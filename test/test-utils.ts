@@ -116,8 +116,8 @@ export class Form {
 		return this.e(`setState({onSubmit: ${onSubmit}, onChange: ${onChange}, ...${JSON.stringify(state)}})`);
 	}
 
-	getState() {
-		return this.e("lajiForm.state") as Promise<any>;
+	async getState() {
+		return browser.executeScript("const {formData} = window.lajiForm.lajiForm.state; return {formData};") as Promise<any>;
 	}
 
 	async submit() {

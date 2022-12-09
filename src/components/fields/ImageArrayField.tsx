@@ -1,17 +1,17 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import Context from "../../Context";
+import getContext from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, keyboardClick } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import * as exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import * as moment from "moment";
-import { FieldProps, RootContext } from "../LajiForm";
+import { FieldProps } from "../LajiForm";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
@@ -100,6 +100,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		METADATA_FORM_ID: string;
 
 		static contextType = ReactContext;
+
 		static propTypes = {
 			uiSchema: PropTypes.shape({
 				"ui:options": PropTypes.shape({
@@ -136,7 +137,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		apiClient: ApiClient;
 		_context: any;
-		mainContext: RootContext;
 		mounted: boolean;
 		fetching: any;
 
@@ -171,10 +171,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			});
 			this.apiClient = props.formContext.apiClient;
-			this._context = new Context(`${this.KEY}_ARRAY_FIELD`);
+			this._context = getContext(`${this.KEY}_ARRAY_FIELD`);
 			if (!this._context.metadatas) this._context.metadatas = {};
 			if (!this._context.tmpMedias) this._context.tmpMedias = {};
-			this.mainContext = (this as any).getContext();
 			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {}).map(i => +i)};
 			const {addModal, autoOpenAddModal} = options;
 			if (addModal
@@ -211,7 +210,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const getCount = (_props: FieldProps, _state: MediaArrayState) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
 
 			if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
-				(new Context(this.props.formContext.contextId) as RootContext).sendCustomEvent(this.props.idSchema.$id, "resize");
+				this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 			}
 		}
 
@@ -265,8 +264,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								          onDragEnter={this.onDragEnter}
 								          onDragLeave={this.onDragLeave}
 								          onDrop={this.onDrop}
-										  disabled={readonly || disabled}
-										  noKeyboard={true}
+								          disabled={readonly || disabled}
+								          noKeyboard={true}
 									  >
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
@@ -278,7 +277,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 												tabIndex={0}
 												{...rootProps}
 												onKeyDown={this.onKeyDown}
-											    ref={this.addMediaContainerRef} >
+												ref={this.addMediaContainerRef} >
 												<input {...getInputProps()} />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
@@ -294,11 +293,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			);
 		}
 
-		onKeyDown = keyboardClick(() => {
+		onKeyDown = this.props.formContext.utils.keyboardClick(() => {
 			const input = this.addMediaContainerRef.current?.querySelector("input");
 			const {addModal} = getUiOptions(this.props.uiSchema);
 			addModal ? this.defaultOnClick() : input?.click();
-		}, this.props.formContext)
+		});
 
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;
@@ -375,7 +374,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const uiSchema = isOpen ? {
 				...metadataForm.uiSchema,
-				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})},
+				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...this.props.formContext.services.keyHandler.shortcuts},
 				"ui:disabled": this.props.disabled,
 				"ui:readonly": this.props.readonly,
 			} : undefined;
@@ -542,16 +541,16 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					})
 				);
 			}, Promise.resolve(found)).then((found) => {
-				let {registry, formContext: {contextId}} = this.props;
-				const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
-				const {schema} = lajiFormInstance.props;
-				let {formData} = lajiFormInstance.state;
+				let {registry} = this.props;
+				const lajiFormInstance = this.props.formContext.services.rootInstance;
+				const schema = lajiFormInstance.getSchema();
+				let formData = lajiFormInstance.getFormData();
 				exifParsers.filter((f: any) => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}: any) => {
 					if (type === "mutate") {
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
 					}
 					if (type === "event") {
-						(new Context(contextId) as RootContext).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
+						this.props.formContext.services.customEvents.send(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 					}
 				});
 				return formData;
@@ -559,9 +558,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		sideEffects = (formData: any) => {
-			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
-			const {formData: lajiFormFormData} = lajiFormInstance.state;
-			const {schema} = lajiFormInstance.props;
+			const lajiFormInstance = this.props.formContext.services.rootInstance;
+			const schema = lajiFormInstance.getSchema();
+			const lajiFormFormData = lajiFormInstance.getFormData();
 			const {sideEffects} = getUiOptions(this.props.uiSchema);
 			if (sideEffects) {
 				const thisPath = idSchemaIdToJSONPointer(this.props.idSchema.$id);
@@ -584,7 +583,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}, formData);
 			}
 			if (formData !== lajiFormFormData) {
-				lajiFormInstance.onChange({formData});
+				lajiFormInstance.onChange(formData);
 			}
 		}
 
@@ -597,25 +596,25 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const id = this.getContainerId();
 
-			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
+			const lajiFormInstance = this.props.formContext.services.rootInstance;
 			const saveAndOnChange = () => this.saveMedias(files).then(mediaIds => {
-				if (!lajiFormInstance.mounted || !mediaIds) {
+				if (!lajiFormInstance.isMounted() || !mediaIds) {
 					return;
 				}
 
-				let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+				let pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, id);
 				if (!this.mounted && !pointer) {
 					return;
 				}
 				const newFormData = [
 					...(this.mounted
 						? this.props.formData || []
-						: parseJSONPointer(lajiFormInstance.state.formData, pointer) || []
+						: parseJSONPointer(lajiFormInstance.getFormData(), pointer) || []
 					),
 					...mediaIds
 				];
 
-				if (!lajiFormInstance.mounted) return;
+				if (!lajiFormInstance.isMounted()) return;
 
 				if ((this.mounted || id === "root") && id === this.getContainerId()) {
 					this.props.onChange(newFormData);
@@ -631,8 +630,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					return;
 				}
 
-				pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
-				lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+				pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, id);
+				lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 			});
 
 			(this as any).addSubmitHook(saveAndOnChange);
@@ -767,7 +766,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
-			this.mainContext.pushBlockingLoader();
+			this.props.formContext.services.blocker.push();
 			this.apiClient.fetch(`/${this.ENDPOINT}/${formData.id}`, undefined, {
 				method: "PUT",
 				headers: {
@@ -776,7 +775,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				},
 				body: JSON.stringify(formData)
 			}).then(() => {
-				this.mainContext.popBlockingLoader();
+				this.props.formContext.services.blocker.pop();
 				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {
 					this.setState({metadataModalOpen: false}, notify);
@@ -784,7 +783,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					notify();
 				}
 			}).catch(() => {
-				this.mainContext.popBlockingLoader();
+				this.props.formContext.services.blocker.pop();
 				this.mounted && this.setState({metadataSaveSuccess: false});
 			});
 		}

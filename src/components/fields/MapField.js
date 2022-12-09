@@ -6,7 +6,6 @@ import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const equals = require("deep-equal");
-import Context from "../../Context";
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
@@ -83,18 +82,18 @@ export default class MapField extends React.Component {
 		const {uiSchema} = this.props;
 		const {mapOptions = {}} = getUiOptions(uiSchema);
 		if (mapOptions.singleton) {
-			const map = this.getContext().singletonMap;
+			const {map} = this.props.formContext.services.singletonMap;
 			if (map && map.getOptions().locate && map.userLocation) {
 				this.onLocate(map.userLocation.latlng, map.userLocation.accuracy);
 			}
 		}
 		this.geocode(this.props);
 
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -163,7 +162,7 @@ export default class MapField extends React.Component {
 		let singletonHasLocate = false;
 		let singletonRendered = false;
 		if (isSingleton) {
-			const map = this.getContext().singletonMap;
+			const {map} = this.props.formContext.services.singletonMap;
 			if (map) {
 				singletonRendered = true;
 				singletonHasLocate = map.getOptions().locate;
@@ -494,7 +493,7 @@ class MobileEditorMap extends React.Component {
 		const {translations} = this.props.formContext;
 
 		return (
-			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} contextId={this.props.formContext.contextId}>
+			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent
 					{...options}
 					singleton={true}

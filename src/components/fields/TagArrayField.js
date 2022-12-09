@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
 const equals = require("deep-equal");
 
 @BaseComponent
@@ -44,7 +43,7 @@ export class TagInputComponent extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!equals(prevProps.formData, this.props.formData)) {
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+			this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 		}
 	}
 
@@ -143,7 +142,7 @@ export class TagInputComponent extends React.Component {
 						{tags.map((item, idx) => 
 							<li key={idx} className="rw-multiselect-tag">
 								{item}
-								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={keyboardClick(this.onRemove(idx), this.props.formContext)}>×</span>
+								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span>
 							</li>
 						)}
 					</ul>

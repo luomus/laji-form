@@ -56,11 +56,11 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getContext().addFocusHandler(this.props.id, this.focus);
+		this.props.formContext.services.focus.addFocusHandler(this.props.id, this.focus);
 	}
 
 	componentWillUnmount() {
-		this.getContext().removeFocusHandler(this.props.id, this.focus);
+		this.props.formContext.services.focus.removeFocusHandler(this.props.id, this.focus);
 	}
 
 	focus = () => {
@@ -276,7 +276,7 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	setSameAsToday = () => {
-		const {formData} = this.getContext();
+		const formData = this.props.formContext.services.rootInstance.getFormData();
 		const sameOptions = getUiOptions(this.props).showButtons.same || {};
 		const {path = "/gatheringEvent/dateBegin"} = sameOptions;
 		const today = parseJSONPointer(formData, path, !!"safely");

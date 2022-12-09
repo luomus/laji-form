@@ -1,7 +1,7 @@
 import * as React from "react";
 import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
-import { getUiOptions, formDataEquals } from "../../utils";
+import { getUiOptions } from "../../utils";
 import AnyToBoolean from "./AnyToBooleanField";
 import { getTemplate } from "@rjsf/utils";
 
@@ -28,7 +28,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.getInitialState(props);
+		this.state = this.getInitialState(props)
 	}
 
 	getInitialState(props) {
@@ -44,11 +44,11 @@ export default class MultiAnyToBooleanField extends React.Component {
 				if (value === undefined) {
 					return;
 				}
-				const trueIndex = trueValues.findIndex(trueValue => formDataEquals(value, trueValue, props.formContext, props.idSchema.$id));
+				const trueIndex = trueValues.findIndex(trueValue => props.formContext.utils.formDataEquals(value, trueValue, props.idSchema.$id));
 				if (trueIndex !== -1) {
 					groupsFormData[trueIndex] = value;
 				} else {
-					const falseIndex = falseValues.findIndex(falseValue => formDataEquals(value, falseValue, props.formContext, props.idSchema.$id));
+					const falseIndex = falseValues.findIndex(falseValue => props.formContext.utils.formDataEquals(value, falseValue, props.idSchema.$id));
 					if (falseIndex !== -1) {
 						groupsFormData[falseIndex] = value;
 					}
@@ -79,7 +79,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 		let {groups} = getUiOptions(this.props.uiSchema) || [];
 		return (
 			<React.Fragment>
-				<TitleFieldTemplate title={this.props.schema.title} uiSchema={this.props.uiSchema} />
+				<TitleFieldTemplate title={this.props.schema.title} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 				<div className={"checkbox-row"}>
 					{groups.map((group, idx) => {
 						const {"ui:help": help, "ui:helpHoverable": helpHoverable, helpPlacement, ..._group} = group;

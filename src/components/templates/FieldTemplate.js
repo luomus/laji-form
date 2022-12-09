@@ -1,17 +1,16 @@
 import * as React from "react";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { Help, TooltipComponent } from "../components";
-import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll, classNames } from "../../utils";
+import { isMultiSelect, getUiOptions, formatErrorMessage, classNames } from "../../utils";
 
 export default class FieldTemplateTemplate extends React.Component {
-
 	constructor(props) {
 		super(props);
 		if (getUiOptions(props.uiSchema).reserveId === false) {
 			this.state = {};
 			return;
 		}
-		const id = this.props.formContext.reserveId(this.props.id, this.receiveId);
+		const id = this.props.formContext.services.DOMIds.reserve(this.props.id, this.receiveId);
 		if (id) {
 			this.state = {id};
 		} else {
@@ -21,17 +20,17 @@ export default class FieldTemplateTemplate extends React.Component {
 
 	canFocus = () => {
 		const {formContext} = this.props;
-		const {uiSchema = {}} = (formContext.getFormRef() || {props: {}}).props;
+		const {uiSchema = {}} = (formContext.formRef.current || {props: {}}).props;
 		return uiSchema.autoFocus !== false;
 	}
 
 	componentDidMount() {
 		const {formContext} = this.props;
 		const contextId = formContext.contextId;
-		const _context = new Context(contextId);
+		const _context = getContext(contextId);
 		const {idToFocus, idToScroll} = _context;
 		if (this.canFocus() && idToFocus !== undefined && this.state.id === idToFocus) {
-			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
+			if (this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
 				_context.idToScroll = undefined;
 			}
@@ -40,17 +39,17 @@ export default class FieldTemplateTemplate extends React.Component {
 
 	UNSAFE_componentWillReceiveProps(props) {
 		if (getUiOptions(props.uiSchema).reserveId !== false && this.props.id !== props.id) {
-			this.props.formContext.releaseId(this.props.id, this.receiveId);
-			const id = props.formContext.reserveId(props.id, this.receiveId);
+			this.props.formContext.services.DOMIds.release(this.props.id, this.receiveId);
+			const id = props.formContext.services.DOMIds.reserve(props.id, this.receiveId);
 			id && this.receiveId(id);
 		}
 	}
 
 	receiveId = (id) => {
 		this.setState({id}, () => {
-			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
+			const {idToFocus, idToScroll} = getContext(this.props.formContext.contextId);
 			if (this.canFocus() && idToFocus === id) {
-				focusAndScroll(this.props.formContext, idToFocus, idToScroll);
+				this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll);
 			}
 		});
 	}
@@ -59,7 +58,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		if (getUiOptions(this.props.uiSchema).reserveId === false) {
 			return;
 		}
-		this.props.formContext.releaseId(this.props.id, this.receiveId);
+		this.props.formContext.services.DOMIds.release(this.props.id, this.receiveId);
 	}
 
 	render() {
@@ -68,7 +67,6 @@ export default class FieldTemplateTemplate extends React.Component {
 			classNames: _classNames,
 			children,
 			rawErrors,
-			rawHelp,
 			description,
 			hidden,
 			required,
@@ -110,7 +108,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		const {Label, errorsAsPopup} = this.props.formContext;
 		const component = (errorsComponent) => (
 			<div className={classNames(_classNames, warningClassName)} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} contextId={formContext.contextId} /> : null}
+				{label && _displayLabel ? <Label label={label} uiSchema={uiSchema} id={id} required={required || uiSchema["ui:required"]} registry={this.props.registry} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}

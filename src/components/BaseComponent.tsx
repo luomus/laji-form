@@ -1,7 +1,7 @@
 const deepEquals = require("deep-equal");
-import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
-import Context from "../Context";
-import { FieldProps, WidgetProps, RootContext, SubmitHook } from "./LajiForm";
+import { getReactComponentName, parseJSONPointer, getUUID as _getUUID } from "../utils";
+import { FieldProps, WidgetProps } from "./LajiForm";
+import { SubmitHook } from "../services/submit-hook-service";
 
 type Constructor<T> = new(...args: any[]) => T;
 
@@ -20,7 +20,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			const props: P = args[0];
 			super(props);
 			this.onChange = this.onChange.bind(this);
-			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadContextSettings(props, this.getContext());
+			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadGlobalSettings(props, this.getGlobals());
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
 		}
@@ -28,8 +28,8 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		loadSettings(props: P, target: any = {}, rule: RegExp) {
 			const {uiSchema, formContext} = props;
 
-			if (uiSchema && uiSchema["ui:settings"]) {
-				const settings = formContext.settings || {};
+			if (uiSchema?.["ui:settings"]) {
+				const {settings} = formContext.services.settings;
 				uiSchema["ui:settings"].forEach((key: string) => {
 					if (this.getSettingsKey(props, key) in settings) {
 						if (key.match(rule)) {
@@ -45,7 +45,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			return target;
 		}
 
-		loadContextSettings(props: P, context: any) {
+		loadGlobalSettings(props: P, context: any) {
 			return this.loadSettings(props, context, /^%/);
 		}
 
@@ -94,9 +94,9 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			}
 
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach((key: string) => {
-				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
+				this.props.formContext.services.settings.addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseSettingSaver(this.getContext(), key.replace(/^%[^/]*/, ""));
+						return parseSettingSaver(this.getGlobals(), key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseSettingSaver(this.state, key);
 					}
@@ -113,7 +113,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 				if (key.match(/^%/)) key = (key.match(/^%([^/]*)/) as string[])[1];
 				return (!deepEquals(...[prevState, this.state].map(state => parseJSONPointer(state, key, !!"safely"))));
 			})) {
-				this.getContext().onSettingsChange();
+				this.props.formContext.services.settings.onSettingsChange();
 			}
 		}
 
@@ -123,8 +123,8 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		}
 
 		componentWillUnmount() {
-			if (this.props.uiSchema) (this.props.uiSchema["ui:settings"] || []).forEach((key: string) => {
-				this.getContext().removeSettingSaver(this.getSettingsKey(this.props, key));
+			(this.props.uiSchema?.["ui:settings"] || []).forEach((key: string) => {
+				this.props.formContext.services.settings.removeSettingSaver(this.getSettingsKey(this.props, key));
 			});
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
@@ -133,15 +133,12 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
 		}
 
-		getContext() {
-			return new Context(this.props.formContext.contextId) as RootContext;
+		getGlobals() {
+			return this.props.formContext.globals;
 		}
 
 		getUUID() {
-			if (!(this.props as any).formData) {
-				return;
-			}
-			return _getUUID((this.props as any).formData) || this.props.formContext._parentLajiFormId || "root";
+			return _getUUID((this.props as any)?.formData) || this.props.formContext._parentLajiFormId || "root";
 		}
 
 		getIdSchemaId(props: P) {
@@ -149,11 +146,10 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		}
 
 		addSubmitHook(hook: SubmitHook["hook"]) {
-			const id = this.getUUID() || this.props.formContext._parentLajiFormId || "root";
-			const lajiFormInstance = this.getContext().formInstance;
+			const id = this.getUUID();
 			const idSchemaId = this.getIdSchemaId(this.props);
-			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, idSchemaId, id);
-			return this.getContext().addSubmitHook(id, relativePointer, hook);
+			const relativePointer = this.props.formContext.services.ids.getRelativePointer(idSchemaId, id);
+			return this.props.formContext.services.submitHooks.add(id, relativePointer, hook);
 		}
 	} as any;
 }

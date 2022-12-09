@@ -1,5 +1,5 @@
 import * as React from "react";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
@@ -113,7 +113,7 @@ export default class _SchemaField extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!deepEquals(prevProps.errorSchema, this.props.errorSchema)) {
-			new Context(this.props.registry.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+			this.props.registry.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 		}
 	}
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
 import BaseComponent from "./BaseComponent";
-import Context from "../Context";
+import getContext from "../Context";
 import { FieldProps } from "./LajiForm";
 
 export function getPropsWithInnerUiSchema(props: FieldProps): FieldProps {
@@ -82,7 +82,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 
 	if ((ComposedComponent as any).getName) {
 		const name = (ComposedComponent as any).getName();
-		(new Context("VIRTUAL_SCHEMA_NAMES") as any)[name] = true;
+		(getContext("VIRTUAL_SCHEMA_NAMES") as any)[name] = true;
 		if (process.env.NODE_ENV !== "production" && (ComposedComponent as any).getName() !== getReactComponentName(ComposedComponent as any)) {
 			console.warn(`${getReactComponentName(ComposedComponent as any)} getName() doesn't return it's component name! (It returned '${name}')`);
 		}

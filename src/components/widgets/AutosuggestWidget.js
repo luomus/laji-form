@@ -2,9 +2,9 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
@@ -255,6 +255,7 @@ class UnitAutosuggestWidget extends React.Component {
 
 class FriendsAutosuggestWidget extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -383,6 +384,7 @@ class RangeAutosuggestWidget extends React.Component {
 
 export class Autosuggest extends React.Component {
 	static contextType = ReactContext;
+
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -423,12 +425,12 @@ export class Autosuggest extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.triggerConvert(this.props);
-		new Context(this.props.formContext.contextId).addKeyHandler(this.props.id, this.keyFunctions);
+		this.props.formContext.services.keyHandler.addKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
+		this.props.formContext.services.keyHandler.removeKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -598,7 +600,7 @@ export class Autosuggest extends React.Component {
 			clearTimeout(this.timeout);
 		}
 		if (debounce) {
-			this.timeout = this.context.setTimeout(request, 100);
+			this.timeout = this.props.formContext.setTimeout(request, 100);
 		} else {
 			request();
 		}
@@ -733,10 +735,8 @@ export class Autosuggest extends React.Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+		setTimeout(() => this.props.formContext.utils.focusById(this.props.id), 1); // Refocus input
 	}
-
-	onToggleByKeyboard = keyboardClick(this.onToggle)
 
 	isSuggested = () => {
 		const {suggestion} = this.state;
@@ -813,7 +813,7 @@ export class Autosuggest extends React.Component {
 				return tooltip;
 			}
 
-			const {shortcuts = []} = new Context(this.props.formContext.contextId);
+			const {shortcuts} = this.props.formContext.services.keyHandler;
 			Object.keys(shortcuts).some(keyCombo => {
 				if (shortcuts[keyCombo].fn == "autosuggestToggle") {
 					tooltip = `[${stringifyKeyCombo(keyCombo)}]: ${tooltip}`;
@@ -890,6 +890,7 @@ export class Autosuggest extends React.Component {
 
 class _TaxonWrapper extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};
@@ -1009,7 +1010,8 @@ class _TaxonWrapper extends React.Component {
 			                placement={placement}
 			                contextId={this.props.formContext.contextId}
 			                overlay={popover}
-			                ref={this.props.overlayRef}>
+			                ref={this.props.overlayRef}
+			                formContext={this.props.formContext}>
 				{children}
 			</OverlayTrigger>
 		);
@@ -1047,7 +1049,8 @@ class InformalTaxonGroupsAddon extends React.Component {
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
 	}
 
-	onKeyDown = keyboardClick(this.toggle)
+
+	onKeyDown = this.props.formContext.utils.keyboardClick(this.toggle);
 
 	renderGlyph = () => {
 		const {taxonGroupID} = this.props;
@@ -1074,6 +1077,9 @@ class InformalTaxonGroupsAddon extends React.Component {
 	}
 
 	render() {
+		if (!this.onKeyDown) { // Context not available before first render, so we initialize the key handler here.
+			this.onKeyDown = this.context.utils.keyboardClick(this.toggle);
+		}
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
 				{this.renderGlyph()}
@@ -1221,8 +1227,7 @@ class ReactAutosuggest extends React.Component {
 
 	onInputKeyDown = (e) => {
 		let state, suggestion;
-		const context = new Context(this.props.formContext.contextId);
-		const {shortcuts = {}} = context;
+		const {shortcuts} = this.props.formContext.services.keyHandler;
 		switch (e.key) {
 		case "ArrowDown":
 			e.preventDefault();
@@ -1254,7 +1259,7 @@ class ReactAutosuggest extends React.Component {
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 			if (shortcuts.Enter) {
-				this.context.setTimeout(() => {
+				this.props.formContext.setTimeout(() => {
 					suggestion && this.onSuggestionSelected(suggestion);
 				}, 0);
 			} else {

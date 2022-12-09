@@ -1,14 +1,13 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState as _getDefaultFormState } from "@rjsf/utils";
-import Context from "./Context";
+import getContext from "./Context";
 import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
-import Form from "@rjsf/core";
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
-import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
+import { FormContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
 import rjsfValidator from "@rjsf/validator-ajv6";
 
 export const isObject = _isObject;
@@ -130,7 +129,7 @@ interface SchemaFieldWrappersContext {
 
 export function getInnerUiSchema(parentUiSchema: UiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && ((new Context("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (new Context("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && ((getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
@@ -224,10 +223,6 @@ export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLEle
 	return fields as HTMLElement[];
 }
 
-export function getSchemaElementById(contextId: number, id: string) {
-	return document.getElementById(`_laji-form_${contextId}_${id}`);
-}
-
 export function isTabbableInput(elem: HTMLElement) {
 	return elem.id.match(/^_laji-form_/)
 	|| inputTypes.includes(elem.tagName.toLowerCase())
@@ -247,11 +242,6 @@ export function findNearestParentSchemaElem(elem: HTMLElement | null | undefined
 	return elem;
 }
 
-export function findNearestParentSchemaElemId(contextId: number, elem: HTMLElement) {
-	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
-	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
-}
-
 export function findNearestParentTabbableElem(elem: HTMLElement): HTMLElement | undefined {
 	while (!isTabbableInput(elem)) {
 		elem = elem.parentNode as HTMLElement;
@@ -259,7 +249,40 @@ export function findNearestParentTabbableElem(elem: HTMLElement): HTMLElement | 
 	return elem;
 }
 
-export function getNextInputInInputs(formReactNode: Form<any>, inputElem: HTMLElement | undefined, reverseDirection = false, fields: HTMLElement[]): HTMLElement | undefined {
+export interface ReactUtilsType {
+	findNearestParentSchemaElemId: (elem: HTMLElement) => string | undefined;
+	getSchemaElementById: (id: string) => HTMLElement | null;
+	focusById: (id: string, focus?: boolean) => boolean;
+	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
+	shouldSyncScroll: () => boolean;
+	syncScroll: (force: boolean) => void;
+	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
+	formDataIsEmpty: (props: FieldProps) => boolean;
+	formDataEquals: (f1: any, f2: any, id: string) => boolean;
+	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
+	getNextInput: (inputElem: HTMLElement, reverseDirection: boolean) => HTMLElement | undefined;
+	focusNextInput: (reverseDirection: boolean) => void;
+	getNextInputInInputs: (inputElem: HTMLElement | undefined, reverseDirection: boolean, fields: HTMLElement[]) => HTMLElement | undefined
+}
+
+export const ReactUtils = (context: FormContext): ReactUtilsType => ({
+	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
+	getSchemaElementById: _getSchemaElementById(context),
+	focusById: _focusById(context),
+	focusAndScroll: _focusAndScroll(context),
+	shouldSyncScroll: _shouldSyncScroll(context),
+	syncScroll: _syncScroll(context),
+	filterItemIdsDeeply: _filterItemIdsDeeply(context),
+	formDataIsEmpty: _formDataIsEmpty(context),
+	formDataEquals: _formDataEquals(context),
+	keyboardClick: _keyboardClick(context),
+	getNextInput: getNextInput(context),
+	focusNextInput: focusNextInput(context),
+	getNextInputInInputs: getNextInputInInputs(context)
+});
+
+export const getNextInputInInputs = (formContext: FormContext) => (inputElem: HTMLElement | undefined, reverseDirection = false, fields: HTMLElement[]): HTMLElement | undefined => {
+	const formReactNode = formContext.formRef.current;
 	const formElem = findDOMNode(formReactNode) as HTMLElement;
 	if (!formElem) {
 		return undefined;
@@ -295,20 +318,25 @@ export function getNextInputInInputs(formReactNode: Form<any>, inputElem: HTMLEl
 	return undefined;
 }
 
-export function getNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
-	const formElem = findDOMNode(formReactNode) as HTMLElement;
-	const fields = getTabbableFields(formElem);
-	return getNextInputInInputs(formReactNode, inputElem, reverseDirection, fields);
-}
 
-export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
+export const getNextInput = (formContext: FormContext) => (inputElem: HTMLElement, reverseDirection = false) => {
+	const formElem = findDOMNode(formContext.formRef.current) as HTMLElement;
+	const fields = getTabbableFields(formElem);
+	return formContext.utils.getNextInputInInputs(inputElem, reverseDirection, fields);
+};
+
+export const focusNextInput = (formContext: FormContext) => (reverseDirection = false) => {
+	const formReactNode = formContext.formRef.current;
+	if (!formReactNode) {
+		throw new Error("focusNextInput() didn't find form ref");
+	}
 	const {uiSchema = {}} = formReactNode.props;
 	if (uiSchema.autoFocus === false) {
 		return false;
 	}
 	const width = pixelsToBsSize(window.outerWidth);
 	if (width === "xs") return false;
-	const field = getNextInput(formReactNode, inputElem, reverseDirection);
+	const field = formContext.utils.getNextInput(document.activeElement as HTMLElement, reverseDirection);
 	if (field) {
 		field.focus();
 		return true;
@@ -316,21 +344,148 @@ export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement,
 	return false;
 }
 
-export function focusById(formContext: FormContext, id: string, focus = true) {
-	const elem = getSchemaElementById(formContext.contextId, id);
+const _findNearestParentSchemaElemId = ({contextId}: Pick<FormContext, "contextId">) => (elem: HTMLElement) => {
+	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
+	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
+};
+export const findNearestParentSchemaElemId = (contextId: number, elem: HTMLElement) => {
+	return _findNearestParentSchemaElemId({contextId})(elem);
+};
+
+const _getSchemaElementById = ({contextId}: Pick<FormContext, "contextId">) => (id: string) => {
+	return document.getElementById(`_laji-form_${contextId}_${id}`);
+};
+export const getSchemaElementById = (contextId: number, id: string) => {
+	return _getSchemaElementById({contextId})(id);
+};
+
+const _focusById = (context: FormContext) => (id: string, focus = true) => {
+	const elem = getSchemaElementById(context.contextId, id);
+
 	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
-			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
-			const _context = new Context(formContext.contextId) as RootContext;
-			_context.lastIdToFocus = id; // Mark for components that manipulate scroll positions
-			_context.windowScrolled = getWindowScrolled();
+			scrollIntoViewIfNeeded(elem, context.topOffset, context.bottomOffset);
+			const rootContext = getContext(context.contextId);
+			rootContext.lastIdToFocus = id; // Mark for components that manipulate scroll positions
+			rootContext.windowScrolled = getWindowScrolled();
 			return true;
 		}
 	}
 	return false;
-}
+};
+
+export const focusById = (context: FormContext, id: string, focus?: boolean) => _focusById(context)(id, focus);
+
+const _focusAndScroll = (context: FormContext) => (idToFocus?: string, idToScroll?: string, focus = true) => {
+	const {contextId, topOffset, bottomOffset} = context;
+	const _context = getContext(contextId);
+	if (idToFocus === undefined && idToScroll === undefined) return;
+	if (idToFocus && !context.utils.focusById(getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
+	if (idToScroll) {
+		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
+		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
+		if (!elemToScroll || !elemToFocus) {
+			return end();
+		}
+		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		const scrollAmount = wouldScrollTo - getWindowScrolled();
+		const {top} = elemToFocus.getBoundingClientRect();
+		const viewTopDistanceFromTop = top - scrollAmount;
+
+		// Don't scroll if scrolling would hide focused elem top.
+		if (viewTopDistanceFromTop < topOffset) {
+			return end();
+		} else {
+			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		}
+	}
+	return end();
+
+	function end() {
+		_context.lastIdToScroll = idToScroll;
+		_context.lastIdToFocus = idToFocus;
+		_context.windowScrolled = getWindowScrolled();
+		return true;
+	}
+};
+
+export const focusAndScroll = (context: FormContext, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
+
+const _shouldSyncScroll = (context: FormContext) => () => {
+	return getContext(context.contextId).windowScrolled === getWindowScrolled();
+};
+
+export const shouldSyncScroll = (context: FormContext) => _shouldSyncScroll(context)();
+
+export const _syncScroll = (context: FormContext) => (force = false) => {
+	if (force || shouldSyncScroll(context)) {
+		const {lastIdToFocus, lastIdToScroll} = getContext(context.contextId);
+		focusAndScroll(context, lastIdToFocus, lastIdToScroll, false);
+	}
+};
+
+export const syncScroll = (context: FormContext, force: boolean) => _syncScroll(context)(force);
+
+export const filterLajiFormId = (item: any) => {
+	if (item && item._lajiFormId) {
+		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		item = _item;
+	}
+	return item;
+};
+
+export const filterItemId = (item: any) => {
+	if (item && (item._lajiFormId || item.id)) {
+		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		item = _item;
+	}
+	return item;
+};
+
+const _filterItemIdsDeeply = (context: FormContext) => (item: any, idSchemaId: string) => {
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(idSchemaId);
+	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
+	return _item;
+};
+export const filterItemIdsDeeply = (item: any, context: FormContext, idSchemaId: string) => _filterItemIdsDeeply(context)(item, idSchemaId);
+
+const _formDataIsEmpty = (context: FormContext) => (props: FieldProps) => {
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(props.idSchema.$id);
+	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
+	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
+};
+export const formDataIsEmpty = (props: FieldProps, context: FormContext) => _formDataIsEmpty(context)(props);
+
+const _formDataEquals = (context: FormContext) => (f1: any, f2: any, id: string) => {
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(id);
+	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
+	return deepEquals(_f1, _f2);
+};
+export const formDataEquals = (f1: any, f2: any, context: FormContext, id: string) => {
+	return _formDataEquals(context)(f1, f2, id);
+};
+
+const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
+	return (e: KeyboardEvent | React.KeyboardEvent) => {
+		let keys = [" ", "Enter"];
+		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
+			const {shortcuts} = getContext(contextId);
+			keys = keys.filter(k => !shortcuts[k]);
+		}
+		if (keys.every(k => e.key !== k)) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		fn(e);
+	};
+};
+
+export const keyboardClick = (fn: (e: KeyboardEvent | React.KeyboardEvent) => void, context: FormContext) => {
+	return _keyboardClick(context)(fn);
+};
 
 export function getNestedTailUiSchema(uiSchema: UiSchema) {
 	while (uiSchema && uiSchema.uiSchema) {
@@ -381,54 +536,13 @@ export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "", context: RootContext, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
+export function getKeyHandlerTargetId(target = "", context: any, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	while (target.match(/%\{([^{}]*)\}/)) {
 		const path = /%\{([^{}]*)\}/.exec(target)?.[1] || "";
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");
 		target = target.replace(`%{${path}}`, eval(path));
 	}
 	return target;
-}
-
-export function handleKeysWith(context: RootContext, id: string, keyFunctions: KeyFunctions = {}, e: KeyboardEvent, additionalParams: any = {}) {
-	if (context.blockingLoaderCounter > 0 &&
-			!isDescendant(document.querySelector(".pass-block"), e.target as HTMLElement)) {
-		e.preventDefault();
-		return;
-	}
-
-	if (isDescendant(document.querySelector(".laji-map"), e.target as HTMLElement)) return;
-
-	function handleKey(keyHandler: InternalKeyHandler) {
-		const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
-		const eventHandled = returnValue !== undefined ? returnValue : true;
-		if (eventHandled) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		return eventHandled;
-	}
-
-	const highPriorityHandled = context.keyHandlers.some(keyHandler => {
-		let target = getKeyHandlerTargetId(keyHandler.target, context);
-		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
-			if (!handleKey(keyHandler)) {
-				e.preventDefault();
-				e.stopPropagation();
-			}
-			return true;
-		}
-		return false;
-	});
-
-	if (highPriorityHandled) return highPriorityHandled;
-
-	return context.keyHandlers.some(keyHandler => {
-		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
-			return handleKey(keyHandler);
-		}
-		return false;
-	});
 }
 
 export function capitalizeFirstLetter(string: string) {
@@ -765,50 +879,6 @@ export function checkArrayRules(rules: any[], props: FieldProps, idx: number, ca
 	}
 }
 
-export function focusAndScroll(formContext: FormContext, idToFocus?: string, idToScroll?: string, focus = true) {
-	const {contextId, topOffset, bottomOffset} = formContext;
-	const _context = new Context(contextId) as RootContext;
-	if (idToFocus === undefined && idToScroll === undefined) return;
-	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
-	if (idToScroll) {
-		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
-		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
-		if (!elemToScroll || !elemToFocus) {
-			return end();
-		}
-		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
-		const scrollAmount = wouldScrollTo - getWindowScrolled();
-		const {top} = elemToFocus.getBoundingClientRect();
-		const viewTopDistanceFromTop = top - scrollAmount;
-
-		// Don't scroll if scrolling would hide focused elem top.
-		if (viewTopDistanceFromTop < topOffset) {
-			return end();
-		} else {
-			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
-		}
-	}
-	return end();
-
-	function end() {
-		_context.lastIdToScroll = idToScroll;
-		_context.lastIdToFocus = idToFocus;
-		_context.windowScrolled = getWindowScrolled();
-		return true;
-	}
-}
-
-export function shouldSyncScroll(formContext: FormContext) {
-	return (new Context(formContext.contextId) as RootContext).windowScrolled === getWindowScrolled();
-}
-
-export function syncScroll(formContext: FormContext, force = false) {
-	if (force || shouldSyncScroll(formContext)) {
-		const {lastIdToFocus, lastIdToScroll} = new Context(formContext.contextId) as RootContext;
-		focusAndScroll(formContext, lastIdToFocus, lastIdToScroll, false);
-	}
-}
-
 export function bringRemoteFormData(formData: any, formContext: FormContext) {
 	if (formContext.formDataTransformers) {
 		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
@@ -931,40 +1001,6 @@ export function updateFormDataWithJSONPointer(schemaProps: Pick<FieldProps, "for
 	});
 }
 
-export const filterLajiFormId = (item: any) => {
-	if (item && item._lajiFormId) {
-		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
-		item = _item;
-	}
-	return item;
-};
-
-export const filterItemId = (item: any) => {
-	if (item && (item._lajiFormId || item.id)) {
-		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
-		item = _item;
-	}
-	return item;
-};
-
-export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
-	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
-	return _item;
-};
-
-export const formDataIsEmpty = (props: FieldProps) => {
-	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
-	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
-	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
-};
-
-export const formDataEquals = (f1: any, f2: any, formContext: FormContext, id: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, id);
-	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
-	return deepEquals(_f1, _f2);
-};
-
 let uuid = 0;
 export const assignUUID = (item: any, immutably = false) => {
 	if (isObject(item) && !item.id && !item._lajiFormId) {
@@ -978,31 +1014,6 @@ export const assignUUID = (item: any, immutably = false) => {
 	}
 	return item;
 };
-
-export function createTmpIdTree(schema: RJSFSchema) {
-	function walk(_schema: any) {
-		if (_schema.properties) {
-			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
-				const walked = walk(_schema.properties[key]);
-				if (walked) {
-					(paths as any)[key] = walked;
-				}
-				return paths;
-			}, {});
-			if (Object.keys(_walked).length) return _walked;
-		} else if (_schema.type === "array" && _schema.items.type === "object") {
-			return Object.keys(_schema.items.properties).reduce((paths, key) => {
-				const walked = walk(_schema.items.properties[key]);
-				if (walked) {
-					(paths as any)[key] = walked;
-				}
-				return paths;
-			}, {_hasId: true});
-		}
-		return undefined;
-	}
-	return walk(schema);
-}
 
 export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
 
@@ -1085,57 +1096,10 @@ export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, laj
 	return undefined;
 }
 
-export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
-	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
-	if (!containerPointer) {
-		return;
-	}
-	const indicesCount = containerPointer.match(/\/[0-9]+/g)?.length || 0;
-	const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");
-	const thisPointer = idSchemaId.replace("root", "").replace(/_/g, "/");
-	let thisPointerWithoutContainerIndices = thisPointer;
-	for (let i = indicesCount; i > 0; i--) {
-		thisPointerWithoutContainerIndices = thisPointerWithoutContainerIndices.replace(/[0-9]+/, "");
-	}
-	return thisPointerWithoutContainerIndices.replace(containerPointerWithoutArrayIndices, "");
-}
-
-export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
-	const relativePointer = getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId);
-	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
-}
-
-export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string | number, relativePointer?: string) {
-	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
-	if (!containerPointer) {
-		return "";
-	}
-	return containerPointer + relativePointer;
-}
-
 export function highlightElem(elem?: Element) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
 	window.setTimeout(() => elem.className = `${elem.className} highlight-error-fire`);
-}
-
-export function getRelativeTmpIdTree(contextId: number, id: string)  {
-	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
-
-	let tmpIdTree;
-	if (rootTmpIdTree) {
-		tmpIdTree = rootTmpIdTree;
-		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
-		for (const k of treePath) {
-			if (tmpIdTree[k]) {
-				tmpIdTree = tmpIdTree[k];
-			} else {
-				tmpIdTree = undefined;
-				break;
-			}
-		}
-	}
-	return tmpIdTree;
 }
 
 export function filteredErrors(errorSchema: any) {
@@ -1212,22 +1176,6 @@ export function getTitle(props: {schema: RJSFSchema, uiSchema: any, name?: strin
 }
 
 export const classNames = (...cs: any[]) => cs.filter(s => typeof s === "string").join(" ");
-
-export function keyboardClick(fn: (e: KeyboardEvent | React.KeyboardEvent) => void, formContext: FormContext): (e: (KeyboardEvent | React.KeyboardEvent)) => void {
-	return (e: KeyboardEvent | React.KeyboardEvent) => {
-		let keys = [" ", "Enter"];
-		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
-			const {shortcuts} = new Context(formContext.contextId) as RootContext;
-			keys = keys.filter(k => !shortcuts[k]);
-		}
-		if (keys.every(k => e.key !== k)) {
-			return;
-		}
-		e.preventDefault();
-		e.stopPropagation();
-		fn(e);
-	};
-}
 
 export function translate(translations: ByLang, key: string, params?: {[key: string]: string | undefined}) {
 	return Object.keys(params || {}).reduce(

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, getUiOptions, classNames } from "../../utils";
 import ReactContext from "../../ReactContext";
 
 export default class CheckboxWidget extends React.Component {
@@ -98,9 +98,6 @@ export default class CheckboxWidget extends React.Component {
 			falseLabel,
 			unknownLabel,
 			required,
-			help,
-			helpHoverable,
-			helpPlacement,
 			label: uiOptionsLabel
 		} = options;
 		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
@@ -137,7 +134,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement} contextId={this.props.formContext.contextId}>
+			<Label label={label} required={required} uiSchema={options} contextId={this.props.formContext.contextId}>
 				{checkbox}
 			</Label>
 		);
@@ -150,27 +147,28 @@ export default class CheckboxWidget extends React.Component {
 		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
 	}
 
-	onGroupKeyDown = keyboardClick((e) => {
+	onGroupKeyDown = this.props.formContext.utils.keyboardClick((e) => {
 		this.getToggleMode(this.props) && this.toggle(e);
-	}, this.props.formContext)
+	});
 
-	onTrueKeyDown = keyboardClick(() => {
+	onTrueKeyDown = this.props.formContext.utils.keyboardClick(() => {
 		if (this.props.disabled || this.props.readonly) {
 			return;
 		}
 		this.onChange(true);
-	}, this.props.formContext)
+	});
 
-	onFalseKeyDown = keyboardClick(() => {
+	onFalseKeyDown = this.props.formContext.utils.keyboardClick(() => {
 		if (this.props.disabled || this.props.readonly) {
 			return;
 		}
 		this.onChange(false);
-	}, this.props.formContext)
+	});
 
-	onUndefinedKeyDown = keyboardClick(() => {
+	onUndefinedKeyDown = this.props.formContext.utils.keyboardClick(() => {
 		this.onChange(undefined);
-	}, this.props.formContext)
+	});
+
 
 	toggle = (e) => {
 		if (this.props.disabled || this.props.readonly) {

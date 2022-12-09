@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject, findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
-import Context from "../../Context";
+import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { getTemplate } from "@rjsf/utils";
@@ -10,12 +10,12 @@ import { getTemplate } from "@rjsf/utils";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
@@ -31,8 +31,8 @@ export function beforeAdd(props) {
 			: 0;
 	idx = offset + idx;
 	let idToFocus = `${props.idSchema.$id}_${idx}`;
-	new Context(contextId).idToFocus = idToFocus;
-	new Context(contextId).idToScroll = idToScrollAfterAdd;
+	getContext(contextId).idToFocus = idToFocus;
+	getContext(contextId).idToScroll = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {
@@ -181,36 +181,32 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addKeyHandlers() {
-			const context = new Context(this.props.formContext.contextId);
 			const [keys, options] = (super.getKeyHandlers || this.getKeyHandlers).call(this, this.props);
 			this.arrayKeyFunctions = keys;
-			context.addKeyHandler(this.props.idSchema.$id, keys, options);
+			this.props.formContext.services.keyHandler.addKeyHandler(this.props.idSchema.$id, keys, options);
 		}
 
 		removeKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
-			context.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
+			this.props.formContext.services.keyHandler.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
 		}
 
 		getKeyHandlers(props) {
 			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(props.uiSchema);
 			return [_arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions}, {
-				getProps: () => this.props
+				getProps: () => this.props,
 			}];
 		}
 
 		addChildKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
 			this.childKeyHandlers = (super.getChildKeyHandlers || this.getChildKeyHandlers).call(this, props);
 			this.childKeyHandlers.forEach(handler => {
-				context.addKeyHandler(...handler);
+				this.props.formContext.services.keyHandler.addKeyHandler(...handler);
 			});
 		}
 
-		removeChildKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
+		removeChildKeyHandlers() {
 			this.childKeyHandlers.forEach(handler => {
-				context.removeKeyHandler(...handler);
+				this.props.formContext.services.keyHandler.removeKeyHandler(...handler);
 			});
 		}
 
@@ -224,7 +220,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		onFocus = target => {
-			const context = new Context(this.props.formContext.contextId);
+			const context = getContext(this.props.formContext.contextId);
 			if (target === "last") {
 				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
 				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
@@ -253,15 +249,15 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addCustomEventListeners(props) {
-			const context = new Context(props.formContext.contextId);
+			const {customEvents} = props.formContext.services;
 			const customEventListeners = (super.getCustomEventListeners || this.getCustomEventListeners).call(this, props);
 			this.customEventListeners = customEventListeners;
-			customEventListeners.forEach(params => context.addCustomEventListener(props.idSchema.$id, ...params));
+			customEventListeners.forEach(params => customEvents.add(props.idSchema.$id, ...params));
 		}
 
 		removeCustomEventListeners(props) {
-			const context = new Context(props.formContext.contextId);
-			this.customEventListeners.forEach(params => context.removeCustomEventListener(props.idSchema.$id, ...params));
+			const {customEvents} = props.formContext.services;
+			this.customEventListeners.forEach(params => customEvents.remove(props.idSchema.$id, ...params));
 		}
 	};
 }
@@ -283,7 +279,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	}
 	onFocuses = []
 	getOnFocus = (i) => () => {
-		new Context(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
+		getContext(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	render() {
@@ -342,7 +338,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} uiSchema={this.props.uiSchema} />
+				<Title title={title} label={title} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
@@ -380,7 +376,7 @@ export const arrayKeyFunctions = {
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				focusAndScroll(getProps().formContext, _idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
+				getProps().formContext.utils.focusAndScroll(_idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
 			}
 			if (focusByIdx) {
 				focusByIdx(idx, prop, callback);
@@ -389,12 +385,12 @@ export const arrayKeyFunctions = {
 			}
 		}
 
-		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+		const nearestSchemaElemId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
-		const lastId = nearestSchemaElemId.substring(`${getProps().idSchema.$id}_${focusedIdx}`.length + 1, nearestSchemaElemId.length);
-		const focusedProp = isNaN(lastId) ? lastId : undefined;
+		const focusedPropMaybe = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_${focusedIdx}_(.+)`))?.[1];
+		const focusedProp = isNaN(focusedPropMaybe) ? focusedPropMaybe : undefined;
 
 		const currentIdx = getCurrentIdx ? getCurrentIdx() : focusedIdx;
 
@@ -451,9 +447,8 @@ export const arrayKeyFunctions = {
 export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id, getProps}) {
 		const {items, idSchema, formContext, readonly, disabled} = getProps();
-		const {getFormRef, contextId} = formContext;
 
-		if (readonly || disabled || !isDescendant(getSchemaElementById(contextId, id), e.target)) {
+		if (readonly || disabled || !isDescendant(getProps().formContext.utils.getSchemaElementById(id), e.target)) {
 			return;
 		}
 
@@ -462,22 +457,22 @@ export const arrayItemKeyFunctions = {
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
 
-		const activeId = findNearestParentSchemaElemId(contextId, document.activeElement);
+		const activeId = formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
-		const elem = getSchemaElementById(contextId, `${idSchema.$id}_${idx}`);
-		const prevElem = elem ? getNextInput(getFormRef(), getTabbableFields(elem)[0], !!"reverse") : null;
+		const elem = getProps().formContext.utils.getSchemaElementById(`${idSchema.$id}_${idx}`);
+		const prevElem = elem ? formContext.utils.getNextInput(getTabbableFields(elem)[0], !!"reverse") : null;
 
 		deleteButton.onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
-					focusById(formContext, `${idSchema.$id}_${idxToFocus}`);
+					getProps().formContext.utils.focusById(`${idSchema.$id}_${idxToFocus}`);
 				} else if (prevElem) {
 					prevElem.focus();
 				}
 			} else {
-				focusById(formContext, `${activeId}`);
+				getProps().formContext.utils.focusById(`${activeId}`);
 			}
 		});
 		return true;

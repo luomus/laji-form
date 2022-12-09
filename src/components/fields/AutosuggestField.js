@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
+import getContext from "../../Context";
 import * as merge from "deepmerge";
 
 const suggestionParsers = {
@@ -81,7 +81,7 @@ export default class AutosuggestField extends React.Component {
 	
 	getStateFromProps = (props, toggled) => {
 		let {schema, uiSchema, formData} = props;
-		const context = new Context(this.props.formContext.contextId);
+		const context = getContext(this.props.formContext.contextId);
 		const uiOptions = getUiOptions(uiSchema);
 		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey, togglePersistenceKey, suggestionInputField, suggestionReceivers} = uiOptions;
 
@@ -232,8 +232,8 @@ export default class AutosuggestField extends React.Component {
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit};
-			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !formDataEquals(this.props.formData, formData, this.props.formContext, this.props.idSchema.$id)) {
-				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
+			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !this.props.formContext.utils.formDataEquals(this.props.formData, formData, this.props.idSchema.$id)) {
+				this.onNextTick = () => this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
 			formData = handleSuggestionReceivers(formData, suggestion);
@@ -253,10 +253,10 @@ export default class AutosuggestField extends React.Component {
 					return changed;
 				}, formData);
 			}
-			const lajiFormInstance = new Context(formContext.contextId).formInstance;
-			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
+			const lajiFormInstance = formContext.services.rootInstance;
+			const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
 			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
-			lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+			lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 		}
 	}
 
@@ -328,7 +328,7 @@ export default class AutosuggestField extends React.Component {
 		const {uiSchema} = this.props;
 		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = this.getActiveOptions(getUiOptions(uiSchema));
 		if (informalTaxonGroupPersistenceKey !== undefined) {
-			new Context(this.props.formContext.contextId)[this.getInformalTaxonGroupsPersistenceContextKey(this.props)] = informalTaxonID;
+			getContext(this.props.formContext.contextId)[this.getInformalTaxonGroupsPersistenceContextKey(this.props)] = informalTaxonID;
 			this.setState(this.getStateFromProps(this.props));
 		} else {
 			this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
@@ -338,7 +338,7 @@ export default class AutosuggestField extends React.Component {
 	onToggleChange = (value) => {
 		const {togglePersistenceKey} = getUiOptions(this.props.uiSchema);
 		if (togglePersistenceKey) {
-			new Context(this.props.formContext.contextId)[this.getTogglePersistenceContextKey(this.props)] = value;
+			getContext(this.props.formContext.contextId)[this.getTogglePersistenceContextKey(this.props)] = value;
 		}
 		this.setState(this.getStateFromProps(this.props, value));
 	}

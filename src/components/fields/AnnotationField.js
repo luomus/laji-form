@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons, getDefaultFormState } from "../../utils";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
@@ -58,7 +58,7 @@ export default class AnnotationField extends React.Component {
 	getAnnotations = () => {
 		const {annotations = {}} = this.props.formContext.uiSchemaContext;
 		const {id} = this.props.formData;
-		return new Context(`${this.props.formContext.contextId}_ANNOTATIONS`)[id] || annotations[id];
+		return getContext(`${this.props.formContext.contextId}_ANNOTATIONS`)[id] || annotations[id];
 	}
 
 	render() {
@@ -113,7 +113,7 @@ export default class AnnotationField extends React.Component {
 	}
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 
 class AnnotationBox extends React.Component {
 	static contextType = ReactContext;
@@ -150,8 +150,8 @@ class AnnotationBox extends React.Component {
 
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
-		const context = new Context(this.props.formContext.contextId);
-		context.pushBlockingLoader();
+		const context = getContext(this.props.formContext.contextId);
+		this.props.formContext.services.blocker.push();
 		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
 			body: JSON.stringify({...formData, targetID: this.props.id, rootID: context.formData.id, type, byRole: "MMAN.formAdmin"})
@@ -161,13 +161,13 @@ class AnnotationBox extends React.Component {
 			}
 			return response.json();
 		}).then(annotation => {
-			context.popBlockingLoader();
-			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
+			this.props.formContext.services.blocker.pop();
+			const annotationContext = getContext(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
 		}).catch(() => {
-			context.popBlockingLoader();
+			this.props.formContext.services.blocker.pop();
 			this.setState({fail: true});
 		});
 	}
@@ -262,13 +262,12 @@ class AnnotationBox extends React.Component {
 
 	getUiSchema = () => {
 		const {uiSchema} = this.props;
-		const mainContext = new Context(this.props.contextId);
 		const {metadataForm = {}} = this.state;
 		return uiSchema || {
 			...metadataForm.uiSchema, 
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
-				...(mainContext.shortcuts || {})
+				...(this.props.formContext.services.keyHandler.shortcuts)
 			},
 			"ui:showShortcutsButton": false
 		};
@@ -278,7 +277,7 @@ class AnnotationBox extends React.Component {
 		this.props.formContext.apiClient.fetchRaw(`/annotations/${id}`, undefined, {
 			method: "DELETE"
 		}).then(() => {
-			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
+			const annotationContext = getContext(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = this.state.annotations.filter(({id: _id}) => _id !== id);
 			annotationContext[this.props.id] = annotations;
 			this.setState({deleteFail: false, annotations});

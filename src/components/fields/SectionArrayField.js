@@ -1,11 +1,11 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
@@ -153,6 +153,7 @@ const SectionContent = ({
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
@@ -161,7 +162,7 @@ class SectionArrayFieldTemplate extends React.Component {
 	}
 	onFocuses = []
 	getOnFocus = (i) => () => {
-		this.props.formContext.this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	getElemsForRowIdx = (rowIdx) => {
@@ -404,7 +405,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				);
 			}, result);
 		}, getDefaultFormState(schema.items));
-		const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, this.props.idSchema.$id);
+		const tmpIdTree = formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
 		item = updateFormDataWithJSONPointer({schema: schema.items, formData: item, registry}, parseInt(newSection), sectionField);
@@ -413,8 +414,8 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const idToFocus =  `${this.props.idSchema.$id}_${idx}`;
 		let {idToScrollAfterAdd = `${this.props.idSchema.$id}-add-section`} = getUiOptions(uiSchema || {});
-		new Context(formContext.contextId).idToFocus = idToFocus;
-		new Context(formContext.contextId).idToScroll = idToScrollAfterAdd;
+		getContext(formContext.contextId).idToFocus = idToFocus;
+		getContext(formContext.contextId).idToScroll = idToScrollAfterAdd;
 
 		formContext.this.props.onChange(items);
 		this.hideAddSection();
@@ -502,7 +503,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			return map;
 		}, {});
 
-		const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
+		const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
 
 		const oldIds = getAllLajiFormIdsDeeply(this.props.formData, tmpIdTree);
 		let ids = {};
@@ -515,7 +516,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					// we don't define it again, or else it will be rendered again and won't be autofocused properly.
 					const [_rowDefinerItem, _ids] = containerIdx === 0 && getUUID(unit)
 						? addLajiFormIds(unit, tmpIdTree)
-						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false);
+						: addLajiFormIds(this.props.formContext.utils.filterItemIdsDeeply(unit, this.props.idSchema.$id), tmpIdTree, false);
 					rowDefinerItem  = _rowDefinerItem;
 					ids = {...ids, ..._ids};
 				}
@@ -549,7 +550,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		Object.keys(oldIds).forEach(id => {
 			if (!ids[id]) {
-				new Context(this.props.formContext.contextId).removeSubmitHook(id);
+				this.props.formContext.services.submitHooks.remove(id);
 			}
 		});
 	}
@@ -637,7 +638,7 @@ const _arrayKeyFunctions = options => {
 		},
 		navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
 			const {rowDefinerField, rowValueField} = options;
-			const currentId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+			const currentId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 			const amount = left || up ? -1 : 1;
 			const id = getProps().idSchema.$id;
 			let nextId;
@@ -670,7 +671,7 @@ const _arrayKeyFunctions = options => {
 						}
 					}
 				});
-				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, elem);
+				nextId = getProps().formContext.utils.findNearestParentSchemaElemId(elem);
 			};
 
 			if (left || right) {
@@ -694,7 +695,7 @@ const _arrayKeyFunctions = options => {
 					} else {
 						let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
 						// Horizontal navigation inside non row section field.
-						if (currentId === findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableInSection[tabbableInSection.length - 1])) {
+						if (currentId === getProps().formContext.utils.findNearestParentSchemaElemId(tabbableInSection[tabbableInSection.length - 1])) {
 							nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
 							// Horizontal navigation from non row section to row field.
 						} else {
@@ -732,12 +733,12 @@ const _arrayKeyFunctions = options => {
 					: `${id}-section-definer`;
 				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
 				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
-				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+				nextId = getProps().formContext.utils.findNearestParentSchemaElemId(tabbableOutsideContainer[tabbableIdx + amount]);
 				if (nextId === "root") {
 					return true;
 				}
 			}
-			focusAndScroll(getProps().formContext, nextId);
+			getProps().formContext.utils.focusAndScroll(nextId);
 		}
 	};
 	keyFunctions.navigate = (e, props) => {
@@ -753,10 +754,10 @@ const _arrayKeyFunctions = options => {
 			const {rowDefinerField} = options;
 			const firstElem = getTabbableFields(document.getElementById(`${id}_0-section`))[0];
 			if (document.activeElement === firstElem) {
-				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.getFormRef()));
+				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.formRef.current));
 				const matcher = new RegExp(JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+")));
 				const allTabbableFieldsWithoutRowDefinerInputs = allTabbableFields.filter(f => !f.id.match(matcher));
-				const input = getNextInputInInputs(getProps().formContext.getFormRef(), undefined, true, allTabbableFieldsWithoutRowDefinerInputs);
+				const input = getProps().formContext.utils.getNextInputInInputs(undefined, true, allTabbableFieldsWithoutRowDefinerInputs);
 				if (input) {
 					input.focus();
 				}

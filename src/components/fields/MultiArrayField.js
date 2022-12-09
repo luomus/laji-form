@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { rulesPropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
 @BaseComponent
@@ -41,11 +41,11 @@ export default class MultiArrayField extends React.Component {
 			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
 			if (persistByParent) {
 				const parentId = this.props.formContext._parentLajiFormId;
-				const context = new Context(`${parentId}_MULTI`);
+				const context = getContext(`${parentId}_MULTI`);
 				this.groupItemIds = context.groupItemIds || getGroupItemIds();
 				context.groupItemIds = this.groupItemIds;
 			} else if (typeof persistenceKey === "string") {
-				const context = new Context(`${persistenceKey}_MULTI`);
+				const context = getContext(`${persistenceKey}_MULTI`);
 				this.groupItemIds = context.groupItemIds || getGroupItemIds();
 				context.groupItemIds = this.groupItemIds;
 			} else {
@@ -100,7 +100,7 @@ export default class MultiArrayField extends React.Component {
 		}, itemGroups);
 
 		nonGrouped.forEach(([item, idx]) => {
-			const context = new Context(`${persistenceKey}_MULTI`);
+			const context = getContext(`${persistenceKey}_MULTI`);
 			const groupIdx = this.groupItemIds.length - 1;
 			if (typeof persistenceKey === "string" && (context.nonGroupedMap || {})[idx] !== undefined && this.groupItemIds[groupIdx]) {
 				addToGroup(context.nonGroupedMap[idx], item);
@@ -174,7 +174,7 @@ export default class MultiArrayField extends React.Component {
 		}
 		let {persistenceKey} = getUiOptions(this.props.uiSchema);
 		const lengthChange = formData.length - this.groupedItems[idx].length;
-		const context = new Context(`${persistenceKey}_MULTI`);
+		const context = getContext(`${persistenceKey}_MULTI`);
 
 		// Fix idxs map for items after this group.
 		if (lengthChange && context.nonGroupedMap) {

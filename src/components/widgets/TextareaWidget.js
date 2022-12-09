@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 
@@ -24,9 +24,8 @@ export default class TextareaWidget extends React.Component {
 		this.state = this.getStateFromProps(props);
 		this.textareaRef = React.createRef();
 
-		this._context = new Context(props.formContext.contextId);
-		const {shortcuts} = this._context;
-		Object.keys(shortcuts || {}).some(keyCombo => {
+		this._context = getContext(props.formContext.contextId);
+		Object.keys(props.formContext.services.keyHandler.shortcuts).some(keyCombo => {
 			if (keyCombo === "Enter") {
 			//	// Direct mutation should be ok in constructor.
 				this.state.enterReserved = true; // eslint-disable-line react/no-direct-mutation-state
@@ -62,7 +61,7 @@ export default class TextareaWidget extends React.Component {
 				this.props.onChange(value);
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
-				this.timeout = this.context.setTimeout(() => {
+				this.timeout = this.props.formContext.setTimeout(() => {
 					this.props.onChange(value === "" ? getUiOptions(this.props).emptyValue : value);
 				}, 1000);
 			}

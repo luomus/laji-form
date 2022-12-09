@@ -3,12 +3,12 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
@@ -53,10 +53,11 @@ export default class SingleActiveArrayField extends React.Component {
 		this.deleteButtonRefSetters = {};
 		this.state = {
 			activeIdx: this.getInitialActiveIdx(props),
+			scrollHeightFixed: 0,
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
-		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
+		this.props.formContext.globals[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
 	getInitialActiveIdx = (props) => {
@@ -70,14 +71,14 @@ export default class SingleActiveArrayField extends React.Component {
 		this.mounted = true;
 		this.updatePopups(this.props);
 		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
 		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
-			new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
@@ -90,7 +91,7 @@ export default class SingleActiveArrayField extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset, affixed} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
 		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
@@ -99,18 +100,18 @@ export default class SingleActiveArrayField extends React.Component {
 				: !affixed && (renderer === "accordion" || renderer === "pager")
 					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
+			this.getLocalFormContext().utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
 		}
 
 		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
-			new Context(prevProps.formContext.contextId).removeCustomEventListener(prevProps.idSchema.$id, "activeIdx", this.onActiveChange);
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.remove(prevProps.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
 	shouldComponentUpdate(prevProps, prevState) {
-		if ((this.state.formContext && !prevState.formContext)
-			|| (this.state.formContext && this.state.formContext.topOffset !== prevState.formContext.topOffset)
+		if ((this.state.scrollHeightFixed && !prevState.scrollHeightFixed)
+			|| this.state.scrollHeightFixed && this.state.scrollHeightFixed !== prevState.scrollHeightFixed
 		) {
 			return false;
 		}
@@ -149,14 +150,22 @@ export default class SingleActiveArrayField extends React.Component {
 
 	onHeaderAffixChange = (elem, value) => {
 		if (value) {
-			this.scrollHeightFixed = elem.scrollHeight;
-			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
-				syncScroll(this.state.formContext, !!"force");
+			this.setState({scrollHeightFixed: elem.scrollHeight}, () =>  {
+				this.getLocalFormContext().utils.syncScroll(!!"force");
 			});
 		} else {
-			this.scrollHeightFixed = 0;
-			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset}});
+			this.setState({scrollHeightFixed: 0});
 		}
+	}
+
+	getLocalFormContext = () => {
+		if (this.localContextKey === this.state.scrollHeightFixed) {
+			return this.localContext;
+		}
+		this.localContextKey = this.state.scrollHeightFixed;
+		this.localContext = {...this.props.formContext, topOffset: this.props.formContext.topOffset + this.state.scrollHeightFixed};
+		this.localContext.utils = ReactUtils(this.localContext);
+		return this.localContext;
 	}
 
 	render() {
@@ -179,7 +188,7 @@ export default class SingleActiveArrayField extends React.Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const formContext = {...(this.state.formContext || this.props.formContext), this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
+		const formContext = {...this.getLocalFormContext(), this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
@@ -363,13 +372,13 @@ function handlesButtonsAndFocus(ComposedComponent) {
 		addFocusHandlers() {
 			this.focusHandlers = this.getFocusHandlers(this.props);
 			this.focusHandlers.forEach(handler => {
-				new Context(this.props.formContext.contextId).addFocusHandler(...handler);
+				this.props.formContext.services.focus.addFocusHandler(...handler);
 			});
 		}
 
 		removeFocusHandlers() {
 			this.focusHandlers.forEach(handler => {
-				new Context(this.props.formContext.contextId).removeFocusHandler(...handler);
+				this.props.formContext.services.focus.removeFocusHandler(...handler);
 			});
 		}
 
@@ -473,7 +482,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 				</AccordionHeader>;
 
 			if (affixed && activeIdx === idx) {
-				const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
+				const offset = this.props.formContext.topOffset - (that.state.scrollHeightFixed);
 				header = (
 					<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 						{header}
@@ -569,7 +578,7 @@ class PagerArrayFieldTemplate extends React.Component {
 		);
 
 		if (affixed) {
-			const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
+			const offset = this.props.formContext.topOffset - (that.state.scrollHeightFixed);
 			header = (
 				<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 					{header}
@@ -648,7 +657,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
-				<Title title={title} label={title} uiSchema={titleUiSchema} formData={that.props.formData} />
+				<Title title={title} label={title} uiSchema={titleUiSchema} formData={that.props.formData} registry={this.props.registry} />
 				<DescriptionFieldTemplate description={this.props.uiSchema["ui:description"]} />
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
@@ -673,7 +682,7 @@ class TableArrayFieldTemplate extends React.Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this.onResize);
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
@@ -682,7 +691,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 	componentWillUnmount() {
 		window.removeEventListener("resize", this._updateRenderingMode);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "resize", this.onResize);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -716,8 +725,6 @@ class TableArrayFieldTemplate extends React.Component {
 		}
 
 		if (this.props.idSchema.$id !== prevProps.idSchema.$id) {
-			new Context(prevProps.formContext.contextId).removeCustomEventListener(prevProps.idSchema.$id, "resize", this.onResize);
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
 			this.updateLayout();
 		}
 	}
@@ -778,7 +785,7 @@ class TableArrayFieldTemplate extends React.Component {
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
 			this._lastWidth = window.innerWidth;
-			const scrollBack = shouldSyncScroll(this.props.formContext);
+			const scrollBack = this.props.formContext.utils.shouldSyncScroll();
 			const state = this.getStyles();
 			if (!state) {
 				return;
@@ -786,7 +793,7 @@ class TableArrayFieldTemplate extends React.Component {
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
 				if (scrollBack) {
-					syncScroll(this.props.formContext, !!"force");
+					this.props.formContext.utils.syncScroll(!!"force");
 				}
 				if (callback) callback();
 			};
@@ -835,7 +842,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const Title = renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);
-		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
+		const {tmpImgs = {}} = getContext("IMAGE_ARRAY_FIELD");
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
 				const found = 
@@ -894,7 +901,7 @@ class TableArrayFieldTemplate extends React.Component {
 				return this.mouseCache[cacheKey][idx];
 			}
 		};
-		const mouseHandler = (eventName) => (idx) => () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, eventName, {idx});
+		const mouseHandler = (eventName) => (idx) => () => that.props.formContext.services.customEvents.send(that.props.idSchema.$id, eventName, {idx});
 		const onMouseEnter = cachedMouseHandler("enter", mouseHandler("startHighlight"));
 		const onMouseLeave = cachedMouseHandler("leave", mouseHandler("endHighlight"));
 		const onKeyDown = cachedMouseHandler("keydown", (idx) => (e) => {
@@ -909,7 +916,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
-				<Title title={title} label={title} uiSchema={uiSchema} formData={formData} />
+				<Title title={title} label={title} uiSchema={uiSchema} formData={formData} registry={this.props.registry} />
 				<DescriptionFieldTemplate description={uiSchema["ui:description"]}/>
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
@@ -1009,7 +1016,7 @@ const headerFormatters = {
 
 			that.hoveredIdx = idx;
 			if (!force && idx === that.state.activeIdx) return;
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const map = getContext(`${that.props.formContext.contextId}_MAP`).map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
 			const unitGeometries = [...(item && item.units ? item.units : [])]
@@ -1028,7 +1035,7 @@ const headerFormatters = {
 			});
 		},
 		onMouseLeave: (that) => {
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const map = getContext(`${that.props.formContext.contextId}_MAP`).map;
 			const lastData = map.data[map.data.length -1];
 			if (lastData && lastData.temp) {
 				map.removeData(map.data.length - 1);
@@ -1090,10 +1097,10 @@ const headerFormatters = {
 	},
 	lolife: {
 		onMouseEnter: (that, idx) => {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData[idx])});
+			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData[idx])});
 		},
 		onMouseLeave: (that, idx) => {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
+			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
 		}
 	}
 };

@@ -4,8 +4,8 @@ import * as merge from "deepmerge";
 const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
-import Context from "../../Context";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, dictionarify, isObject } from "../../utils";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
@@ -125,9 +125,8 @@ export default class ScopeField extends React.Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
-			const context = new Context(this.props.formContext.contextId);
-			syncScroll(this.props.formContext);
-			context.sendCustomEvent(this.props.idSchema.$id, "resize");
+			this.props.formContext.utils.syncScroll();
+			this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 		}
 	}
 
@@ -135,7 +134,7 @@ export default class ScopeField extends React.Component {
 		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
 		let formDataItem = props.formData[additionalsPersistenceField];
 		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
-			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
+			formDataItem = getContext(this.props.formContext.contextId)[additionalPersistenceContextKey];
 		}
 		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
 		if (includeUndefined) items = ["undefined", ...items];
@@ -155,23 +154,23 @@ export default class ScopeField extends React.Component {
 		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(props.uiSchema);
 
 		let additionalFields = additionalsPersistenceField
-			?  {}
+			? {}
 			: (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceKey) {
-			const mainContext = this.getContext();
-			this._context = mainContext[ `scopeField_${additionalsPersistenceKey}`];
-		}
+			if (!props.formContext.globals[`scopeField_${additionalsPersistenceKey}`]) {
+				props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = {};
+			}
+			this._globals = props.formContext.globals[`scopeField_${additionalsPersistenceKey}`];
 
-		if (this._context) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceField) {
 				const additionalPersistenceValue = this.getAdditionalPersistenceValue(props);
 				additionalPersistenceValue.forEach(item => {
-					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
+					if (this._globals && this._globals[item]) additionalsToAdd = {...additionalsToAdd, ...this._globals[item]};
 				});
 			} else {
-				if (this._context) additionalsToAdd = this._context;
+				if (this._globals) additionalsToAdd = this._globals;
 			}
 			additionalFields = {...additionalFields, ...additionalsToAdd};
 		}
@@ -505,20 +504,20 @@ export default class ScopeField extends React.Component {
 			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
 		}, this.state.additionalFields);
 
-		if (this.context) {
+		if (this._globals) {
 			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
-			let contextEntry = this._context || {};
+			let globalsEntry = this._globals || {};
 			if (additionalsPersistenceField) {
 				let additionalsKeys = this.props.schema.properties[additionalsPersistenceField].type === "array"
 					? additionalsPersistenceVal
 					: [additionalsPersistenceVal];
 				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
 				additionalsKeys.forEach(persistenceKey => {
-					contextEntry[persistenceKey] = additionalFields;
+					globalsEntry[persistenceKey] = additionalFields;
 				});
-				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = contextEntry;
+				this.props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = globalsEntry;
 			} else if (additionalsPersistenceKey) {
-				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
+				this.props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
@@ -626,7 +625,7 @@ const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations
 	);
 });
 
-function GlyphField({settings, idSchema, formData, schema, registry, isIncluded, toggleAdditionalProperty}) {
+function GlyphField({settings, idSchema, formData, schema, isIncluded, toggleAdditionalProperty}) {
 	const {glyph, label, show} = settings;
 	const property = show;
 	const onButtonClick = React.useCallback(() => toggleAdditionalProperty(property), [property, toggleAdditionalProperty]);
@@ -649,4 +648,4 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 	);
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").ScopeField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").ScopeField = true;

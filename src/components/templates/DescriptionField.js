@@ -1,5 +1,5 @@
 import * as React from "react";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { parseJSONPointer } from "../../utils";
 import * as L from "leaflet";
 
@@ -14,13 +14,13 @@ export default function DescriptonField(props) {
 		replacePattern = replacePattern.replace(/%|{|}/g, "");
 		let replacement;
 		if (replacePattern[0] === "#") {
-			replacement = parseJSONPointer(new Context(contextId).formData, replacePattern.substr(1));
+			replacement = parseJSONPointer(getContext(contextId).formData, replacePattern.substr(1));
 		// TODO DescriptionField doesn't receive formData
 		//} else if (replacePattern[0] === "/") {
 		//	replacement = parseJSONPointer(props.formData, replacePattern);
 		} else if (replacePattern.startsWith("bbox")) {
 			const field = replacePattern.match(/\((.*)\)/)[1];
-			const value = parseJSONPointer(new Context(contextId).formData, field.substr(1));
+			const value = parseJSONPointer(getContext(contextId).formData, field.substr(1));
 			const bounds = L.geoJSON(value).getBounds();
 			const sw = bounds.getSouthWest();
 			const ne = bounds.getNorthEast(); 

@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import * as Combobox from "react-widgets/lib/Combobox";
 import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 
 import { isEmptyString, getUiOptions, filter } from "../../utils";
@@ -15,17 +15,17 @@ class SelectWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
-		this._context = new Context(this.props.formContext.contextId);
+		this._context = getContext(this.props.formContext.contextId);
 	}
 
 	componentDidMount() {
 		this.mounted = true;
-		this._context.addFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focus.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this._context.removeFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focus.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
@@ -93,7 +93,7 @@ class SelectWidget extends React.Component {
 			return;
 		}
 		this.props.onChange(values.map(({value}) => this.getEnum(value)));
-		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
+		this.props.formContext.services.customEvents.send(this.props.id, "resize");
 	}
 
 	selectOnChange = (item) => {
@@ -109,7 +109,7 @@ class SelectWidget extends React.Component {
 	onBlur = () => this.setState({open: false});
 
 	onSelect = (item) => {
-		this.state.open && this.context.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
+		this.state.open && this.props.formContext.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
 		const value = this.getEnum(item.value);
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}

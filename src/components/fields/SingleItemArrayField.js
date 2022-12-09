@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
+import { getUiOptions, getTitle, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
 
 @VirtualSchemaField
@@ -15,13 +15,14 @@ export default class SingleItemArrayField extends React.Component {
 
 	static getName() {return "SingleItemArrayField";}
 
+
 	constructor(props) {
 		super(props);
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(props);
+		props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(props);
 	}
 
 	componentDidUpdate() {
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(this.props);
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(this.props);
 	}
 
 	getStateFromProps(props) {
@@ -58,7 +59,7 @@ export default class SingleItemArrayField extends React.Component {
 				? props.formData[activeIdx]
 				: addLajiFormIds(
 					getDefaultFormState(props.schema.items),
-					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
+					this.props.formContext.services.ids.getRelativeTmpIdTree(props.idSchema.$id),
 					false
 				)[0],
 			schema: props.schema.items,

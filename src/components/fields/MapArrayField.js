@@ -8,8 +8,8 @@ import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
-import Context from "../../Context";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
@@ -77,6 +77,7 @@ export default class MapArrayField extends React.Component {
 
 @_MapArrayField
 class DefaultMapArrayField extends React.Component {
+
 	constructor(props) {
 		super(props);
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
@@ -270,13 +271,13 @@ class UnitsMapArrayField extends React.Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	isGeometryCollection = (idx) => {
@@ -434,7 +435,7 @@ class UnitsMapArrayField extends React.Component {
 		this.startHighlight(idx);
 
 		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
-		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		this.highlightedElem = this.props.formContext.utils.getSchemaElementById(id);
 
 		if (this.highlightedElem) {
 			this.highlightedElem.className += " map-highlight";
@@ -766,7 +767,7 @@ class LineTransectMapArrayField extends React.Component {
 			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
-		this.context.setTimeout(() => {
+		this.props.formContext.setTimeout(() => {
 			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100}); // eslint-disable-line no-undef
 		});
 	}
@@ -791,13 +792,13 @@ class LolifeMapArrayField extends React.Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1041,7 +1042,7 @@ class LolifeMapArrayField extends React.Component {
 
 	getHighlightElem(idx, unit) {
 		if (unit) {
-			return getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0_units_${idx}`);
+			return this.props.formContext.utils.getSchemaElementById(`${this.props.idSchema.$id}_0_units_${idx}`);
 		} else {
 			return document.getElementById(`${this.props.idSchema.$id}_${idx}-panel`);
 		}
@@ -1130,7 +1131,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 	constructor(props) {
 		super(props);
-		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
+		this._context = getContext(`${props.formContext.contextId}_MAP_CONTAINER`);
 		this._context.featureIdxsToItemIdxs = {};
 		this._context.setState = (state, callback) => this.setState(state, callback);
 
@@ -1145,7 +1146,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	componentDidMount() {
 		if (super.componentDidMount) super.componentDidMount();
 		this.setState({mounted: true});
-		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+		this.props.formContext.services.keyHandler.addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
 		this._setActiveEventHandler = idx => {
 			this.setState({activeIdx: idx});
@@ -1160,11 +1161,10 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		this._resizeEventHandler = () => {
 			this.refs.stretch.invalidate();
 		};
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 
 		if (this.state.activeIdx !== undefined) {
 			this.afterActiveChange(this.state.activeIdx, !!"initial call");
@@ -1178,11 +1178,11 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 	componentWillUnmount() {
 		this.setState({mounted: false});
-		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
+		this.props.formContext.services.keyHandler.removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 	}
 
 	componentDidUpdate(...params) {
@@ -1193,7 +1193,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			if (!this.nestedHandledActiveChange && this.state.activeIdx !== undefined) {
 				const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
-				focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
+				this.props.formContext.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
 			}
 			this.nestedHandledActiveChange = false;
 			this.afterActiveChange(this.state.activeIdx);
@@ -1202,7 +1202,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
 			if (resizeTimeout) {
-				this.context.setTimeout(this.refs.stretch.update, resizeTimeout);
+				this.props.formContext.setTimeout(this.refs.stretch.update, resizeTimeout);
 			} else {
 				this.refs.stretch.update();
 			}
@@ -1780,8 +1780,8 @@ export class MapComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};
-		this.mainContext = new Context(props.formContext.contextId);
-		this._context = new Context(`${props.formContext.contextId}_MAP`);
+		this.mainContext = getContext(props.formContext.contextId);
+		this._context = getContext(`${props.formContext.contextId}_MAP`);
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;
@@ -1833,14 +1833,14 @@ export class MapComponent extends React.Component {
 	}
 
 	grabFocus = () => {
-		this.mainContext.pushBlockingLoader();
+		this.props.formContext.services.blocker.push();
 		this.setState({focusGrabbed: true}, () => {
 			if (this.props.onFocusGrab) this.props.onFocusGrab();
 		});
 	}
 
 	releaseFocus = () => {
-		this.mainContext.popBlockingLoader();
+		this.props.formContext.services.blocker.push();
 		this.setState({focusGrabbed: false}, () => {
 			if (this.props.onFocusRelease) this.props.onFocusRelease();
 		});
@@ -1910,7 +1910,7 @@ export class MapComponent extends React.Component {
 				     ref="map"
 				     showHelp={this.showHelp}
 				     hideHelp={this.hideHelp}
-				     contextId={this.props.formContext.contextId}
+				     formContext={this.props.formContext}
 				     {...{...mapOptions, ...this.state.mapOptions}}
 				/>
 			</div>
@@ -1949,9 +1949,10 @@ export class Map extends React.Component {
 	}
 
 	componentWillUnmount() {
-		!this.props.singleton && this.map && this.map.destroy();
-		if (this.hasSingletonHandle) {
-			new Context(this.props.formContext.contextId).onSingletonHandleGrabbed = undefined;
+		if (this.props.singleton) {
+			this.props.formContext.services.singletonMap.release(this);
+		} else {
+			this.map && this.map.destroy();
 		}
 		this.mounted = false;
 	}
@@ -1959,19 +1960,19 @@ export class Map extends React.Component {
 	componentDidUpdate(prevProps) {
 		const {hidden, onComponentDidMount, singleton} = this.props;
 		const {...props} = this.props;
-		if (!singleton || this.hasSingletonHandle) {
 
+		if (!hidden && !this.map) {
+			this.initializeMap(props);
+			if (onComponentDidMount) onComponentDidMount(this.map);
+		}
+
+		if (!singleton || this.props.formContext.services.singletonMap.amOwner(this)) {
 			if (this.map && prevProps.lineTransect && props.lineTransect && "activeIdx" in props.lineTransect) {
 				this.map.setLTActiveIdx(props.lineTransect.activeIdx);
 			}
 			if (prevProps.lineTransect) delete props.lineTransect;
 
 			this.setMapOptions(this.getEnhancedMapOptions(prevProps), this.getEnhancedMapOptions(this.props));
-		}
-
-		if (!hidden && !this.map) {
-			this.initializeMap(props);
-			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
 	}
 
@@ -2017,7 +2018,7 @@ export class Map extends React.Component {
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
 		mapOptions.rootElem = this.refs.map;
-		const lajiGeoServerAddress = this.props.contextId !== undefined && new Context(this.props.contextId).lajiGeoServerAddress;
+		const {lajiGeoServerAddress} = props.formContext;
 		if (lajiGeoServerAddress) {
 			mapOptions.lajiGeoServerAddress = lajiGeoServerAddress;
 		}
@@ -2057,20 +2058,9 @@ export class Map extends React.Component {
 	initializeMap = (props) => {
 		const mapOptions = this.getEnhancedMapOptions(props);
 		if (props.singleton) {
-			const context = new Context(props.formContext.contextId);
-			context.onSingletonHandleGrabbed && context.onSingletonHandleGrabbed();
-			this.hasSingletonHandle = true;
-			if (!context.singletonMap) {
-				context.singletonMap = new LajiMap(mapOptions);
-				this.map = context.singletonMap;
-				this.mounted && props.singleton && this.hasSingletonHandle && props.zoomToData && this.map.zoomToData(props.zoomToData);
-			} else {
-				this.map = context.singletonMap;
-				this.setMapOptions(context.singletonMap.getOptions(), mapOptions);
-			}
-			context.onSingletonHandleGrabbed = () => {
-				this.hasSingletonHandle = false;
-			};
+			const singletonMapService = props.formContext.services.singletonMap;
+			this.map = singletonMapService.grab(this, mapOptions);
+			this.setMapOptions(this.map.getOptions(), mapOptions);
 		} else {
 			this.map = new LajiMap(mapOptions);
 		}

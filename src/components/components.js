@@ -2,8 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import * as Spinner from "react-spinner";
-import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
-import Context from "../Context";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, JSONPointerToId, classNames } from "../utils";
 import ReactContext from "../ReactContext";
 
 export class Button extends React.Component {
@@ -439,7 +438,8 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required, contextId, helpHoverable, helpPlacement}) {
+export function Label({label, children, id, required, registry = {}, uiSchema = {}}) {
+	const {"ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement} = uiSchema;
 	const showHelp = label && help;
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
@@ -465,7 +465,7 @@ export function Label({label, help, children, id, required, contextId, helpHover
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} contextId={contextId}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
@@ -649,7 +649,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.context.setTimeout(() => {
+		this.overlayTimeout = this.props.formContext.setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
 				this.setState({show: false});
 			}
@@ -665,7 +665,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.context.setTimeout(() => {
+		this.overlayTimeout = this.props.formContext.setTimeout(() => {
 			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn) {
 				this.setState({show: false});
 			}
@@ -712,14 +712,14 @@ export class Fullscreen extends React.Component {
 
 		if (this.props.onKeyDown) {
 			this._onKeyDown = true;
-			new Context(this.props.contextId).addGlobalEventHandler("keydown", this.props.onKeyDown);
+			this.props.formContext.services.keyHandler.addGlobalEventHandler("keydown", this.props.onKeyDown);
 		}
 	}
 
 	componentWillUnmount() {
 		document.body.style.overflow = this.bodyOverFlow;
 		if (this._onKeyDown) {
-			new Context(this.props.contextId).removeGlobalEventHandler("keydown", this.props.onKeyDown);
+			this.props.formContext.services.keyHandler.removeGlobalEventHandler("keydown", this.props.onKeyDown);
 		}
 	}
 
@@ -742,7 +742,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 	dismissFailedJob = ({id, hook, running}) => (e) => {
 		e.stopPropagation();
 		if (running) return;
-		this.props.context.removeSubmitHook(id, hook);
+		this.props.formContext.services.submitHooks.remove(id, hook);
 	}
 
 	retryFailedJob = ({hook, running}) => (e) => {
@@ -761,14 +761,14 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!jobs.length) return null;
 
-		const {Glyphicon, Panel} = this.context.theme;
+		const {Glyphicon} = this.context.theme;
 
 		const errors = jobs.reduce((_errors, error) => {
 			const {lajiFormId, relativePointer, e, running} = error;
 			if (!e) {
 				return _errors;
 			}
-			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer);
+			const getJsonPointer = () => this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndRelativePointer(lajiFormId, relativePointer);
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
 				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");
@@ -787,7 +787,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 		if (!errors.length) return null;
 
 		const footer = (
-			<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+			<Button onClick={this.props.formContext.services.submitHooks.removeAll}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
 		);
 
 		return (

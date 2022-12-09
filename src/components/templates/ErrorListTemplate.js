@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button, ErrorPanel } from "../components";
 import { parseJSONPointer, formatErrorMessage } from "../../utils";
-import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
 export default class ErrorListTemplate extends React.Component {
@@ -10,7 +9,7 @@ export default class ErrorListTemplate extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {popped: false, poppedTouched: false};
-		new Context(this.props.formContext.contextId).errorList = this;
+		this.props.formContext.services.rootInstance.setErrorListInstance(this);
 	}
 
 	expand = () => {
@@ -25,23 +24,20 @@ export default class ErrorListTemplate extends React.Component {
 	}
 
 	revalidate = () => {
-		const that = new Context(this.props.formContext.contextId).formInstance;
-		that.validate();
+		this.props.formContext.services.rootInstance.validate();
 		this.refs.errorPanel.expand();
 		this.refs.warningPanel.expand();
 	}
 
 	submitWithWarnings = () => {
-		const that = new Context(this.props.formContext.contextId).formInstance;
-		that.validateAndSubmit(!"warnings");
+		this.props.formContext.services.rootInstance.submitWithWarnings();
 	}
 
 	render() {
 		const {errorSchema, schema, formContext, uiSchema} = this.props;
 		const {"ui:disabled": disabled, "ui:readonly": readonly} = uiSchema;
-		const {contextId, translations} = formContext;
-		const that = new Context(contextId).formInstance;
-		const clickHandler = that.errorClickHandler;
+		const {translations} = formContext;
+		const clickHandler = formContext.services.focus.focus;
 
 		function walkErrors(path, id, errorSchema, uiSchema, defaultTitle) {
 			const {__errors, ...properties} = errorSchema;

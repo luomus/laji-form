@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, formDataEquals, getInnerUiSchema } from "../../utils";
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 export const AnyToBoolean = (props) => <_AnyToBoolean {...props} />;
 
@@ -10,9 +10,9 @@ const _AnyToBoolean = (props) => {
 	const {trueValue, falseValue, allowUndefined = true} = options;
 	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
 	const id = widget ? props.id : props.idSchema.$id;
-	const value = formDataEquals(props[widget ? "value": "formData"], trueValue, props.formContext, id)
+	const value = props.formContext.utils.formDataEquals(props[widget ? "value": "formData"], trueValue, id)
 		? true
-		: formDataEquals(props[widget ? "value": "formData"], falseValue, props.formContext, id)
+		: props.formContext.utils.formDataEquals(props[widget ? "value": "formData"], falseValue, id)
 			? false
 			: undefined;
 

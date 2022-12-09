@@ -50,7 +50,7 @@ function GridTemplate(props) {
 				<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
 					<Label id={idSchema.$id + "_row_" + i}
 								 label={rowTitles[i].title}
-								 help={rowTitles[i].help}/>
+								 uiSchema={{"ui:help": rowTitles[i].help}}/>
 				</Col>
 			);
 		}
@@ -117,6 +117,7 @@ function GridTemplate(props) {
 					<TitleFieldTemplate title={fieldTitle}
 					                    schema={schema}
 					                    uiSchema={titleUiSchema}
+					                    registry={props.registry}
 					                    id={idSchema.$id} /> : null}
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}

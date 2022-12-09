@@ -1,10 +1,10 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, addLajiFormIds, getDefaultFormState } from "../../utils";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -74,7 +74,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.$id);
 
 			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
 			return withLajiFormIds;
@@ -91,7 +91,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				];
 				this.setState({show: false});
 				targetId = this.props.idSchema.$id;
-				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", (this.props.formData || []).length);
+				this.props.formContext.services.customEvents.send(targetId, "activeIdx", (this.props.formData || []).length);
 			} else { // gathering object
 				gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
@@ -104,7 +104,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				zoomToData = true;
 			}
 			this.props.onChange(newFormData);
-			if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
+			if (zoomToData) this.props.formContext.services.customEvents.send(targetId, "zoomToData", undefined);
 		} catch (e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}
@@ -238,7 +238,7 @@ class NamedPlaceChooser extends React.Component {
 		const bounds = map.getBoundsForLayers(layers);
 		const center = bounds.getCenter();
 		map.fitBounds(bounds, {animate: false});
-		this.context.setTimeout(() => layer.fire("click", {latlng: center}), 10);
+		this.props.formContext.setTimeout(() => layer.fire("click", {latlng: center}), 10);
 	}
 
 	onMapChange = (events) => {
@@ -378,6 +378,7 @@ class NamedPlaceChooser extends React.Component {
 						controls={{draw: false}}
 						lang={this.props.formContext.lang}
 						bodyAsDialogRoot={false}
+						formContext={this.props.formContext}
 					/>
 					{(!places) ? <Spinner /> : null}
 					<div style={{display: "none"}} ref={this.setPopupContainerRef}>
@@ -386,7 +387,7 @@ class NamedPlaceChooser extends React.Component {
 							onPlaceSelected={this.onPlaceSelected}
 							onPlaceDeleted={this.onPlaceDeleted}
 							deleting={this.state.deleting}
-							contextId={this.props.formContext.contextId}
+							formContext={this.props.formContext}
 							translations={translations} />
 					</div>
 				</div>
@@ -396,8 +397,6 @@ class NamedPlaceChooser extends React.Component {
 }
 
 class Popup extends React.Component {
-	static contextType = ReactContext;
-
 	_onPlaceSelected = () => {
 		this.props.onPlaceSelected(this.props.place);
 	}
@@ -406,7 +405,7 @@ class Popup extends React.Component {
 	}
 
 	componentDidUpdate() {
-		this.context.setTimeout(() => {
+		this.props.formContext.setTimeout(() => {
 			if (this.buttonElem) findDOMNode(this.buttonElem).focus();
 		});
 	}
@@ -451,4 +450,4 @@ class Popup extends React.Component {
 	}
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").NamedPlaceChooserField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").NamedPlaceChooserField = true;

@@ -2,10 +2,10 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 const equals = require("deep-equal");
-import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
@@ -59,13 +59,13 @@ export default class GeocoderField extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.componentDidUpdate();
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocate);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocate);
 		this.getComponentContext().resetRemountedState = (loading) => this.setState(this.getStateFromProps(this.props, loading));
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocate);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "locate", this.onLocate);
 		delete this.getComponentContext().resetRemountedState;
 	}
 
@@ -194,11 +194,10 @@ export default class GeocoderField extends React.Component {
 	}
 
 	getComponentContext = () => {
-		return new Context(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
+		return getContext(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
 	}
 
 	updateForGeometry = (props, callback, geometry) => {
-		const mainContext = new Context(props.formContext.contextId);
 		const {fields} = this.getOptions();
 		const fieldByKeys = fields.reduce((_fields, option) => {
 			_fields[option] = true;
@@ -221,7 +220,7 @@ export default class GeocoderField extends React.Component {
 
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
-		const lajiFormInstance = mainContext.formInstance;
+		const lajiFormInstance = props.formContext.services.rootInstance;
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 		const doAsync = () => {
@@ -339,9 +338,9 @@ export default class GeocoderField extends React.Component {
 							if (this.mounted) {
 								this.props.onChange({...(this.props.formData || {}), ...changes});
 							} else {
-								const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
-								const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
-								lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+								const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
+								const newFormData = {...parseJSONPointer(lajiFormInstance.getFormData(), pointer), ...changes};
+								lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 							}
 							if (callback) callback();
 						});
@@ -365,7 +364,7 @@ export default class GeocoderField extends React.Component {
 
 				this.getComponentContext().fetching = true;
 
-				this.context.setTimeout(() => {
+				this.props.formContext.setTimeout(() => {
 					if (timestamp !== this.promiseTimestamp) return;
 					if (this.getComponentContext().fetching) {
 						fail(this.props.formContext.translations.GeocodingTimeout);
@@ -395,7 +394,7 @@ export default class GeocoderField extends React.Component {
 		};
 
 		if (this.getComponentContext().hook) {
-			mainContext.removeSubmitHook(this.getUUID(), this.getComponentContext().hook).then(doAsync);
+			this.props.formContext.services.submitHooks.remove(this.getUUID(), this.getComponentContext().hook).then(doAsync);
 		} else {
 			doAsync();
 		}
