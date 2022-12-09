@@ -634,7 +634,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 			});
 
-			(this as any).addSubmitHook(saveAndOnChange);
+			this.props.formContext.services.submitHooks.add(this.props, saveAndOnChange);
 		}
 
 		getContainerId = () => {

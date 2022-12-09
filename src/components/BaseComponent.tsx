@@ -137,12 +137,6 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			return (props as any).idSchema ? (props as any).idSchema.$id : props.id;
 		}
 
-		addSubmitHook(hook: SubmitHook["hook"]) {
-			const id = getFieldUUID(this.props);
-			const idSchemaId = this.getIdSchemaId(this.props);
-			const relativePointer = this.props.formContext.services.ids.getRelativePointer(idSchemaId, id);
-			return this.props.formContext.services.submitHooks.add(id, relativePointer, hook);
-		}
 	} as any;
 }
 

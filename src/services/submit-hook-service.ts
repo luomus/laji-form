@@ -1,3 +1,6 @@
+import {FieldProps} from "../components/LajiForm";
+import {getFieldUUID} from "../utils";
+
 export interface SubmitHook {
 	hook: () => void;
 	promise: Promise<any>;
@@ -20,7 +23,7 @@ export default class SubmitHookService {
 		this.onSubmitHooksChange(submitHooks, callback);
 	}
 
-	add(lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) {
+	private internalAdd(lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) {
 		lajiFormId = `${lajiFormId}`;
 		let promise: Promise<any>;
 		const _hook = (): Promise<any> => {
@@ -51,6 +54,16 @@ export default class SubmitHookService {
 			{hook: _hook, promise, lajiFormId, description, relativePointer, running: true}
 		]);
 		return _hook;
+	}
+
+
+	/**
+	 * Add a submit hook for a Field component.
+	 */
+	add(props: Pick<FieldProps, "formData" | "idSchema" | "formContext">, hook: SubmitHook["hook"]) {
+			const id = getFieldUUID(props);
+			const relativePointer = props.formContext.services.ids.getRelativePointer(props.idSchema.$id, id);
+			return this.internalAdd(id, relativePointer, hook);
 	}
 
 	remove(lajiFormId: string, hook: SubmitHook["hook"]) {

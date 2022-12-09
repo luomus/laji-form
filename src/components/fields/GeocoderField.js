@@ -224,7 +224,7 @@ export default class GeocoderField extends React.Component {
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 		const doAsync = () => {
-			this.getComponentContext().hook = this.addSubmitHook(() => new Promise((resolve, reject) => {
+			this.getComponentContext().hook = props.formContext.services.submitHooks.add(props, () => new Promise((resolve, reject) => {
 				const afterFetch = (callback, timeout = false) => {
 					if (this.getComponentContext().fetching) {
 						if (callback) callback(timeout);
