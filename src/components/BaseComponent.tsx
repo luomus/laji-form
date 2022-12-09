@@ -20,7 +20,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			const props: P = args[0];
 			super(props);
 			this.onChange = this.onChange.bind(this);
-			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadGlobalSettings(props, this.getGlobals());
+			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadGlobalSettings(props, this.props.formContext.globals);
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
 		}
@@ -96,7 +96,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach((key: string) => {
 				this.props.formContext.services.settings.addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseSettingSaver(this.getGlobals(), key.replace(/^%[^/]*/, ""));
+						return parseSettingSaver(this.props.formContext.globals, key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseSettingSaver(this.state, key);
 					}
@@ -131,10 +131,6 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 
 		onChange(formData: any) {
 			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
-		}
-
-		getGlobals() {
-			return this.props.formContext.globals;
 		}
 
 		getIdSchemaId(props: P) {
