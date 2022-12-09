@@ -1017,6 +1017,11 @@ export const assignUUID = (item: any, immutably = false) => {
 
 export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
 
+/**
+ * Return item UUID or the parent UUID
+ **/
+export const getFieldUUID = (props: {formData: any, formContext: FormContext}) => getUUID(props.formData) || props.formContext._parentLajiFormId || "root";
+
 function walkFormDataWithIdTree(_formData: any, tree: any, itemOperator?: (item: any) => void): [any, {[id: string]: true}] {
 	const ids: any = {};
 	const walk = (_formData: any, tree: any) => {

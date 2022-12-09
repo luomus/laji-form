@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 const equals = require("deep-equal");
-import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState, getFieldUUID } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";
 import getContext from "../../Context";
@@ -194,7 +194,7 @@ export default class GeocoderField extends React.Component {
 	}
 
 	getComponentContext = () => {
-		return getContext(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
+		return getContext(`${this.props.formContext.contextId}_${getFieldUUID(this.props)}_GEOCODERFIELD`);
 	}
 
 	updateForGeometry = (props, callback, geometry) => {
@@ -338,7 +338,7 @@ export default class GeocoderField extends React.Component {
 							if (this.mounted) {
 								this.props.onChange({...(this.props.formData || {}), ...changes});
 							} else {
-								const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
+								const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, getFieldUUID(this.props));
 								const newFormData = {...parseJSONPointer(lajiFormInstance.getFormData(), pointer), ...changes};
 								lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 							}
@@ -394,7 +394,7 @@ export default class GeocoderField extends React.Component {
 		};
 
 		if (this.getComponentContext().hook) {
-			this.props.formContext.services.submitHooks.remove(this.getUUID(), this.getComponentContext().hook).then(doAsync);
+			this.props.formContext.services.submitHooks.remove(getFieldUUID(this.props), this.getComponentContext().hook).then(doAsync);
 		} else {
 			doAsync();
 		}
