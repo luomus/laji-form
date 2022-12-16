@@ -40,8 +40,9 @@ export function hasData(formData: any): boolean {
 	function hasValue(value: any)  {
 		return value !== undefined && value !== null && value !== "";
 	}
-	if (!formData && !hasValue(formData)) return false;
-	else {
+	if (!hasValue(formData)) {
+		return false;
+	} else {
 		if (!Array.isArray(formData)) formData = [formData];
 		return formData.some((data: any) => {
 			if (isObject(data)) {
