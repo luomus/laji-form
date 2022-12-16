@@ -77,7 +77,7 @@ export default class SingleItemArrayField extends React.Component {
 			: 0;
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const activeIdx = this.getActiveIdx(this.props);
 		const copy = (this.props.formData || []).slice();
 		copy[activeIdx] = formData;

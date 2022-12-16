@@ -33,11 +33,12 @@ export default class StringToArrayField extends React.Component {
 				"ui:disabled": disabled,
 				"ui:readonly": readonly,
 				...innerUiSchema
-			}
+			},
+			onChange: this.onChange
 		};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const {delimiter = " "} = this.getUiOptions();
 		this.props.onChange(formData.filter(v => v).join(delimiter));
 	}

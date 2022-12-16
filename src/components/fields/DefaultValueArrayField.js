@@ -31,7 +31,11 @@ export default class DefaultValueArrayField extends React.Component {
 
 	static getName() {return "DefaultValueArrayField";}
 
-	onChange(formData) {
+	getStateFromProps() {
+		return {onChange: this.onChange};
+	}
+
+	onChange = (formData) => {
 		const options = this.getUiOptions();
 		const _default = options.default;
 

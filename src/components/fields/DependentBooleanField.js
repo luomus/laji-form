@@ -43,10 +43,10 @@ export default class DependentBooleanField extends React.Component {
 		});
 		formData = {...props.formData, [booleanField]: booleanFieldData};
 
-		return {schema, uiSchema, formData};
+		return {schema, uiSchema, formData, onChange: this.onChange};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const {booleanField, booleanDefiner} = this.getUiOptions();
 		const propsFormData = this.props.formData;
 

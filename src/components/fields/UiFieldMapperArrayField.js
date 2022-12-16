@@ -133,13 +133,14 @@ export default class UiFieldMapperArrayField extends React.Component {
 				return errorSchema;
 			}, {})),
 			formContext: templateOutput.formContext,
-			registry: templateOutput.registry
+			registry: templateOutput.registry,
+			onChange: this.onChange
 		};
 
 		return state;
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		this.props.onChange(formData.map((item, idx) => {
 			if (!deepEquals(item, (this.props.formData || [])[idx])) {
 				const output = this.functionOutputProps[idx] || this.getFunctionOutputForIdx(this.props, idx);

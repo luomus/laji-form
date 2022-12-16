@@ -80,10 +80,10 @@ export default class InjectField extends React.Component {
 			});
 		});
 
-		return {schema, uiSchema, idSchema, formData, errorSchema};
+		return {schema, uiSchema, idSchema, formData, errorSchema, onChange: this.onChange};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const options = this.getUiOptions();
 
 		(Array.isArray(options.injections) ? options.injections.slice(0).reverse() : [options.injections]).forEach((injection) => {

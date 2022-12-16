@@ -1,4 +1,4 @@
-import {FieldProps} from "../components/LajiForm";
+import {FieldProps, WidgetProps} from "../components/LajiForm";
 import {getFieldUUID} from "../utils";
 
 export interface SubmitHook {
@@ -60,10 +60,14 @@ export default class SubmitHookService {
 	/**
 	 * Add a submit hook for a Field component.
 	 */
-	add(props: Pick<FieldProps, "formData" | "idSchema" | "formContext">, hook: SubmitHook["hook"]) {
-			const id = getFieldUUID(props);
-			const relativePointer = props.formContext.services.ids.getRelativePointer(props.idSchema.$id, id);
-			return this.internalAdd(id, relativePointer, hook);
+	add(
+		props: Pick<FieldProps, "formData" | "idSchema" | "formContext"> | Pick<WidgetProps, "formData" | "id" | "formContext">,
+		hook: SubmitHook["hook"])
+	{
+		const id = getFieldUUID(props);
+		const idSchemaId = "id" in props ? props.id : props.idSchema.$id;
+		const relativePointer = props.formContext.services.ids.getRelativePointer(idSchemaId, id);
+		return this.internalAdd(id, relativePointer, hook);
 	}
 
 	remove(lajiFormId: string, hook: SubmitHook["hook"]) {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { assignUUID, getUUID, getDefaultFormState, getInnerUiSchema } from "../../utils";
+import { assignUUID, getUUID, getDefaultFormState } from "../../utils";
 
 @VirtualSchemaField
 export default class AutoArrayField extends React.Component {
@@ -22,7 +22,7 @@ export default class AutoArrayField extends React.Component {
 	getStateFromProps(props) {
 		const {formData = [], schema, uiSchema, formContext: {utils}} = props;
 
-		const state = {formData};
+		const state = {formData, onChange: this.onChange};
 
 		const newEmptyItem = getDefaultFormState(schema.items);
 		const emptyItem = this.emptyItem
@@ -47,7 +47,7 @@ export default class AutoArrayField extends React.Component {
 		return state;
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const emptyItem = getDefaultFormState(this.props.schema.items);
 		if (formData && formData.length !== 0 && this.props.formContext.utils.formDataEquals(formData[formData.length - 1], emptyItem, this.props.idSchema.$id)) {
 			formData = formData.slice(0, formData.length - 1);

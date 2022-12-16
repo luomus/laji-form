@@ -29,10 +29,10 @@ export default class SumField extends React.Component {
 	static getName() {return "SumField";}
 
 	getStateFromProps({formData}) {
-		return {prevResult: this.getSums(formData)};
+		return {prevResult: this.getSums(formData), onChange: this.onChange};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		let {sums} = this.getUiOptions();
 		sums = Array.isArray(sums) ? sums : [sums];
 

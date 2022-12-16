@@ -105,7 +105,7 @@ export default class SelectTreeField extends React.Component {
 		return {schema, formData, uiSchema, idSchema};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		let selectNames = Object.keys(formData).sort((a, b) => {return b - a;});
 
 		for (let i in selectNames) {

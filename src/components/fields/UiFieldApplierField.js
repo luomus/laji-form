@@ -44,7 +44,7 @@ export default class UiFieldApplierField extends React.Component {
 			this.functions = this.functions.slice(0, this.getFunctions().length);
 		}
 		let {field} = this.getUiOptions();
-		return this.getFunctions().reduce((props, options, idx) => {
+		const state = this.getFunctions().reduce((props, options, idx) => {
 			let {"ui:field": uiField, "ui:options": uiOptions} = options;
 
 			const uiSchemaForField = parseJSONPointer(props.uiSchema, uiSchemaJSONPointer(props.schema, field));
@@ -88,9 +88,11 @@ export default class UiFieldApplierField extends React.Component {
 			});
 			return {...props, ...computedProps};
 		}, props);
+		state.onChange = this.onChange;
+		return state;
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const {field} = this.getUiOptions();
 		this.onChangeFormData = formData;
 		this.functions[this.functions.length - 1].fn.onChange(parseJSONPointer(formData, field));

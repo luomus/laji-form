@@ -16,7 +16,6 @@ type Constructor<LFC> = new(...args: any[]) => LFC;
 
 interface LajiFormComponentForVirtualSchemaField extends Omit<React.Component<FieldProps>, "render"> {
 	getStateFromProps?(propsWithInnerUiSchema: FieldProps, origProps: FieldProps): any;
-	onChange?(formData: any): void;
 	render?(): React.ReactNode;
 }
 
@@ -50,7 +49,6 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 			return {
 				...propsWithInnerUiSchema,
 				...state,
-				onChange: this.onChange
 			};
 		}
 

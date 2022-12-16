@@ -170,6 +170,7 @@ class CodeReader extends React.Component {
 
 		if (!(value === this.state.value && taxonID === this.state.taxonID)) {
 			this.setState({value, taxonID, loading: true, success: undefined});
+			console.log(this.props);
 			this.props.formContext.services.submitHooks.add(this.props, () => {
 				return parseCode(value, taxonID).then((result) => {
 					this.setState({loading: false, success: result.success, value: result.value});

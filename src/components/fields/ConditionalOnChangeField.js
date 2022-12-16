@@ -55,7 +55,11 @@ export default class ConditionalOnChangeField extends React.Component {
 
 	static getName() {return "ConditionalOnChangeField";}
 
-	onChange(formData) {
+	getStateFromProps() {
+		return {onChange: this.onChange};
+	}
+
+	onChange = (formData) => {
 		const {rules} = this.getUiOptions();
 
 		(Array.isArray(rules) ? rules : [rules]).forEach(({conditions, transformations}) => {

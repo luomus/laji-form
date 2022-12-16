@@ -32,7 +32,8 @@ export default class FlatField extends React.Component {
 			uiSchema: props.uiSchema,
 			errorSchema: props.errorSchema,
 			formData: props.formData,
-			idSchema: props.idSchema
+			idSchema: props.idSchema,
+			onChange: this.onChange
 		};
 
 		const {fields} = this.getUiOptions();
@@ -183,7 +184,7 @@ export default class FlatField extends React.Component {
 		return formData;
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const _formData = this._onChange(formData, this.props.schema, this.getUiOptions().fields);
 		this.props.onChange(_formData);
 	}

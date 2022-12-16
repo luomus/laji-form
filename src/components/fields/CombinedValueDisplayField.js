@@ -79,7 +79,7 @@ export default class CombinedValueDisplayField extends React.Component {
 			formData = {...formData, [name]: value};
 		});
 		
-		return {schema, idSchema, formData};
+		return {schema, idSchema, formData, onChange: this.onChange};
 	}
 
 	toMinutes = (time) => {
@@ -87,7 +87,7 @@ export default class CombinedValueDisplayField extends React.Component {
 		return Number(parts[0]) * 60 + Number(parts[1]);
 	};
 
-	onChange(formData) {
+	onChange = (formData) => {
 		const uiOptions = this.getUiOptions();
 		const combined = Array.isArray(uiOptions.combined) ? uiOptions.combined : [uiOptions.combined];
 

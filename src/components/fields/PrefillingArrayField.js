@@ -49,7 +49,8 @@ export default class PrefillingArrayField extends React.Component {
 			idSchema: {
 				prefiller: {prefiller: `${props.idSchema.$id}_${field}`},
 				rest: props.idSchema
-			}
+			},
+			onChange: this.onChange
 		};
 	}
 
@@ -66,7 +67,7 @@ export default class PrefillingArrayField extends React.Component {
 		});
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		this.props.onChange(this.mapFormData(formData));
 	}
 }

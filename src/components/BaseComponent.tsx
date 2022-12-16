@@ -1,14 +1,12 @@
 const deepEquals = require("deep-equal");
-import { getReactComponentName, parseJSONPointer, getFieldUUID } from "../utils";
+import { getReactComponentName, parseJSONPointer } from "../utils";
 import { FieldProps, WidgetProps } from "./LajiForm";
-import { SubmitHook } from "../services/submit-hook-service";
 
 type Constructor<T> = new(...args: any[]) => T;
 
 interface LajiFormComponentForBaseComponent<P, S> extends React.Component<P, S> {
 	getStateFromProps?(props: P): S;
 	UNSAFE_componentWillReceiveProps?(props: Readonly<P>, nextContext?: any): void;
-	onChange?(formData: any): void;
 }
 
 export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends Constructor<LajiFormComponentForBaseComponent<P, S>>>(ComposedComponent: LFC) {
@@ -19,7 +17,6 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		constructor(...args: any[]) {
 			const props: P = args[0];
 			super(props);
-			this.onChange = this.onChange.bind(this);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadGlobalSettings(props, this.props.formContext.globals);
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
@@ -127,10 +124,6 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 				this.props.formContext.services.settings.removeSettingSaver(this.getSettingsKey(this.props, key));
 			});
 			if (super.componentWillUnmount) super.componentWillUnmount();
-		}
-
-		onChange(formData: any) {
-			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
 		}
 
 		getIdSchemaId(props: P) {

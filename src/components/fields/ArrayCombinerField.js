@@ -100,10 +100,10 @@ export default class ArrayCombinerField extends React.Component {
 				}
 			});
 		});
-		return {schema, errorSchema, formData, uiSchema};
+		return {schema, errorSchema, formData, uiSchema, onChange: this.onChange};
 	}
 
-	onChange(formData) {
+	onChange = (formData) => {
 		let origArraysContainer = {};
 		if (!formData || formData.length === 0) {
 			Object.keys(this.props.schema.properties).forEach((prop) => {

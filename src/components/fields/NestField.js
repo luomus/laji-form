@@ -230,10 +230,10 @@ export default class NestField extends React.Component {
 			if (splices.length) uiSchema = update(uiSchema, {"ui:order": {$splice: splices.sort(([idx], [_idx]) => _idx - idx)}});
 		}
 
-		return {schema, uiSchema, idSchema, errorSchema, formData};
+		return {schema, uiSchema, idSchema, errorSchema, formData, onChange: this.onChange};
 	}
 
-	onChange(formData = {}) {
+	onChange = (formData = {}) => {
 		const {nests} = this.getUiOptions();
 
 		Object.keys(nests).reverse().forEach(nestName => {
@@ -247,6 +247,7 @@ export default class NestField extends React.Component {
 
 		this.props.onChange(formData);
 	}
+
 }
 
 export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange}, fields, title) {

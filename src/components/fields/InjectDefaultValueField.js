@@ -34,7 +34,11 @@ export default class InjectDefaultValueField extends React.Component {
 
 	static getName() {return "InjectDefaultValueField";}
 
-	onChange(formData) {
+	getStateFromProps() {
+		return {onChange: this.onChange};
+	}
+
+	onChange = (formData) => {
 		let {schema} = this.props;
 		const options = this.getUiOptions();
 		const {fields, target} = options;
