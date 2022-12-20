@@ -20,7 +20,7 @@ export default class MultiLanguageField extends React.Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Label, lang, contextId} = this.props.formContext;
-		const {schema, uiSchema, idSchema, errorSchema, formData, required} = this.props;
+		const {schema, uiSchema, idSchema, errorSchema, formData = {}, required} = this.props;
 		const uiOptions = getUiOptions(uiSchema);
 
 		const languages = Object.keys(schema.properties).sort((a, b) => {
