@@ -472,8 +472,8 @@ class UnitsMapArrayField extends React.Component {
 				if (geometry && hasData(geometry)) {
 					units[idx] = geometry;
 				}
-				return units;
 			}
+			return units;
 		}, []);
 		return {gatherings, units};
 	}
@@ -1615,7 +1615,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 				</Row>
 				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
 					<Row className="map-array-field-below-buttons">
-						<TitleFieldTemplate title={getUiOptions(uiSchema).buttonsTitle} />
+						<TitleFieldTemplate title={getUiOptions(uiSchema).buttonsTitle} schema={this.props.schema} />
 						<ButtonToolbar>{buttons}</ButtonToolbar>
 					</Row>
 				): null}

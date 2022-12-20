@@ -240,13 +240,13 @@ export interface FormContext {
 
 export type Lang = "fi" | "en" | "sv";
 
-export interface FieldProps extends RJSFFieldProps<any, FormContext> {
+export interface FieldProps extends RJSFFieldProps<any, any, FormContext> {
 	uiSchema: any;
 	errorSchema: any;
 	formContext: FormContext;
 }
 
-export interface WidgetProps extends RJSFWidgetProps<any, FormContext> {
+export interface WidgetProps extends RJSFWidgetProps<any, any, FormContext> {
 	uiSchema: any;
 	errorSchema: any;
 	formContext: FormContext;

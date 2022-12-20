@@ -657,8 +657,8 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
-				<Title title={title} label={title} uiSchema={titleUiSchema} formData={that.props.formData} registry={this.props.registry} />
-				<DescriptionFieldTemplate description={this.props.uiSchema["ui:description"]} />
+				<Title title={title} label={title} schema={this.props.schema} uiSchema={titleUiSchema} formData={that.props.formData} registry={this.props.registry} />
+				<DescriptionFieldTemplate description={this.props.uiSchema["ui:description"]} schema={this.props.schema} />
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;
@@ -916,8 +916,8 @@ class TableArrayFieldTemplate extends React.Component {
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
-				<Title title={title} label={title} uiSchema={uiSchema} formData={formData} registry={this.props.registry} />
-				<DescriptionFieldTemplate description={uiSchema["ui:description"]}/>
+				<Title title={title} label={title} uiSchema={uiSchema} schema={schema} formData={formData} registry={this.props.registry} />
+				<DescriptionFieldTemplate description={uiSchema["ui:description"]} schema={this.props.schema} />
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">

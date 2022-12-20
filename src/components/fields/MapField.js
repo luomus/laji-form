@@ -205,7 +205,7 @@ export default class MapField extends React.Component {
 
 		return (
 			<div>
-				<TitleFieldTemplate title={this.props.schema.title} />
+				<TitleFieldTemplate title={this.props.schema.title}  schema={this.props.schema} />
 				<Affix {...{topOffset, bottomOffset}}>
 					<div style={{height}}>
 						<MapComponent

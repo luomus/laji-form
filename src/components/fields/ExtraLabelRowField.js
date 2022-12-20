@@ -72,7 +72,7 @@ export default class ExtraLabelRowField extends React.Component {
 			<div ref={this.setContainerRef}>
 				{title
 					? (
-						<TitleFieldTemplate title={title} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} registry={this.props.registry} />
+						<TitleFieldTemplate title={title} schema={this.props.schema} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} registry={this.props.registry} />
 					) : null
 				}
 				{labelRow}

@@ -41,11 +41,13 @@ export default class SplitField extends React.Component<FieldProps> {
 					id={`${this.props.idSchema.$id}__title`}
 					title={_title !== undefined ? _title : this.props.title}
 					required={this.props.required || this.props.uiSchema["ui:required"]}
+					schema={this.props.schema}
 					uiSchema={this.props.uiSchema}
 					registry={this.props.registry}
 				/>
 				<DescriptionFieldTemplate
 					id={`${this.props.idSchema.$id}__description`}
+					schema={this.props.schema}
 					description={this.props.description}
 					registry={this.props.registry}
 				/>

@@ -487,13 +487,15 @@ describe("Trip report (JX.519)", () => {
 
 			const unitFill = await $$gatheringMarkerPaths.last().getAttribute("style");
 
+			debugger;
 			await browser.actions()
 				.mouseMove(lajiFormLocate("gatherings.0.units.0").getWebElement())
 				.perform();
+			debugger;
 
 			const unitFillAfterLocationHover = await $$gatheringMarkerPaths.last().getAttribute("style");
 
-			expect(await unitFill).not.toBe(unitFillAfterLocationHover);
+			expect(unitFill).not.toBe(unitFillAfterLocationHover);
 
 			await removeUnit(0, 1);
 		});

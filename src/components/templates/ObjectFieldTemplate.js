@@ -34,6 +34,7 @@ export default function ObjectFieldTemplate(props) {
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
 						required={props.required || props.uiSchema["ui:required"]}
+						schema={props.schema}
 						uiSchema={titleUiSchema}
 						registry={props.registry}
 					/>}
@@ -43,6 +44,7 @@ export default function ObjectFieldTemplate(props) {
 						id={`${props.idSchema.$id}__description`}
 						description={props.description}
 						registry={props.registry}
+						schema={props.schema}
 					/>
 				}
 				{leftButtons && (

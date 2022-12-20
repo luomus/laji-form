@@ -39,7 +39,7 @@ export default class ArrayBulkField extends React.Component {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		return (
 			<fieldset>
-				<TitleFieldTemplate title={this.props.schema.title || this.props.name} uiSchema={this.props.uiSchema} registry={this.props.registry} />
+				<TitleFieldTemplate title={this.props.schema.title || this.props.name} schema={this.props.schema} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 				{this.renderItems()}
 				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
 			</fieldset>
