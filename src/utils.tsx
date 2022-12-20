@@ -317,8 +317,7 @@ export const getNextInputInInputs = (formContext: FormContext) => (inputElem: HT
 		}
 	}
 	return undefined;
-}
-
+};
 
 export const getNextInput = (formContext: FormContext) => (inputElem: HTMLElement, reverseDirection = false) => {
 	const formElem = findDOMNode(formContext.formRef.current) as HTMLElement;
@@ -343,7 +342,7 @@ export const focusNextInput = (formContext: FormContext) => (reverseDirection = 
 		return true;
 	}
 	return false;
-}
+};
 
 const _findNearestParentSchemaElemId = ({contextId}: Pick<FormContext, "contextId">) => (elem: HTMLElement) => {
 	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);

@@ -8,7 +8,7 @@ let singletonContext: any = {};
 export default (nameSpace: number | string = "") => {
 	if (!singletonContext[nameSpace]) singletonContext[nameSpace] = {};
 	return singletonContext[nameSpace];
-}
+};
 
 export function clear() {
 	singletonContext = {};

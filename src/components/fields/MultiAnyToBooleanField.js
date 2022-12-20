@@ -28,7 +28,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.getInitialState(props)
+		this.state = this.getInitialState(props);
 	}
 
 	getInitialState(props) {

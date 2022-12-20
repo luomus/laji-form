@@ -48,7 +48,7 @@ export default class SettingsService {
 		const settings = this.getSettings(global);
 		if (!equals(this.settings, settings)) {
 			this.settings = settings;
-			this._onSettingsChange(settings, global)
+			this._onSettingsChange(settings, global);
 		}
 	}
 }
