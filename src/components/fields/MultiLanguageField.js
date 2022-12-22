@@ -19,7 +19,7 @@ export default class MultiLanguageField extends React.Component {
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		const {Label, lang, contextId} = this.props.formContext;
+		const {Label, lang} = this.props.formContext;
 		const {schema, uiSchema, idSchema, errorSchema, formData = {}, required} = this.props;
 		const uiOptions = getUiOptions(uiSchema);
 
@@ -34,10 +34,7 @@ export default class MultiLanguageField extends React.Component {
 				<Label
 					label={schema.title || ""}
 					required={required || uiSchema["ui:required"]}
-					help={uiSchema["ui:help"]}
-					helpHoverable={uiSchema["ui:helpHoverable"]}
-					helpPlacement={uiSchema["ui:helpPlacement"]}
-					contextId={contextId}
+					uiSchema={uiSchema}
 				/>
 				{ languages.map(_lang => (
 					<SchemaField
