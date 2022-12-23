@@ -1125,17 +1125,17 @@ class LolifeMapArrayField extends React.Component {
 }
 
 function _MapArrayField(ComposedComponent) {
-@BaseComponent
 class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
+		this.props.formContext.services.settings.bind(this, props);
 		this._context = getContext(`${props.formContext.contextId}_MAP_CONTAINER`);
 		this._context.featureIdxsToItemIdxs = {};
 		this._context.setState = (state, callback) => this.setState(state, callback);
 
-		const initialState = {activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
+		const initialState = {...(this.state || {}), activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
 		const options = getUiOptions(props.uiSchema);
 		if ((this.props.formData || []).length && "activeIdx" in options) initialState.activeIdx = options.activeIdx;
 		this.state = {...initialState, ...(this.state || {})};

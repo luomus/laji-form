@@ -55,7 +55,6 @@ const scopeFieldSettings = {
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
-@BaseComponent
 export default class ScopeField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -76,6 +75,17 @@ export default class ScopeField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
+	}
+
+	constructor(props) {
+		super(props);
+		this.props.formContext.services.settings.bind(this, props);
+		this.state = this.getStateFromProps(props);
+	}
+
+	UNSAFE_componentWillReceiveProps(props) {
+		const state = this.getStateFromProps(props);
+		if (state) this.setState(state);
 	}
 
 	componentDidMount() {

@@ -48,7 +48,6 @@ export function getCenterAndRadiusFromGeometry(geometry) {
 	return {center, radius};
 }
 
-@BaseComponent
 export default class MapField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -68,6 +67,7 @@ export default class MapField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {located: false};
+		this.props.formContext.services.settings.bind(this, props);
 	}
 
 	onLocateEventHandler = (geometry) => {

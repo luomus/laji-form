@@ -421,7 +421,7 @@ export const shouldSyncScroll = (context: FormContext) => _shouldSyncScroll(cont
 
 export const _syncScroll = (context: FormContext) => (force = false) => {
 	if (force || shouldSyncScroll(context)) {
-		const {lastIdToFocus, lastIdToScroll} = getContext(context.contextId);
+		const {lastIdToFocus, lastIdToScroll} = getContext(context.contextId) as any;
 		focusAndScroll(context, lastIdToFocus, lastIdToScroll, false);
 	}
 };
@@ -471,7 +471,7 @@ const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e:
 	return (e: KeyboardEvent | React.KeyboardEvent) => {
 		let keys = [" ", "Enter"];
 		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
-			const {shortcuts} = getContext(contextId);
+			const {shortcuts} = getContext(contextId) as any;
 			keys = keys.filter(k => !shortcuts[k]);
 		}
 		if (keys.every(k => e.key !== k)) {

@@ -42,7 +42,6 @@ const parseQuery = (query, props, taxonGroups) => {
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }
  */
-@BaseComponent
 export default class AutosuggestField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -67,6 +66,12 @@ export default class AutosuggestField extends React.Component {
 	}
 
 	static getName() {return "AutosuggestField";}
+
+	constructor(props) {
+		super(props);
+		this.props.formContext.services.settings.bind(this, props);
+		this.state = this.getStateFromProps(props);
+	}
 
 	UNSAFE_componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));

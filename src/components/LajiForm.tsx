@@ -13,7 +13,6 @@ import Context, { ContextProps } from "../ReactContext";
 import StubTheme from "../themes/stub";
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, TemplatesType } from "@rjsf/utils";
-import ErrorListTemplate from "./templates/ErrorListTemplate";
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import instanceContext from "../Context";
 import * as translations from "../translations.json";
@@ -234,7 +233,7 @@ export interface FormContext {
 		DOMIds: DOMIdService,
 		ids: IdService,
 		rootInstance: RootInstanceService,
-		singletonMap: SingletonMapService
+		singletonMap: SingletonMapService,
 	}
 }
 
