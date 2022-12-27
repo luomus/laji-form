@@ -128,9 +128,10 @@ interface SchemaFieldWrappersContext {
 	[name: string]: boolean;
 }
 
-export function getInnerUiSchema(parentUiSchema: UiSchema) {
+export function getInnerUiSchema(parentUiSchema: UiSchema, buttons = false) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && ((getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && parentUiSchema["ui:buttons"]) {
+	// if (uiSchema && ((getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [

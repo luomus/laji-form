@@ -11,7 +11,6 @@ export function getPropsWithInnerUiSchema(props: FieldProps): FieldProps {
 	};
 }
 
-
 type Constructor<LFC> = new(...args: any[]) => LFC;
 
 interface LajiFormComponentForVirtualSchemaField extends Omit<React.Component<FieldProps>, "render"> {

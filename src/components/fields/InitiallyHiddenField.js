@@ -1,11 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
-import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
+import NextSchemaField from "../NextSchemaField";
 
-@BaseComponent
 export default class InitiallyHiddenField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -20,23 +18,12 @@ export default class InitiallyHiddenField extends React.Component {
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {visible: false, ...this.getStateFromProps(props)};
-	}
-
-	getStateFromProps(props) {
-		return {uiSchema: getInnerUiSchema(props.uiSchema)};
-	}
-
 	toggleVisibility = () => {
 		this.setState({visible: !this.state.visible});
 	}
 
-
 	render() {
 		let shouldShow = this.state.visible;
-		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Row, Col, Collapse} = this.context.theme;
 		return (
 			<div>
@@ -49,7 +36,7 @@ export default class InitiallyHiddenField extends React.Component {
 				</Collapse>
 				<Collapse in={shouldShow}>
 					<div>
-						<SchemaField {...this.props} {...this.state} />
+						<NextSchemaField {...this.props} {...this.state} />
 					</div>
 				</Collapse>
 			</div>);
