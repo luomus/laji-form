@@ -91,7 +91,7 @@ export class Form {
 		this.props = params;
 	}
 
-	async initialize(beforeInit?: (form: Form) => Promise<void>) {
+	async initialize(beforeInit?: (form: Form) => Promise<void>, contextId?: number) {
 		const query = (params: any) => Object.keys(params).reduce((q, key) =>
 			`${q}&${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
 		, "");
@@ -103,7 +103,7 @@ export class Form {
 		}
 		beforeInit && await beforeInit(this);
 		await this.setState(this.props);
-		this.contextId = await this.e("lajiForm._id") as number;
+		this.contextId = contextId ?? (await this.e("lajiForm._id") as number);
 	}
 
 	e(path: string) {
