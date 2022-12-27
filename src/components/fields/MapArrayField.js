@@ -11,7 +11,6 @@ import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
-import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import { getButton } from "../templates/ArrayFieldTemplate";
 import { onArrayFieldChange } from "./ArrayField";
@@ -1750,7 +1749,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			});
 		}
 	}
-}
+} // eslint-disable-line indent
 return _MapArrayField; // eslint-disable-line indent
 }
 
