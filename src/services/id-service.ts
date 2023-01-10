@@ -97,6 +97,9 @@ export default class IdService {
 
 	getRelativeTmpIdTree(id: string) {
 		let tmpIdTree = this.tmpIdTree;
+		if (!tmpIdTree) {
+			return undefined;
+		}
 		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
 		for (const k of treePath) {
 			if (tmpIdTree[k]) {
