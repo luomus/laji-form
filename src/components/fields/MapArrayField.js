@@ -207,10 +207,9 @@ class DefaultMapArrayField extends React.Component {
 
 	onAdd({feature: {geometry}}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-		return update(formData,
-			{[this.state.activeIdx]: getUpdateObjectFromJSONPointer(geometryField, {$set: {type: "GeometryCollection", geometries: [
-				...parseGeometries(this.getGeometry(formData)), geometry
-			]}})});
+		return updateSafelyWithJSONPointer(formData,
+			{type: "GeometryCollection", geometries: [ ...parseGeometries(this.getGeometry(formData)), geometry ]},
+			`/${this.state.activeIdx}/${geometryField}`);
 	}
 
 	onRemove({idxs}, formData) {
