@@ -194,7 +194,6 @@ describe("Trip report (JX.519)", () => {
 			expect(await $additionalsButton.isDisplayed()).toBe(true);
 		});
 
-
 		describe("taxonCensus", () => {
 			it("can be added from additional fields", async () => {
 				await $additionalsButton.click();
@@ -239,6 +238,18 @@ describe("Trip report (JX.519)", () => {
 
 		it("map is empty for new gathering", async () => {
 			expect(await $gatheringsMap.$(".vector-marker.leaflet-interactive").isPresent()).toBe(false);
+		});
+
+		it("items can be closed", async () => {
+			await $("#root_gatherings_1-panel .laji-form-clickable-panel-header").click();
+
+			expect(await lajiFormLocate("gatherings.1.units").isPresent()).toBe(false);
+		});
+
+		it("items can be opened", async () => {
+			await $("#root_gatherings_1-panel .laji-form-clickable-panel-header").click();
+
+			expect(await lajiFormLocate("gatherings.1.units").isPresent()).toBe(true);
 		});
 
 		it("items can be deleted", async () => {
