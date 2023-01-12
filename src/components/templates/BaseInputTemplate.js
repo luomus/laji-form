@@ -1,6 +1,5 @@
 import * as React from "react";
 import { getDefaultRegistry } from "@rjsf/core";
-import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 

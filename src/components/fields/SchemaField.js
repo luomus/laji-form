@@ -1,10 +1,8 @@
 import * as React from "react";
-import getContext from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "@rjsf/utils";
-import ArrayFieldTemplate from "../templates/ArrayFieldTemplate";
 import { getDefaultRegistry } from "@rjsf/core";
 
 export default class _SchemaField extends React.Component {

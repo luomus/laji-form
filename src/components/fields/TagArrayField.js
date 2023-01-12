@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
+import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const equals = require("deep-equal");
 

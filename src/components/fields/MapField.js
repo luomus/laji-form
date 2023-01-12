@@ -4,7 +4,6 @@ import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
-import BaseComponent from "../BaseComponent";
 const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";

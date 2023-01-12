@@ -7,7 +7,6 @@ import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, dictionarify, isObject } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
-import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
 import { orderProperties } from "@rjsf/utils";
 
