@@ -150,11 +150,11 @@ class AnnotationBox extends React.Component {
 
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
-		const context = getContext(this.props.formContext.contextId);
+		const rootID = this.props.formContext.services.rootInstance.getFormData().id;
 		this.props.formContext.services.blocker.push();
 		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
-			body: JSON.stringify({...formData, targetID: this.props.id, rootID: context.formData.id, type, byRole: "MMAN.formAdmin"})
+			body: JSON.stringify({...formData, targetID: this.props.id, rootID, type, byRole: "MMAN.formAdmin"})
 		}).then(response => {
 			if (response.status >= 400) {
 				throw new Error("Request failed");
