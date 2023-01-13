@@ -38,12 +38,16 @@ export default class SettingsService {
 		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
 		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
-				return {...settings, [key]: settingSavers[key]()};
+				const value = settingSavers[key]();
+				if (value === undefined) { // skip, or JSON parse will error.
+					return settings;
+				}
+				return {...settings, [key]: value};
 			} catch (e) {
 				// Swallow failing settings parsing.
 			}
 			return settings;
-		}, this.settings);
+		}, {});
 	}
 
 	onSettingsChange = (global = false) => {
