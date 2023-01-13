@@ -1,0 +1,609 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "collectionID": {
+        "type": "string",
+        "title": "Kokoelma"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "",
+              "title": ""
+            },
+            {
+              "const": "MNP.tagAccessibilityEasy",
+              "title": "Helppokulkuinen"
+            },
+            {
+              "const": "MNP.tagAccessibilityModerate",
+              "title": "Normaalikulkuinen"
+            },
+            {
+              "const": "MNP.tagAccessibilityDifficult",
+              "title": "Vaikeakulkuinen"
+            },
+            {
+              "const": "MNP.tagHabitatImportant",
+              "title": "Tärkeä habitaatti"
+            },
+            {
+              "const": "MNP.tagCensusRare",
+              "title": "Harvoin laskettu"
+            },
+            {
+              "const": "MNP.tagHabitatFarmland",
+              "title": "Pelto"
+            },
+            {
+              "const": "MNP.tagHabitatMire",
+              "title": "Suo"
+            },
+            {
+              "const": "MNP.tagHabitatMountain",
+              "title": "Tunturi"
+            }
+          ]
+        },
+        "uniqueItems": true,
+        "title": "Paikan ominaisuudet"
+      },
+      "name": {
+        "type": "string",
+        "title": "Nimi"
+      },
+      "municipality": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Kunta",
+        "uniqueItems": true
+      },
+      "geometry": {
+        "type": "object",
+        "properties": {},
+        "title": ""
+      },
+      "notes": {
+        "type": "string",
+        "title": "Lisätiedot"
+      },
+      "locality": {
+        "type": "string",
+        "title": "Paikkatiedot"
+      },
+      "localityDescription": {
+        "type": "string",
+        "title": "Paikan vapaamuotoinen kuvaus"
+      },
+      "biogeographicalProvince": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Eliömaakunta",
+        "uniqueItems": true
+      },
+      "alternativeIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Vaihtoehtoiset tunnisteet"
+      },
+      "images": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Kuvat paikasta"
+      },
+      "taxonIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Kohdetaksoni"
+      }
+    },
+    "required": [
+      "collectionID",
+      "name",
+      "geometry"
+    ]
+  },
+  "excludeFromCopy": [
+    "$.images"
+  ],
+  "id": "MHL.32",
+  "language": "fi",
+  "name": "Vieraslajien torjunnan nimetty paikka",
+  "options": {
+    "saveLabel": "Luo paikka",
+    "hideDraftButton": true,
+    "namedPlaceOptions": {
+      "allowAddingPublic": true
+    }
+  },
+  "uiSchema": {
+    "ui:classNames": "well well-sm",
+    "collectionID": {
+      "ui:field": "HiddenField"
+    },
+    "geometry": {
+      "ui:field": "MapField",
+      "ui:help": "Aloita piirtämällä paikka kartalle",
+      "ui:options": {
+        "geometryField": "geometry",
+        "geometryMapper": "default",
+        "mapSizes": {
+          "lg": 6,
+          "md": 12,
+          "sm": 12,
+          "xs": 12
+        },
+        "minHeight": 435
+      }
+    },
+    "municipality": {
+      "ui:functions": [
+        {
+          "ui:field": "ContextInjectionField",
+          "ui:options": {
+            "injections": {
+              "/items/oneOf": "/municipalityEnum/oneOf"
+            },
+            "target": "schema"
+          }
+        }
+      ]
+    },
+    "biogeographicalProvince": {
+      "ui:field": "ContextInjectionField",
+      "ui:options": {
+        "injections": {
+          "/items/oneOf": "/biogeographicalProvinceEnum/oneOf"
+        },
+        "target": "schema"
+      }
+    },
+    "notes": {
+      "ui:options": {
+        "rows": 3
+      },
+      "ui:widget": "textarea"
+    },
+    "alternativeIDs": {
+      "ui:field": "TagArrayField",
+      "ui:options": {
+        "renderTitleAsLabel": true
+      }
+    },
+    "ui:field": "ScopeField",
+    "ui:functions": [
+      {
+        "ui:field": "ConditionalField",
+        "ui:options": {
+          "cases": [
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "draw": {
+                            "coordinateInput": true,
+                            "copy": true,
+                            "upload": true,
+                            "undo": true,
+                            "redo": true,
+                            "clear": true,
+                            "delete": true
+                          },
+                          "drawReverse": false
+                        },
+                        "draw": {
+                          "circle": false,
+                          "marker": false,
+                          "polygon": false,
+                          "polyline": false,
+                          "rectangle": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.39$"
+              }
+            },
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "draw": {
+                            "coordinateInput": true,
+                            "clear": true,
+                            "delete": true
+                          }
+                        },
+                        "draw": {
+                          "circle": true,
+                          "marker": false,
+                          "polygon": true,
+                          "polyline": false,
+                          "rectangle": true
+                        },
+                        "overlayNames": [
+                          "municipalities"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.2049|HR.2891$"
+              }
+            },
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "draw": {
+                            "clear": true,
+                            "reverse": false,
+                            "coordinateInput": false,
+                            "undo": false,
+                            "redo": false,
+                            "copy": true
+                          }
+                        },
+                        "draw": {
+                          "marker": true,
+                          "circle": false,
+                          "polygon": false,
+                          "polyline": false,
+                          "rectangle": false
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.2991$"
+              }
+            },
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "location": false,
+                          "draw": {
+                            "coordinateInput": true,
+                            "clear": true,
+                            "copy": true,
+                            "reverse": false,
+                            "undo": false,
+                            "redo": false
+                          }
+                        },
+                        "draw": {
+                          "marker": true,
+                          "circle": false,
+                          "polygon": false,
+                          "polyline": false,
+                          "rectangle": false
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.62|HR.3991|HR.3992|HR.4891$"
+              }
+            },
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "location": false,
+                          "draw": {
+                            "reverse": false,
+                            "coordinateInput": true,
+                            "clear": true,
+                            "copy": true
+                          }
+                        },
+                        "draw": {
+                          "marker": true,
+                          "circle": false,
+                          "polygon": false,
+                          "polyline": false,
+                          "rectangle": false
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.157$"
+              }
+            },
+            {
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "geometry": {
+                    "ui:options": {
+                      "mapOptions": {
+                        "controls": {
+                          "location": false,
+                          "draw": {
+                            "clear": true,
+                            "delete": true,
+                            "reverse": true,
+                            "undo": false,
+                            "redo": false
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "rules": {
+                "field": "collectionID",
+                "regexp": "^HR.2951$"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "ui:field": "GeocoderField",
+        "ui:options": {
+          "fieldOptions": [
+            {
+              "enum": "municipalityEnum",
+              "field": "municipality"
+            }
+          ],
+          "fields": [
+            "municipality"
+          ],
+          "geometryField": "geometry"
+        }
+      },
+      {
+        "ui:field": "DataLeakerField",
+        "ui:options": {
+          "props": [
+            {
+              "from": "municipality",
+              "target": "/uiSchema/geometry/ui:options/area"
+            }
+          ]
+        }
+      }
+    ],
+    "ui:grid": {
+      "lg": {
+        "*": 12
+      },
+      "md": {
+        "*": 12
+      },
+      "sm": {
+        "*": 12
+      }
+    },
+    "ui:options": {
+      "fieldScopes": {
+        "collectionID": {
+          "*": {
+            "fields": [
+              "name",
+              "geometry"
+            ]
+          },
+          "HR.2049": {
+            "fields": [
+              "municipality",
+              "locality",
+              "taxonIDs",
+              "notes"
+            ]
+          },
+          "HR.39": {
+            "fields": [
+              "municipality",
+              "alternativeIDs",
+              "notes"
+            ]
+          },
+          "HR.61": {
+            "fields": [
+              "tags",
+              "notes"
+            ]
+          },
+          "HR.2891": {
+            "fields": [
+              "municipality",
+              "biogeographicalProvince",
+              "locality",
+              "localityDescription",
+              "notes"
+            ]
+          },
+          "HR.2951": {
+            "fields": [
+              "municipality",
+              "locality",
+              "localityDescription",
+              "notes",
+              "geometry"
+            ]
+          },
+          "HR.2991": {
+            "fields": [
+              "municipality",
+              "biogeographicalProvince",
+              "notes",
+              "geometry"
+            ]
+          },
+          "HR.62": {
+            "fields": [
+              "municipality",
+              "geometry",
+              "alternativeIDs"
+            ]
+          },
+          "HR.3991": {
+            "fields": [
+              "municipality",
+              "geometry",
+              "alternativeIDs"
+            ]
+          },
+          "HR.3992": {
+            "fields": [
+              "municipality",
+              "geometry",
+              "alternativeIDs"
+            ]
+          },
+          "HR.157": {
+            "fields": [
+              "municipality",
+              "geometry",
+              "alternativeIDs",
+              "tags"
+            ]
+          },
+          "HR.3431": {
+            "fields": [
+              "municipality",
+              "geometry",
+              "alternativeIDs"
+            ]
+          }
+        }
+      }
+    },
+    "ui:order": [
+      "geometry",
+      "name",
+      "municipality",
+      "biogeographicalProvince",
+      "*"
+    ],
+    "images": {
+      "ui:field": "ImageArrayField"
+    },
+    "taxonIDs": {
+      "items": {
+        "ui:options": {
+          "allowNonsuggestedValue": false,
+          "autosuggestField": "taxon",
+          "query": {
+            "onlyInvasive": true
+          },
+          "suggestionReceive": "key"
+        },
+        "ui:widget": "AutosuggestWidget"
+      },
+      "ui:field": "SingleItemArrayField",
+      "ui:functions": {
+        "ui:field": "ConditionalUiSchemaField",
+        "ui:options": {
+          "cases": {
+            "operations": {
+              "type": "merge",
+              "uiSchema": {
+                "ui:disabled": true
+              }
+            },
+            "rules": [
+              "isEdit"
+            ]
+          }
+        }
+      },
+      "ui:help": "Kirjoita torjuttavan taksonin nimi tekstikenttään. Taksoni on valittava tekstikentän alapuolelle aukeavasta luettelosta.",
+      "ui:options": {
+        "renderTitleAsLabel": true
+      }
+    }
+  },
+  "context": "namedPlace",
+  "validators": {
+    "name": {
+      "length": {
+        "minimum": 1,
+        "tooShort": "Kunta täytyy ilmoittaa"
+      }
+    },
+    "geometry": {
+      "geometry": {
+        "message": {
+          "missingGeometries": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+          "notGeometry": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "missingType": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "invalidRadius": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "invalidCoordinates": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "invalidGeometries": "Vähintään yksi paikka täytyy ilmoittaa.",
+          "noOverlap": "Vähintään yksi paikka täytyy ilmoittaa."
+        },
+        "requireShape": true,
+        "maximumSize": 10,
+        "boundingBoxMaxHectares": 1000000
+      }
+    },
+    "taxonIDs": {
+      "presence": {
+        "allowEmpty": false,
+        "message": "Kohdetaksoni on ilmoitettava."
+      }
+    }
+  },
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.32"
+  }
+}
