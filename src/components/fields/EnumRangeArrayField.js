@@ -111,7 +111,7 @@ export default class EnumRangeArrayField extends React.Component {
 
 class EnumRangeInputInjection extends React.Component {
 	render() {
-		return <TagInputComponent {...this.props} onChange={this.onChange} onInputChange={this.onInputChange}/>;
+		return <TagInputComponent {...this.props} formContext={this.props.that.props.formContext} onChange={this.onChange} onInputChange={this.onInputChange} />;
 	}
 
 	onInputChange = e => {
