@@ -41,11 +41,6 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 		getStateFromProps = (props: FieldProps) => {
 			const propsWithInnerUiSchema = getPropsWithInnerUiSchema(props);
 			const state = super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema;
-			["readonly", "disabled"].forEach(prop => {
-				if (props[prop]) {
-					state.uiSchema = {...(state.uiSchema || propsWithInnerUiSchema.uiSchema), [`ui:${prop}`]: true};
-				}
-			});
 			return {
 				...propsWithInnerUiSchema,
 				...state,
@@ -64,7 +59,9 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 				"formData",
 				"errorSchema",
 				"registry",
-				"onChange"
+				"onChange",
+				"disabled",
+				"readonly"
 			].reduce<FieldProps>((_props, prop) => {
 				if (prop in props) _props[prop] = props[prop];
 				return _props;

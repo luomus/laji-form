@@ -546,6 +546,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						noHtml5Validate={true}
 						liveValidate={true}
 						autoComplete="off"
+						readonly={readonly}
+						disabled={disabled}
 					>
 						{this.props.children}
 					</Form>
