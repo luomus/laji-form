@@ -1,15 +1,27 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
-import { rulesPropType } from "./ConditionalUiSchemaField";
+import { rulePropType } from "./ConditionalUiSchemaField";
 import BaseComponent from "../BaseComponent";
+
+const arrayRulePropType = PropTypes.shape({
+	idx: PropTypes.number,
+	isLast: PropTypes.number,
+	complement: PropTypes.bool
+});
+
+export const arrayRulesPropType = PropTypes.oneOfType([
+	rulePropType,
+	arrayRulePropType,
+	PropTypes.arrayOf(PropTypes.oneOfType([rulePropType, arrayRulePropType]))
+]);
 
 @BaseComponent
 export default class FilterArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				rules: rulesPropType,
+				rules: arrayRulesPropType,
 				cache: PropTypes.boolean
 			})
 		}),

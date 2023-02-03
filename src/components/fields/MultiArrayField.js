@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { rulesPropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
+import { operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
+import { arrayRulesPropType } from "./FilterArrayField";
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
@@ -11,7 +12,7 @@ export default class MultiArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				rules: rulesPropType,
+				rules: arrayRulesPropType,
 				itemsOperations: PropTypes.oneOfType([
 					operationPropType,
 					PropTypes.arrayOf(operationPropType)
