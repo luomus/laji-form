@@ -7,10 +7,6 @@ import * as _notus from "notus";
 import * as queryString from "querystring";
 import { isObject } from "../src/utils.tsx";
 
-import "../src/styles.js";
-import "./styles-dev.css";
-
-import "notus/src/notus.css";
 
 const notus = _notus();
 
@@ -45,20 +41,21 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-const {mockApi, test, id, local, localFormData, settings, theme, ...lajiFormOptions} = query;
+const {mockApi, test, id, local, localFormData, settings, theme = "bs3", ...lajiFormOptions} = query;
 
-let themeName = theme;
-if (!themeName) {
-	themeName = "bs3";
-}
-const themePromise = import("../src/themes/" + themeName);
-if (themeName === "bs3" || themeName === "bs5") {
-	const styleUrl = themeName === "bs3" ? "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css";
+const themePromise = import("../src/themes/" + theme);
+if (theme === "bs3" || theme === "bs5") {
+	const styleUrl = theme === "bs3" ? "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css";
 	const link = document.createElement("link");
 	link.rel = "stylesheet";
 	link.href = styleUrl;
 	document.head.appendChild(link);
 }
+
+import "../src/styles.js";
+import "./styles-dev.css";
+
+import "notus/src/notus.css";
 
 if (mockApi) {
 	const mockResponses = {};
