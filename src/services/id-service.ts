@@ -74,10 +74,7 @@ export default class IdService {
 
 	getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(idSchemaId: string, lajiFormId: string | number) {
 		const relativePointer = this.getRelativePointer(idSchemaId, lajiFormId);
-		if (!relativePointer) {
-			return "";
-		}
-		return this.getJSONPointerFromLajiFormIdAndRelativePointer(lajiFormId, relativePointer);
+		return this.getJSONPointerFromLajiFormIdAndRelativePointer(lajiFormId, relativePointer || "");
 	}
 
 	getRelativePointer(idSchemaId: string, lajiFormId: string | number) {
