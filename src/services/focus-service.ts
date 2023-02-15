@@ -64,6 +64,6 @@ export default class FocusService {
 			console.warn("Focus service can't  doesn't have ref to the form");
 			return;
 		}
-		this.formContext.utils.focusNextInput(reverse);
+		return this.formContext.utils.focusNextInput(reverse);
 	}
 }

@@ -80,7 +80,7 @@ interface FormProps {
 	isAdmin?: boolean;
 	isEdit?: boolean;
 	id?: string;
-	localFormData?: boolean;
+	localFormData?: boolean | string;
 }
 
 export class Form {
@@ -148,6 +148,8 @@ export class Form {
 	getPropsData() {
 		return this.e("lajiForm.props.formData") as Promise<any>;
 	}
+
+	$form = $(".laji-form  .rjsf");
 
 	$locate(path: string) {
 		return $(getLocatorForContextId(this.contextId)(path));

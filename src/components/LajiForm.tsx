@@ -546,6 +546,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						noHtml5Validate={true}
 						liveValidate={true}
 						autoComplete="off"
+						tagName="div"
 						readonly={readonly}
 						disabled={disabled}
 					>
@@ -776,7 +777,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	keyFunctions = {
 		navigate: (e: KeyboardEvent, {reverse}: any) => {
-			this.memoizedFormContext.services.focus.focusNextInput(reverse);
+			return this.memoizedFormContext.services.focus.focusNextInput(reverse);
 		},
 		help: (e: KeyboardEvent, {delay}: any) => {
 			if (this.helpStarted) return false;

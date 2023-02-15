@@ -1,4 +1,4 @@
-import { navigateToForm, lajiFormLocate } from "./test-utils";
+import { navigateToForm, lajiFormLocate, Form, createForm } from "./test-utils";
 import { $, browser } from "protractor";
 
 const $blocker = lajiFormLocate("gatherings.0.geometry").$(".blocker");
@@ -8,12 +8,14 @@ const $mobileEditorMap = $(".laji-form.fullscreen .laji-form-map");
 describe("Mobile form (MHL.51)", () => {
 
 	describe("without formData", () => {
+		let form: Form;
+
 		it("navigate to form", async () => {
-			await navigateToForm("MHL.51");
+			form = await createForm({id: "MHL.51"});
 		});
 
 		it("is displayed", async () => {
-			expect(await $(".laji-form form").isPresent()).toBe(true);
+			expect(await form.$form.isPresent()).toBe(true);
 		});
 
 
@@ -29,12 +31,14 @@ describe("Mobile form (MHL.51)", () => {
 	});
 
 	describe("with formData with geometry", () => {
+		let form: Form;
+
 		it("navigate to form", async () => {
-			await navigateToForm("MHL.51", "&localFormData=MHL.51-geometry");
+			form = await createForm({id: "MHL.51", localFormData: "MHL.51-geometry"});
 		});
 
 		it("is displayed", async () => {
-			expect(await $(".laji-form form").isPresent()).toBe(true);
+			expect(await form.$form.isPresent()).toBe(true);
 		});
 
 
@@ -55,12 +59,14 @@ describe("Mobile form (MHL.51)", () => {
 	});
 
 	describe("with formData with image", () => {
+		let form: Form;
+
 		it("navigate to form", async () => {
-			await navigateToForm("MHL.51", "&localFormData=MHL.51-image-geometry");
+			form = await createForm({id: "MHL.51", localFormData: "MHL.51-image-geometry"});
 		});
 
 		it("is displayed", async () => {
-			expect(await $(".laji-form form").isPresent()).toBe(true);
+			expect(await form.$form.isPresent()).toBe(true);
 		});
 
 		it("image add modal isn't displayed", async () => {
@@ -80,12 +86,14 @@ describe("Mobile form (MHL.51)", () => {
 	});
 
 	describe("with formData without image and edit mode", () => {
+		let form: Form;
+
 		it("navigate to form", async () => {
-			await navigateToForm("MHL.51", "&localFormData=MHL.51-geometry&isEdit=true");
+			form = await createForm({id: "MHL.51", localFormData: "MHL.51-geometry", isEdit: true});
 		});
 
 		it("is displayed", async () => {
-			expect(await $(".laji-form form").isPresent()).toBe(true);
+			expect(await form.$form.isPresent()).toBe(true);
 		});
 
 		it("image add modal isn't displayed", async () => {
