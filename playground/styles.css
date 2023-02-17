@@ -114,7 +114,7 @@ body .laji-form {
 	line-height: 12.5px;
 }
 .laji-form .form-control:not(textarea), .laji-form .rw-widget-picker.rw-widget-container, .laji-form .rw-combobox > .rw-widget-container, .laji-form .autosuggest-wrapper:not(.laji-form-enum-range), .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
-	height: 25px !important;
+	height: 25px;
 }
 .laji-form .form-control-feedback {
 	line-height: 25px;
