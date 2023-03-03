@@ -96,8 +96,8 @@ const _Modal: ModalI = Modal as unknown as ModalI;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
-_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) => (
-	<span {...props} ref={ref}>
+_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({children, className, ...props}, ref) => (
+	<span {...props} ref={ref} className={classNames(className, "bg-white")}>
 		{
 			React.Children.map(children, child => (
 				React.isValidElement(child) ? React.cloneElement(child, {variant: "outline-secondary"}) : child
@@ -143,7 +143,7 @@ const theme: Theme = {
 	Form,
 	ControlLabel: Form.Label,
 	Checkbox: Form.Check,
-	ToggleButton,
-	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>((props, ref) => <ToggleButtonGroup {...props as any} ref={ref} />)
+	ToggleButton: (props) => <ToggleButton variant={'outline-secondary'} {...props as any} />,
+	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>(({className, ...props}, ref) => <ToggleButtonGroup {...props as any} className={classNames(className, "bg-white")} ref={ref} />)
 };
 export default theme;
