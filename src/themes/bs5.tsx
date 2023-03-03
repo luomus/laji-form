@@ -52,7 +52,8 @@ import {
 	AccordionProps,
 	DropdownToggleProps,
 	FormGroupProps,
-	ValidationState
+	ValidationState,
+	ToggleButtonProps
 } from "./theme";
 import { classNames } from "../utils";
 
@@ -143,7 +144,7 @@ const theme: Theme = {
 	Form,
 	ControlLabel: Form.Label,
 	Checkbox: Form.Check,
-	ToggleButton: (props) => <ToggleButton variant={'outline-secondary'} {...props as any} />,
+	ToggleButton: React.forwardRef<typeof ToggleButton, ToggleButtonProps>((props, ref) => <ToggleButton variant={'outline-secondary'} {...props as any} ref={ref} />),
 	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>(({className, ...props}, ref) => <ToggleButtonGroup {...props as any} className={classNames(className, "bg-white")} ref={ref} />)
 };
 export default theme;
