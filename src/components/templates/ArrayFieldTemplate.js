@@ -106,7 +106,7 @@ function _Button({button, props, getProps, buttonId}) {
 
 	return render ? render(onClick, button) : (
 		<Button id={buttonId} className={className} onClick={onClick} variant={variant} active={active} tooltip={tooltip || help} tooltipPlacement={tooltipPlacement} tooltipClass={tooltipClass} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))} style={button.style}>
-			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
+			{glyph && <ReactContext.Consumer>{({theme: {Glyphicon}}) => <Glyphicon glyph={glyph} />}</ReactContext.Consumer>}
 			{glyph ? ` ${label}` : label}
 			{help && <Help /> }
 		</Button>
