@@ -472,7 +472,7 @@ const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e:
 		let keys = [" ", "Enter"];
 		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
 			const {shortcuts} = getContext(contextId) as any;
-			keys = keys.filter(k => !shortcuts[k]);
+			keys = keys.filter(k => !shortcuts?.[k]);
 		}
 		if (keys.every(k => e.key !== k)) {
 			return;
