@@ -1613,7 +1613,7 @@ min-height: 20px;
 }
 
 .laji-form .laji-form-hide-btn-label, .laji-form .btn.btn-default.laji-form-hide-btn-label {
-	color: white;
+	color: rgba(0, 0, 0, 0);
 }
 
 .laji-form .informal-group-image {
@@ -1668,9 +1668,6 @@ min-height: 20px;
 /* Styles related to bs5 theme */
 .laji-form .pull-right {
 	float: right !important;
-}
-.laji-form .laji-form-error-list {
-	background-color: white;
 }
 .laji-form .laji-form-error-list .card {
 	border: none;
