@@ -52,11 +52,12 @@ import {
 	AccordionProps,
 	DropdownToggleProps,
 	FormGroupProps,
-	ValidationState
+	ValidationState,
+	ToggleButtonProps
 } from "./theme";
 import { classNames } from "../utils";
 
-const mapAnyVariant = (variant?: VariantI | ButtonVariantI, defaultVariant: Variant | ButtonVariant = "secondary"): Variant | ButtonVariant => {
+const mapAnyVariant = (variant?: VariantI | ButtonVariantI, defaultVariant: Variant | ButtonVariant = "outline-secondary"): Variant | ButtonVariant => {
 	if (!variant || variant === "default") {
 		return defaultVariant;
 	}
@@ -96,14 +97,8 @@ const _Modal: ModalI = Modal as unknown as ModalI;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
-_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) => (
-	<span {...props} ref={ref}>
-		{
-			React.Children.map(children, child => (
-				React.isValidElement(child) ? React.cloneElement(child, {variant: "outline-secondary"}) : child
-			))
-		}
-	</span>
+_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+	<span {...props} ref={ref} />
 ));
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
@@ -143,7 +138,7 @@ const theme: Theme = {
 	Form,
 	ControlLabel: Form.Label,
 	Checkbox: Form.Check,
-	ToggleButton,
+	ToggleButton: React.forwardRef<typeof ToggleButton, ToggleButtonProps>((props, ref) => <ToggleButton variant={'outline-secondary'} {...props as any} ref={ref} />),
 	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>((props, ref) => <ToggleButtonGroup {...props as any} ref={ref} />)
 };
 export default theme;

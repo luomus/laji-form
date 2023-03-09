@@ -1613,7 +1613,7 @@ min-height: 20px;
 }
 
 .laji-form .laji-form-hide-btn-label, .laji-form .btn.btn-default.laji-form-hide-btn-label {
-	color: white;
+	color: rgba(0, 0, 0, 0);
 }
 
 .laji-form .informal-group-image {
@@ -1669,9 +1669,6 @@ min-height: 20px;
 .laji-form .pull-right {
 	float: right !important;
 }
-.laji-form .laji-form-error-list {
-	background-color: white;
-}
 .laji-form .laji-form-error-list .card {
 	border: none;
 }
@@ -1704,7 +1701,12 @@ min-height: 20px;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
-
+.laji-form .rw-widget-picker .rw-select {
+	vertical-align: middle;
+}
+.laji-form .rw-calendar-header .rw-btn, .laji-form .rw-calendar-footer .rw-btn {
+	vertical-align: baseline;
+}
 
 .laji-form .input-group .input-group-text, .laji-form .input-group .input-group-button > button {
 	height: 25px;

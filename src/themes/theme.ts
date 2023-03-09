@@ -236,7 +236,7 @@ export interface ToggleButtonProps extends JSX.IntrinsicAttributes, HasMaybeClas
 	value?: any;
 }
 
-export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren {
+export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren, HasMaybeClassName {
 	type: "radio" | "checkbox";
 	name?: string;
 	defaultValue?: boolean;
