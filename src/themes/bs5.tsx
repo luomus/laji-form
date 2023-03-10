@@ -138,7 +138,7 @@ const theme: Theme = {
 	Form,
 	ControlLabel: Form.Label,
 	Checkbox: Form.Check,
-	ToggleButton: React.forwardRef<typeof ToggleButton, ToggleButtonProps>((props, ref) => <ToggleButton variant={'outline-secondary'} {...props as any} ref={ref} />),
+	ToggleButton: React.forwardRef<typeof ToggleButton, ToggleButtonProps>((props, ref) => <ToggleButton variant={"outline-secondary"} {...props as any} ref={ref} />),
 	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>((props, ref) => <ToggleButtonGroup {...props as any} ref={ref} />)
 };
 export default theme;
