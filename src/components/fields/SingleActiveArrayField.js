@@ -834,7 +834,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const {schema, uiSchema = {}, formData = [], items, disabled, readonly} = this.props;
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(uiSchema));
 		const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(uiSchema));
-		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(uiSchema);
+		const {renderTitleAsLabel, formatters = {}, shownColumns = [], removable = true} = getUiOptions(uiSchema);
 		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const foundProps = {};
@@ -878,7 +878,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const {confirmDelete} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = (idx, item) => {
-			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
+			return removable && <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
 										       disabled={disabled || readonly}
 			                     ref={this.getDeleteButtonRef(idx)}
 			                     key={getUUID(this.props.formData[item.index]) || item.key}
