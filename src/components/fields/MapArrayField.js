@@ -1156,13 +1156,9 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			this._tileLayerNameOnNextTick = tileLayerOptions;
 			this._tileLayerNameOnNextTickCallback = callback;
 		};
-		this._resizeEventHandler = () => {
-			this.refs.stretch.invalidate();
-		};
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 
 		if (this.state.activeIdx !== undefined) {
 			this.afterActiveChange(this.state.activeIdx, !!"initial call");
@@ -1180,7 +1176,6 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
 		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
 		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 	}
 
 	componentDidUpdate(...params) {

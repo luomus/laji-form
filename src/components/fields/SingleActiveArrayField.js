@@ -675,14 +675,14 @@ class TableArrayFieldTemplate extends React.Component {
 		super(props);
 		this.state = {};
 		this.itemElems = [];
+		this.resizeObserver = new ResizeObserver(this.onResize);
 	}
 
-	onResize = (data, callback) => {
-		this.updateLayout(null, callback);
+	onResize = () => {
+		this.updateLayout();
 	}
 
 	componentDidMount() {
-		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this.onResize);
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
@@ -691,7 +691,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 	componentWillUnmount() {
 		window.removeEventListener("resize", this._updateRenderingMode);
-		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "resize", this.onResize);
+		this.resizeObserver.disconnect();
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -722,12 +722,6 @@ class TableArrayFieldTemplate extends React.Component {
 			}
 			if (tHeadHeight) this.prevTHeadHeight = tHeadHeight;
 			this._prevCheckedLength = this.props.items.length;
-		}
-
-		if (this.props.idSchema.$id !== prevProps.idSchema.$id) {
-			prevProps.formContext.services.customEvents.remove(prevProps.idSchema.$id, "resize", this.onResize);
-			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this.onResize);
-			this.updateLayout();
 		}
 	}
 
@@ -778,6 +772,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 	setActiveRef = (elem) => {
 		this.activeElem = elem;
+		this.activeElem && this.resizeObserver.observe(this.activeElem);
 	}
 
 	setTHeadRef = (elem) => {

@@ -109,12 +109,6 @@ export default class _SchemaField extends React.Component {
 		};
 	}
 
-	componentDidUpdate(prevProps) {
-		if (!deepEquals(prevProps.errorSchema, this.props.errorSchema)) {
-			this.props.registry.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
-		}
-	}
-
 	render() {
 		const props = this.functionOutputProps || this.props;
 		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars

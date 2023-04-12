@@ -10,12 +10,10 @@ import { getTemplate } from "@rjsf/utils";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {

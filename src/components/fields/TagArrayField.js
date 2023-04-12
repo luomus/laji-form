@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
-const equals = require("deep-equal");
 
 @BaseComponent
 export default class TagArrayField extends React.Component {
@@ -39,12 +38,6 @@ export class TagInputComponent extends React.Component {
 
 	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
-	}
-
-	componentDidUpdate(prevProps) {
-		if (!equals(prevProps.formData, this.props.formData)) {
-			this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
-		}
 	}
 
 	getStateFromProps = ({value}) => {

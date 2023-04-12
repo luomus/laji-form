@@ -206,14 +206,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			this.mounted = false;
 		}
 
-		componentDidUpdate(prevProps: FieldProps, prevState: MediaArrayState) {
-			const getCount = (_props: FieldProps, _state: MediaArrayState) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
-
-			if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
-				this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
-			}
-		}
-
 		onDragEnter = () => {this.setState({dragging: true});};
 
 		onDragLeave = () => {this.setState({dragging: false});};
