@@ -12,10 +12,6 @@ function onAdd(e, props) {
 	props.onAddClick(e);
 }
 
-export const onDelete = (item, props) => (e) => {
-	item.onDropIndexClick(item.index)(e);
-};
-
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const {contextId} = props.formContext;
@@ -313,7 +309,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 					<DeleteButton id={`${props.idSchema.$id}_${i}`}
 					              disabled={disabled || readonly}
 					              ref={getRefFor(i)}
-					              onClick={onDelete(item, props)}
+					              onClick={item.onDropIndexClick(item.index)}
 					              confirm={confirmDelete}
 					              corner={deleteCorner}
 					              tooltip={deleteHelp}

@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden, getUUID } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton } from "../components";
-import { getButtonElems, handlesArrayKeys, onDelete } from "../templates/ArrayFieldTemplate";
+import { getButtonElems, handlesArrayKeys } from "../templates/ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
@@ -174,7 +174,7 @@ class TableArrayFieldTemplate extends React.Component {
 						<DeleteButton ref={getRefFor(i)}
 						              id={`${props.idSchema.$id}_${i}`}
 						              disabled={readonly || disabled}
-						              onClick={onDelete(item, props)}
+						              onClick={item.onDropIndexClick(item.index)}
 						              confirm={confirmDelete}
 						              corner={deleteCorner}
 						              tooltip={deleteHelp}

@@ -6,7 +6,7 @@ import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBoot
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../templates/ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -275,14 +275,14 @@ export default class SingleActiveArrayField extends React.Component {
 		onActiveChange ? onActiveChange(idx, prop, callback) : this.setState({activeIdx: idx}, callback);
 	}
 
-	onDelete = (idx, item) => (e) => {
+	onDelete = (item) => (e) => {
 		const newLength = this.props.formData.length - 1;
 		if (!newLength) {
 			this.onActiveChange(undefined);
 		} else if (this.state.activeIdx > newLength - 1) {
 			this.onActiveChange(newLength - 1);
 		}
-		onDelete(item, this.props)(e);
+		item.onDropIndexClick(item.index)(e);
 	}
 
 	buttonDefinitions = {
@@ -478,7 +478,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 						className="pull-right"
 						confirm={confirmDelete}
 						translations={translations}
-						onClick={that.onDelete(idx, item)} />}
+						onClick={that.onDelete(item)} />}
 				</AccordionHeader>;
 
 			if (affixed && activeIdx === idx) {
@@ -613,7 +613,7 @@ class PagerArrayFieldTemplate extends React.Component {
 									className="pull-right"
 									confirm={confirmDelete}
 									translations={translations}
-									onClick={that.onDelete(activeIdx, arrayTemplateFieldProps.items[activeIdx])}
+									onClick={that.onDelete(arrayTemplateFieldProps.items[activeIdx])}
 								/>
 							)
 							: null}
@@ -883,7 +883,7 @@ class TableArrayFieldTemplate extends React.Component {
 			                     key={getUUID(this.props.formData[item.index]) || item.key}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
-			                     onClick={that.onDelete(idx, item)} />;
+			                     onClick={that.onDelete(item)} />;
 		};
 
 		const setItemRef = idx => elem => {
