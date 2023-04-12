@@ -856,7 +856,6 @@ export class Autosuggest extends React.Component {
 				loading={this.state.isLoading} 
 				validationState={validationState} 
 				extra={[addon, toggler]}
-				 className={toggler ? "has-toggler" : undefined}
 				{...inputProps} 
 			/>
 		);

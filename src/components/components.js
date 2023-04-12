@@ -586,26 +586,20 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 	const _extra = (!Array.isArray(extra)) ? [extra] : extra;
 	const hasExtras = _extra.some(item => item !== null && item !== undefined);
 
-	const inputContent = (
-		<React.Fragment>
-			{hasExtras && <InputGroup.Button>{..._extra}</InputGroup.Button>}
-			<Input {...inputProps} ref={ref} />
-			{glyph}
-			{loading && <Spinner />}
-		</React.Fragment>
-	);
+	const inputContent = <>
+		{hasExtras && <InputGroup.Button>{..._extra}</InputGroup.Button>}
+		<Input {...inputProps} ref={ref} />
+		{glyph}
+		{loading && <Spinner />}
+	</>;
 
-	const content = extra
+	const content = hasExtras
 		? (
 			<InputGroup>
 				{inputContent}
 			</InputGroup>
 		)
-		: (
-			<React.Fragment>
-				{inputContent}
-			</React.Fragment>
-		);
+		: inputContent;
 
 	return (
 		<FormGroup onMouseOver={onMouseOver} onMouseOut={onMouseOut} validationState={validationState} className={classNames(className, "fetcher-input")}>
