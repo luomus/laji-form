@@ -13,6 +13,7 @@ import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
+import * as memoize from "memoizee";
 
 const popupMappers = {
 	units: (schema, units, options) => {
@@ -826,6 +827,24 @@ class TableArrayFieldTemplate extends React.Component {
 		return that.deleteButtonRefSetters[idx];
 	}
 
+	customEventSender = memoize((eventName) => memoize((idx) => () => {
+		const that = this.props.formContext.this;
+		that.props.formContext.services.customEvents.send(that.props.idSchema.$id, eventName, {idx});
+	}))
+
+	onKeyDownActivate = memoize((idx) => (e) => {
+		if (idx !== this.state.activeIdx && (e.key === " " || e.key === "Enter")) {
+			this.getOnChangeActive(idx)();
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	})
+
+	getOnChangeActive = memoize(idx => () => {
+		const that = this.props.formContext.this;
+		idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
+	});
+
 	render() {
 		if (this.state.normalRendering) {
 			return <_ArrayFieldTemplate {...this.props} />;
@@ -871,10 +890,6 @@ class TableArrayFieldTemplate extends React.Component {
 		const {errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
-		const changeActive = idx => () => {
-			idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
-		};
-
 		const {confirmDelete} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = (idx, item) => {
@@ -893,22 +908,8 @@ class TableArrayFieldTemplate extends React.Component {
 
 		const title = getTitle(this.props, that.state.activeIdx);
 
-		const cachedMouseHandler = (cacheKey, handler) => (idx)  => {
-			if (that.props.idSchema.$id.match(/units$/)) {
-				this.mouseCache[cacheKey][idx] = handler(idx);
-				return this.mouseCache[cacheKey][idx];
-			}
-		};
-		const mouseHandler = (eventName) => (idx) => () => that.props.formContext.services.customEvents.send(that.props.idSchema.$id, eventName, {idx});
-		const onMouseEnter = cachedMouseHandler("enter", mouseHandler("startHighlight"));
-		const onMouseLeave = cachedMouseHandler("leave", mouseHandler("endHighlight"));
-		const onKeyDown = cachedMouseHandler("keydown", (idx) => (e) => {
-			if (idx !== this.state.activeIdx && (e.key === " " || e.key === "Enter")) {
-				changeActive(idx)();
-				e.preventDefault();
-				e.stopPropagation();
-			}
-		});
+		const onMouseEnter = this.customEventSender("startHighlight");
+		const onMouseLeave = this.customEventSender("endHighlight");
 
 		const {Table} = this.context.theme;
 
@@ -935,7 +936,7 @@ class TableArrayFieldTemplate extends React.Component {
 									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
 										<tr key={getUUID(this.props.formData[item.index]) || item.key}
-										    onClick={changeActive(idx)}
+										    onClick={this.getOnChangeActive(idx)}
 										    className={className}
 										    tabIndex={idx === activeIdx ? undefined : 0}
 										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}
@@ -943,7 +944,7 @@ class TableArrayFieldTemplate extends React.Component {
 										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
 										    onMouseEnter={onMouseEnter(idx)}
 										    onMouseLeave={onMouseLeave(idx)}
-										    onKeyDown={onKeyDown(idx)}
+										    onKeyDown={this.onKeyDownActivate(idx)}
 										>
 											{cols.map(col => 
 												<td key={col}>
