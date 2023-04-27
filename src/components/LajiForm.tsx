@@ -88,6 +88,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"DefaultValueArrayField",
 	"UiFieldApplierField",
 	"MultiLanguageField",
+	"SortArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.

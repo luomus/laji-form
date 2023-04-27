@@ -3,7 +3,7 @@ import getContext from "../../Context";
 import { Help, TooltipComponent } from "../components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, classNames } from "../../utils";
 
-export default class FieldTemplateTemplate extends React.Component {
+export default class _FieldTemplate extends React.Component {
 	constructor(props) {
 		super(props);
 		if (getUiOptions(props.uiSchema).reserveId === false) {

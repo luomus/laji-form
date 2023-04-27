@@ -1665,6 +1665,22 @@ min-height: 20px;
 	display: initial;
 }
 
+.laji-form-col-sortable {
+	cursor: pointer;
+}
+.laji-form-col-desc:after {
+	content: "↓";
+	position: absolute;
+	margin-left: 5px;
+	float: right;
+}
+.laji-form-col-asc:after {
+	content: "↑";
+	position: absolute;
+	margin-left: 5px;
+	float: right;
+}
+
 /* Styles related to bs5 theme */
 .laji-form .pull-right {
 	float: right !important;

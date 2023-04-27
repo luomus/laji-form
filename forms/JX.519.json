@@ -2957,6 +2957,9 @@
           "ui:functions": [
             {
               "ui:field": "UnitListShorthandArrayField"
+            },
+            {
+              "ui:field": "SortArrayField"
             }
           ],
           "ui:field": "SingleActiveArrayField",

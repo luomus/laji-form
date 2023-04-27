@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils, isDefaultData } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils, isDefaultData, classNames } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
@@ -137,13 +137,18 @@ export default class SingleActiveArrayField extends React.Component {
 	getStateFromProps(props) {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
-		if ("activeIdx" in options) state.activeIdx = options.activeIdx;
-		else if ((props.formData || []).length === 1 && (this.props.formData || []).length === 0) {
+		if ("activeIdx" in options) {
+			state.activeIdx = options.activeIdx;
+		} else if ((props.formData || []).length === 1 && (this.props.formData || []).length === 0) {
 			state.activeIdx = 0;
 		}
 
 		if (!state.activeIdx && this.props && props.idSchema.$id !== this.props.idSchema.$id) {
 			state.activeIdx = this.getInitialActiveIdx(props);
+		}
+
+		if (options.sortCols && options.sortCols !== getUiOptions(this.props.uiSchema).sortCols) {
+			state.activeIdx = undefined;
 		}
 
 		return state;
@@ -845,6 +850,26 @@ class TableArrayFieldTemplate extends React.Component {
 		idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
 	});
 
+	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col))
+
+	getSortableHeaderProps(col, props) {
+		const {onSortToggle, sortCols} = getUiOptions(props.uiSchema);
+		if (!onSortToggle) {
+			return {};
+		}
+		const colSort = sortCols.find(({name}) => name === col);
+		const className = classNames(
+			colSort?.descending
+				? "laji-form-col-desc"
+				: colSort?.descending === false
+					? "laji-form-col-asc"
+					: undefined,
+			"laji-form-col-sortable"
+		);
+
+		return {onClick: this.getOnHeaderClick(col, onSortToggle), className};
+	}
+
 	render() {
 		if (this.state.normalRendering) {
 			return <_ArrayFieldTemplate {...this.props} />;
@@ -923,7 +948,7 @@ class TableArrayFieldTemplate extends React.Component {
 							{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
 									<tr className="darker">
-										{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+										{cols.map(col => <th key={col} {...this.getSortableHeaderProps(col, this.props)}>{schema.items.properties[col].title}</th>)}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
 									</tr>
