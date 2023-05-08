@@ -818,5 +818,25 @@
 		"fi": "kuvaa",
 		"en": "photos",
 		"sv": "foton"
+	},
+	"sortStrategyDefault": {
+		"fi": "Oletus",
+		"en": "Default",
+		"sv": "Förmodan"
+	},
+	"sortStrategyTaxonomic": {
+		"fi": "Taksonominen",
+		"en": "Taxonomic",
+		"sv": "Taxonomisk"
+	},
+	"sortStrategies": {
+		"fi": "Järjestysasetukset",
+		"en": "Sort settings",
+		"sv": "sorteringsinställningar"
+	},
+	"clickToSort": {
+		"fi": "Klikkaa järjestääksesi",
+		"en": "Click to sort",
+		"sv": "Klicka för att sortera"
 	}
 }

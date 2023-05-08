@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState, getFormDataIndex } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
@@ -76,9 +76,8 @@ export class ArrayFieldPatched extends ArrayField {
 	}
 
 	getIdSchema(props, _index) {
-		const {idSchema, uiSchema} = props;
-		const {idxOffsets = {}} = getUiOptions(uiSchema);
-		const index = (idxOffsets[_index] || 0) + _index;
+		const {idSchema} = props;
+		const index = getFormDataIndex(_index, props.uiSchema);
 
 		const root = idSchema.$id;
 		const reduced = (idSchema, root) => Object.keys(idSchema).reduce((idSchema, prop) => {

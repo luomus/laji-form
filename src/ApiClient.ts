@@ -46,13 +46,13 @@ export default class ApiClient {
 		});
 	}
 
-	fetch(path: string, query?: Query, options: Options = {}) {
+	fetch<T>(path: string, query?: Query, options: Options = {}): Promise<T> {
 		const {failSilently = false, ...fetchOptions} = options;
 		return this.fetchRaw(path, query, fetchOptions).then(response => {
 			if (!failSilently && response.status >= 400) {
 				throw new Error("Request failed");
 			}
-			return response.json();
+			return response.json() as T;
 		}).catch(() => {
 			if (this.cache[path]) delete this.cache[path][this.getCacheKey(query, options)];
 			throw new Error(this.translations[this.lang].RequestFailed as string);
@@ -63,10 +63,10 @@ export default class ApiClient {
 		return JSON.stringify(query) + JSON.stringify(options);
 	}
 
-	fetchCached(path: string, query?: Query, options?: Options) {
+	fetchCached<T>(path: string, query?: Query, options?: Options): Promise<T> {
 		const cacheKey = this.getCacheKey(query, options);
 		if (!this.cache[path])  this.cache[path] = {};
-		this.cache[path][cacheKey] = cacheKey in this.cache[path] ? this.cache[path][cacheKey] : this.fetch(path, query, options);
+		this.cache[path][cacheKey] = cacheKey in this.cache[path] ? this.cache[path][cacheKey] : this.fetch<T>(path, query, options);
 		return this.cache[path][cacheKey];
 	}
 

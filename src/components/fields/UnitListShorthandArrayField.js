@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState, assignUUID } from "../../utils";
 import { Button } from "../components";
 import ReactContext from "../../ReactContext";
 import { TagInputComponent } from "./TagArrayField";
@@ -71,6 +71,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			units = units.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit);
 				unit = bringRemoteFormData(unit, this.props.formContext);
+				unit = assignUUID(unit);
 				return unit;
 			});
 			const formData = this.props.formData;

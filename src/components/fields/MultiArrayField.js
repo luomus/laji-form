@@ -122,7 +122,7 @@ export default class MultiArrayField extends React.Component {
 			} else {
 				idxOffsets = group.reduce((g, i, _idx) => {
 					g[_idx] = offset;
-					return  g;
+					return g;
 				}, {});
 			}
 			offset += group.length;

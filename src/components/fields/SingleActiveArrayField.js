@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils, isDefaultData, classNames } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
@@ -14,6 +14,8 @@ import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 import * as memoize from "memoizee";
+import { colIsLoading } from "./SortArrayField";
+import { ArrayFieldPatched } from "./ArrayField";
 
 const popupMappers = {
 	units: (schema, units, options) => {
@@ -93,15 +95,16 @@ export default class SingleActiveArrayField extends React.Component {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
 		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset, affixed} = getUiOptions(this.props.uiSchema);
+		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", affixed} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
 		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
+			const id = `${this.props.idSchema.$id}_${getFormDataIndex(this.state.activeIdx, this.props.uiSchema)}`;
 			const idToScroll = idToScrollAfterNavigate
 				? idToScrollAfterNavigate
 				: !affixed && (renderer === "accordion" || renderer === "pager")
-					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
+					? `${id}-header`
 					: `${this.props.idSchema.$id}-add`;
-			this.getLocalFormContext().utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
+			this.getLocalFormContext().utils.focusAndScroll(idToFocusAfterNavigate || id, idToScroll, focusOnNavigate);
 		}
 
 		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
@@ -304,7 +307,7 @@ export default class SingleActiveArrayField extends React.Component {
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
 					formData.length - 1;
-				beforeAdd(this.props);
+				beforeAdd(this.props, idx + 1);
 				this.props.onChange([
 					...formData.slice(0, idx + 1),
 					copyItemFunction(this, formData[idx])(...params),
@@ -390,9 +393,11 @@ function handlesButtonsAndFocus(ComposedComponent) {
 
 		getFocusHandlers = (props) => {
 			const that = props.formContext.this;
+			const {idxMap = {}} = getUiOptions(props.uiSchema);
 			return props.items.map((_, i) => {
-				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
-				return [`${that.props.idSchema.$id}_${idx}`,() => {
+				const mappedIdx = idxMap[i] ?? i;
+				const idx = getFormDataIndex(i, that.props.uiSchema);
+				return [`${that.props.idSchema.$id}_${idx}`, () => {
 					if (that.state.activeIdx !== i) return new Promise(resolve => {
 						that.onActiveChange(i, undefined, () => resolve());
 					});
@@ -478,7 +483,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 					wrapperClassName="panel-title"
 			    className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header"
 				>
-					{item.hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
+					{item.hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}`}
 						disabled={disabled || readonly}
 						ref={this.setDeleteButtonRef(idx)}
 						className="pull-right"
@@ -508,10 +513,10 @@ class AccordionArrayFieldTemplate extends React.Component {
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
-						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
+						       id={`${this.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
-									 variant={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
+									 variant={filteredErrors(that.props.errorSchema)[getFormDataIndex(idx, that.props.uiSchema)] ? "danger" : "default"}>
 							<Panel.Heading>
 								{getHeader(item, idx)}
 							</Panel.Heading>
@@ -614,7 +619,7 @@ class PagerArrayFieldTemplate extends React.Component {
 						{activeIdx !== undefined && arrayTemplateFieldProps.items[activeIdx].hasRemove
 							? (
 								<DeleteButton
-									id={`${that.props.idSchema.$id}_${getIdxWithOffset(activeIdx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
+									id={`${that.props.idSchema.$id}_${getFormDataIndex(activeIdx, that.props.uiSchema)}`}
 									ref={this.setDeleteButtonRef(activeIdx)}
 									className="pull-right"
 									confirm={confirmDelete}
@@ -853,21 +858,21 @@ class TableArrayFieldTemplate extends React.Component {
 	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col))
 
 	getSortableHeaderProps(col, props) {
-		const {onSortToggle, sortCols} = getUiOptions(props.uiSchema);
+		const {onSortToggle, sortCols, ui} = getUiOptions(props.uiSchema);
 		if (!onSortToggle) {
 			return {};
 		}
-		const colSort = sortCols.find(({name}) => name === col);
+		const sortCol = sortCols.find(({name}) => name === col);
 		const className = classNames(
-			colSort?.descending
+			sortCol?.descending
 				? "laji-form-col-desc"
-				: colSort?.descending === false
+				: sortCol?.descending === false
 					? "laji-form-col-asc"
 					: undefined,
 			"laji-form-col-sortable"
 		);
 
-		return {onClick: this.getOnHeaderClick(col, onSortToggle), className};
+		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col], tooltip: props.formContext.translations["ClickToSort"]};
 	}
 
 	render() {
@@ -948,7 +953,14 @@ class TableArrayFieldTemplate extends React.Component {
 							{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
 									<tr className="darker">
-										{cols.map(col => <th key={col} {...this.getSortableHeaderProps(col, this.props)}>{schema.items.properties[col].title}</th>)}
+										{cols.map(col => {
+											const sortableHeaderProps = this.getSortableHeaderProps(col, this.props);
+											const {ui, tooltip, ..._sortableHeaderProps} = sortableHeaderProps;
+											return <TooltipComponent key={col} tooltip={tooltip} placement="top"><th {..._sortableHeaderProps}>
+												{schema.items.properties[col].title}
+												{ui || null}
+											</th></TooltipComponent>
+										})}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
 									</tr>
@@ -958,13 +970,13 @@ class TableArrayFieldTemplate extends React.Component {
 								{formData.map((_, idx) => {
 									const item = items[idx];
 									let className = "";
-									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
+									if (filteredErrors(errorSchema)[getFormDataIndex(idx, uiSchema)]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
 										<tr key={getUUID(this.props.formData[item.index]) || item.key}
 										    onClick={this.getOnChangeActive(idx)}
 										    className={className}
 										    tabIndex={idx === activeIdx ? undefined : 0}
-										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}
+										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${ArrayFieldPatched.prototype.getIdSchema(this.props, idx).$id}` : undefined}
 										    ref={setItemRef(idx)}
 										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
 										    onMouseEnter={onMouseEnter(idx)}
@@ -1204,7 +1216,7 @@ class AccordionHeader extends React.Component {
 		const header = (
 			<div className={this.props.className}
 			     role="tab"
-			     id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-header`}
+			     id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-header`}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}
 				   onMouseLeave={this.onMouseLeave} >

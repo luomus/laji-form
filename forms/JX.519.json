@@ -2956,10 +2956,27 @@
           },
           "ui:functions": [
             {
-              "ui:field": "UnitListShorthandArrayField"
+              "ui:field": "SortArrayField",
+							"ui:options": {
+								"columns": {
+									"identifications_0_taxon": {
+										"compareStrategies": [
+											{"strategy": "default"},
+											{
+											"strategy": "taxonomic",
+											"valueField": "identifications_0_id",
+											"query": {
+												"informalGroupFilters": "MVL.1",
+												"onlyFinnish": true
+											}
+										}
+										]
+									}
+								}
+							}
             },
             {
-              "ui:field": "SortArrayField"
+              "ui:field": "UnitListShorthandArrayField"
             }
           ],
           "ui:field": "SingleActiveArrayField",

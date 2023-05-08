@@ -1015,7 +1015,7 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
-export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
+export const getUUID = (item: any): number => item ? (item.id || item._lajiFormId) : undefined;
 
 /**
  * Return item UUID or the parent UUID
@@ -1134,18 +1134,37 @@ export function constructTranslations(translations: {[word: string]: {[lang: str
 	return dictionaries;
 }
 
-export function getIdxWithOffset(idx: number, offsets: any, totalOffset: number) {
+export function getIdxWithOffset(idx: number, offsets?: Record<string, number>, totalOffset?: number) {
 	let offset = idx in (offsets || {})
 		? (offsets || {})[idx]
 		: totalOffset;
 	return (offset || 0) + idx;
 }
 
-export function getIdxWithoutOffset(idx: number, offsets: any, totalOffset: number) {
+export function getIdxWithoutOffset(idx: number, offsets?: Record<string, number>, totalOffset?: number) {
 	let offset = `_${idx}` in (offsets || {})
 		? (offsets || {})[`_${idx}`]
 		: totalOffset;
 	return idx - (offset || 0);
+}
+
+/**
+ * The indices of the formData that a component receives doesn't match the actual root formData indices,
+ * if the data is sorted or has offsets. This returns the original index.
+ */
+export function getFormDataIndex(idx: number, uiSchema: any) {
+	const {idxMap = {}, idxOffsets, totalOffset} = getUiOptions(uiSchema);
+	const mappedIdx = idxMap[idx] ?? idx;
+	return getIdxWithOffset(mappedIdx, idxOffsets, totalOffset);
+}
+
+/**
+ * Given an index pointing to actual index in root formData, returns the index with sorting & offset applied.
+ */
+export function getReversedFormDataIndex(idx: number, uiSchema: any) {
+	const {idxMap = {}, idxOffsets, totalOffset} = getUiOptions(uiSchema);
+	const mappedIdx = idxMap["_" + idx] ?? idx;
+	return getIdxWithoutOffset(mappedIdx, idxOffsets, totalOffset);
 }
 
 export function toJSONPointer(s: string) {

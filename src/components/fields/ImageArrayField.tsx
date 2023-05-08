@@ -325,7 +325,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const item = this.props.formData[i];
 			this.setState({metadataModalOpen: i});
 			this.fetching = item;
-			this.apiClient.fetch(`/${this.ENDPOINT}/${item}`).then(response => {
+			this.apiClient.fetch(`/${this.ENDPOINT}/${item}`).then((response: any) => {
 				if (response.id !== this.fetching) return;
 				this._context.metadatas[item] = response;
 				this.setState({modalIdx: i, modalMediaSrc: response.fullURL, modalMetadata: this._context.metadatas[item]});

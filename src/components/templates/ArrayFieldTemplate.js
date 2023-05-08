@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
+import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getReversedFormDataIndex } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
@@ -12,12 +12,12 @@ function onAdd(e, props) {
 	props.onAddClick(e);
 }
 
-export function beforeAdd(props) {
+export function beforeAdd(props, addedIdx) {
 	if (!canAdd(props)) return;
 	const {contextId} = props.formContext;
 	const startIdx = props.startIdx  || getUiOptions(props.uiSchema).startIdx;
 	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`, idxOffsets, totalOffset} = getUiOptions(props.uiSchema || {});
-	let idx = (props.items || props.formData || []).length;
+	let idx = addedIdx ?? (props.items || props.formData || []).length;
 	const offset = startIdx !== undefined
 		? startIdx
 		: idxOffsets
@@ -86,7 +86,7 @@ function _Button({button, props, getProps, buttonId}) {
 		const onClickProps = getProps ? getProps() : props;
 		let _fn = () => fn(e)(onClickProps, options);
 		const __fn = () => {
-			beforeFn && beforeFn(onClickProps, options);
+			beforeFn && beforeFn(onClickProps);
 			_fn();
 			callback && callback();
 		};
@@ -382,7 +382,7 @@ export const arrayKeyFunctions = {
 		const nearestSchemaElemId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
-		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
+		const focusedIdx = activeItemQuery ? getReversedFormDataIndex(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getProps().uiSchema) : undefined;
 		const focusedPropMaybe = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_${focusedIdx}_(.+)`))?.[1];
 		const focusedProp = isNaN(focusedPropMaybe) ? focusedPropMaybe : undefined;
 

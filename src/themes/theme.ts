@@ -169,6 +169,7 @@ export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren
 	onClick?: React.MouseEventHandler<any>;
 	active?: boolean;
 	disabled?: boolean;
+	eventKey?: string | number;
 }
 
 export interface AlertProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
@@ -197,15 +198,17 @@ export interface CollapseProps extends JSX.IntrinsicAttributes {
 	in?: boolean;
 }
 
-export interface DropdownProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export type DropdownProps = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeClassName & {
 	id: string;
 	pullRight?: boolean;
 	open?: boolean;
-	onSelect: React.EventHandler<any>;
-	onToggle: React.EventHandler<any>;
+	onToggle?: React.EventHandler<any>;
+	onClick?: React.MouseEventHandler<any>;
 }
 
-export type DropdownMenuProps = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeRef;
+export type DropdownMenuProps = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeRef & {
+	onSelect?: React.EventHandler<any>;
+};	
 
 export type Dropdown = React.ComponentType<DropdownProps> & {
 	Menu: React.ComponentType<DropdownMenuProps>;

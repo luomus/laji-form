@@ -23,8 +23,8 @@ export default class SubmitHookService {
 		this.onSubmitHooksChange(submitHooks, callback);
 	}
 
-	private internalAdd(lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) {
-		lajiFormId = `${lajiFormId}`;
+	private internalAdd(_lajiFormId: string | number, relativePointer: string | undefined, hook: () => void, description?: string) {
+		const lajiFormId = `${_lajiFormId}`;
 		let promise: Promise<any>;
 		const _hook = (): Promise<any> => {
 			return new Promise((resolve) => {
