@@ -128,21 +128,7 @@ const ColumnOptionsUI = ({field, compareStrategies = [], sortCol, updateSortCol,
 			return;
 		}
 		updateSortCol({...(sortCol || {}), compareStrategy: strategy});
-
-		const finish = (comparer: TaxonomicComparer) => {
-			const descending = sortCol?.descending === undefined ? true : sortCol?.descending;
-			updateSortCol({...(sortCol || {}), compareStrategy: strategy, compare: comparer.compare, descending});
-		};
-
-		const comparer = comparers[strategy.strategy];
-		if (!comparer) {
-			comparers[strategy.strategy] = new compareStrategyMap[strategy.strategy](compareStrategies[idx] as any, field, formContext);
-			const instance = comparers[strategy.strategy];
-			instance.initialize().then(() => finish(instance));
-		} else {
-			finish(comparer);
-		}
-	}, [compareStrategies, field, formContext, sortCol, updateSortCol]);
+	}, [compareStrategies, sortCol, updateSortCol]);
 
 	if (!compareStrategies) {
 		return null;
@@ -271,6 +257,42 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 	*/
 	sortTimeIdToOrigIdx: Record<string, number> = {};
 
+	constructor(props: FieldProps) {
+		super(props);
+		props.formContext.services.settings.bind(this, props);
+		this.syncColumns();
+	}
+
+	componentDidUpdate() {
+		this.syncColumns();
+	}
+
+	// Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
+	// asynchronously when the  component updates according to the comparison strategy name.
+	syncColumns() {
+		const {sortCols} = this.state;
+		sortCols.forEach(sortCol => {
+			const {compareStrategy} = sortCol;
+			if (!compareStrategy || compareStrategy.strategy === "default" || sortCol.compare) {
+				return;
+			}
+
+			const finish = (comparer: TaxonomicComparer) => {
+				const descending = sortCol?.descending === undefined ? true : sortCol?.descending;
+				this.updateSortCol({...(sortCol || {}), compareStrategy, compare: comparer.compare, descending});
+			};
+
+			const comparer = comparers[compareStrategy.strategy];
+			if (!comparer) {
+				comparers[compareStrategy.strategy] = new compareStrategyMap[compareStrategy.strategy](compareStrategy as any, sortCol.name, this.props.formContext);
+				const instance = comparers[compareStrategy.strategy];
+				instance.initialize().then(() => finish(instance));
+			} else {
+				finish(comparer);
+			}
+		});
+	}
+
 	getUiShema(props: FieldProps, {sortCols}: State, sortedData: any[]) {
 		const idToSortedIdx = getIdToSortedIdx(sortedData);
 		const idToOrigIdx = getIdToSortedIdx(props.formData);
@@ -299,6 +321,13 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			formData: sortedFormData,
 			onChange: this.onChange
 		};
+	}
+
+	updateSortCol(sortCol: SortCol) {
+		const existingIdx = this.state.sortCols.findIndex(c => c.name === sortCol.name);
+		const _sortCols = [...this.state.sortCols];
+		_sortCols.splice(existingIdx === -1 ? _sortCols.length : existingIdx, 1, sortCol);
+		this.setSortCols(_sortCols);
 	}
 
 	setSortCols(sortCols: SortCol[]) {
