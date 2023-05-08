@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
@@ -14,7 +14,6 @@ import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 import * as memoize from "memoizee";
-import { colIsLoading } from "./SortArrayField";
 import { ArrayFieldPatched } from "./ArrayField";
 
 const popupMappers = {
@@ -393,9 +392,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 
 		getFocusHandlers = (props) => {
 			const that = props.formContext.this;
-			const {idxMap = {}} = getUiOptions(props.uiSchema);
 			return props.items.map((_, i) => {
-				const mappedIdx = idxMap[i] ?? i;
 				const idx = getFormDataIndex(i, that.props.uiSchema);
 				return [`${that.props.idSchema.$id}_${idx}`, () => {
 					if (that.state.activeIdx !== i) return new Promise(resolve => {
@@ -959,7 +956,7 @@ class TableArrayFieldTemplate extends React.Component {
 											return <TooltipComponent key={col} tooltip={tooltip} placement="top"><th {..._sortableHeaderProps}>
 												{schema.items.properties[col].title}
 												{ui || null}
-											</th></TooltipComponent>
+											</th></TooltipComponent>;
 										})}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
@@ -1102,7 +1099,7 @@ const headerFormatters = {
 			fetch = (props) =>  {
 				const {namedPlaceID} = (props.that.props.formData || {})[props.idx] || {};
 				if (namedPlaceID) props.that.props.formContext.apiClient.fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
-					if (this.mounted && name !== this.state.name) this.setState({
+					if (this.mounted && response.name !== this.state.name) this.setState({
 						namedPlaceID,
 						name: response.name
 					});
