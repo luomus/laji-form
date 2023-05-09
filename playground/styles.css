@@ -721,7 +721,7 @@ min-height: 20px;
 .laji-form .darker legend {
 	border-color: #cacaca;
 }
-.laji-form .darker th {
+.laji-form th.darker {
 	border-color: #cacaca;
 }
 .laji-form .laji-form-single-active-array .panel-body {
@@ -1670,6 +1670,9 @@ min-height: 20px;
 
 .laji-form-col-sortable {
 	cursor: pointer;
+}
+.laji-form-col-sortable.darker:hover {
+	background-color: #eaeaea;
 }
 .laji-form-col-desc:after {
 	content: "↓";

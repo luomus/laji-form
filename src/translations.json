@@ -830,13 +830,8 @@
 		"sv": "Taxonomisk"
 	},
 	"sortStrategies": {
-		"fi": "Järjestysasetukset",
-		"en": "Sort settings",
-		"sv": "sorteringsinställningar"
-	},
-	"clickToSort": {
-		"fi": "Klikkaa järjestääksesi",
-		"en": "Click to sort",
-		"sv": "Klicka för att sortera"
+		"fi": "Sarakkeen järjestysasetukset",
+		"en": "Columnn sort settings",
+		"sv": "Kolumn sorteringsinställningar"
 	}
 }

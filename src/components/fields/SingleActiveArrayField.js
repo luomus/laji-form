@@ -855,8 +855,8 @@ class TableArrayFieldTemplate extends React.Component {
 	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col))
 
 	getSortableHeaderProps(col, props) {
-		const {onSortToggle, sortCols, ui} = getUiOptions(props.uiSchema);
-		if (!onSortToggle) {
+		const {onSortToggle, sortCols, ui, sortableColumns} = getUiOptions(props.uiSchema);
+		if (!onSortToggle || sortableColumns && !sortableColumns.includes(col)) {
 			return {};
 		}
 		const sortCol = sortCols.find(({name}) => name === col);
@@ -869,7 +869,7 @@ class TableArrayFieldTemplate extends React.Component {
 			"laji-form-col-sortable"
 		);
 
-		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col], tooltip: props.formContext.translations["ClickToSort"]};
+		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col]};
 	}
 
 	render() {
@@ -949,15 +949,16 @@ class TableArrayFieldTemplate extends React.Component {
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 							{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
-									<tr className="darker">
+									<tr>
 										{cols.length ? cols.map(col => {
 											const sortableHeaderProps = this.getSortableHeaderProps(col, this.props);
-											const {ui, tooltip, ..._sortableHeaderProps} = sortableHeaderProps;
-											return <TooltipComponent key={col} tooltip={tooltip} placement="top"><th {..._sortableHeaderProps}>
+											const {ui, ..._sortableHeaderProps} = sortableHeaderProps;
+											const className = classNames("darker", sortableHeaderProps.className);
+											return <th key={col} {..._sortableHeaderProps} className={className}>
 												{schema.items.properties[col].title}
 												{ui || null}
-											</th></TooltipComponent>;
-										}) : <th />}
+											</th>;
+										}) : <th className="darker"/>}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
 									</tr>

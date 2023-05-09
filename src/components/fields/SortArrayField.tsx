@@ -6,6 +6,11 @@ import ReactContext from "../../ReactContext";
 import {TooltipComponent} from "../components";
 const Spinner = require("react-spinner");
 
+interface Options {
+	columns?: Record<string, ColumnOptions> | undefined;
+	sortableColumns?: string[];
+}
+
 export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
 interface SortCol {
 	name: string;
@@ -32,10 +37,12 @@ interface State {
 
 type DefaultCompareStrategy = {
 	strategy: "default";
+	noAscending?: boolean;
 }
 
 type TaxonomicCompareStrategy = {
 	strategy: "taxonomic";
+	noAscending?: boolean;
 	valueField?: string
 	query: {
 		informalGroupsFilter?: string
@@ -167,11 +174,11 @@ const getUI = (
 	return Object.keys(columns || {}).reduce((fieldToUI, field: string) => {
 		fieldToUI[field] = <>
 			{colsLoading(sortCols) && <Spinner />}
-			<ColumnOptionsUI field={field}
+			{(columns?.[field]?.compareStrategies?.length || 0) > 1 && <ColumnOptionsUI field={field}
 			                 {...columns?.[field]}
 			                 sortCol={sortCols?.find(c => c.name === field)}
 			                 updateSortCol={getUpdateSortCol(field, sortCols, setSortCols)}
-			                 formContext={formContext} />
+			                 formContext={formContext} />}
 		</>;
 		return fieldToUI;
 	}, {} as Record<string, React.ReactNode>);
@@ -278,7 +285,9 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			}
 
 			const finish = (comparer: TaxonomicComparer) => {
-				const descending = sortCol?.descending === undefined ? true : sortCol?.descending;
+				const descending = sortCol?.descending === undefined
+					? true
+					: sortCol?.descending;
 				this.updateSortCol({...(sortCol || {}), compareStrategy, compare: comparer.compare, descending});
 			};
 
@@ -297,7 +306,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		const idToSortedIdx = getIdToSortedIdx(sortedData);
 		const idToOrigIdx = getIdToSortedIdx(props.formData);
 		const nextComponentUiSchema = getInnerUiSchema(props.uiSchema);
-		const uiOptions = getUiOptions(props.uiSchema);
+		const uiOptions: Options = getUiOptions(props.uiSchema);
 		return {
 			...nextComponentUiSchema,
 			"ui:options": {
@@ -305,6 +314,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				onSortToggle: this.onSortToggle.bind(this),
 				sortCols,
 				ui: getUI(uiOptions.columns, sortCols, this.setSortCols.bind(this), props.formContext),
+				sortableColumns: uiOptions.sortableColumns,
 				idxMap: Object.keys(idToOrigIdx).reduce((map, id) => {
 					map[idToSortedIdx[id] as any] = idToOrigIdx[id];
 					map["_" + idToOrigIdx[id] as any] = idToSortedIdx[id];
@@ -341,14 +351,24 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		const sortCols = [..._sortCols];
 		const colSortIdx = sortCols?.findIndex(s => s.name === name);
 		const current = sortCols[colSortIdx];
+		const colOptions: ColumnOptions = getUiOptions(this.props.uiSchema).columns[name] || {};
+
+		const compareStrategy = current?.compareStrategy || colOptions.compareStrategies?.[0] || {strategy: "default"};
+
+		const {noAscending} = compareStrategy;
 		const nextDescending = current?.descending === undefined
 			? true
 			: current.descending
-				? false
+				? noAscending ? undefined : false
 				: undefined;
-		const sortCol = {...(current || {}), name, descending: nextDescending};
+		const sortCol = {
+			...(current || {}),
+			compareStrategy,
+			name,
+			descending: nextDescending,
+		};
 
-		if (current && current.descending === undefined) { // Push to end if the "descending" changes from undefinedjkd
+		if (current && current.descending === undefined) { // Push to end if the "descending" changes from undefined
 			sortCols.splice(colSortIdx, 1);
 			sortCols.push(sortCol);
 		} else { // Replace current with new
