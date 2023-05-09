@@ -950,14 +950,14 @@ class TableArrayFieldTemplate extends React.Component {
 							{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
 									<tr className="darker">
-										{cols.map(col => {
+										{cols.length ? cols.map(col => {
 											const sortableHeaderProps = this.getSortableHeaderProps(col, this.props);
 											const {ui, tooltip, ..._sortableHeaderProps} = sortableHeaderProps;
 											return <TooltipComponent key={col} tooltip={tooltip} placement="top"><th {..._sortableHeaderProps}>
 												{schema.items.properties[col].title}
 												{ui || null}
 											</th></TooltipComponent>;
-										})}
+										}) : <th />}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
 									</tr>
@@ -980,7 +980,7 @@ class TableArrayFieldTemplate extends React.Component {
 										    onMouseLeave={onMouseLeave(idx)}
 										    onKeyDown={this.onKeyDownActivate(idx)}
 										>
-											{cols.map(col => 
+											{cols.length ? cols.map(col => 
 												<td key={col}>
 													{formatValue(
 														{
@@ -993,7 +993,7 @@ class TableArrayFieldTemplate extends React.Component {
 														{formData: formData[idx]}
 													)}
 												</td>
-											)}
+											) : <td />}
 											{(activeIdx !== undefined && items[activeIdx] && idx === activeIdx) ? (
 												<td key={getUUID(formData[activeIdx]) || activeIdx} className="single-active-array-table-content-col">
 													<div className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} ref={this.setActiveRef}>
