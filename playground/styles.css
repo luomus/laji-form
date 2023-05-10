@@ -1675,13 +1675,13 @@ min-height: 20px;
 	background-color: #eaeaea;
 }
 .laji-form-col-desc:after {
-	content: "↓";
+	content: "↑";
 	position: absolute;
 	margin-left: 5px;
 	float: right;
 }
 .laji-form-col-asc:after {
-	content: "↑";
+	content: "↓";
 	position: absolute;
 	margin-left: 5px;
 	float: right;

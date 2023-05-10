@@ -12,6 +12,9 @@ interface Options {
 }
 
 export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
+
+const colsLoading = (sortCols: SortCol[]) => sortCols.filter(colIsLoading).length > 0;
+
 interface SortCol {
 	name: string;
 	/**
@@ -22,11 +25,11 @@ interface SortCol {
 	 * Compare function provided by the compare strategy. It can be asynchronously set.
 	 * If it returns undefined, comparison will fallback to the default algorithm.
 	*/
-	compare?: (a: any, b: any) => number | undefined;
+	compare?: (a: any, b: any, sortCol: SortCol, schema: any) => number | undefined;
 	/**
 	 * The chosen compare strategy object.
 	*/
-	compareStrategy?: CompareStrategy;
+	compareStrategy: CompareStrategy;
 	loading?: boolean;
 }
 
@@ -37,12 +40,12 @@ interface State {
 
 type DefaultCompareStrategy = {
 	strategy: "default";
-	noAscending?: boolean;
+	noDescending?: boolean;
 }
 
 type TaxonomicCompareStrategy = {
 	strategy: "taxonomic";
-	noAscending?: boolean;
+	noDescending?: boolean;
 	valueField?: string
 	query: {
 		informalGroupsFilter?: string
@@ -67,11 +70,15 @@ type ColumnOptionsUIProps = ColumnOptions & {
 	formContext: FormContext;
 }
 
-abstract class Comparer<T extends CompareStrategy> {
+interface ComparerI {
+	initialize?: () => Promise<void>;
+	compare(a: any, b: any, sortCol: SortCol, schema: any): number | undefined;
+}
+
+abstract class Comparer<T extends CompareStrategy> implements ComparerI {
 	protected options: T;
 	protected formContext: FormContext;
 	protected colName: string;
-	public ready = false;
 
 	constructor(options: T, colName: string, formContext: FormContext) {
 		this.options = options;
@@ -79,8 +86,7 @@ abstract class Comparer<T extends CompareStrategy> {
 		this.colName = colName;
 	}
 
-	abstract initialize(): Promise<void>;
-	abstract compare(a: any, b: any): number | undefined;
+	abstract compare(a: any, b: any, sortCol: SortCol, schema: any): number | undefined;
 }
 
 class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
@@ -93,30 +99,44 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 				idToIdx[id] = idx;
 				return idToIdx;
 			}, {} as Record<string, number>);
-		this.ready = true;
 	}
 
 	compare = (a: any, b: any) => {
 		const aValue = a[this.options.valueField || this.colName];
 		const bValue = b[this.options.valueField || this.colName];
 
-		if (aValue === undefined && bValue !== undefined) { 
+		if (this.idToIdx[aValue] === undefined && this.idToIdx[bValue] !== undefined) { 
 			return 1;
-		} else if (aValue !== undefined && bValue === undefined) {
+		} else if (this.idToIdx[aValue] !== undefined && this.idToIdx[bValue] === undefined) {
 			return -1;
-		}
 		// Fall back to default comparison if it's neither are in the taxonomic set.
-		if (aValue === undefined && bValue === undefined) {
+		} else if (this.idToIdx[aValue] === undefined && this.idToIdx[bValue] === undefined) {
 			return undefined;
 		}
 		return this.idToIdx[aValue] - this.idToIdx[bValue];
 	}
 }
 
-const compareStrategyMap: Record<string, typeof TaxonomicComparer> = {
-	taxonomic: TaxonomicComparer
+class DefaultComparer extends Comparer<DefaultCompareStrategy> {
+	compare = (a: any, b: any, sortCol: SortCol, schema: any) => {
+		const {name} = sortCol;
+		const colSchema = schema.items.properties[name];
+		const aValue = getValue(a[name], colSchema);
+		const bValue = getValue(b[name], colSchema);
+		if (aValue === undefined && bValue !== undefined || aValue < bValue) { 
+			return -1;
+		} else if (aValue !== undefined && bValue === undefined || aValue > bValue) {
+			return 1;
+		}
+		return 0;
+	}
+}
+
+const compareStrategyMap: Record<string, typeof DefaultComparer | typeof TaxonomicComparer> = {
+	taxonomic: TaxonomicComparer,
+	default: DefaultComparer
 };
-const comparers: Record<string, TaxonomicComparer> = {};
+const comparers: Record<string, DefaultComparer | TaxonomicComparer> = {};
 
 const ColumnOptionsUI = ({field, compareStrategies = [], sortCol, updateSortCol, formContext}: ColumnOptionsUIProps) => {
 	const {MenuItem, Glyphicon, Dropdown} = React.useContext(ReactContext).theme;
@@ -130,10 +150,6 @@ const ColumnOptionsUI = ({field, compareStrategies = [], sortCol, updateSortCol,
 
 	const onSelect = React.useCallback((idx: number) => {
 		const strategy = compareStrategies[idx];
-		if (strategy.strategy === "default") {
-			updateSortCol({});
-			return;
-		}
 		updateSortCol({...(sortCol || {}), compareStrategy: strategy});
 	}, [compareStrategies, sortCol, updateSortCol]);
 
@@ -192,18 +208,6 @@ const getValue = (formData: any, schema: any) => {
 };
 
 const sort = (schema: any, {sortCols}: State, sortTimeIdToSortedIdx: Record<string, number>, sortTimeIdToOrigIdx: Record<string, number>) => (a: any, b: any): number => {
-	const defaultSort = (a: any, b: any, sortCol: SortCol) => {
-		const {name} = sortCol;
-		const colSchema = schema.items.properties[name];
-		const aValue = getValue(a[name], colSchema);
-		const bValue = getValue(b[name], colSchema);
-		if (aValue === undefined && bValue !== undefined || aValue < bValue) { 
-			return 1;
-		} else if (aValue !== undefined && bValue === undefined || aValue > bValue) {
-			return -1;
-		}
-		return 0;
-	};
 
 	// Don't sort items that weren't there when the sorting was done.
 	// For example when adding a new item to the array, it should be exactly where it is added.
@@ -214,12 +218,14 @@ const sort = (schema: any, {sortCols}: State, sortTimeIdToSortedIdx: Record<stri
 		return sortTimeIdToSortedIdx[getUUID(a)] - sortTimeIdToSortedIdx[getUUID(b)];
 	}
 
+	const defaultSort = DefaultComparer.prototype.compare;
+
 	let result;
 	for (const sortCol of sortCols) {
 		result = sortCol.descending === undefined
 			? 0
-			: (sortCol.compare?.(a, b)
-				?? defaultSort(a, b, sortCol)
+			: (sortCol.compare?.(a, b, sortCol, schema)
+				?? defaultSort(a, b, sortCol, schema)
 			) || 0;
 		if (result !== 0) {
 			result = sortCol.descending ? result * -1 : result;
@@ -228,8 +234,6 @@ const sort = (schema: any, {sortCols}: State, sortTimeIdToSortedIdx: Record<stri
 	}
 	return result as number;
 };
-
-const colsLoading = (sortCols: SortCol[]) => sortCols.filter(colIsLoading).length > 0;
 
 const getSortedData = memoize((formData: any[], schema: any, state: State, sortTimeIdToSortedIdx: Record<string, number>, sortTimeIdToOrigIdx: Record<string, number>) => {
 	return (state.sortCols.length && !colsLoading(state.sortCols))
@@ -280,7 +284,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		const {sortCols} = this.state;
 		sortCols.forEach(sortCol => {
 			const {compareStrategy} = sortCol;
-			if (!compareStrategy || compareStrategy.strategy === "default" || sortCol.compare) {
+			if (sortCol.compare) {
 				return;
 			}
 
@@ -295,9 +299,13 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			if (!comparer) {
 				comparers[compareStrategy.strategy] = new compareStrategyMap[compareStrategy.strategy](compareStrategy as any, sortCol.name, this.props.formContext);
 				const instance = comparers[compareStrategy.strategy];
-				instance.initialize().then(() => finish(instance));
+				if ((instance as any).initialize) {
+					(instance as any).initialize().then(() => finish(instance as any));
+				} else {
+					finish(instance as any);
+				}
 			} else {
-				finish(comparer);
+				finish(comparer as any);
 			}
 		});
 	}
@@ -355,12 +363,12 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 
 		const compareStrategy = current?.compareStrategy || colOptions.compareStrategies?.[0] || {strategy: "default"};
 
-		const {noAscending} = compareStrategy;
+		const {noDescending} = compareStrategy;
 		const nextDescending = current?.descending === undefined
-			? true
+			? false
 			: current.descending
-				? noAscending ? undefined : false
-				: undefined;
+				? undefined
+				: noDescending ? undefined : true;
 		const sortCol = {
 			...(current || {}),
 			compareStrategy,
