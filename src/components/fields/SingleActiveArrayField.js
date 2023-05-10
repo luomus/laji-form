@@ -869,7 +869,7 @@ class TableArrayFieldTemplate extends React.Component {
 			"laji-form-col-sortable"
 		);
 
-		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col]};
+		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col], role: "button"};
 	}
 
 	render() {

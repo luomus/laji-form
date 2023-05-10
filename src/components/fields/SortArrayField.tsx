@@ -1,5 +1,5 @@
 import * as React from "react";
-import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID } from "../../utils";
+import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID, isDefaultData } from "../../utils";
 import { FieldProps, FormContext } from "../LajiForm";
 import * as memoize from "memoizee";
 import ReactContext from "../../ReactContext";
@@ -386,6 +386,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			return;
 		} else {
 			const idToOrigIdx = getIdToOrigIdx(this.props.formData);
+			this.sortTimeIdToSortedIdx = getIdToSortedIdx(formData);
 
 			const existingItems: any[] = [];
 			const newItems: any[] = [];
@@ -403,7 +404,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				prevUUID = uuid;
 			});
 
-			const sorted = existingItems.sort((a: any, b: any) => {
+			const sortedToOriginal = existingItems.sort((a: any, b: any) => {
 				const aIdx = idToOrigIdx[getUUID(a)];
 				const bIdx = idToOrigIdx[getUUID(b)];
 				return aIdx - bIdx;
@@ -412,11 +413,17 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			newItems.forEach(item => {
 				const uuid = getUUID(item);
 				const precedingUUID = UUIDToPrev[uuid];
-				const precedingIdx = sorted.findIndex((i) => getUUID(i) === precedingUUID);
-				sorted.splice(precedingIdx + 1, 0, item);
+				const precedingOriginalIdx = sortedToOriginal.findIndex((i) => getUUID(i) === precedingUUID);
+				const precedingSortedIdx = this.sortTimeIdToSortedIdx[getUUID(item)];
+				// Detect whether i's a new empty item. If it is, put it to the end of the original array.
+				// Otherwise (it's e.g. a copied item), put it in the original array after the preceding item of the sorted order.
+				if (precedingSortedIdx === sortedToOriginal.length && isDefaultData(item, this.props.schema.items)) {
+					sortedToOriginal.push(item);
+				} else {
+					sortedToOriginal.splice(precedingOriginalIdx + 1, 0, item);
+				}
 			});
-			this.sortTimeIdToSortedIdx = getIdToSortedIdx(formData);
-			this.props.onChange(sorted);
+			this.props.onChange(sortedToOriginal);
 		}
 	}
 
