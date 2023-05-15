@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, getDefaultFormState } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import * as deepmerge from "deepmerge";
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -171,7 +172,13 @@ export default class NestField extends React.Component {
 				uiSchema = {...uiSchema, [wrapperFieldName]: {...(nest.rootUiSchema || {}), ...(uiSchema[wrapperFieldName] || {})}};
 			}
 
-			nests[wrapperFieldName].fields.forEach(fieldName => {
+			nest.fields.forEach(fieldName => {
+				if (uiSchema[fieldName]) {
+					uiSchema[wrapperFieldName][fieldName] = deepmerge(uiSchema[wrapperFieldName][fieldName] || {}, uiSchema[fieldName], {
+						arrayMerge: (a1, a2) => a2
+					});
+				}
+
 				[schema.properties, errorSchema, idSchema, formData, uiSchema].forEach(container => {
 					delete container[fieldName];
 				});
