@@ -10,7 +10,8 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				buttonLabel: PropTypes.string.isRequired,
-				contextFieldForDefaultValue: PropTypes.string.isRequired
+				contextFieldForDefaultValue: PropTypes.string,
+				onClick: PropTypes.func
 			}).isRequired
 		}).isRequired,
 		schema: PropTypes.shape({
@@ -37,9 +38,15 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 	}
 
 	onClick = () => {
-		const uiSchemaContext = this.props.formContext.uiSchemaContext || {};
-		const {contextFieldForDefaultValue} = getUiOptions(this.props);
-		const defaultValue = uiSchemaContext[contextFieldForDefaultValue];
-		this.props.onChange(defaultValue);
+		const {contextFieldForDefaultValue, onClick} = getUiOptions(this.props);
+
+		if (contextFieldForDefaultValue) {
+			const uiSchemaContext = this.props.formContext.uiSchemaContext || {};
+			const defaultValue = uiSchemaContext[contextFieldForDefaultValue];
+			this.props.onChange(defaultValue);
+		}
+		if (onClick) {
+			onClick();
+		}
 	}
 }
