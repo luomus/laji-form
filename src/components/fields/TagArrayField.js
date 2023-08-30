@@ -100,7 +100,8 @@ export class TagInputComponent extends React.Component {
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		const splitted = separatorKeys.reduce((splitted, separator) => 
 			splitted.reduce((_splitted, i) => ([..._splitted, ...i.split(separator)]), []),
-		[value]);
+		[value]).filter(s => !isEmptyString(s));
+
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
 			if (splitted.length > 1) {
