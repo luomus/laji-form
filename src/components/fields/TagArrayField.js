@@ -9,7 +9,8 @@ export default class TagArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				separatorKeys: PropTypes.arrayOf(PropTypes.string)
+				separatorKeys: PropTypes.arrayOf(PropTypes.string),
+				showDeleteButton: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -111,7 +112,7 @@ export class TagInputComponent extends React.Component {
 	}
 
 	render() {
-		let {tags = [], InputComponent, readonly, disabled} = this.props;
+		let {tags = [], InputComponent, readonly, disabled, uiSchema} = this.props;
 		tags = tags.filter(s => !isEmptyString(s));
 		const {value = ""} = this.state;
 
@@ -128,15 +129,17 @@ export class TagInputComponent extends React.Component {
 			onKeyDown: this.onKeyDown
 		};
 
+		const {showDeleteButton = true, onTagClick} = getUiOptions(uiSchema);
+
 		return (
 			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
 				onClick={this.onClick}>
 				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
 						{tags.map((item, idx) => 
-							<li key={idx} className="rw-multiselect-tag">
+							<li key={idx} className="rw-multiselect-tag" onClick={() => onTagClick?.(idx)}>
 								{item}
-								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span>
+								{showDeleteButton ? <span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span> : ""}
 							</li>
 						)}
 					</ul>

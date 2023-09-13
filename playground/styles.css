@@ -1776,3 +1776,20 @@ min-height: 20px;
 .laji-form .input-group.multi-lang-input-group .input-group-text {
 	width: 40px;
 }
+
+.laji-form-multi-tag-array-field {
+	display: flex;
+}
+.laji-form-multi-tag-array-field-buttons {
+	flex: 0 0 auto;
+}
+.laji-form-multi-tag-array-field-buttons .btn-group-vertical {
+	margin-top: 20px;
+	margin-right: 5px;
+}
+.laji-form-multi-tag-array-field-content {
+	flex: 1 1 auto;
+}
+.laji-form-multi-tag-array-field.laji-form-multi-tag-array-field-active .rw-multiselect-tag:hover {
+	cursor: crosshair;
+}
