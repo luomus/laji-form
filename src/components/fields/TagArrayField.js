@@ -51,7 +51,7 @@ export class TagInputComponent extends React.Component {
 	}
 
 	onKeyDown = (e) => {
-		const {value} = this.state;
+		const value = this.getTrimmedValue();
 		const {tags = []} = this.props;
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
@@ -79,8 +79,9 @@ export class TagInputComponent extends React.Component {
 	onBlur = (e) => {
 		this.setState({focused: false});
 		triggerParentComponent("onBlur", e, this.props);
-		if (!isEmptyString(this.state.value)) {
-			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
+		const value = this.getTrimmedValue();
+		if (!isEmptyString(value)) {
+			this.props.onChange([...(this.props.tags || []), value], "blur");
 		}
 
 	}
@@ -96,13 +97,12 @@ export class TagInputComponent extends React.Component {
 	onInputChange = (e) => {
 		const {onInputChange} = this.props;
 		onInputChange && e.persist();
-		let {target: {value}} = e;
-		value = value.trim();
+		const {target: {value}} = e;
 
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		const splitted = separatorKeys.reduce((splitted, separator) => 
 			splitted.reduce((_splitted, i) => ([..._splitted, ...i.split(separator)]), []),
-		[value]).filter(s => !isEmptyString(s));
+		[value]).map(s => s.trim()).filter(s => !isEmptyString(s));
 
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
@@ -110,6 +110,11 @@ export class TagInputComponent extends React.Component {
 				this.props.onChange([...(this.props.tags || []), ...splitted]);
 			}
 		});
+	}
+
+	getTrimmedValue() {
+		const {value} = this.state;
+		return value.trim();
 	}
 
 	render() {
