@@ -41,8 +41,13 @@ import {
 	DropdownMenuProps,
 	DropdownToggleProps,
 	Breadcrumb as BreadcrumbI,
-	OverlayTriggerProps
+	OverlayTriggerProps,
+	ButtonVariant as ButtonVariantI
 } from "./theme";
+
+const mapBtnVariant = (variant?: ButtonVariantI): ButtonVariantI|undefined => {
+	return variant?.replace("outline-", "");
+};
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({variant, ...props}, ref) => <_Panel {...props} bsStyle={variant} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
@@ -93,7 +98,7 @@ const theme: Theme = {
 	Panel: __Panel,
 	Table,
 	ProgressBar,
-	Button: React.forwardRef<Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} bsStyle={variant} bsSize={small ? "small" : undefined} ref={ref}/>),
+	Button: React.forwardRef<Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} bsStyle={mapBtnVariant(variant)} bsSize={small ? "small" : undefined} ref={ref}/>),
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay,

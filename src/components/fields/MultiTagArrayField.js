@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import {classNames, getUiOptions} from "../../utils";
 import ReactContext from "../../ReactContext";
-import {Button} from "../components";
+import {Affix, Button} from "../components";
 
 
 @BaseComponent
@@ -47,8 +47,17 @@ export default class MultiTagArrayField extends React.Component {
 		this.state = {activeButtonIdx: undefined};
 	}
 
+	setContainerRef = (elem) => {
+		this.containerElem = elem;
+	}
+
+	getContainerRef = () => {
+		return this.containerElem;
+	}
+
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
+		const {Row, Col} = this.context.theme;
 		const {schema, uiSchema, idSchema, errorSchema, formData = {}} = this.props;
 		const uiOptions = getUiOptions(uiSchema);
 		const {buttons = []} = uiOptions;
@@ -58,20 +67,24 @@ export default class MultiTagArrayField extends React.Component {
 		const propertyKeys = Object.keys(schema.properties)
 
 		return (
-			<div className={`laji-form-multi-tag-array-field${activeButtonIdx !== undefined ? " laji-form-multi-tag-array-field-active" : ""}`}>
-				<div className={"laji-form-multi-tag-array-field-buttons"}>
-					<div className={"btn-group-vertical"}>
-						{ buttons.map((btnProps, idx) => (
-							<Button
-								key={idx}
-								onClick={this.onButtonClick(idx, btnProps)}
-								variant={btnProps.operation === "delete" ? "danger": "default"}
-								className={classNames(btnProps.className, activeButtonIdx === idx ? "active" : "")}
-							>{ btnProps.label }</Button>
-						)) }
-					</div>
-				</div>
-				<div className={"laji-form-multi-tag-array-field-content"}>
+			<Row className={`laji-form-multi-tag-array-field${activeButtonIdx !== undefined ? " laji-form-multi-tag-array-field-active" : ""}`}>
+				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"} ref={this.setContainerRef}>
+					<Affix getContainer={this.getContainerRef}
+						   topOffset={this.props.formContext.topOffset + 15}
+						   bottomOffset={this.props.formContext.bottomOffset}>
+						<div className={"btn-group-vertical"}>
+							{ buttons.map((btnProps, idx) => (
+								<Button
+									key={idx}
+									onClick={this.onButtonClick(idx, btnProps)}
+									variant={btnProps.operation === "delete" ? "outline-danger": "default"}
+									className={classNames(btnProps.className, activeButtonIdx === idx ? "active" : "")}
+								>{ btnProps.label }</Button>
+							)) }
+						</div>
+					</Affix>
+				</Col>
+				<Col xs={9} sm={9} md={10} lg={10} className={"laji-form-multi-tag-array-field-content"}>
 					{ propertyKeys.map(key => (
 						<SchemaField
 							{...this.props}
@@ -92,8 +105,8 @@ export default class MultiTagArrayField extends React.Component {
 							onChange={this.onChange(key)}
 						/>
 					)) }
-				</div>
-			</div>
+				</Col>
+			</Row>
 		);
 	}
 

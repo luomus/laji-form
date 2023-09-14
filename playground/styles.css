@@ -1777,19 +1777,22 @@ min-height: 20px;
 	width: 40px;
 }
 
-.laji-form-multi-tag-array-field {
-	display: flex;
-}
-.laji-form-multi-tag-array-field-buttons {
-	flex: 0 0 auto;
-}
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical {
-	margin-top: 20px;
-	margin-right: 5px;
-}
-.laji-form-multi-tag-array-field-content {
-	flex: 1 1 auto;
+	margin-right: 17px;
 }
 .laji-form-multi-tag-array-field.laji-form-multi-tag-array-field-active .rw-multiselect-tag:hover {
 	cursor: crosshair;
+}
+.laji-form-multi-tag-array-field-buttons .btn-group-vertical button.active::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	margin-top: -14px;
+	border-top: 14px solid transparent;
+	border-bottom: 14px solid transparent;
+	border-left: 15px solid rgb(108, 117, 125);
+	right: -15px;
+}
+.laji-form-multi-tag-array-field-buttons .btn-group-vertical button.active.btn-outline-danger::before {
+	border-left: 1em solid rgb(220, 53, 69);
 }
