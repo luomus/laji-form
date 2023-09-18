@@ -3,6 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import * as memoize from "memoizee";
 
 @BaseComponent
 export default class TagArrayField extends React.Component {
@@ -64,11 +65,11 @@ export class TagInputComponent extends React.Component {
 		triggerParentComponent("onKeyDown", e, this.props);
 	}
 
-	onRemove = (idx) => () => {
+	onRemove = memoize((idx) => () => {
 		const tags = [...(this.props.tags || [])];
 		tags.splice(idx, 1);
 		this.props.onChange(tags, "remove");
-	}
+	})
 
 	onFocus = (e) => {
 		this.setState({focused: true}, () => {
@@ -112,6 +113,11 @@ export class TagInputComponent extends React.Component {
 		});
 	}
 
+	onTagClick = memoize((idx) => () => {
+		const {onTagClick} = getUiOptions(this.props.uiSchema);
+		onTagClick?.(idx);
+	});
+
 	getTrimmedValue() {
 		const {value} = this.state;
 		return value?.trim();
@@ -135,7 +141,7 @@ export class TagInputComponent extends React.Component {
 			onKeyDown: this.onKeyDown
 		};
 
-		const {showDeleteButton = true, onTagClick} = getUiOptions(uiSchema);
+		const {showDeleteButton = true} = getUiOptions(uiSchema);
 
 		return (
 			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
@@ -143,7 +149,7 @@ export class TagInputComponent extends React.Component {
 				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
 						{tags.map((item, idx) => 
-							<li key={idx} className="rw-multiselect-tag" onClick={() => onTagClick?.(idx)}>
+							<li key={idx} className="rw-multiselect-tag" onClick={this.onTagClick(idx)}>
 								{item}
 								{showDeleteButton ? <span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span> : ""}
 							</li>

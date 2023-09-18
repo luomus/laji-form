@@ -8,6 +8,7 @@ import { FieldProps } from "../LajiForm";
 import { RefObject } from "react";
 import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
+import * as memoize from "memoizee";
 
 interface CommonButtonOptions {
 	label?: string;
@@ -104,7 +105,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 							{ buttons.map((btnProps, idx) => (
 								<Button
 									key={idx}
-									onClick={this.onButtonClick(idx, btnProps)}
+									onClick={this.onButtonClick(idx)}
 									variant={btnProps.operation === "delete" ? "outline-danger": "default"}
 									className={classNames(btnProps.className, activeButtonIdx === idx ? "active" : "")}
 								>{ btnProps.label }</Button>
@@ -138,19 +139,22 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		);
 	}
 
-	onChange = (key: string) => (formData: any) => {
+	onChange = memoize((key: string) => (formData: any) => {
 		const newFormData = {...this.props.formData, [key]: formData};
 		this.props.onChange(newFormData);
-	}
+	})
 
-	onButtonClick = (idx: number, options: ButtonOptions) => () => {
+	onButtonClick = memoize((idx: number) => () => {
 		const {activeButtonIdx} = this.state;
 		if (activeButtonIdx === idx) {
 			this.setState({activeButtonIdx: undefined});
 			return;
 		}
 
-		const operation = options.operation;
+		const {buttons = []} = getUiOptions(this.props.uiSchema) as Options;
+		const options = buttons[idx];
+		const {operation} = options;
+
 		if (operation === "moveAll") {
 			const {toField, fromField} = options as MoveAllButtonOptions;
 			const toFieldNewValue = (this.props.formData[toField] || []).concat(this.props.formData[fromField] || []);
@@ -159,9 +163,9 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		} else if (operation === "move" || operation === "delete") {
 			this.setState({activeButtonIdx: idx});
 		}
-	}
+	})
 
-	onTagClick = (fromField: string) => (idx: number) => {
+	onTagClick = memoize((fromField: string) => (idx: number) => {
 		const {activeButtonIdx} = this.state;
 		if (activeButtonIdx === undefined) {
 			return;
@@ -171,9 +175,9 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		const options = buttons[activeButtonIdx];
 		const {operation} = options;
 
-		let formData = this.props.formData;
-
 		if (operation === "move" || operation === "delete") {
+			let formData = this.props.formData;
+
 			if (operation === "move") {
 				const {toField} = options as MoveButtonOptions;
 				if (fromField === toField) {
@@ -191,5 +195,5 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 
 			this.props.onChange(formData);
 		}
-	}
+	})
 }
