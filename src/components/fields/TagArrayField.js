@@ -114,7 +114,7 @@ export class TagInputComponent extends React.Component {
 
 	getTrimmedValue() {
 		const {value} = this.state;
-		return value.trim();
+		return value?.trim();
 	}
 
 	render() {
