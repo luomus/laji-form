@@ -531,10 +531,6 @@ function ErrorPanelError({label, error, id, getId, extra = null, disabled, click
 	);
 }
 
-function NullTooltip() {
-	return <div />;
-}
-
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export class TooltipComponent extends React.Component {
 	static contextType = ReactContext;
@@ -557,17 +553,19 @@ export class TooltipComponent extends React.Component {
 
 		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const overlay = (
-			<OverlayTrigger
-				show={this.state.show}
-				placement={placement}
-				trigger={trigger === "hover" ? [] : trigger}
-				key={`${id}-overlay`}
-				overlay={
-					(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
-				}
-			>
-				{children}
-			</OverlayTrigger>
+			tooltip ? (
+				<OverlayTrigger
+					show={this.state.show}
+					placement={placement}
+					trigger={trigger === "hover" ? [] : trigger}
+					key={`${id}-overlay`}
+					overlay={
+						<Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip>
+					}
+				>
+					{children}
+				</OverlayTrigger>
+			): <React.Fragment>{children}</React.Fragment>
 		);
 
 		return (trigger === "hover") ? (
