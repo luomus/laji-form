@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import {classNames, getUiOptions} from "../../utils";
+import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
-import {Affix, Button} from "../components";
+import { Affix, Button } from "../components";
 
 
 @BaseComponent
@@ -64,14 +64,14 @@ export default class MultiTagArrayField extends React.Component {
 
 		const {activeButtonIdx} = this.state;
 
-		const propertyKeys = Object.keys(schema.properties)
+		const propertyKeys = Object.keys(schema.properties);
 
 		return (
-			<Row className={`laji-form-multi-tag-array-field${activeButtonIdx !== undefined ? " laji-form-multi-tag-array-field-active" : ""}`}>
+			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx && "laji-form-multi-tag-array-field-active")}>
 				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"} ref={this.setContainerRef}>
 					<Affix getContainer={this.getContainerRef}
-						   topOffset={this.props.formContext.topOffset + 15}
-						   bottomOffset={this.props.formContext.bottomOffset}>
+						topOffset={this.props.formContext.topOffset + 15}
+						bottomOffset={this.props.formContext.bottomOffset}>
 						<div className={"btn-group-vertical"}>
 							{ buttons.map((btnProps, idx) => (
 								<Button
@@ -151,7 +151,7 @@ export default class MultiTagArrayField extends React.Component {
 			fromFieldNewValue.splice(idx, 1);
 
 			if (operation === "move") {
-				const toFieldNewValue = [...(formData[toField] || []), value]
+				const toFieldNewValue = [...(formData[toField] || []), value];
 				formData = {...formData, [fromField]: fromFieldNewValue, [toField]: toFieldNewValue};
 			} else {
 				formData = {...formData, [fromField]: fromFieldNewValue};

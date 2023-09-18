@@ -1,5 +1,5 @@
-import {Form, createForm, EnumWidgetPOI} from "./test-utils";
-import {$, by, protractor} from "protractor";
+import { Form, createForm, EnumWidgetPOI } from "./test-utils";
+import { $, by, protractor } from "protractor";
 
 describe("transaction form (MHL.930)", () => {
 	let form: Form;
