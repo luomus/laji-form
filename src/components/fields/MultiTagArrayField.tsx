@@ -4,10 +4,39 @@ import BaseComponent from "../BaseComponent";
 import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
 import { Affix, Button } from "../components";
+import { FieldProps } from "../LajiForm";
+import { RefObject } from "react";
+import update from "immutability-helper";
+import { IdSchema } from "@rjsf/utils";
 
+interface CommonButtonOptions {
+	label?: string;
+	className?: string;
+}
+interface MoveAllButtonOptions extends CommonButtonOptions {
+	operation: "moveAll";
+	fromField: string;
+	toField: string;
+}
+interface MoveButtonOptions extends CommonButtonOptions {
+	operation: "move";
+	toField: string;
+}
+interface DeleteButtonOptions extends CommonButtonOptions {
+	operation: "delete";
+}
+type ButtonOptions = MoveAllButtonOptions | MoveButtonOptions | DeleteButtonOptions;
+
+interface Options {
+	buttons: ButtonOptions[];
+}
+
+interface State {
+	activeButtonIdx?: number;
+}
 
 @BaseComponent
-export default class MultiTagArrayField extends React.Component {
+export default class MultiTagArrayField extends React.Component<FieldProps, State> {
 	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -42,24 +71,23 @@ export default class MultiTagArrayField extends React.Component {
 		formData: PropTypes.object
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {activeButtonIdx: undefined};
+	state: State = {activeButtonIdx: undefined};
+
+	private affixContainerElem?: RefObject<HTMLElement>;
+
+	setAffixContainerRef = (elem: RefObject<HTMLElement>) => {
+		this.affixContainerElem = elem;
 	}
 
-	setContainerRef = (elem) => {
-		this.containerElem = elem;
-	}
-
-	getContainerRef = () => {
-		return this.containerElem;
+	getAffixContainerRef = (): RefObject<HTMLElement>|undefined => {
+		return this.affixContainerElem;
 	}
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Row, Col} = this.context.theme;
 		const {schema, uiSchema, idSchema, errorSchema, formData = {}} = this.props;
-		const uiOptions = getUiOptions(uiSchema);
+		const uiOptions: Options = getUiOptions(uiSchema);
 		const {buttons = []} = uiOptions;
 
 		const {activeButtonIdx} = this.state;
@@ -68,10 +96,10 @@ export default class MultiTagArrayField extends React.Component {
 
 		return (
 			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx && "laji-form-multi-tag-array-field-active")}>
-				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"} ref={this.setContainerRef}>
-					<Affix getContainer={this.getContainerRef}
-						topOffset={this.props.formContext.topOffset + 15}
-						bottomOffset={this.props.formContext.bottomOffset}>
+				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"} ref={this.setAffixContainerRef}>
+					<Affix getContainer={this.getAffixContainerRef}
+					       topOffset={this.props.formContext.topOffset + 15}
+					       bottomOffset={this.props.formContext.bottomOffset}>
 						<div className={"btn-group-vertical"}>
 							{ buttons.map((btnProps, idx) => (
 								<Button
@@ -99,7 +127,7 @@ export default class MultiTagArrayField extends React.Component {
 								}
 							}}
 							errorSchema={errorSchema[key] || {}}
-							idSchema={idSchema[key]}
+							idSchema={idSchema[key] as IdSchema}
 							formData={formData[key] || []}
 							required={uiSchema[key]?.["ui:required"] || false}
 							onChange={this.onChange(key)}
@@ -110,19 +138,21 @@ export default class MultiTagArrayField extends React.Component {
 		);
 	}
 
-	onChange = (key) => (formData) => {
+	onChange = (key: string) => (formData: any) => {
 		const newFormData = {...this.props.formData, [key]: formData};
 		this.props.onChange(newFormData);
 	}
 
-	onButtonClick = (idx, {operation, fromField, toField}) => () => {
+	onButtonClick = (idx: number, options: ButtonOptions) => () => {
 		const {activeButtonIdx} = this.state;
 		if (activeButtonIdx === idx) {
 			this.setState({activeButtonIdx: undefined});
 			return;
 		}
 
+		const operation = options.operation;
 		if (operation === "moveAll") {
+			const {toField, fromField} = options as MoveAllButtonOptions;
 			const toFieldNewValue = (this.props.formData[toField] || []).concat(this.props.formData[fromField] || []);
 			const newFormData = {...this.props.formData, [fromField]: [], [toField]: toFieldNewValue};
 			this.props.onChange(newFormData);
@@ -131,30 +161,32 @@ export default class MultiTagArrayField extends React.Component {
 		}
 	}
 
-	onTagClick = (fromField) => (idx) => {
+	onTagClick = (fromField: string) => (idx: number) => {
 		const {activeButtonIdx} = this.state;
 		if (activeButtonIdx === undefined) {
 			return;
 		}
 
-		const {buttons = []} = getUiOptions(this.props.uiSchema);
-		const {operation, toField} = buttons[activeButtonIdx];
-		if (fromField === toField) {
-			return;
-		}
+		const {buttons = []} = getUiOptions(this.props.uiSchema) as Options;
+		const options = buttons[activeButtonIdx];
+		const {operation} = options;
 
 		let formData = this.props.formData;
 
 		if (operation === "move" || operation === "delete") {
-			const value = formData[fromField][idx];
-			const fromFieldNewValue = [...formData[fromField]];
-			fromFieldNewValue.splice(idx, 1);
-
 			if (operation === "move") {
-				const toFieldNewValue = [...(formData[toField] || []), value];
-				formData = {...formData, [fromField]: fromFieldNewValue, [toField]: toFieldNewValue};
+				const {toField} = options as MoveButtonOptions;
+				if (fromField === toField) {
+					return;
+				}
+
+				const value = formData[fromField][idx];
+				formData = update(formData, {
+					[fromField]: {$splice: [[idx, 1]]},
+					[toField]: {$apply: (values: any[]) => [...(values || []), value]}
+				});
 			} else {
-				formData = {...formData, [fromField]: fromFieldNewValue};
+				formData = update(formData, {[fromField]: {$splice: [[idx, 1]]}});
 			}
 
 			this.props.onChange(formData);
