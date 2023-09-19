@@ -1794,5 +1794,5 @@ min-height: 20px;
 	right: -15px;
 }
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical button.active.btn-outline-danger::before {
-	border-left: 1em solid rgb(220, 53, 69);
+	border-left: 15px solid rgb(220, 53, 69);
 }
