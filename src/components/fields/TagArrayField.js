@@ -3,13 +3,15 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import * as memoize from "memoizee";
 
 @BaseComponent
 export default class TagArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				separatorKeys: PropTypes.arrayOf(PropTypes.string)
+				separatorKeys: PropTypes.arrayOf(PropTypes.string),
+				showDeleteButton: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -50,7 +52,7 @@ export class TagInputComponent extends React.Component {
 	}
 
 	onKeyDown = (e) => {
-		const {value} = this.state;
+		const value = this.getTrimmedValue();
 		const {tags = []} = this.props;
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
@@ -63,11 +65,11 @@ export class TagInputComponent extends React.Component {
 		triggerParentComponent("onKeyDown", e, this.props);
 	}
 
-	onRemove = (idx) => () => {
+	onRemove = memoize((idx) => () => {
 		const tags = [...(this.props.tags || [])];
 		tags.splice(idx, 1);
 		this.props.onChange(tags, "remove");
-	}
+	})
 
 	onFocus = (e) => {
 		this.setState({focused: true}, () => {
@@ -78,8 +80,9 @@ export class TagInputComponent extends React.Component {
 	onBlur = (e) => {
 		this.setState({focused: false});
 		triggerParentComponent("onBlur", e, this.props);
-		if (!isEmptyString(this.state.value)) {
-			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
+		const value = this.getTrimmedValue();
+		if (!isEmptyString(value)) {
+			this.props.onChange([...(this.props.tags || []), value], "blur");
 		}
 
 	}
@@ -100,7 +103,7 @@ export class TagInputComponent extends React.Component {
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		const splitted = separatorKeys.reduce((splitted, separator) => 
 			splitted.reduce((_splitted, i) => ([..._splitted, ...i.split(separator)]), []),
-		[value]).filter(s => !isEmptyString(s));
+		[value]).map(s => s.trim()).filter(s => !isEmptyString(s));
 
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
@@ -110,8 +113,18 @@ export class TagInputComponent extends React.Component {
 		});
 	}
 
+	onTagClick = memoize((idx) => () => {
+		const {onTagClick} = getUiOptions(this.props.uiSchema);
+		onTagClick?.(idx);
+	});
+
+	getTrimmedValue() {
+		const {value} = this.state;
+		return value?.trim();
+	}
+
 	render() {
-		let {tags = [], InputComponent, readonly, disabled} = this.props;
+		let {tags = [], InputComponent, readonly, disabled, uiSchema} = this.props;
 		tags = tags.filter(s => !isEmptyString(s));
 		const {value = ""} = this.state;
 
@@ -128,15 +141,17 @@ export class TagInputComponent extends React.Component {
 			onKeyDown: this.onKeyDown
 		};
 
+		const {showDeleteButton = true} = getUiOptions(uiSchema);
+
 		return (
 			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
 				onClick={this.onClick}>
 				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
 						{tags.map((item, idx) => 
-							<li key={idx} className="rw-multiselect-tag">
+							<li key={idx} className="rw-multiselect-tag" onClick={this.onTagClick(idx)}>
 								{item}
-								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span>
+								{showDeleteButton ? <span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span> : ""}
 							</li>
 						)}
 					</ul>
