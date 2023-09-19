@@ -5,10 +5,11 @@ import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
 import { Affix, Button } from "../components";
 import { FieldProps } from "../LajiForm";
-import { RefObject } from "react";
+import { ReactInstance } from "react";
 import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
 import * as memoize from "memoizee";
+import { findDOMNode } from "react-dom";
 
 interface CommonButtonOptions {
 	label?: string;
@@ -74,13 +75,13 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 
 	state: State = {activeButtonIdx: undefined};
 
-	private affixContainerElem?: RefObject<HTMLElement>;
+	private affixContainerElem: Element|null = null;
 
-	setAffixContainerRef = (elem: RefObject<HTMLElement>) => {
-		this.affixContainerElem = elem;
+	setAffixContainer = (ref: ReactInstance) => {
+		this.affixContainerElem = findDOMNode(ref) as Element|null;
 	}
 
-	getAffixContainerRef = (): RefObject<HTMLElement>|undefined => {
+	getAffixContainer = (): Element|null => {
 		return this.affixContainerElem;
 	}
 
@@ -96,9 +97,9 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		const propertyKeys = Object.keys(schema.properties);
 
 		return (
-			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx && "laji-form-multi-tag-array-field-active")}>
-				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"} ref={this.setAffixContainerRef}>
-					<Affix getContainer={this.getAffixContainerRef}
+			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx && "laji-form-multi-tag-array-field-active")} ref={this.setAffixContainer}>
+				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"}>
+					<Affix getContainer={this.getAffixContainer}
 					       topOffset={this.props.formContext.topOffset + 15}
 					       bottomOffset={this.props.formContext.bottomOffset}>
 						<div className={"btn-group-vertical"}>
