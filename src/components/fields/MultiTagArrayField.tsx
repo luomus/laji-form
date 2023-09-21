@@ -97,7 +97,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		const propertyKeys = Object.keys(schema.properties);
 
 		return (
-			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx && "laji-form-multi-tag-array-field-active")} ref={this.setAffixContainer}>
+			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx !== undefined && "laji-form-multi-tag-array-field-active")} ref={this.setAffixContainer}>
 				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"}>
 					<Affix getContainer={this.getAffixContainer}
 					       topOffset={this.props.formContext.topOffset + 15}
@@ -122,10 +122,12 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 							schema={{title: "", ...schema.properties[key]}}
 							uiSchema={{
 								"ui:field": "TagArrayField",
+								...uiSchema[key],
 								"ui:options": {
 									...uiOptions,
 									buttons: undefined,
-									onTagClick: this.onTagClick(key)
+									onTagClick: this.onTagClick(key),
+									...uiSchema[key]?.["ui:options"]
 								}
 							}}
 							errorSchema={errorSchema[key] || {}}
