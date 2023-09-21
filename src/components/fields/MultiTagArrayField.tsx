@@ -10,6 +10,7 @@ import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
 import * as memoize from "memoizee";
 import { findDOMNode } from "react-dom";
+const equals = require("deep-equal");
 
 interface CommonButtonOptions {
 	label?: string;
@@ -83,6 +84,17 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 
 	getAffixContainer = (): Element|null => {
 		return this.affixContainerElem;
+	}
+
+	componentDidUpdate(prevProps: FieldProps) {
+		if (this.state.activeButtonIdx !== undefined) {
+			const prevButtons = getUiOptions(prevProps.uiSchema).buttons;
+			const currentButtons = getUiOptions(this.props.uiSchema).buttons;
+
+			if (!equals(prevButtons, currentButtons)) {
+				this.setState({activeButtonIdx: undefined});
+			}
+		}
 	}
 
 	render() {
