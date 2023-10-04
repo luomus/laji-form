@@ -5,7 +5,7 @@ lib*
 dist
 build
 test-export
-*.json
+properties.json
 diff
 .vim*
 *.swp
