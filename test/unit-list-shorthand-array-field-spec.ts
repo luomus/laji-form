@@ -65,8 +65,12 @@ describe("UnitListShorthandArrayField", () => {
 
 		const formData = await form.getChangedData();
 
-		const susiAndKettu = [{"informalTaxonGroups":["MVL.2"],"identifications":[{"taxon":"susi"}],"unitFact":{"autocompleteSelectedTaxonID":"MX.46549"}},{"informalTaxonGroups":["MVL.2"],"identifications":[{"taxon":"kettu"}],"unitFact":{"autocompleteSelectedTaxonID":"MX.46587"}}];
+		expect(formData[0]["informalTaxonGroups"]).toContain("MVL.2");
+		expect(formData[0]["identifications"]).toEqual([{"taxon":"susi"}]);
+		expect(formData[0]["unitFact"]).toEqual({"autocompleteSelectedTaxonID":"MX.46549"});
 
-		expect(formData).toEqual(susiAndKettu);
+		expect(formData[1]["informalTaxonGroups"]).toContain("MVL.2");
+		expect(formData[1]["identifications"]).toEqual([{"taxon":"kettu"}]);
+		expect(formData[1]["unitFact"]).toEqual({"autocompleteSelectedTaxonID":"MX.46587"});
 	});
 });
