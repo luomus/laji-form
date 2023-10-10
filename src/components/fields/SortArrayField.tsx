@@ -90,6 +90,10 @@ abstract class Comparer<T extends CompareStrategy> implements ComparerI {
 }
 
 class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
+	constructor(options: TaxonomicCompareStrategy, colName: string, formContext: FormContext) {
+		super(options, colName, formContext);
+		this.compare = this.compare.bind(this);
+	}
 
 	private idToIdx: Record<string, number>;
 
@@ -101,7 +105,7 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 			}, {} as Record<string, number>);
 	}
 
-	compare = (a: any, b: any) => {
+	compare(a: any, b: any) {
 		const aValue = a[this.options.valueField || this.colName];
 		const bValue = b[this.options.valueField || this.colName];
 
@@ -118,7 +122,7 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 }
 
 class DefaultComparer extends Comparer<DefaultCompareStrategy> {
-	compare = (a: any, b: any, sortCol: SortCol, schema: any) => {
+	compare(a: any, b: any, sortCol: SortCol, schema: any) {
 		const {name} = sortCol;
 		const colSchema = schema.items.properties[name];
 		const aValue = getValue(a[name], colSchema);
