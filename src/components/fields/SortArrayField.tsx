@@ -13,6 +13,7 @@ interface Options {
 	 * defaults to false
 	 */
 	multisort?: boolean;
+	excludeSortableColumns?: string[];
 }
 
 export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
@@ -61,6 +62,7 @@ type CompareStrategy = DefaultCompareStrategy | TaxonomicCompareStrategy;
 
 interface ColumnOptions {
 	compareStrategies?: CompareStrategy[];
+	tooltip?: string;
 }
 
 type TaxaResponse = {
@@ -94,6 +96,10 @@ abstract class Comparer<T extends CompareStrategy> implements ComparerI {
 }
 
 class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
+	constructor(options: TaxonomicCompareStrategy, colName: string, formContext: FormContext) {
+		super(options, colName, formContext);
+		this.compare = this.compare.bind(this);
+	}
 
 	private idToIdx: Record<string, number>;
 
@@ -105,7 +111,7 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 			}, {} as Record<string, number>);
 	}
 
-	compare = (a: any, b: any) => {
+	compare(a: any, b: any) {
 		const aValue = a[this.options.valueField || this.colName];
 		const bValue = b[this.options.valueField || this.colName];
 
@@ -122,7 +128,7 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 }
 
 class DefaultComparer extends Comparer<DefaultCompareStrategy> {
-	compare = (a: any, b: any, sortCol: SortCol, schema: any) => {
+	compare(a: any, b: any, sortCol: SortCol, schema: any) {
 		const {name} = sortCol;
 		const colSchema = schema.items.properties[name];
 		const aValue = getValue(a[name], colSchema);
@@ -282,8 +288,10 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		this.syncColumns();
 	}
 
-	// Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
-	// asynchronously when the  component updates according to the comparison strategy name.
+	/**
+	 * Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
+	 * asynchronously when the  component updates according to the comparison strategy name.
+	 */
 	syncColumns() {
 		const {sortCols} = this.state;
 		sortCols.forEach(sortCol => {
@@ -326,7 +334,14 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				onSortToggle: this.onSortToggle.bind(this),
 				sortCols,
 				ui: getUI(uiOptions.columns, sortCols, this.setSortCols.bind(this), props.formContext),
-				sortableColumns: uiOptions.sortableColumns,
+				sortableColumns: this.getSortableColumns(props),
+				sortColTooltips: Object.keys(uiOptions.columns || {})?.reduce<Record<string, string>>((map, c) => {
+					const {tooltip} = uiOptions.columns?.[c] || {};
+					if (tooltip) {
+						map[c] = tooltip;
+					}
+					return map;
+				}, {}),
 				idxMap: Object.keys(idToOrigIdx).reduce((map, id) => {
 					map[idToSortedIdx[id] as any] = idToOrigIdx[id];
 					map["_" + idToOrigIdx[id] as any] = idToSortedIdx[id];
@@ -334,6 +349,21 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				}, {} as Record<string, number>)
 			}
 		};
+	}
+
+	getSortableColumns(props: FieldProps) {
+		const {uiSchema, schema} = props;
+		const {sortableColumns, excludeSortableColumns} = getUiOptions(uiSchema) as Options;
+		if (sortableColumns) {
+			if (excludeSortableColumns) {
+				return sortableColumns.filter(c => !excludeSortableColumns.includes(c));
+			}
+			return sortableColumns;
+		}
+		if (excludeSortableColumns) {
+			return Object.keys(schema.items.properties).filter(c => !excludeSortableColumns.includes(c));
+		}
+		return undefined;
 	}
 
 	getNextComponentProps(props: any, state: State) {

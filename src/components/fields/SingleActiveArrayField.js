@@ -855,7 +855,7 @@ class TableArrayFieldTemplate extends React.Component {
 	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col))
 
 	getSortableHeaderProps(col, props) {
-		const {onSortToggle, sortCols, ui, sortableColumns} = getUiOptions(props.uiSchema);
+		const {onSortToggle, sortCols, ui, sortableColumns, sortColTooltips} = getUiOptions(props.uiSchema);
 		if (!onSortToggle || sortableColumns && !sortableColumns.includes(col)) {
 			return {};
 		}
@@ -868,8 +868,8 @@ class TableArrayFieldTemplate extends React.Component {
 					: undefined,
 			"laji-form-col-sortable"
 		);
-
-		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col], role: "button"};
+		const tooltip = sortColTooltips[col] || props.formContext.translations["ClickToSort"];
+		return {onClick: this.getOnHeaderClick(col, onSortToggle), className, ui: ui[col], role: "button", tooltip};
 	}
 
 	render() {
@@ -952,12 +952,16 @@ class TableArrayFieldTemplate extends React.Component {
 									<tr>
 										{cols.length ? cols.map(col => {
 											const sortableHeaderProps = this.getSortableHeaderProps(col, this.props);
-											const {ui, ..._sortableHeaderProps} = sortableHeaderProps;
+											const {ui, tooltip, ..._sortableHeaderProps} = sortableHeaderProps;
 											const className = classNames("darker", sortableHeaderProps.className);
-											return <th key={col} {..._sortableHeaderProps} className={className}>
-												{schema.items.properties[col].title}
-												{ui || null}
-											</th>;
+											return (
+												<TooltipComponent key={col} tooltip={tooltip} placement="top">
+													<th key={col} {..._sortableHeaderProps} className={className}>
+														{schema.items.properties[col].title}
+														{ui || null}
+													</th>
+												</TooltipComponent>
+											);
 										}) : <th className="darker"/>}
 										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />

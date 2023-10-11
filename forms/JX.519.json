@@ -282,7 +282,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue38",
-                    "title": "Varpu-heinäkallio tai -kivikko"
+                    "title": "Varpu–heinäkallio tai -kivikko"
                   },
                   {
                     "const": "MY.habitatEnumValue39",
@@ -386,7 +386,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue64",
-                    "title": "Oja tai muu kaivanto  (sis. ojanpientareet, metsäojat)"
+                    "title": "Oja tai muu kaivanto (sis. ojanpientareet, metsäojat)"
                   },
                   {
                     "const": "MY.habitatEnumValue65",
@@ -475,6 +475,34 @@
                   {
                     "const": "MY.habitatEnumValue86",
                     "title": "Joutomaa (sis. satamat, ratapihat)"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue88",
+                    "title": "Meri"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue89",
+                    "title": "Murtovesi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue90",
+                    "title": "Karu järvi tai lampi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue91",
+                    "title": "Rehevä järvi tai lampi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue92",
+                    "title": "Lampare tai allikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue93",
+                    "title": "Joki"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue94",
+                    "title": "Koski"
                   }
                 ]
               },
@@ -501,80 +529,44 @@
                   "title": ""
                 },
                 {
-                  "const": "MY.samplingMethodLight",
-                  "title": "Valo"
-                },
-                {
-                  "const": "MY.samplingMethodLightTrap",
-                  "title": "Valopyydys"
-                },
-                {
-                  "const": "MY.samplingMethodTrap",
-                  "title": "Pyydys (määrittelemätön)"
-                },
-                {
-                  "const": "MY.samplingMethodMalaise",
-                  "title": "Malaise-pyydys"
-                },
-                {
-                  "const": "MY.samplingMethodPitfall",
-                  "title": "Kuoppapyydys"
-                },
-                {
-                  "const": "MY.samplingMethodWindowtrap",
-                  "title": "Ikkunapyydys"
-                },
-                {
-                  "const": "MY.samplingMethodYellowWindowTrap",
-                  "title": "Keltaikkunapyydys"
-                },
-                {
-                  "const": "MY.samplingMethodPantrap",
-                  "title": "Maljapyydys"
-                },
-                {
-                  "const": "MY.samplingMethodYellowpan",
-                  "title": "Keltamalja"
-                },
-                {
-                  "const": "MY.samplingMethodYellowtrap",
-                  "title": "Liimapyydys"
+                  "const": "MY.samplingMethodCarnet",
+                  "title": "Autohaavi"
                 },
                 {
                   "const": "MY.samplingMethodFeromonetrap",
                   "title": "Feromonipyydys"
                 },
                 {
-                  "const": "MY.samplingMethodBaittrap",
-                  "title": "Syöttipyydys"
-                },
-                {
-                  "const": "MY.samplingMethodBait",
-                  "title": "Syötti (ilman pyydystä)"
-                },
-                {
                   "const": "MY.samplingMethodNet",
                   "title": "Haavi"
                 },
                 {
-                  "const": "MY.samplingMethodSweeping",
-                  "title": "Lyöntihaavi"
+                  "const": "MY.samplingMethodDrag",
+                  "title": "Hara"
                 },
                 {
-                  "const": "MY.samplingMethodCarnet",
-                  "title": "Autohaavi"
+                  "const": "MY.samplingMethodWindowtrap",
+                  "title": "Ikkunapyydys"
                 },
                 {
-                  "const": "MY.samplingMethodMistnet",
-                  "title": "Lintuverkko"
+                  "const": "MY.samplingMethodDigging",
+                  "title": "Kaivaminen"
                 },
                 {
-                  "const": "MY.samplingMethodBoard",
-                  "title": "Lautapyydys"
+                  "const": "MY.samplingMethodFishNet",
+                  "title": "Kalaverkko"
+                },
+                {
+                  "const": "MY.samplingMethodHand",
+                  "title": "Käsinkeräys"
                 },
                 {
                   "const": "MY.samplingMethodReared",
                   "title": "Kasvatettu"
+                },
+                {
+                  "const": "MY.samplingMethodEpupa",
+                  "title": "Kasvatettu kotelosta"
                 },
                 {
                   "const": "MY.samplingMethodExovo",
@@ -585,100 +577,140 @@
                   "title": "Kasvatettu toukasta"
                 },
                 {
-                  "const": "MY.samplingMethodEpupa",
-                  "title": "Kasvatettu kotelosta"
+                  "const": "MY.samplingMethodFishTrap",
+                  "title": "Katiska tai rysä"
                 },
                 {
-                  "const": "MY.samplingMethodEclectortrap",
-                  "title": "Kuoriutumispyydys, eklektori"
+                  "const": "MY.samplingMethodYellowWindowTrap",
+                  "title": "Keltaikkunapyydys"
                 },
                 {
-                  "const": "MY.samplingMethodHand",
-                  "title": "Käsinkeräys"
-                },
-                {
-                  "const": "MY.samplingMethodSifting",
-                  "title": "Seulos"
-                },
-                {
-                  "const": "MY.samplingMethodSoilsample",
-                  "title": "Maaperänäyte"
-                },
-                {
-                  "const": "MY.samplingMethodDropping",
-                  "title": "Ravistelu/pudottelu"
-                },
-                {
-                  "const": "MY.samplingMethodWashing",
-                  "title": "Maaston peseminen"
-                },
-                {
-                  "const": "MY.samplingMethodDigging",
-                  "title": "Kaivaminen"
-                },
-                {
-                  "const": "MY.samplingMethodDiving",
-                  "title": "Sukeltaminen"
-                },
-                {
-                  "const": "MY.samplingMethodDrag",
-                  "title": "Hara"
+                  "const": "MY.samplingMethodYellowpan",
+                  "title": "Keltamalja"
                 },
                 {
                   "const": "MY.samplingMethodTriangleDrag",
                   "title": "Kolmiohara"
                 },
                 {
-                  "const": "MY.samplingMethodFishNet",
-                  "title": "Kalaverkko"
+                  "const": "MY.samplingMethodPitfall",
+                  "title": "Kuoppapyydys"
                 },
                 {
-                  "const": "MY.samplingMethodElectrofishing",
-                  "title": "Sähkökalastus"
-                },
-                {
-                  "const": "MY.samplingMethodAngleFishing",
-                  "title": "Onkiminen"
-                },
-                {
-                  "const": "MY.samplingMethodFishTrap",
-                  "title": "Katiska tai rysä"
-                },
-                {
-                  "const": "MY.samplingMethodSeine",
-                  "title": "Nuotta"
-                },
-                {
-                  "const": "MY.samplingMethodTrawling",
-                  "title": "Troolaus"
-                },
-                {
-                  "const": "MY.samplingMethodBeamTrawl",
-                  "title": "Puomitrooli"
+                  "const": "MY.samplingMethodEclectortrap",
+                  "title": "Kuoriutumispyydys, eklektori"
                 },
                 {
                   "const": "MY.samplingMethodDungTrap",
                   "title": "Lantapyydys"
                 },
                 {
+                  "const": "MY.samplingMethodBoard",
+                  "title": "Lautapyydys"
+                },
+                {
+                  "const": "MY.samplingMethodYellowtrap",
+                  "title": "Liimapyydys"
+                },
+                {
+                  "const": "MY.samplingMethodMistnet",
+                  "title": "Lintuverkko"
+                },
+                {
+                  "const": "MY.samplingMethodSweeping",
+                  "title": "Lyöntihaavi"
+                },
+                {
+                  "const": "MY.samplingMethodSoilsample",
+                  "title": "Maaperänäyte"
+                },
+                {
+                  "const": "MY.samplingMethodWashing",
+                  "title": "Maaston peseminen"
+                },
+                {
+                  "const": "MY.samplingMethodMalaise",
+                  "title": "Malaise-pyydys"
+                },
+                {
+                  "const": "MY.samplingMethodPantrap",
+                  "title": "Maljapyydys"
+                },
+                {
+                  "const": "MY.samplingMethodSeine",
+                  "title": "Nuotta"
+                },
+                {
+                  "const": "MY.samplingMethodAngleFishing",
+                  "title": "Onkiminen"
+                },
+                {
+                  "const": "MY.samplingMethodTrampling",
+                  "title": "Polkeminen"
+                },
+                {
+                  "const": "MY.samplingMethodBeamTrawl",
+                  "title": "Puomitrooli"
+                },
+                {
+                  "const": "MY.samplingMethodTrap",
+                  "title": "Pyydys (määrittelemätön)"
+                },
+                {
+                  "const": "MY.samplingMethodDropping",
+                  "title": "Ravistelu/pudottelu"
+                },
+                {
                   "const": "MY.samplingMethodTrunkWindowTrap",
                   "title": "Runkoikkunapyydys"
+                },
+                {
+                  "const": "MY.samplingMethodElectrofishing",
+                  "title": "Sähkökalastus"
+                },
+                {
+                  "const": "MY.samplingMethodSifting",
+                  "title": "Seulos"
                 },
                 {
                   "const": "MY.samplingMethodDiverInsectTrap",
                   "title": "Sukeltajahyönteispyydys"
                 },
                 {
-                  "const": "MY.samplingMethodAquaticEmergenceTrap",
-                  "title": "Vesihyönteisten kuoriutumispyydys"
+                  "const": "MY.samplingMethodDiving",
+                  "title": "Sukeltaminen"
+                },
+                {
+                  "const": "MY.samplingMethodBait",
+                  "title": "Syötti (ilman pyydystä)"
+                },
+                {
+                  "const": "MY.samplingMethodBaittrap",
+                  "title": "Syöttipyydys"
+                },
+                {
+                  "const": "MY.samplingMethodTrawling",
+                  "title": "Troolaus"
+                },
+                {
+                  "const": "MY.samplingMethodLight",
+                  "title": "Valo"
+                },
+                {
+                  "const": "MY.samplingMethodLightTrap",
+                  "title": "Valopyydys"
                 },
                 {
                   "const": "MY.samplingMethodWaterBucket",
                   "title": "Vesiämpäri"
                 },
                 {
-                  "const": "MY.samplingMethodTrampling",
-                  "title": "Polkeminen"
+                  "const": "MY.samplingMethodAquaticNet",
+                  "title": "Vesihaavi"
+                },
+                {
+                  "const": "MY.samplingMethodAquaticEmergenceTrap",
+                  "title": "Vesihyönteisten kuoriutumispyydys"
                 },
                 {
                   "const": "MY.samplingMethodWaterSieve",
@@ -862,12 +894,20 @@
                         "title": "Epäsuora havainto (jäljet, ulosteet, yms)"
                       },
                       {
+                        "const": "MY.recordBasisMachineObservation",
+                        "title": "Laitteen tekemä havainto"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationPhoto",
+                        "title": "Laitteen tekemä havainto, valokuva"
+                      },
+                      {
                         "const": "MY.recordBasisMachineObservationVideo",
-                        "title": "Laitteen tekemä videotallenne"
+                        "title": "Laitteen tekemä havainto, video"
                       },
                       {
                         "const": "MY.recordBasisMachineObservationAudio",
-                        "title": "Laitteen tekemä äänitallenne"
+                        "title": "Laitteen tekemä havainto, ääni"
                       }
                     ],
                     "title": "Havainnointitapa",
@@ -881,80 +921,44 @@
                         "title": ""
                       },
                       {
-                        "const": "MY.samplingMethodLight",
-                        "title": "Valo"
-                      },
-                      {
-                        "const": "MY.samplingMethodLightTrap",
-                        "title": "Valopyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodTrap",
-                        "title": "Pyydys (määrittelemätön)"
-                      },
-                      {
-                        "const": "MY.samplingMethodMalaise",
-                        "title": "Malaise-pyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodPitfall",
-                        "title": "Kuoppapyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodWindowtrap",
-                        "title": "Ikkunapyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodYellowWindowTrap",
-                        "title": "Keltaikkunapyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodPantrap",
-                        "title": "Maljapyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodYellowpan",
-                        "title": "Keltamalja"
-                      },
-                      {
-                        "const": "MY.samplingMethodYellowtrap",
-                        "title": "Liimapyydys"
+                        "const": "MY.samplingMethodCarnet",
+                        "title": "Autohaavi"
                       },
                       {
                         "const": "MY.samplingMethodFeromonetrap",
                         "title": "Feromonipyydys"
                       },
                       {
-                        "const": "MY.samplingMethodBaittrap",
-                        "title": "Syöttipyydys"
-                      },
-                      {
-                        "const": "MY.samplingMethodBait",
-                        "title": "Syötti (ilman pyydystä)"
-                      },
-                      {
                         "const": "MY.samplingMethodNet",
                         "title": "Haavi"
                       },
                       {
-                        "const": "MY.samplingMethodSweeping",
-                        "title": "Lyöntihaavi"
+                        "const": "MY.samplingMethodDrag",
+                        "title": "Hara"
                       },
                       {
-                        "const": "MY.samplingMethodCarnet",
-                        "title": "Autohaavi"
+                        "const": "MY.samplingMethodWindowtrap",
+                        "title": "Ikkunapyydys"
                       },
                       {
-                        "const": "MY.samplingMethodMistnet",
-                        "title": "Lintuverkko"
+                        "const": "MY.samplingMethodDigging",
+                        "title": "Kaivaminen"
                       },
                       {
-                        "const": "MY.samplingMethodBoard",
-                        "title": "Lautapyydys"
+                        "const": "MY.samplingMethodFishNet",
+                        "title": "Kalaverkko"
+                      },
+                      {
+                        "const": "MY.samplingMethodHand",
+                        "title": "Käsinkeräys"
                       },
                       {
                         "const": "MY.samplingMethodReared",
                         "title": "Kasvatettu"
+                      },
+                      {
+                        "const": "MY.samplingMethodEpupa",
+                        "title": "Kasvatettu kotelosta"
                       },
                       {
                         "const": "MY.samplingMethodExovo",
@@ -965,100 +969,140 @@
                         "title": "Kasvatettu toukasta"
                       },
                       {
-                        "const": "MY.samplingMethodEpupa",
-                        "title": "Kasvatettu kotelosta"
+                        "const": "MY.samplingMethodFishTrap",
+                        "title": "Katiska tai rysä"
                       },
                       {
-                        "const": "MY.samplingMethodEclectortrap",
-                        "title": "Kuoriutumispyydys, eklektori"
+                        "const": "MY.samplingMethodYellowWindowTrap",
+                        "title": "Keltaikkunapyydys"
                       },
                       {
-                        "const": "MY.samplingMethodHand",
-                        "title": "Käsinkeräys"
-                      },
-                      {
-                        "const": "MY.samplingMethodSifting",
-                        "title": "Seulos"
-                      },
-                      {
-                        "const": "MY.samplingMethodSoilsample",
-                        "title": "Maaperänäyte"
-                      },
-                      {
-                        "const": "MY.samplingMethodDropping",
-                        "title": "Ravistelu/pudottelu"
-                      },
-                      {
-                        "const": "MY.samplingMethodWashing",
-                        "title": "Maaston peseminen"
-                      },
-                      {
-                        "const": "MY.samplingMethodDigging",
-                        "title": "Kaivaminen"
-                      },
-                      {
-                        "const": "MY.samplingMethodDiving",
-                        "title": "Sukeltaminen"
-                      },
-                      {
-                        "const": "MY.samplingMethodDrag",
-                        "title": "Hara"
+                        "const": "MY.samplingMethodYellowpan",
+                        "title": "Keltamalja"
                       },
                       {
                         "const": "MY.samplingMethodTriangleDrag",
                         "title": "Kolmiohara"
                       },
                       {
-                        "const": "MY.samplingMethodFishNet",
-                        "title": "Kalaverkko"
+                        "const": "MY.samplingMethodPitfall",
+                        "title": "Kuoppapyydys"
                       },
                       {
-                        "const": "MY.samplingMethodElectrofishing",
-                        "title": "Sähkökalastus"
-                      },
-                      {
-                        "const": "MY.samplingMethodAngleFishing",
-                        "title": "Onkiminen"
-                      },
-                      {
-                        "const": "MY.samplingMethodFishTrap",
-                        "title": "Katiska tai rysä"
-                      },
-                      {
-                        "const": "MY.samplingMethodSeine",
-                        "title": "Nuotta"
-                      },
-                      {
-                        "const": "MY.samplingMethodTrawling",
-                        "title": "Troolaus"
-                      },
-                      {
-                        "const": "MY.samplingMethodBeamTrawl",
-                        "title": "Puomitrooli"
+                        "const": "MY.samplingMethodEclectortrap",
+                        "title": "Kuoriutumispyydys, eklektori"
                       },
                       {
                         "const": "MY.samplingMethodDungTrap",
                         "title": "Lantapyydys"
                       },
                       {
+                        "const": "MY.samplingMethodBoard",
+                        "title": "Lautapyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodYellowtrap",
+                        "title": "Liimapyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodMistnet",
+                        "title": "Lintuverkko"
+                      },
+                      {
+                        "const": "MY.samplingMethodSweeping",
+                        "title": "Lyöntihaavi"
+                      },
+                      {
+                        "const": "MY.samplingMethodSoilsample",
+                        "title": "Maaperänäyte"
+                      },
+                      {
+                        "const": "MY.samplingMethodWashing",
+                        "title": "Maaston peseminen"
+                      },
+                      {
+                        "const": "MY.samplingMethodMalaise",
+                        "title": "Malaise-pyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodPantrap",
+                        "title": "Maljapyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodSeine",
+                        "title": "Nuotta"
+                      },
+                      {
+                        "const": "MY.samplingMethodAngleFishing",
+                        "title": "Onkiminen"
+                      },
+                      {
+                        "const": "MY.samplingMethodTrampling",
+                        "title": "Polkeminen"
+                      },
+                      {
+                        "const": "MY.samplingMethodBeamTrawl",
+                        "title": "Puomitrooli"
+                      },
+                      {
+                        "const": "MY.samplingMethodTrap",
+                        "title": "Pyydys (määrittelemätön)"
+                      },
+                      {
+                        "const": "MY.samplingMethodDropping",
+                        "title": "Ravistelu/pudottelu"
+                      },
+                      {
                         "const": "MY.samplingMethodTrunkWindowTrap",
                         "title": "Runkoikkunapyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodElectrofishing",
+                        "title": "Sähkökalastus"
+                      },
+                      {
+                        "const": "MY.samplingMethodSifting",
+                        "title": "Seulos"
                       },
                       {
                         "const": "MY.samplingMethodDiverInsectTrap",
                         "title": "Sukeltajahyönteispyydys"
                       },
                       {
-                        "const": "MY.samplingMethodAquaticEmergenceTrap",
-                        "title": "Vesihyönteisten kuoriutumispyydys"
+                        "const": "MY.samplingMethodDiving",
+                        "title": "Sukeltaminen"
+                      },
+                      {
+                        "const": "MY.samplingMethodBait",
+                        "title": "Syötti (ilman pyydystä)"
+                      },
+                      {
+                        "const": "MY.samplingMethodBaittrap",
+                        "title": "Syöttipyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodTrawling",
+                        "title": "Troolaus"
+                      },
+                      {
+                        "const": "MY.samplingMethodLight",
+                        "title": "Valo"
+                      },
+                      {
+                        "const": "MY.samplingMethodLightTrap",
+                        "title": "Valopyydys"
                       },
                       {
                         "const": "MY.samplingMethodWaterBucket",
                         "title": "Vesiämpäri"
                       },
                       {
-                        "const": "MY.samplingMethodTrampling",
-                        "title": "Polkeminen"
+                        "const": "MY.samplingMethodAquaticNet",
+                        "title": "Vesihaavi"
+                      },
+                      {
+                        "const": "MY.samplingMethodAquaticEmergenceTrap",
+                        "title": "Vesihyönteisten kuoriutumispyydys"
                       },
                       {
                         "const": "MY.samplingMethodWaterSieve",
@@ -1426,14 +1470,6 @@
                       {
                         "const": "MY.plantLifeStageSubterranean",
                         "title": "mukula / sipuli / juuri"
-                      },
-                      {
-                        "const": "MY.plantLifeStageLivingPlant",
-                        "title": "elävä"
-                      },
-                      {
-                        "const": "MY.plantLifeStageDeadPlant",
-                        "title": "kuollut"
                       }
                     ],
                     "title": "Kasvin elinvaihe"
@@ -1620,14 +1656,6 @@
                         "title": "nuijapää"
                       },
                       {
-                        "const": "MY.lifeStageDead",
-                        "title": "kuollut"
-                      },
-                      {
-                        "const": "MY.lifeStageAlive",
-                        "title": "elävä"
-                      },
-                      {
                         "const": "MY.lifeStageEmbryo",
                         "title": "alkio tai sikiö"
                       },
@@ -1658,6 +1686,10 @@
                       {
                         "const": "MY.lifeStageMarks",
                         "title": "jäljet (syömäjäljet tms.)"
+                      },
+                      {
+                        "const": "MY.lifeStageTriungulin",
+                        "title": "triunguliini"
                       }
                     ],
                     "title": "Elinvaihe"
@@ -1743,7 +1775,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "title": "Muotoryhmät"
+                    "title": "Eliöryhmät"
                   },
                   "images": {
                     "type": "array",
@@ -1779,40 +1811,8 @@
                                 "title": ""
                               },
                               {
-                                "const": "MY.identificationBasisSeen",
-                                "title": "Näköhavainto"
-                              },
-                              {
-                                "const": "MY.identificationBasisHeard",
-                                "title": "Kuulohavainto"
-                              },
-                              {
-                                "const": "MY.identificationBasisHandled",
-                                "title": "Käsitelty"
-                              },
-                              {
-                                "const": "MY.identificationBasisMedia",
-                                "title": "Valokuva tai muu media"
-                              },
-                              {
-                                "const": "MY.identificationBasisFreshSpecimen",
-                                "title": "Tuorenäyte"
-                              },
-                              {
-                                "const": "MY.identificationBasisPreservedSpecimen",
-                                "title": "Säilötty / kuivattu näyte"
-                              },
-                              {
-                                "const": "MY.identificationBasisMicroscope",
-                                "title": "Mikroskopointi"
-                              },
-                              {
-                                "const": "MY.identificationBasisSpores",
-                                "title": "Itiöt"
-                              },
-                              {
-                                "const": "MY.identificationBasisChemical",
-                                "title": "Kemiallinen"
+                                "const": "MY.identificationBasisDNA",
+                                "title": "DNA-määritys"
                               },
                               {
                                 "const": "MY.identificationBasisGenitals",
@@ -1823,8 +1823,40 @@
                                 "title": "Genitaalipreparaatti"
                               },
                               {
-                                "const": "MY.identificationBasisDNA",
-                                "title": "DNA-määritys"
+                                "const": "MY.identificationBasisSpores",
+                                "title": "Itiöt"
+                              },
+                              {
+                                "const": "MY.identificationBasisHandled",
+                                "title": "Käsitelty"
+                              },
+                              {
+                                "const": "MY.identificationBasisChemical",
+                                "title": "Kemiallinen"
+                              },
+                              {
+                                "const": "MY.identificationBasisHeard",
+                                "title": "Kuulohavainto"
+                              },
+                              {
+                                "const": "MY.identificationBasisMicroscope",
+                                "title": "Mikroskopointi"
+                              },
+                              {
+                                "const": "MY.identificationBasisSeen",
+                                "title": "Näköhavainto"
+                              },
+                              {
+                                "const": "MY.identificationBasisPreservedSpecimen",
+                                "title": "Säilötty / kuivattu näyte"
+                              },
+                              {
+                                "const": "MY.identificationBasisFreshSpecimen",
+                                "title": "Tuorenäyte"
+                              },
+                              {
+                                "const": "MY.identificationBasisMedia",
+                                "title": "Valokuva tai muu media"
                               }
                             ]
                           },
@@ -2153,10 +2185,6 @@
                       {
                         "const": "MY.batBehaviorHunting",
                         "title": "saalistava"
-                      },
-                      {
-                        "const": "MY.batBehaviorDead",
-                        "title": "kuollut"
                       }
                     ],
                     "title": "Lepakon tila"
@@ -2186,6 +2214,10 @@
                       "type": "string"
                     },
                     "title": "Äänitteet"
+                  },
+                  "alive": {
+                    "type": "boolean",
+                    "title": "Elossa"
                   }
                 },
                 "required": []
@@ -2221,25 +2253,135 @@
   "title": "Retkilomake",
   "shortDescription": "Kirjaa maastoretken kaikki havainto- ja/tai kokoelmanäytetiedot. Havaintoja voi kirjata myös usealta paikalta.",
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "Enter": {
+        "fn": "navigate"
+      },
+      "shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "ctrl+Enter": {
+        "fn": "textareaRowInsert"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havainto"
+      },
+      "alt+g": {
+        "fn": "insert",
+        "target": "root_gatherings",
+        "targetLabel": "paikka"
+      },
+      "alt+t": {
+        "fn": "autosuggestToggle"
+      }
+    },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel",
+          "keywords"
+        ],
+        "target": "gatheringEvent"
       }
     },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
       "ui:field": "NestField",
       "ui:classNames": "well well-sm",
       "ui:order": [
@@ -2363,6 +2505,16 @@
           }
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "dateBegin": {
         "ui:widget": "DateTimeWidget",
         "ui:options": {
@@ -2379,22 +2531,261 @@
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      },
+      "ui:title": "Havainnon tarkat paikkatiedot ovat julkisia"
+    },
     "keywords": {
-      "items": {},
       "ui:field": "TagArrayField",
       "ui:help": "Voit antaa havaintoerälle omia avainsanoja, jotka helpottavat havaintojen etsimistä ja tilastointia. Esim. \"peltoreitti\" tai \"takametsä\"."
     },
     "gatherings": {
+      "ui:functions": [
+        {
+          "ui:field": "NamedPlaceChooserField"
+        }
+      ],
+      "ui:field": "MapArrayField",
+      "ui:settings": [
+        "/mapOptions/tileLayerName",
+        "/mapOptions/overlayNames",
+        "/mapOptions/tileLayerOpacity",
+        "/mapOptions/tileLayers"
+      ],
+      "ui:options": {
+        "mapOptions": {
+          "controls": {
+            "draw": {
+              "clear": true,
+              "delete": true,
+              "reverse": true,
+              "undo": false,
+              "redo": false,
+              "upload": true,
+              "copy": true
+            }
+          }
+        },
+        "geometryField": "geometry",
+        "geometryMapper": "units",
+        "mapSizes": {
+          "lg": 8,
+          "md": 6,
+          "sm": 6,
+          "xs": 12
+        },
+        "buttons": [
+          {
+            "fn": "add",
+            "label": "Lisää paikka"
+          }
+        ],
+        "popupFields": [
+          {
+            "field": "/units/[idx]/identifications/0/taxon"
+          },
+          {
+            "field": "/units/[idx]/sex"
+          },
+          {
+            "field": "/units/[idx]/notes"
+          }
+        ],
+        "belowFields": [
+          "units"
+        ],
+        "belowUiSchemaRoot": {
+          "ui:field": "SingleItemArrayField",
+          "ui:title": "Paikan %{idx} havainnot",
+          "ui:options": {
+            "titleClassName": "lg"
+          }
+        },
+        "inlineUiSchemaRoot": {
+          "ui:field": "SingleActiveArrayField",
+          "ui:title": "Paikka %{idx}",
+          "ui:options": {
+            "renderer": "accordion",
+            "headerFormatters": [
+              "units",
+              "namedPlace"
+            ],
+            "popupFields": [
+              {
+                "field": "units",
+                "mapper": "units",
+                "label": "Havainnot"
+              },
+              {
+                "field": "localityDescription"
+              }
+            ],
+            "confirmDelete": true
+          }
+        },
+        "propsToPassToInlineSchema": [
+          "formData"
+        ],
+        "minHeight": 435,
+        "resizeTimeout": 210,
+        "renderButtonsBelow": true,
+        "buttonsTitle": "Lisää uusi paikka",
+        "emptyHelp": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle"
+      },
       "items": {
+        "ui:functions": [
+          {
+            "ui:field": "GeocoderField",
+            "ui:options": {
+              "updateOnlyEmpty": true,
+              "button": true
+            }
+          },
+          {
+            "ui:field": "NamedPlaceSaverField"
+          }
+        ],
+        "ui:field": "NestField",
+        "ui:options": {
+          "nests": {
+            "eventTime": {
+              "title": "",
+              "fields": [
+                "dateBegin",
+                "dateEnd"
+              ],
+              "rootUiSchema": {
+                "ui:grid": {
+                  "lg": {
+                    "dateBegin": 6,
+                    "dateEnd": 3
+                  },
+                  "md": {
+                    "dateBegin": 7,
+                    "dateEnd": 4
+                  },
+                  "sm": 12,
+                  "xs": 12
+                }
+              }
+            },
+            "placeWrapper": {
+              "title": "Havaintopaikan tiedot",
+              "fields": [
+                "country",
+                "administrativeProvince",
+                "biologicalProvince",
+                "municipality",
+                "locality",
+                "localityDescription",
+                "coordinateRadius",
+                "alt",
+                "images",
+                "weather",
+                "eventTime",
+                "notes",
+                "namedPlaceID",
+                "samplingMethod",
+                "samplingMethodNotes",
+                "habitat",
+                "habitatDescription",
+                "observationDays",
+                "observationMinutes",
+                "trapCount",
+                "taxonCensus"
+              ],
+              "rootUiSchema": {
+                "ui:field": "ScopeField",
+                "ui:settings": [
+                  "%additionalFields/scopeField_gatherings"
+                ],
+                "ui:options": {
+                  "includeAdditionalFieldsChooserButton": true,
+                  "additionalsPersistenceKey": "gatherings",
+                  "fields": [
+                    "locality",
+                    "localityDescription",
+                    "weather",
+                    "notes",
+                    "namedPlaceID"
+                  ],
+                  "glyphFields": [
+                    {
+                      "glyph": "camera",
+                      "show": "images",
+                      "label": "Lisää valokuva",
+                      "open": false
+                    }
+                  ],
+                  "titles": {
+                    "eventTime": "Aika"
+                  }
+                },
+                "ui:order": [
+                  "country",
+                  "administrativeProvince",
+                  "biologicalProvince",
+                  "municipality",
+                  "locality",
+                  "localityDescription",
+                  "coordinateRadius",
+                  "alt",
+                  "images",
+                  "habitat",
+                  "habitatDescription",
+                  "weather",
+                  "eventTime",
+                  "notes",
+                  "geometry",
+                  "namedPlaceID",
+                  "samplingMethod",
+                  "samplingMethodNotes",
+                  "observationDays",
+                  "observationMinutes",
+                  "trapCount",
+                  "taxonCensus"
+                ]
+              }
+            }
+          },
+          "buttonsNest": "placeWrapper"
+        },
+        "ui:order": [
+          "*",
+          "units"
+        ],
+        "geometry": {
+          "ui:field": "HiddenField"
+        },
+        "namedPlaceID": {
+          "ui:field": "HiddenField"
+        },
         "images": {
-          "items": {},
           "ui:field": "ImageArrayField",
           "ui:options": {
             "capturerVerbatimPath": "/gatheringEvent/leg"
           }
         },
-        "habitat": {
-          "items": {}
+        "dateBegin": {
+          "ui:widget": "DateTimeWidget",
+          "ui:options": {
+            "showButtons": true
+          }
+        },
+        "dateEnd": {
+          "ui:widget": "DateTimeWidget"
         },
         "taxonCensus": {
           "items": {
@@ -2408,63 +2799,123 @@
             }
           }
         },
+        "municipality": {
+          "ui:functions": [
+            {
+              "ui:field": "StringToArrayField",
+              "ui:options": {
+                "delimiter": ", "
+              }
+            },
+            {
+              "ui:field": "TagArrayField"
+            }
+          ]
+        },
+        "biologicalProvince": {
+          "ui:functions": [
+            {
+              "ui:field": "StringToArrayField",
+              "ui:options": {
+                "delimiter": ", "
+              }
+            },
+            {
+              "ui:field": "TagArrayField"
+            }
+          ]
+        },
+        "administrativeProvince": {
+          "ui:functions": [
+            {
+              "ui:field": "StringToArrayField",
+              "ui:options": {
+                "delimiter": ", "
+              }
+            },
+            {
+              "ui:field": "TagArrayField"
+            }
+          ]
+        },
         "units": {
+          "ui:childFunctions": {
+            "ui:field": "FlatField",
+            "ui:options": {
+              "fields": [
+                "identifications",
+                "unitGathering",
+                "unitFact"
+              ]
+            }
+          },
+          "ui:functions": [
+            {
+              "ui:field": "SortArrayField",
+              "ui:options": {
+                "excludeSortableColumns": [
+                  "identifications_0_taxon"
+                ]
+              },
+              "ui:settings": [
+                "/sortCols"
+              ]
+            },
+            {
+              "ui:field": "UnitListShorthandArrayField"
+            }
+          ],
+          "ui:field": "SingleActiveArrayField",
+          "ui:title": "",
+          "ui:options": {
+            "renderer": "table",
+            "normalRenderingTreshold": "sm",
+            "activeHeightOffset": -6,
+            "confirmDelete": true,
+            "buttons": [
+              {
+                "fn": "add",
+                "label": "Lisää havainto",
+                "variant": "primary"
+              },
+              {
+                "fn": "copy",
+                "label": "Kopioi havainto",
+                "type": "whitelist",
+                "filter": [
+                  "recordBasis",
+                  "informalTaxonGroups",
+                  "taxonConfidence",
+                  "lifeStage",
+                  "preservation",
+                  "plantLifeStage",
+                  "breeding",
+                  "atlasCode",
+                  "twitched",
+                  "wild",
+                  "identifications_0_det",
+                  "identifications_0_detDate",
+                  "identifications_0_identificationBasis",
+                  "samplingMethod",
+                  "samplingMethodNotes",
+                  "unitGathering_habitatIUCN",
+                  "unitGathering_habitatDescription",
+                  "unitGathering_dateBegin",
+                  "unitGathering_dateEnd",
+                  "keywords"
+                ]
+              }
+            ],
+            "formatters": {
+              "identifications_0_taxon": {
+                "formatter": "unknownTaxon",
+                "idField": "unitFact_autocompleteSelectedTaxonID"
+              }
+            },
+            "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
+            "tableActiveItemClassNames": "panel panel-body gray"
+          },
           "items": {
-            "preservation": {
-              "items": {}
-            },
-            "informalTaxonGroups": {
-              "items": {},
-              "ui:field": "HiddenField"
-            },
-            "images": {
-              "items": {},
-              "ui:field": "ImageArrayField",
-              "ui:options": {
-                "capturerVerbatimPath": "/gatheringEvent/leg",
-                "sideEffects": {
-                  "/../recordBasis": "MY.recordBasisHumanObservationPhoto"
-                }
-              }
-            },
-            "identifications": {
-              "items": {
-                "identificationBasis": {
-                  "items": {}
-                },
-                "detDate": {
-                  "ui:widget": "DateWidget",
-                  "ui:options": {
-                    "allowOnlyYear": true
-                  }
-                }
-              }
-            },
-            "movingStatus": {
-              "items": {},
-              "ui:field": "EnumRangeArrayField",
-              "ui:options": {
-                "range": "MY.birdBehaviorEnum"
-              }
-            },
-            "keywords": {
-              "items": {},
-              "ui:field": "TagArrayField"
-            },
-            "additionalIDs": {
-              "items": {},
-              "ui:field": "TagArrayField"
-            },
-            "audio": {
-              "items": {},
-              "ui:field": "AudioArrayField",
-              "ui:options": {
-                "capturerVerbatimPath": "/gatheringEvent/leg",
-                "sideEffects": {
-                  "/../recordBasis": "MY.recordBasisHumanObservationAudio"
-                }
-              }
-            },
             "ui:functions": [
               {
                 "ui:field": "AutosuggestField",
@@ -2605,7 +3056,8 @@
                           "wild",
                           "checklistID",
                           "keywords",
-                          "additionalIDs"
+                          "additionalIDs",
+                          "alive"
                         ]
                       },
                       "MVL.1": {
@@ -2893,6 +3345,37 @@
                 ]
               ]
             },
+            "identifications": {
+              "items": {
+                "detDate": {
+                  "ui:widget": "DateWidget",
+                  "ui:options": {
+                    "allowOnlyYear": true
+                  }
+                }
+              }
+            },
+            "informalTaxonGroups": {
+              "ui:field": "HiddenField"
+            },
+            "images": {
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg",
+                "sideEffects": {
+                  "/../recordBasis": "MY.recordBasisHumanObservationPhoto"
+                }
+              }
+            },
+            "audio": {
+              "ui:field": "AudioArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg",
+                "sideEffects": {
+                  "/../recordBasis": "MY.recordBasisHumanObservationAudio"
+                }
+              }
+            },
             "unitGathering": {
               "geometry": {
                 "ui:field": "HiddenField"
@@ -2914,7 +3397,10 @@
                   "MY.recordBasisHumanObservationHandled",
                   "MY.recordBasisHumanObservation",
                   "MY.recordBasisHumanObservationAudio",
-                  "MY.recordBasisHumanObservationIndirect"
+                  "MY.recordBasisHumanObservationIndirect",
+                  "MY.recordBasisMachineObservationPhoto",
+                  "MY.recordBasisMachineObservationAudio",
+                  "MY.recordBasisMachineObservationVideo"
                 ],
                 "order": [
                   "",
@@ -2923,7 +3409,10 @@
                   "MY.recordBasisPreservedSpecimen",
                   "MY.recordBasisHumanObservationHandled",
                   "MY.recordBasisHumanObservationAudio",
-                  "MY.recordBasisHumanObservationIndirect"
+                  "MY.recordBasisHumanObservationIndirect",
+                  "MY.recordBasisMachineObservationPhoto",
+                  "MY.recordBasisMachineObservationAudio",
+                  "MY.recordBasisMachineObservationVideo"
                 ]
               }
             },
@@ -2942,497 +3431,21 @@
             },
             "hostID": {
               "ui:widget": "HiddenWidget"
-            }
-          },
-          "ui:childFunctions": {
-            "ui:field": "FlatField",
-            "ui:options": {
-              "fields": [
-                "identifications",
-                "unitGathering",
-                "unitFact"
-              ]
-            }
-          },
-          "ui:functions": [
-            {
-              "ui:field": "SortArrayField",
-							"ui:options": {
-								"columns": {
-									"identifications_0_taxon": {
-										"compareStrategies": [
-											{"strategy": "default"},
-											{
-											"strategy": "taxonomic",
-											"valueField": "identifications_0_id",
-											"query": {
-												"informalGroupFilters": "MVL.1",
-												"onlyFinnish": true
-											}
-										}
-										]
-									}
-								}
-							}
             },
-            {
-              "ui:field": "UnitListShorthandArrayField"
-            }
-          ],
-          "ui:field": "SingleActiveArrayField",
-          "ui:title": "",
-          "ui:options": {
-            "renderer": "table",
-            "normalRenderingTreshold": "sm",
-            "activeHeightOffset": -6,
-            "confirmDelete": true,
-            "buttons": [
-              {
-                "fn": "add",
-                "label": "Lisää havainto",
-                "variant": "primary"
-              },
-              {
-                "fn": "copy",
-                "label": "Kopioi havainto",
-                "type": "whitelist",
-                "filter": [
-                  "recordBasis",
-                  "informalTaxonGroups",
-                  "taxonConfidence",
-                  "lifeStage",
-                  "preservation",
-                  "plantLifeStage",
-                  "breeding",
-                  "atlasCode",
-                  "twitched",
-                  "wild",
-                  "identifications_0_det",
-                  "identifications_0_detDate",
-                  "identifications_0_identificationBasis",
-                  "samplingMethod",
-                  "samplingMethodNotes",
-                  "unitGathering_habitatIUCN",
-                  "unitGathering_habitatDescription",
-                  "unitGathering_dateBegin",
-                  "unitGathering_dateEnd"
-                ]
-              }
-            ],
-            "formatters": {
-              "identifications_0_taxon": {
-                "formatter": "unknownTaxon",
-                "idField": "unitFact_autocompleteSelectedTaxonID"
-              }
-            },
-            "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
-            "tableActiveItemClassNames": "panel panel-body gray"
-          }
-        },
-        "ui:functions": [
-          {
-            "ui:field": "GeocoderField",
-            "ui:options": {
-              "updateOnlyEmpty": true,
-              "button": true
-            }
-          },
-          {
-            "ui:field": "NamedPlaceSaverField"
-          }
-        ],
-        "ui:field": "NestField",
-        "ui:options": {
-          "nests": {
-            "eventTime": {
-              "title": "",
-              "fields": [
-                "dateBegin",
-                "dateEnd"
-              ],
-              "rootUiSchema": {
-                "ui:grid": {
-                  "lg": {
-                    "dateBegin": 6,
-                    "dateEnd": 3
-                  },
-                  "md": {
-                    "dateBegin": 7,
-                    "dateEnd": 4
-                  },
-                  "sm": 12,
-                  "xs": 12
-                }
-              }
-            },
-            "placeWrapper": {
-              "title": "Havaintopaikan tiedot",
-              "fields": [
-                "country",
-                "administrativeProvince",
-                "biologicalProvince",
-                "municipality",
-                "locality",
-                "localityDescription",
-                "coordinateRadius",
-                "alt",
-                "images",
-                "weather",
-                "eventTime",
-                "notes",
-                "namedPlaceID",
-                "samplingMethod",
-                "samplingMethodNotes",
-                "habitat",
-                "habitatDescription",
-                "observationDays",
-                "observationMinutes",
-                "trapCount",
-                "taxonCensus"
-              ],
-              "rootUiSchema": {
-                "ui:field": "ScopeField",
-                "ui:settings": [
-                  "%additionalFields/scopeField_gatherings"
-                ],
-                "ui:options": {
-                  "includeAdditionalFieldsChooserButton": true,
-                  "additionalsPersistenceKey": "gatherings",
-                  "fields": [
-                    "locality",
-                    "localityDescription",
-                    "weather",
-                    "notes",
-                    "namedPlaceID"
-                  ],
-                  "glyphFields": [
-                    {
-                      "glyph": "camera",
-                      "show": "images",
-                      "label": "Lisää valokuva",
-                      "open": false
-                    }
-                  ],
-                  "titles": {
-                    "eventTime": "Aika"
-                  }
-                },
-                "ui:order": [
-                  "country",
-                  "administrativeProvince",
-                  "biologicalProvince",
-                  "municipality",
-                  "locality",
-                  "localityDescription",
-                  "coordinateRadius",
-                  "alt",
-                  "images",
-                  "habitat",
-                  "habitatDescription",
-                  "weather",
-                  "eventTime",
-                  "notes",
-                  "geometry",
-                  "namedPlaceID",
-                  "samplingMethod",
-                  "samplingMethodNotes",
-                  "observationDays",
-                  "observationMinutes",
-                  "trapCount",
-                  "taxonCensus"
-                ]
-              }
-            }
-          },
-          "buttonsNest": "placeWrapper"
-        },
-        "ui:order": [
-          "*",
-          "units"
-        ],
-        "geometry": {
-          "ui:field": "HiddenField"
-        },
-        "namedPlaceID": {
-          "ui:field": "HiddenField"
-        },
-        "dateBegin": {
-          "ui:widget": "DateTimeWidget",
-          "ui:options": {
-            "showButtons": true
-          }
-        },
-        "dateEnd": {
-          "ui:widget": "DateTimeWidget"
-        },
-        "municipality": {
-          "ui:functions": [
-            {
-              "ui:field": "StringToArrayField",
+            "movingStatus": {
+              "ui:field": "EnumRangeArrayField",
               "ui:options": {
-                "delimiter": ", "
+                "range": "MY.birdBehaviorEnum"
               }
             },
-            {
+            "keywords": {
+              "ui:field": "TagArrayField"
+            },
+            "additionalIDs": {
               "ui:field": "TagArrayField"
             }
-          ]
-        },
-        "biologicalProvince": {
-          "ui:functions": [
-            {
-              "ui:field": "StringToArrayField",
-              "ui:options": {
-                "delimiter": ", "
-              }
-            },
-            {
-              "ui:field": "TagArrayField"
-            }
-          ]
-        },
-        "administrativeProvince": {
-          "ui:functions": [
-            {
-              "ui:field": "StringToArrayField",
-              "ui:options": {
-                "delimiter": ", "
-              }
-            },
-            {
-              "ui:field": "TagArrayField"
-            }
-          ]
+          }
         }
-      },
-      "ui:functions": [
-        {
-          "ui:field": "NamedPlaceChooserField"
-        }
-      ],
-      "ui:field": "MapArrayField",
-      "ui:settings": [
-        "/mapOptions/tileLayerName",
-        "/mapOptions/overlayNames",
-        "/mapOptions/tileLayerOpacity",
-        "/mapOptions/tileLayers"
-      ],
-      "ui:options": {
-        "mapOptions": {
-          "controls": {
-            "draw": {
-              "clear": true,
-              "delete": true,
-              "reverse": true,
-              "undo": false,
-              "redo": false,
-              "upload": true,
-              "copy": true
-            }
-          }
-        },
-        "geometryField": "geometry",
-        "geometryMapper": "units",
-        "mapSizes": {
-          "lg": 8,
-          "md": 6,
-          "sm": 6,
-          "xs": 12
-        },
-        "buttons": [
-          {
-            "fn": "add",
-            "label": "Lisää paikka"
-          }
-        ],
-        "popupFields": [
-          {
-            "field": "/units/[idx]/identifications/0/taxon"
-          },
-          {
-            "field": "/units/[idx]/sex"
-          },
-          {
-            "field": "/units/[idx]/notes"
-          }
-        ],
-        "belowFields": [
-          "units"
-        ],
-        "belowUiSchemaRoot": {
-          "ui:field": "SingleItemArrayField",
-          "ui:title": "Paikan %{idx} havainnot",
-          "ui:options": {
-            "titleClassName": "lg"
-          }
-        },
-        "inlineUiSchemaRoot": {
-          "ui:field": "SingleActiveArrayField",
-          "ui:title": "Paikka %{idx}",
-          "ui:options": {
-            "renderer": "accordion",
-            "headerFormatters": [
-              "units",
-              "namedPlace"
-            ],
-            "popupFields": [
-              {
-                "field": "units",
-                "mapper": "units",
-                "label": "Havainnot"
-              },
-              {
-                "field": "localityDescription"
-              }
-            ],
-            "confirmDelete": true
-          }
-        },
-        "propsToPassToInlineSchema": [
-          "formData"
-        ],
-        "minHeight": 435,
-        "resizeTimeout": 210,
-        "renderButtonsBelow": true,
-        "buttonsTitle": "Lisää uusi paikka",
-        "emptyHelp": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle"
-      }
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "alt+F5": {
-        "fn": "revalidate"
-      },
-      "Enter": {
-        "fn": "navigate"
-      },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
-      "alt+ ": {
-        "fn": "navigate"
-      },
-      "alt+shift+ ": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt+PageDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+PageUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowRight": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowLeft": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+h": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+j": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+k": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+l": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+n": {
-        "fn": "navigateArray"
-      },
-      "alt+p": {
-        "fn": "navigateArray",
-        "reverse": true
-      },
-      "alt+Insert": {
-        "fn": "insert"
-      },
-      "alt+i": {
-        "fn": "insert"
-      },
-      "alt+Delete": {
-        "fn": "delete"
-      },
-      "alt+d": {
-        "fn": "delete"
-      },
-      "alt+u": {
-        "fn": "insert",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havainto"
-      },
-      "alt+g": {
-        "fn": "insert",
-        "target": "root_gatherings",
-        "targetLabel": "paikka"
-      },
-      "alt+t": {
-        "fn": "autosuggestToggle"
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors",
-          "secureLevel",
-          "keywords"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "secureLevel": {
-      "ui:widget": "AnyToBooleanWidget",
-      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-      "ui:options": {
-        "trueValue": "MX.secureLevelNone",
-        "falseValue": "MX.secureLevelKM10",
-        "allowUndefined": false
       }
     }
   },
@@ -3695,7 +3708,14 @@
         ],
         "MY.habitatEnumValue86": [
           "MY.habitatEnumValue79"
-        ]
+        ],
+        "MY.habitatEnumValue88": [],
+        "MY.habitatEnumValue89": [],
+        "MY.habitatEnumValue90": [],
+        "MY.habitatEnumValue91": [],
+        "MY.habitatEnumValue92": [],
+        "MY.habitatEnumValue93": [],
+        "MY.habitatEnumValue94": []
       }
     }
   },
@@ -3707,7 +3727,8 @@
       "properties": {
         "leg": {
           "presence": {
-            "message": "Vähintään yksi havainnoija täytyy ilmoittaa."
+            "message": "Vähintään yksi havainnoija täytyy ilmoittaa.",
+            "allowEmpty": false
           }
         },
         "dateBegin": {
@@ -4119,7 +4140,14 @@
               "MY.habitatEnumValue71",
               "MY.habitatEnumValue79"
             ]
-          }
+          },
+          "MY.habitatEnumValue88": {},
+          "MY.habitatEnumValue89": {},
+          "MY.habitatEnumValue90": {},
+          "MY.habitatEnumValue91": {},
+          "MY.habitatEnumValue92": {},
+          "MY.habitatEnumValue93": {},
+          "MY.habitatEnumValue94": {}
         },
         "order": [
           "MY.habitatEnumValue1",
@@ -4128,7 +4156,14 @@
           "MY.habitatEnumValue27",
           "MY.habitatEnumValue36",
           "MY.habitatEnumValue44",
-          "MY.habitatEnumValue55"
+          "MY.habitatEnumValue55",
+          "MY.habitatEnumValue88",
+          "MY.habitatEnumValue89",
+          "MY.habitatEnumValue90",
+          "MY.habitatEnumValue91",
+          "MY.habitatEnumValue92",
+          "MY.habitatEnumValue93",
+          "MY.habitatEnumValue94"
         ]
       }
     }
