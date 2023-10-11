@@ -9,6 +9,10 @@ const Spinner = require("react-spinner");
 interface Options {
 	columns?: Record<string, ColumnOptions> | undefined;
 	sortableColumns?: string[];
+	/**
+	 * defaults to false
+	 */
+	multisort?: boolean;
 }
 
 export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
@@ -359,7 +363,9 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		const sortCols = [..._sortCols];
 		const colSortIdx = sortCols?.findIndex(s => s.name === name);
 		const current = sortCols[colSortIdx];
-		const colOptions: ColumnOptions = getUiOptions(this.props.uiSchema).columns[name] || {};
+		const options = getUiOptions(this.props.uiSchema) as Options;
+		const {multisort} = options;
+		const colOptions = options.columns?.[name] || {};
 
 		const compareStrategy = current?.compareStrategy || colOptions.compareStrategies?.[0] || {strategy: "default"};
 
@@ -376,7 +382,12 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 			descending: nextDescending,
 		};
 
-		if (current && current.descending === undefined) { // Push to end if the "descending" changes from undefined
+		if (!multisort) {
+			this.setSortCols([sortCol]);
+			return;
+		}
+
+		if (current && current.descending === undefined) { // Push to end if the "descending" changes from undefined.
 			sortCols.splice(colSortIdx, 1);
 			sortCols.push(sortCol);
 		} else { // Replace current with new
