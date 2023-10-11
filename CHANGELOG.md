@@ -1,3 +1,6 @@
+## 14.3.2
+* `SortArrayField`: add `multisort` option (defaults to `false`)
+
 ## 14.3.1
 * `SortArrayField`: add `columns[*].tooltip` & `excludeSortableColumns` options
 
