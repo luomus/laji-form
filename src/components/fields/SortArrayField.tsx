@@ -57,6 +57,7 @@ type CompareStrategy = DefaultCompareStrategy | TaxonomicCompareStrategy;
 
 interface ColumnOptions {
 	compareStrategies?: CompareStrategy[];
+	tooltip?: string;
 }
 
 type TaxaResponse = {
@@ -282,8 +283,10 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		this.syncColumns();
 	}
 
-	// Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
-	// asynchronously when the  component updates according to the comparison strategy name.
+	/**
+	 * Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
+	 * asynchronously when the  component updates according to the comparison strategy name.
+	 */
 	syncColumns() {
 		const {sortCols} = this.state;
 		sortCols.forEach(sortCol => {
@@ -327,6 +330,13 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				sortCols,
 				ui: getUI(uiOptions.columns, sortCols, this.setSortCols.bind(this), props.formContext),
 				sortableColumns: uiOptions.sortableColumns,
+				sortColTooltips: Object.keys(uiOptions.columns || {})?.reduce<Record<string, string>>((map, c) => {
+					const {tooltip} = uiOptions.columns?.[c] || {};
+					if (tooltip) {
+						map[c] = tooltip;
+					}
+					return map;
+				}, {}),
 				idxMap: Object.keys(idToOrigIdx).reduce((map, id) => {
 					map[idToSortedIdx[id] as any] = idToOrigIdx[id];
 					map["_" + idToOrigIdx[id] as any] = idToSortedIdx[id];
@@ -363,7 +373,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		const sortCols = [..._sortCols];
 		const colSortIdx = sortCols?.findIndex(s => s.name === name);
 		const current = sortCols[colSortIdx];
-		const colOptions: ColumnOptions = getUiOptions(this.props.uiSchema).columns[name] || {};
+		const colOptions: ColumnOptions = getUiOptions(this.props.uiSchema).columns?.[name] || {};
 
 		const compareStrategy = current?.compareStrategy || colOptions.compareStrategies?.[0] || {strategy: "default"};
 

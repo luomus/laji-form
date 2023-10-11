@@ -833,5 +833,10 @@
 		"fi": "Sarakkeen järjestysasetukset",
 		"en": "Columnn sort settings",
 		"sv": "Kolumn sorteringsinställningar"
+	},
+	"clickToSort": {
+		"fi": "Klikkaa järjestääksesi",
+		"en": "Click to sort",
+		"sv": "Klicka för att sortera"
 	}
 }
