@@ -180,7 +180,7 @@ export default class DateTimeWidget extends React.Component {
 
 	render() {
 		const {value, readonly, disabled} = this.props;
-		const {translations} = this.props.formContext;
+		const {translations, lang} = this.props.formContext;
 		const momentValue = moment(value);
 
 		if (!this.state.textInputFocused && value !== null && !momentValue.isValid()) {
@@ -191,6 +191,7 @@ export default class DateTimeWidget extends React.Component {
 
 		const options = getUiOptions(this.props);
 		const showTimeList = options.showTimeList !== undefined ? options.showTimeList : true;
+		const culture = lang === "en" ? "en-gb" : lang;
 
 		const datePicker = (<DateTimePicker
 			ref={this.setRef}
@@ -204,7 +205,7 @@ export default class DateTimeWidget extends React.Component {
 			value={value && momentValue.isValid() ? momentValue.toDate() : null}
 			parse={this.parse}
 			disabled={readonly || disabled}
-			culture={this.props.formContext.lang}
+			culture={culture}
 		  messages={{
 		    calendarButton: translations.ChooseDate,
 		    timeButton: translations.ChooseTime

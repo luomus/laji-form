@@ -100,7 +100,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Row, Col} = this.context.theme;
-		const {schema, uiSchema, idSchema, errorSchema, formData = {}} = this.props;
+		const {schema, uiSchema, idSchema, errorSchema, formData = {}, disabled, readonly} = this.props;
 		const uiOptions: Options = getUiOptions(uiSchema);
 		const {buttons = []} = uiOptions;
 
@@ -121,6 +121,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 									onClick={this.onButtonClick(idx)}
 									variant={btnProps.operation === "delete" ? "outline-danger": "default"}
 									className={classNames(btnProps.className, activeButtonIdx === idx ? "active" : "")}
+									disabled={disabled || readonly}
 								>{ btnProps.label }</Button>
 							)) }
 						</div>

@@ -221,7 +221,9 @@ describe("Trip report (JX.519)", () => {
 			});
 
 			it("second added item is focused", async () => {
-				await form.$locateButton("gatherings.0.taxonCensus", "add").click();
+				const $taxonCensusAdd = form.$locateButton("gatherings.0.taxonCensus", "add");
+				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonCensusAdd), 300, "taxon census add button is hidden");
+				await $taxonCensusAdd.click();
 
 				expect(await form.$getInputWidget("gatherings.0.taxonCensus.1.censusTaxonID").getAttribute("id")).toBe(await getFocusedId());
 			});
