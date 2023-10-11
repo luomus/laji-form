@@ -9,6 +9,7 @@ const Spinner = require("react-spinner");
 interface Options {
 	columns?: Record<string, ColumnOptions> | undefined;
 	sortableColumns?: string[];
+	excludeSortableColumns?: string[];
 }
 
 export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
@@ -329,7 +330,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				onSortToggle: this.onSortToggle.bind(this),
 				sortCols,
 				ui: getUI(uiOptions.columns, sortCols, this.setSortCols.bind(this), props.formContext),
-				sortableColumns: uiOptions.sortableColumns,
+				sortableColumns: this.getSortableColumns(props),
 				sortColTooltips: Object.keys(uiOptions.columns || {})?.reduce<Record<string, string>>((map, c) => {
 					const {tooltip} = uiOptions.columns?.[c] || {};
 					if (tooltip) {
@@ -344,6 +345,21 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 				}, {} as Record<string, number>)
 			}
 		};
+	}
+
+	getSortableColumns(props: FieldProps) {
+		const {uiSchema, schema} = props;
+		const {sortableColumns, excludeSortableColumns} = getUiOptions(uiSchema) as Options;
+		if (sortableColumns) {
+			if (excludeSortableColumns) {
+				return sortableColumns.filter(c => !excludeSortableColumns.includes(c));
+			}
+			return sortableColumns;
+		}
+		if (excludeSortableColumns) {
+			return Object.keys(schema.items.properties).filter(c => !excludeSortableColumns.includes(c));
+		}
+		return undefined;
 	}
 
 	getNextComponentProps(props: any, state: State) {
