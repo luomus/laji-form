@@ -1,3 +1,6 @@
+## 14.3.1
+* `SortArrayField`: add `columns[*].tooltip` & `excludeSortableColumns` options
+
 ## 14.1.0
 * Add bootstrap 5 theme
 
