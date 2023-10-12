@@ -359,7 +359,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				...props.formContext,
 				translations: this.translations[props.lang as Lang],
 				lang: props.lang,
-				uiSchemaContext: props.uiSchemaContext,
+				uiSchemaContext: props.uiSchemaContext || {},
 				topOffset: props.topOffset || 0,
 				bottomOffset: props.bottomOffset || 0,
 				contextId: this._id,
