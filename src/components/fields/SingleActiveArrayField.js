@@ -957,7 +957,7 @@ class TableArrayFieldTemplate extends React.Component {
 											return (
 												<TooltipComponent key={col} tooltip={tooltip} placement="top">
 													<th key={col} {..._sortableHeaderProps} className={className}>
-														{schema.items.properties[col].title}
+														{((uiSchema.items || {})[col] || {})["ui:title"] || schema.items.properties[col].title}
 														{ui || null}
 													</th>
 												</TooltipComponent>
