@@ -19,20 +19,30 @@
 		"en": "Yesterday",
 		"sv": "Igår"
 	},
-	"dateLocale": {
-		"fi": "DD.MM.YYYY",
-		"en": "DD/MM/YYYY",
-		"sv": "DD.MM.YYYY"
+	"dateTimeDay": {
+		"fi": "pp",
+		"en": "dd",
+		"sv": "pp"
 	},
-	"datePlaceholderDay": {
-		"fi": "pp.kk.vvvv",
-		"en": "dd/mm/yyyy",
-		"sv": "pp.kk.vvvv"
+	"dateTimeMonth": {
+		"fi": "kk",
+		"en": "mm",
+		"sv": "kk"
 	},
-	"timePlaceholderDay": {
-		"fi": "tt.mm",
-		"en": "h:mm AM/PM",
-		"sv": "tt.mm"
+	"dateTimeYear": {
+		"fi": "vvvv",
+		"en": "yyyy",
+		"sv": "vvvv"
+	},
+	"dateTimeHour": {
+		"fi": "tt",
+		"en": "hh",
+		"sv": "tt"
+	},
+	"dateTimeMinute": {
+		"fi": "mm",
+		"en": "mm",
+		"sv": "mm"
 	},
 	"yes": {
 		"fi": "Kyllä",

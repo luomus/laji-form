@@ -32,7 +32,8 @@ export default class DateTimeWidget extends React.Component {
 					})
 				]),
 				showTimeList: PropTypes.bool,
-				allowOnlyYear: PropTypes.bool
+				allowOnlyYear: PropTypes.bool,
+				dateFormat: PropTypes.string
 			})
 		}),
 		schema: PropTypes.shape({
@@ -68,22 +69,27 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	getStateFromProps(props) {
-		const {lang} = props.formContext;
-		let localeFormats = moment().locale(lang === "sv" ? "fi" : lang)._locale._longDateFormat;
-		const {translations} = props.formContext;
-		const {allowOnlyYear} = getUiOptions(props);
+		const {lang, translations} = props.formContext;
+		const formatLang = lang === "sv" ? "fi" : lang === "en" ? "en-gb" : lang;
+		let localeFormats = moment().locale(formatLang)._locale._longDateFormat;
 
-		let dateFormat = "";
+		let {allowOnlyYear, dateFormat = ""} = getUiOptions(props);
+
 		let timeFormat = "";
 		let placeholder = "";
 		if (props.calendar) {
-			dateFormat += translations.DateLocale;
-			placeholder += translations.datePlaceholderDay;
+			if (!dateFormat) dateFormat = localeFormats.L;
+			placeholder += dateFormat
+				.replace("DD", translations.dateTimeDay)
+				.replace("MM", translations.dateTimeMonth)
+				.replace("YYYY", translations.dateTimeYear);
 		}
 		if (props.time) {
-			if (placeholder) placeholder += DATE_TIME_SEPARATOR;
-			placeholder += translations.timePlaceholderDay;
 			timeFormat = localeFormats.LT;
+			if (placeholder) placeholder += DATE_TIME_SEPARATOR;
+			placeholder += timeFormat
+				.replace("HH", translations.dateTimeHour)
+				.replace("mm", translations.dateTimeMinute);
 		}
 
 		const format = `${dateFormat}${dateFormat ? DATE_TIME_SEPARATOR : ""}${timeFormat}`;
