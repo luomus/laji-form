@@ -79,17 +79,12 @@ export default class DateTimeWidget extends React.Component {
 		let placeholder = "";
 		if (props.calendar) {
 			if (!dateFormat) dateFormat = localeFormats.L;
-			placeholder += dateFormat
-				.replace("DD", translations.dateTimeDay)
-				.replace("MM", translations.dateTimeMonth)
-				.replace("YYYY", translations.dateTimeYear);
+			placeholder += translations[dateFormat.toLowerCase()] || dateFormat;
 		}
 		if (props.time) {
 			timeFormat = localeFormats.LT;
 			if (placeholder) placeholder += DATE_TIME_SEPARATOR;
-			placeholder += timeFormat
-				.replace("HH", translations.dateTimeHour)
-				.replace("mm", translations.dateTimeMinute);
+			placeholder += translations[timeFormat.toLowerCase()] || timeFormat;
 		}
 
 		const format = `${dateFormat}${dateFormat ? DATE_TIME_SEPARATOR : ""}${timeFormat}`;

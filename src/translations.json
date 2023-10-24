@@ -19,30 +19,20 @@
 		"en": "Yesterday",
 		"sv": "Igår"
 	},
-	"dateTimeDay": {
-		"fi": "pp",
-		"en": "dd",
-		"sv": "pp"
+	"dd/mm/yyyy": {
+		"fi": "pp/kk/vvvv",
+		"en": "dd/mm/yyyy",
+		"sv": "pp/kk/vvvv"
 	},
-	"dateTimeMonth": {
-		"fi": "kk",
-		"en": "mm",
-		"sv": "kk"
+	"dd.mm.yyyy": {
+		"fi": "pp.kk.vvvv",
+		"en": "dd.mm.yyyy",
+		"sv": "pp.kk.vvvv"
 	},
-	"dateTimeYear": {
-		"fi": "vvvv",
-		"en": "yyyy",
-		"sv": "vvvv"
-	},
-	"dateTimeHour": {
-		"fi": "tt",
-		"en": "hh",
-		"sv": "tt"
-	},
-	"dateTimeMinute": {
-		"fi": "mm",
-		"en": "mm",
-		"sv": "mm"
+	"hh:mm": {
+		"fi": "tt:mm",
+		"en": "hh:mm",
+		"sv": "tt:mm"
 	},
 	"yes": {
 		"fi": "Kyllä",
