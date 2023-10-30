@@ -424,7 +424,7 @@ export class Stretch extends React.Component {
 }
 
 export function Help({help, id}) {
-	const helpGlyph = <span className="label-info bg-info laji-form-help-glyph"><b>?</b></span>;
+	const helpGlyph = <span className="laji-form-help-glyph text-muted" />;
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
 	return help ? (
