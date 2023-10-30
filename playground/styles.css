@@ -250,13 +250,13 @@ min-height: 20px;
 .laji-form .laji-form-help-glyph {
 	margin-left: 5px;
 	border-radius: 100%;
-	padding: 0px 5px;
 	font-size: 13px;
 	background: white;
 	border: 1px solid #aeaeae;
 	width: 20px;
 	font-weight: bold;
 	display: inline-block;
+	text-align: center;
 }
 .laji-form .laji-form-help-glyph:before {
 	content: "?";
