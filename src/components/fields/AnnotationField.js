@@ -7,7 +7,7 @@ import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
-import { isObject } from "laji-map/lib/utils";
+import { isObject } from "@luomus/laji-map/lib/utils";
 
 @BaseComponent
 export default class AnnotationField extends React.Component {

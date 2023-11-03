@@ -1,5 +1,5 @@
 import { Form, createForm } from "./test-utils";
-import { MapPageObject } from "laji-map/test-export/test-utils";
+import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 
 describe("invasive species eradication form (MHL.33)", () => {

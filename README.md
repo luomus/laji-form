@@ -5,7 +5,7 @@ LajiForm is a dynamic form built on React. It can be used as a standalone librar
 # Installing
 
 ```
-npm install laji-form --save
+npm install @luomus/laji-form --save
 ```
 
 If you are going to use the bootstrap 3 theme, you need to install also `react-bootstrap`:

@@ -8,7 +8,7 @@ import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
-import { NORMAL_COLOR, ACTIVE_COLOR } from "laji-map/lib/globals";
+import { NORMAL_COLOR, ACTIVE_COLOR } from "@luomus/laji-map/lib/globals";
 import SelectWidget from "../widgets/SelectWidget";
 
 const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";

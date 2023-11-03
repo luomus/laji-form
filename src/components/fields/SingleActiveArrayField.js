@@ -11,7 +11,7 @@ import { copyItemFunction } from "./ArrayField";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
-import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
+import { getLineTransectStartEndDistancesForIdx } from "@luomus/laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 import * as memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";

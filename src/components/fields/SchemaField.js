@@ -1,6 +1,6 @@
 import * as React from "react";
 import { isMultiSelect, getUiOptions } from "../../utils";
-import { isObject } from "laji-map/lib/utils";
+import { isObject } from "@luomus/laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "@rjsf/utils";
 import { getDefaultRegistry } from "@rjsf/core";

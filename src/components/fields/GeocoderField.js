@@ -9,7 +9,7 @@ import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
-import { FINLAND_BOUNDS } from "laji-map/lib/globals";
+import { FINLAND_BOUNDS } from "@luomus/laji-map/lib/globals";
 
 const cache = {};
 

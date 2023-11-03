@@ -7,7 +7,7 @@ import { getUiOptions, isObject } from "../../utils";
 const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
-import { anyToFeatureCollection } from "laji-map/lib/utils";
+import { anyToFeatureCollection } from "@luomus/laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 
 export function findSingleGeometry(geoJSON) {

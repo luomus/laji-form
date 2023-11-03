@@ -4,7 +4,7 @@ import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormS
 import getContext from "./Context";
 import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
-import { isObject as  _isObject } from "laji-map/lib/utils";
+import { isObject as  _isObject } from "@luomus/laji-map/lib/utils";
 const deepEquals = require("deep-equal");
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
 import { FormContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";

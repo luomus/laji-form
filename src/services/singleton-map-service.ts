@@ -1,6 +1,6 @@
-import LajiMap from "laji-map";
-import LajiMapType from "laji-map/lib/map";
-import { Options } from "laji-map";
+import LajiMap from "@luomus/laji-map";
+import LajiMapType from "@luomus/laji-map/lib/map";
+import { Options } from "@luomus/laji-map";
 
 /**
  * Service used for accessing a singlet on instance of LajiMap. Using a singleton instance increases performance, as

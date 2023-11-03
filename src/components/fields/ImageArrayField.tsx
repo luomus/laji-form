@@ -9,7 +9,7 @@ import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, 
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import * as exif from "exif-js";
-import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
+import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
 import * as moment from "moment";
 import { FieldProps } from "../LajiForm";
 import ApiClient from "../../ApiClient";
@@ -422,7 +422,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		renderMediaAddModal = () => {
 			const {disabled, readonly} = this.props;
 			const {addModal} = this.state;
-			const {labels: {cancel} = {cancel: undefined}} = isObject(addModal) ? addModal : {};
+			const {labels: {cancel} = {cancel: undefined}} = (isObject(addModal) ? addModal : {} as any);
 			const {translations} = this.props.formContext;
 
 			if (!addModal) return null;
