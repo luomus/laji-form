@@ -68,7 +68,7 @@ export default class ImageArrayField extends React.Component<FieldProps, ImageAr
 	}
 }
 
-interface MediaArrayState {
+export interface MediaArrayState {
 	tmpMedias: number[];
 	addModal?: any;
 	dragging?: boolean
@@ -825,6 +825,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 interface ThumbnailProps {
 	id?: string;
 	apiClient: ApiClient;
+	apiEndpoint?: string;
 	dataURL?: string;
 	loading?: boolean;
 }
@@ -832,7 +833,7 @@ interface ThumbnailState {
 	url?: string;
 }
 
-class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
+export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
 	mounted: boolean;
 
 	constructor(props: ThumbnailProps) {
@@ -853,9 +854,9 @@ class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
 		this.updateURL(props);
 	}
 
-	updateURL = ({id, apiClient}: ThumbnailProps) => {
+	updateURL = ({id, apiClient, apiEndpoint = 'images'}: ThumbnailProps) => {
 		if (!id) return;
-		apiClient.fetchCached(`/images/${id}`, undefined, {failSilently: true}).then((response: any) => {
+		apiClient.fetchCached(`/${apiEndpoint}/${id}`, undefined, {failSilently: true}).then((response: any) => {
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL});
 		});
