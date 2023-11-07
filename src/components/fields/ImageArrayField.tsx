@@ -854,7 +854,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 		this.updateURL(props);
 	}
 
-	updateURL = ({id, apiClient, apiEndpoint = 'images'}: ThumbnailProps) => {
+	updateURL = ({id, apiClient, apiEndpoint = "images"}: ThumbnailProps) => {
 		if (!id) return;
 		apiClient.fetchCached(`/${apiEndpoint}/${id}`, undefined, {failSilently: true}).then((response: any) => {
 			if (!this.mounted) return;
