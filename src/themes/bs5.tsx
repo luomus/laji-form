@@ -90,7 +90,7 @@ Panel.Collapse = React.forwardRef<typeof Collapse, any>(({children, ...props}, r
 Panel.Footer = Card.Footer;
 
 const Glyphicon: React.ComponentType<GlyphiconProps> = React.forwardRef<SVGSVGElement, GlyphiconProps>(({glyph, ...props}, ref) => (
-	<FontAwesomeIcon icon={iconMapping[glyph]} {...props} ref={ref} />
+	<FontAwesomeIcon className={"glyphicon"} icon={iconMapping[glyph]} {...props} ref={ref} />
 ));
 
 const _Modal: ModalI = Modal as unknown as ModalI;
