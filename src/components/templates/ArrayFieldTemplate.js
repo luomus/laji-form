@@ -148,7 +148,7 @@ export function getButtonsForPosition(props, buttonDescriptions = [], position, 
 
 export function handlesArrayKeys(ComposedComponent) {
 	return class ArrayFieldTemplateField extends ComposedComponent {
-		static displayName = getReactComponentName(ComposedComponent);
+		static displayName = getReactComponentName(ComposedComponent) + "_handlesArrayKeys";
 
 		componentDidMount() {
 			this.addKeyHandlers(this.props);
