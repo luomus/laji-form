@@ -1,6 +1,6 @@
 {
   "name": "@luomus/laji-form",
-  "version": "14.3.6",
+  "version": "14.3.7",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -19,7 +19,7 @@
     "test:multi": "TEST_BROWSER=multi HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
     "test:ffox": "TEST_BROWSER=firefox HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
     "test:debug": "HOST=127.0.0.1 PORT=8083 HEADLESS=false node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js",
-		"patch": "patch-package"
+    "patch": "patch-package"
   },
   "keywords": [
     "react-jsonschema-form",
