@@ -18,7 +18,8 @@
     "test": "HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
     "test:multi": "TEST_BROWSER=multi HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
     "test:ffox": "TEST_BROWSER=firefox HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
-    "test:debug": "HOST=127.0.0.1 PORT=8083 HEADLESS=false node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js"
+    "test:debug": "HOST=127.0.0.1 PORT=8083 HEADLESS=false node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js",
+		"patch": "patch-package"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -69,6 +70,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "mini-css-extract-plugin": "^2.1.0",
     "notus": "^0.3.2",
+    "patch-package": "^8.0.0",
     "protractor": "^7.0.0",
     "protractor-console-plugin": "^0.1.1",
     "querystring": "^0.2.1",
