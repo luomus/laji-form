@@ -25,11 +25,9 @@ const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) 
 
 	const helpComponent = help ? <Help /> : null;
 
-	let titleTextContent = (
-		<React.Fragment>
-			<span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent}
-		</React.Fragment>
-	);
+	let titleTextContent = <span>
+		<span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent}
+	</span>;
 
 	if (help) {
 		const tooltipElem = (
