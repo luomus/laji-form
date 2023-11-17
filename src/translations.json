@@ -819,6 +819,11 @@
 		"en": "photos",
 		"sv": "foton"
 	},
+	"howManyFiles": {
+		"fi": "tiedostoa",
+		"en": "files",
+		"sv": "filer"
+	},
 	"sortStrategyDefault": {
 		"fi": "Oletus",
 		"en": "Default",
