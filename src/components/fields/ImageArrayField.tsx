@@ -5,7 +5,7 @@ import getContext from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, isNullOrUndefined } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import * as exif from "exif-js";
@@ -243,6 +243,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {Row, Col} = this.context.theme;
 			const {DescriptionFieldTemplate} = this.props.registry.templates;
+
+			const mediaCount = (this.props.formData || []).length + (this.state.tmpMedias || []).length;
+			const showAdd = isNullOrUndefined(this.props.schema.maxItems) || mediaCount < this.props.schema.maxItems;
+
 			return (
 				<Row>
 					<Col xs={12}>
@@ -251,7 +255,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 						<div className={`laji-form-medias ${this.CONTAINER_CLASS}`}>
 							{this.renderMedias()}
 							{this.renderLoadingMedias()}
-							<OverlayTrigger overlay={tooltip}>
+							{showAdd && <OverlayTrigger overlay={tooltip}>
 								<DropZone accept={this.ACCEPT_FILE_TYPES}
 								          onDragEnter={this.onDragEnter}
 								          onDragLeave={this.onDragLeave}
@@ -276,7 +280,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 										);
 									}}
 								</DropZone>
-							</OverlayTrigger>
+							</OverlayTrigger>}
 							{this.renderMetadataModal()}
 							{this.renderMediaAddModal()}
 						</div>
