@@ -27,9 +27,6 @@ export default class AsArrayField extends React.Component<FieldProps> {
 				},
 				maxItems: 1
 			},
-			uiSchema: props.uiSchema,
-			idSchema: props.idSchema,
-			errorSchema: props.errorSchema,
 			onChange: this.onChange
 		};
 	}
