@@ -17,7 +17,7 @@ export default class AsArrayField extends React.Component<FieldProps> {
 	getStateFromProps(props: FieldProps) {
 		return {
 			...props,
-			formData: props.formData?.length ? [props.formData[0]] : [],
+			formData: props.formData !== undefined ? [props.formData] : [],
 			schema: {
 				title: props.schema.title,
 				type: "array",
