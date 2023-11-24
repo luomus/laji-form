@@ -14,12 +14,11 @@ export default class PdfArrayField extends React.Component<FieldProps, MediaArra
 	TRANSLATION_SELECT_FILE = "";
 	TRANSLATION_NO_MEDIA = ""
 	CONTAINER_CLASS = "pdf-container"
-	METADATA_FORM_ID = "MHL.1070"
+	METADATA_FORM_ID = ""
 
-	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} />
-	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} />
-	onMediaClick = (i: number) => (this as any).openModalFor(i)
-	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
+	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} downloadLink={true} />
+	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} downloadLink={true} />
+	onMediaClick = () => null
 
 	formatValue(value: string[], options: any, props: FieldProps) {
 		const {translations} = props.formContext;

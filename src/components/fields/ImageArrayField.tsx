@@ -300,7 +300,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const {deleteConfirmPlacement = "top"} = getUiOptions(this.props.uiSchema);
 			return (this.props.formData || []).map((item: any, i : number) => (
 				<div key={i} className="media-container">
-					<a onClick={(this as any).onMediaClick(i)}>{(this as any).renderMedia(item, i)}</a>
+					<div className="media-container-link" onClick={(this as any).onMediaClick(i)}>{(this as any).renderMedia(item, i)}</div>
 					<DeleteButton corner={true}
 					              confirm={true}
 					              confirmPlacement={deleteConfirmPlacement}
@@ -832,9 +832,11 @@ interface ThumbnailProps {
 	apiEndpoint?: string;
 	dataURL?: string;
 	loading?: boolean;
+	downloadLink?: boolean;
 }
 interface ThumbnailState {
 	url?: string;
+	linkUrl?: string;
 }
 
 export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
@@ -862,13 +864,18 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 		if (!id) return;
 		apiClient.fetchCached(`/${apiEndpoint}/${id}`, undefined, {failSilently: true}).then((response: any) => {
 			if (!this.mounted) return;
-			this.setState({url: response.squareThumbnailURL});
+			this.setState({url: response.squareThumbnailURL, linkUrl: response.originalURL});
 		});
 	}
 
 	render() {
 		const url = this.state.url || this.props.dataURL;
-		const img = url ? <img src={url} /> : null;
+		const linkUrl = this.state.linkUrl;
+		const addLink = this.props.downloadLink && linkUrl;
+
+		let img = url ? <img src={url} /> : null;
+		img = addLink ? <a href={linkUrl} target="_blank" download>{img}</a> : img;
+
 		return (!url || this.props.loading)
 			?  <div className="media-loading">{img}<Spinner /></div>
 			: img;
