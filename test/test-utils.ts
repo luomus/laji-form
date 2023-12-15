@@ -2,6 +2,7 @@ import { Locator, Page } from "@playwright/test";
 import * as path from "path";
 import { JSONSchema7 } from "json-schema";
 import { LajiFormState } from "@luomus/laji-form/lib/components/LajiForm";
+import type { JSONSerializable } from "@luomus/laji-form/lib/utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 export const emptyForm = async (page: Page, params = "") => page.goto(`/?test=true&settings=false&mockApi=true&${params}`);
@@ -263,8 +264,8 @@ export class DemoPageForm extends Form {
 		await this.setState(this.props);
 	}
 
-	e(path: string) {
-		return this.page.evaluate(`window.lajiForm.${path}`) as Promise<any>;
+	e<T>(path: string) {
+		return this.page.evaluate<T>(`window.lajiForm.${path}`);
 	}
 
 	setState(state: any) {
@@ -289,22 +290,22 @@ export class DemoPageForm extends Form {
 	}
 
 	getSubmittedData() {
-		return this.page.evaluate("window.submittedData") as Promise<any>;
+		return this.page.evaluate<JSONSerializable>("window.submittedData");
 	}
 
 	getChangedData() {
-		return this.page.evaluate("window.changedData") as Promise<any>;
+		return this.page.evaluate<JSONSerializable>("window.changedData");
 	}
 
 	getPropsData() {
-		return this.e("lajiForm.props.formData") as Promise<any>;
+		return this.e<JSONSerializable>("lajiForm.props.formData");
 	}
 
 	getMockStr = (path: string, query: any) => `window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})]`;
 
 	async setMockResponse(path: string, query?: any): Promise<Mock> {
 		await this.page.evaluate(`window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)})`);
-		const mock = (method: "resolve" | "reject" | "remove", response?: any, raw?: boolean) => this.page.evaluate(`${this.getMockStr(path, query)}.${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`) as Promise<void>;
+		const mock = (method: "resolve" | "reject" | "remove", response?: any, raw?: boolean) => this.page.evaluate<void>(`${this.getMockStr(path, query)}.${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`);
 		return {
 			resolve: (response?: any, raw?: boolean) => mock("resolve", response, raw),
 			reject: (response?: any, raw?: boolean) => mock("reject", response, raw),

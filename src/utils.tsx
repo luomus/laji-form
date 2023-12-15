@@ -1207,3 +1207,6 @@ export function translate(translations: ByLang, key: string, params?: {[key: str
 		translations[key]
 	);
 }
+
+export type JSONSerializable = string | number | boolean | JSONSerializableObject | JSONSerializable[] | null;
+export type JSONSerializableObject = { [prop: string]: JSONSerializable };
