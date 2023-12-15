@@ -1,3 +1,7 @@
+## 15.0.0
+* Migrate from protractor to playwright
+* Drop context id from field html ids
+
 ## 14.3.2
 * `SortArrayField`: add `multisort` option (defaults to `false`)
 
