@@ -49,41 +49,43 @@ interface DemoPageProps {
 }
 
 export class Form {
-	constructor(protected page: Page) {
-	}
+	constructor(
+		protected page: Page,
+		protected $locator = page.locator(".laji-form")
+	) { }
 
-	$form = this.page.locator(".laji-form .rjsf");
+	$form = this.$locator.locator(".rjsf");
 
 	/** Locates a field with a dot separated identifier, e.g. "gatherings.0.units.1" */
 	$locate(path: string) {
-		return this.page.locator(lajiFormLocator(path));
+		return this.$locator.locator(lajiFormLocator(path));
 	}
 
 	/** Locates a button for a field with a dot separated identifier, e.g. "gatherings.0.units.1" */
-	$locateButton(path: string, selector: string) {
-		return this.page.locator(`#root${typeof path === "string" && path.length > 0 ? `_${path.replace(/\./g, "_")}` : ""}-${selector}`);
+	$locateButton(path: string, selector: string, locateFromBody = false) {
+		return (locateFromBody ? this.page : this.$locator).locator(`#root${typeof path === "string" && path.length > 0 ? `_${path.replace(/\./g, "_")}` : ""}-${selector}`);
 	}
 
 	/** Locates some additional element for a field with a dot separated identifier, e.g. "gatherings.0.units.1" */
-	$locateAddition(path: string, selector: string) {
-		return this.$locateButton(path, selector);
+	$locateAddition(path: string, selector: string, locateFromBody = false) {
+		return this.$locateButton(path, selector, locateFromBody);
 	}
 
 	createValidatorPO = (type: "error" | "warning") => ({
-		$all: this.page.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
-		$panel: this.page.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
+		$all: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
+		$panel: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
 	})
 
 	errors = this.createValidatorPO("error")
 	warnings = this.createValidatorPO("warning")
 	failedJobs = {
-		$container: this.page.locator(".laji-form-failed-jobs-list"),
-		$errors: this.page.locator(".laji-form-failed-jobs-list").locator(".list-group-item")
+		$container: this.$locator.locator(".laji-form-failed-jobs-list"),
+		$errors: this.$locator.locator(".laji-form-failed-jobs-list").locator(".list-group-item")
 	}
 
-	$runningJobs = this.page.locator(".running-jobs");
+	$runningJobs = this.$locator.locator(".running-jobs");
 
-	$acknowledgeWarnings = this.page.locator(".laji-form-warning-list .panel-footer button")
+	$acknowledgeWarnings = this.$locator.locator(".laji-form-warning-list .panel-footer button")
 
 	$blocker = this.page.locator(".laji-form.blocking-loader")
 
@@ -150,7 +152,7 @@ export class Form {
 			$imgs: $imgContainers.locator("img"),
 			$imgLoading: $imgContainers.locator(".react-spinner"),
 			$imgRemoves: $imgContainers.locator(".button-corner"),
-			$imgRemoveConfirmButton: (id: string) => this.$locateAddition(id, "delete-confirm-yes"),
+			$imgRemoveConfirmButton: (id: string) => this.$locateAddition(id, "delete-confirm-yes", true),
 			$dropzone: this.$locate(lajiFormLocator).locator(".laji-form-drop-zone"),
 			$modal,
 			$addModal,
@@ -167,7 +169,7 @@ export class Form {
 			$getGlyph: (glyph: string) => this.$locate(lajiFormLocator).locator(glyph),
 			$suggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-ok"),
 			$nonsuggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-warning-sign"),
-			$powerUserButton: this.page.locator(".power-user-addon")
+			$powerUserButton: this.$locator.locator(".power-user-addon")
 		};
 	}
 
@@ -183,18 +185,21 @@ export class Form {
 		}
 	})
 
-	getLocationChooser = (lajiFormLocator: string) => ({
-		$button: this.$locateButton(lajiFormLocator, "location"),
-		modal: {
-			$container: this.page.locator(".map-dialog"),
-			map: new MapPageObject(this.page, this.page.locator(".map-dialog .laji-map"))
-		},
-		peeker: {
-			$popover: this.$locateButton(lajiFormLocator, "location-peeker"),
-			$map: this.$locateButton(lajiFormLocator, "location-peeker").locator(".laji-map"),
-			$markers: this.$locateButton(lajiFormLocator, "location-peeker").locator(".vector-marker path"),
-		}
-	})
+	getLocationChooser = (lajiFormLocator: string) => {
+		const $peeker = this.$locateButton(lajiFormLocator, "location-peeker", true);
+		return {
+			$button: this.$locateButton(lajiFormLocator, "location"),
+			modal: {
+				$container: this.page.locator(".map-dialog"),
+				map: new MapPageObject(this.page, this.page.locator(".map-dialog .laji-map"))
+			},
+			peeker: {
+				$popover: $peeker,
+				$map: $peeker.locator(".laji-map"),
+				$markers: $peeker.locator(".vector-marker path"),
+			}
+		};
+	}
 
 	getUnitListShorthandArrayField = (lajiFormLocator: string) => ({
 		$button: this.$locateButton(lajiFormLocator, "addUnitList"),

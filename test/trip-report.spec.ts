@@ -263,7 +263,7 @@ test.describe("Trip report (JX.519)", () => {
 
 		test("items can be deleted", async () => {
 			await form.$locateButton("gatherings.1", "delete").click();
-			await form.$locateButton("gatherings.1", "delete-confirm-yes").click();
+			await form.$locateButton("gatherings.1", "delete-confirm-yes", true).click();
 
 			await expect(form.$locate("gatherings.1")).not.toBeVisible();
 			await expect(form.$locateAddition("gatherings.1", "header")).not.toBeVisible();
@@ -310,7 +310,7 @@ test.describe("Trip report (JX.519)", () => {
 			test("new gathering is added", async () => {
 				await expect(form.$locate("gatherings.1")).toBeVisible();
 				await form.$locateButton("gatherings.1", "delete").click();
-				await form.$locateButton("gatherings.1", "delete-confirm-yes").click();
+				await form.$locateButton("gatherings.1", "delete-confirm-yes", true).click();
 			});
 		});
 	});
@@ -505,7 +505,7 @@ test.describe("Trip report (JX.519)", () => {
 			await expect($$gatheringMarkerPaths).toHaveCount(1);
 
 			await form.$locateButton("gatherings.1", "delete").click();
-			await form.$locateButton("gatherings.1", "delete-confirm-yes").click();
+			await form.$locateButton("gatherings.1", "delete-confirm-yes", true).click();
 		});
 
 		test("choosing informal taxon group changes fields", async () => {
