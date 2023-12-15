@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getReversedFormDataIndex } from "../../utils";
+import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getReversedFormDataIndex, getFormDataIndex } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
@@ -217,7 +217,7 @@ export function handlesArrayKeys(ComposedComponent) {
 			const context = getContext(this.props.formContext.contextId);
 			if (target === "last") {
 				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
-				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
+				context.idToScroll = `_laji-form_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
 			} else {
 				console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
 			}
@@ -304,9 +304,10 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 
 		const items = props.items.map((item, i) => {
+			const index = getFormDataIndex(i, props.uiSchema);
 			const getDeleteButton = () => (
 				<div className="laji-form-field-template-buttons">
-					<DeleteButton id={`${props.idSchema.$id}_${i}`}
+					<DeleteButton id={`${props.idSchema.$id}_${index}`}
 					              disabled={disabled || readonly}
 					              ref={getRefFor(i)}
 					              onClick={item.onDropIndexClick(item.index)}

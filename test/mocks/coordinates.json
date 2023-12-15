@@ -1,0 +1,131 @@
+{
+    "status": "OK",
+    "results": [
+        {
+            "address_components": [
+                {
+                    "short_name": "Kainuu",
+                    "types": [
+                        "region"
+                    ]
+                }
+            ],
+            "formatted_address": "Kainuu",
+            "geometry": {
+                "bounds": {
+                    "northeast": {
+                        "lat": 65.492458140112,
+                        "lng": 30.74172416909
+                    },
+                    "southwest": {
+                        "lat": 63.674234318578,
+                        "lng": 26.75379514197
+                    }
+                },
+                "location": {
+                    "lat": "64.583346",
+                    "lng": "28.747760"
+                },
+                "location_type": "APPROXIMATE",
+                "viewport": {
+                    "northeast": {
+                        "lat": 65.492458140112,
+                        "lng": 30.74172416909
+                    },
+                    "southwest": {
+                        "lat": 63.674234318578,
+                        "lng": 26.75379514197
+                    }
+                }
+            },
+            "types": [
+                "region"
+            ]
+        },
+        {
+            "address_components": [
+                {
+                    "short_name": "Kuhmo",
+                    "types": [
+                        "municipality"
+                    ]
+                }
+            ],
+            "formatted_address": "Kuhmo",
+            "geometry": {
+                "bounds": {
+                    "northeast": {
+                        "lat": 64.63536,
+                        "lng": 30.553544
+                    },
+                    "southwest": {
+                        "lat": 63.703351,
+                        "lng": 28.751927
+                    }
+                },
+                "location": {
+                    "lat": "64.169355",
+                    "lng": "29.652735"
+                },
+                "location_type": "APPROXIMATE",
+                "viewport": {
+                    "northeast": {
+                        "lat": 64.63536,
+                        "lng": 30.553544
+                    },
+                    "southwest": {
+                        "lat": 63.703351,
+                        "lng": 28.751927
+                    }
+                }
+            },
+            "place_id": "ML.607",
+            "types": [
+                "municipality"
+            ]
+        },
+        {
+            "address_components": [
+                {
+                    "long_name": "Kainuu",
+                    "short_name": "Kn",
+                    "types": [
+                        "biogeographicalProvince"
+                    ]
+                }
+            ],
+            "formatted_address": "Kainuu (Kn)",
+            "geometry": {
+                "bounds": {
+                    "northeast": {
+                        "lat": 65.520892,
+                        "lng": 30.553583
+                    },
+                    "southwest": {
+                        "lat": 63.668812,
+                        "lng": 26.291122
+                    }
+                },
+                "location": {
+                    "lat": "64.594852",
+                    "lng": "28.422353"
+                },
+                "location_type": "APPROXIMATE",
+                "viewport": {
+                    "northeast": {
+                        "lat": 65.520892,
+                        "lng": 30.553583
+                    },
+                    "southwest": {
+                        "lat": 63.668812,
+                        "lng": 26.291122
+                    }
+                }
+            },
+            "place_id": "ML.264",
+            "types": [
+                "biogeographicalProvince"
+            ]
+        }
+    ]
+}

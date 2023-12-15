@@ -115,7 +115,7 @@ export default class UnitShorthandField extends React.Component {
 
 		const id = (shorthandFieldName && this.props.idSchema[shorthandFieldName]) ?
 			this.props.idSchema[shorthandFieldName].$id :
-			`${this.props.idSchema.$id}_shortHandField`;
+			`${this.props.idSchema.$id}-shortHandField`;
 
 		let innerUiSchema = undefined;
 		if (this.state.showSchema) {
@@ -125,7 +125,7 @@ export default class UnitShorthandField extends React.Component {
 		}
 
 		return !this.state.showSchema ? (
-			<div className="laji-form-field-template-item" id={`_laji-form_${this.props.formContext.contextId}_${id}`}>
+			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
 				            onChange={this.onCodeChange}
 				            value={this.props.formData[shorthandFieldName]}

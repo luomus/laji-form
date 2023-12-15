@@ -1,10 +1,12 @@
-import { Form, Mock, createForm, getFocusedId, filterUUIDs } from "./test-utils";
-import { $, browser, protractor, ElementFinder } from "protractor";
+import { test, expect, Page } from "@playwright/test";
+import { DemoPageForm, Mock, createForm, filterUUIDs, getFocusedElement } from "./test-utils";
 
-describe("Line transect (MHL.1)", () => {
+test.describe.configure({ mode: "serial" });
 
-	let form: Form;
-	let $taxon: ElementFinder;
+test.describe("Line transect (MHL.1)", () => {
+
+	let page: Page;
+	let form: DemoPageForm;
 
 	let unitAutocompleteMock: Mock;
 	let taxonAutocompleteMock: Mock;
@@ -63,41 +65,37 @@ describe("Line transect (MHL.1)", () => {
 		}
 	];
 
-	beforeAll(async () => {
-		form = await createForm({id: "MHL.1", localFormData: true});
-		$taxon = form.$locate("gatherings.0.units.0.identifications.0.taxon");
+	test.beforeAll(async ({browser}) => {
+		page = await browser.newPage();
+		form = await createForm(page, {id: "MHL.1", localFormData: true});
 
 		unitAutocompleteMock = await form.setMockResponse("/autocomplete/unit", false);
 		taxonAutocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
 	});
 
-	const $shortHandForIdx = (idx: number, _idx: number) =>  $(`#root_gatherings_${idx}_units_${_idx}_shortHandText`);
-	const $shorthand = $shortHandForIdx(0, 0);
+	const $shortHandForIdx = (idx: number, _idx: number) =>  form.$getInputWidget(`gatherings.${idx}.units.${_idx}.shortHandText`);
+	const $taxonForIdx = (idx: number, _idx: number) =>  form.$getInputWidget(`gatherings.${idx}.units.${_idx}.identifications.0.taxon`);
 
-	it("shorthand unit is shown", async () => {
-		expect(await $shorthand.isDisplayed()).toBe(true);
+	test("shorthand unit is shown", async () => {
+		const $shorthand = $shortHandForIdx(0, 0);
+		await expect($shorthand).toBeVisible();
 	});
 
-	it("shorthand unit expands code after typing code", async () => {
-		function waitUntilShorthandShowsSchema() {
-			return browser.wait(protractor.ExpectedConditions.presenceOf($taxon), 5000, "Code reading timeout");
-		}
-
-		await $shorthand.sendKeys("llx");
-		await $shorthand.sendKeys(protractor.Key.ENTER);
+	test("shorthand unit expands code after typing code", async () => {
+		const $shorthand = $shortHandForIdx(0, 0);
+		await $shorthand.fill("llx");
+		await $shorthand.press("Enter");
 
 		await unitAutocompleteMock.resolve(unitAutocompleteResponse);
 
-		await waitUntilShorthandShowsSchema();
-
-		expect(await $taxon.isDisplayed()).toBe(true);
+		await expect($taxonForIdx(0, 0)).toBeVisible();
 	});
 
-	it("next unit is automatically added", async () => {
-		expect(await $shortHandForIdx(0, 1).isDisplayed()).toBe(true);
+	test("next unit is automatically added", async () => {
+		await expect($shortHandForIdx(0, 1)).toBeVisible();
 	});
 
-	it("unit formData matches response", async () => {
+	test("unit formData matches response", async () => {
 		const formData = await form.getChangedData();
 
 		expect(filterUUIDs(formData.gatherings[0].units[0])).toEqual(unitAutocompleteResponse.payload.unit);
@@ -107,24 +105,22 @@ describe("Line transect (MHL.1)", () => {
 		expect(formData.gatherings[0].units[0].unitFact_lineTransectRouteFieldType).toBe(undefined);
 	});
 
-	it("next unit is focused", async () => {
-		expect(await getFocusedId()).toBe(await $shortHandForIdx(0, 1).getAttribute("id"));
+	test("next unit is focused", async () => {
+		await expect($shortHandForIdx(0, 1)).toBeFocused();
 	});
 
-	it("prev unit is focused after keyboard navigation", async () => {
-		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.UP));
+	test("prev unit is focused after keyboard navigation", async () => {
+		await getFocusedElement(page).press("Alt+ArrowUp");
 
-		expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.0.identifications.0.taxon").getAttribute("id"));
+		await expect($taxonForIdx(0, 0)).toBeFocused();
 	});
 
-	it("next gathering is focused after keyboard navigation", async () => {
-		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.RIGHT));
-
-		await browser.sleep(200);
-		expect(await getFocusedId()).toBe(await $shortHandForIdx(1, 0).getAttribute("id"));
+	test("next gathering is focused after keyboard navigation", async () => {
+		await getFocusedElement(page).press("Alt+ArrowRight");
+		await expect($shortHandForIdx(1, 0)).toBeFocused();
 	});
 
-	it("when prev focused taxon autocomplete finishes, data isn't in FlatField format", async () => {
+	test("when prev focused taxon autocomplete finishes, data isn't in FlatField format", async () => {
 		await taxonAutocompleteMock.resolve(taxonAutocompleteResponse);
 		const formData = await form.getChangedData();
 

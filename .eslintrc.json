@@ -3,16 +3,13 @@
     "env": {
         "es6": true,
         "browser": true,
-        "node": true,
-		"jasmine": true
+        "node": true
     },
     "extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:react/recommended",
-		"plugin:react-hooks/recommended",
-		"plugin:protractor/recommended",
-		"plugin:jasmine/recommended"
+		"plugin:react-hooks/recommended"
 	],
     "parserOptions": {
 		"ecmaVersion": 2020,
@@ -21,58 +18,54 @@
         },
         "sourceType": "module"
     },
-    "rules": {
-        "strict": 0,
-        "indent": [
-            "error",
-            "tab"
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
-        "react/prop-types": "off",
-        "react/display-name": "off",
-        "no-mixed-spaces-and-tabs": [
-            "error",
-            "smart-tabs"
-        ],
-        "no-unsafe-finally": "off",
-        "no-constant-condition": [
-            "error",
-            {"checkLoops": false}
-        ],
-        "react/no-find-dom-node": "off",
-        "react/jsx-no-bind": 2,
-        "jasmine/no-spec-dupes": [1, "branch"],
-        "protractor/no-describe-selectors": "off",
-        "no-console": "off",
-        "keyword-spacing": 1,
-		"@typescript-eslint/no-explicit-any": "off",
-		"@typescript-eslint/no-var-requires": "off",
-		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"@typescript-eslint/no-empty-function": "off",
-		"prefer-const": "off",
-		"react/no-deprecated": "off",
-		"@typescript-eslint/no-this-alias": "off",
-		"react/no-string-refs": "off",
-		"protractor/no-browser-sleep": "off",
-		"protractor/no-repetitive-selectors": "off",
-		"protractor/no-repetitive-locators": "off",
-		"react/no-string-refs": "off"
-    },
+		"rules": {
+			"strict": 0,
+			"indent": [
+				"error",
+				"tab"
+			],
+			"linebreak-style": [
+				"error",
+				"unix"
+			],
+			"quotes": [
+				"error",
+				"double"
+			],
+			"semi": [
+				"error",
+				"always"
+			],
+			"react/prop-types": "off",
+			"react/display-name": "off",
+			"no-mixed-spaces-and-tabs": [
+				"error",
+				"smart-tabs"
+			],
+			"no-unsafe-finally": "off",
+			"no-constant-condition": [
+				"error",
+				{"checkLoops": false}
+			],
+			"react/no-find-dom-node": "off",
+			"react/jsx-no-bind": 2,
+			"protractor/no-describe-selectors": "off",
+			"no-console": "off",
+			"keyword-spacing": 1,
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/no-var-requires": "off",
+			"@typescript-eslint/explicit-module-boundary-types": "off",
+			"@typescript-eslint/no-empty-function": "off",
+			"prefer-const": "off",
+			"react/no-deprecated": "off",
+			"@typescript-eslint/no-this-alias": "off",
+			"react/no-string-refs": "off",
+			"protractor/no-browser-sleep": "off",
+			"protractor/no-repetitive-selectors": "off",
+			"protractor/no-repetitive-locators": "off"
+		},
     "plugins": [
-        "react",
-		"protractor",
-		"jasmine"
+			"react"
     ],
 	"globals": {
 		"L": true

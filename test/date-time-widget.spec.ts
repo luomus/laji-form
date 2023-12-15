@@ -1,8 +1,9 @@
-import { Form, createForm, updateValue, DateWidgetPO, isDisplayed } from "./test-utils";
-import * as moment from "moment";
+import { test, expect } from "@playwright/test";
+import { DemoPageForm, createForm, DateWidgetPO } from "./test-utils";
+import moment from "moment";
 
-describe("Date & time widgets", () => {
-	let form: Form;
+test.describe("Date & time widgets", () => {
+	let form: DemoPageForm;
 	let widget: DateWidgetPO;
 
 	const schema = {
@@ -20,95 +21,93 @@ describe("Date & time widgets", () => {
 	const displayTimeFormat = "HH.mm";
 	const displayFullFormat = `${displayDateFormat}, ${displayTimeFormat}`;
 
-	beforeAll(async () => {
-		form = await createForm();
+	test.beforeAll(async ({browser}) => {
+		form = await createForm(await browser.newPage());
 		widget = form.getDateWidget("");
 	});
 
-	describe("DateTimeWidget", () => {
+	test.describe("DateTimeWidget", () => {
 		const uiSchema = {
 			"ui:widget": "DateTimeWidget",
 		};
 
-		beforeAll(async () => {
+		test.beforeAll(async () => {
 			await form.setState({schema, uiSchema, formData});
 		});
 
-		it("renders date button", async () => {
-			expect(await isDisplayed(widget.buttons.$date)).toBe(true);
+		test("renders date button", async () => {
+			await expect(widget.buttons.$date).toBeVisible();
 		});
 
-		it("renders time button", async () => {
-			expect(await isDisplayed(widget.buttons.$time)).toBe(true);
+		test("renders time button", async () => {
+			await expect(widget.buttons.$time).toBeVisible();
 		});
 
-		it("selecting date from calendar adds only date", async () => {
+		test("selecting date from calendar adds only date", async () => {
 			await widget.buttons.$date.click();
-			await widget.calendar.waitAnimation();
 			await widget.calendar.$today.click();
 
 			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 
-		it("selecting time adds time", async () => {
+		test("selecting time adds time", async () => {
 			await widget.buttons.$time.click();
-			await widget.clock.waitAnimation();
 			await widget.clock["$01:00"].click();
 
 			expect(await widget.$input.getAttribute("value")).toBe(today0100.format(displayFullFormat));
 			expect(await form.getChangedData()).toBe(today0100.format(ISO8601FullFormat));
 		});
 
-		it("time can be typed", async () => {
-			await updateValue(widget.$input, `${today.format(displayDateFormat)}, 10`);
+		test("time can be typed", async () => {
+			await form.updateValue(widget.$input, `${today.format(displayDateFormat)}, 10`);
 
 			expect(await widget.$input.getAttribute("value")).toBe(`${today.format(displayDateFormat)}, 10.00`);
 			expect(await form.getChangedData()).toBe(`${today.format(ISO8601DateFormat)}T10:00`);
 		});
 
-		it("time can be removed by clearing it from input", async () => {
-			await updateValue(widget.$input, today.format(displayDateFormat));
+		test("time can be removed by clearing it from input", async () => {
+			await form.updateValue(widget.$input, today.format(displayDateFormat));
 
 			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 
-		it("whole value can be cleared", async () => {
-			await updateValue(widget.$input, "");
+		test("whole value can be cleared", async () => {
+			await form.updateValue(widget.$input, "");
 
 			expect(await widget.$input.getAttribute("value")).toBe("");
-			expect(await form.getChangedData()).toBe(null);
+			expect(await form.getChangedData()).toBe(undefined);
 		});
 
-		it("date can be typed", async () => {
-			await updateValue(widget.$input, "2.4.2012");
+		test("date can be typed", async () => {
+			await form.updateValue(widget.$input, "2.4.2012");
 
 			expect(await widget.$input.getAttribute("value")).toBe("02.04.2012");
 			expect(await form.getChangedData()).toBe("2012-04-02");
 		});
 
-		describe("today & yesterday buttons", () => {
-			it("not displayed by default", async () => {
-				expect(await isDisplayed(widget.buttons.$today)).toBe(false);
-				expect(await isDisplayed(widget.buttons.$yesterday)).toBe(false);
+		test.describe("today & yesterday buttons", () => {
+			test("not displayed by default", async () => {
+				await expect(widget.buttons.$today).not.toBeVisible();
+				await expect(widget.buttons.$yesterday).not.toBeVisible();
 			});
 
-			it("displayed if showButtons true", async () => {
+			test("displayed if showButtons true", async () => {
 				await form.setState({uiSchema: {...uiSchema, "ui:options": {showButtons: true}}});
 
-				expect(await isDisplayed(widget.buttons.$today)).toBe(true);
-				expect(await isDisplayed(widget.buttons.$yesterday)).toBe(true);
+				await expect(widget.buttons.$today).toBeVisible();
+				await expect(widget.buttons.$yesterday).toBeVisible();
 			});
 
-			it("yesterday works", async () => {
+			test("yesterday works", async () => {
 				await widget.buttons.$yesterday.click();
 
 				expect(await widget.$input.getAttribute("value")).toBe(yesterday.format(displayDateFormat));
 				expect(await form.getChangedData()).toBe(yesterday.format(ISO8601DateFormat));
 			});
 
-			it("today works", async () => {
+			test("today works", async () => {
 				await widget.buttons.$today.click();
 
 				expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
@@ -116,30 +115,30 @@ describe("Date & time widgets", () => {
 			});
 		});
 
-		describe("typing only year when option allowOnlyYear", () => {
+		test.describe("typing only year when option allowOnlyYear", () => {
 			const year = "" + moment().year();
 
-			it("is off should enter full date", async () => {
-				await updateValue(widget.$input, year);
+			test("is off should enter full date", async () => {
+				await form.updateValue(widget.$input, year);
 
 				expect(await widget.$input.getAttribute("value")).toBe(`01.01.${year}`);
 				expect(await form.getChangedData()).toBe(today.format(`${year}-01-01`));
 			});
 
-			it("is on works", async () => {
+			test("is on works", async () => {
 				await form.setState({uiSchema: {...uiSchema, "ui:options": {allowOnlyYear: true}}});
-				await updateValue(widget.$input, year);
+				await form.updateValue(widget.$input, year);
 
 				expect(await widget.$input.getAttribute("value")).toBe(year);
 				expect(await form.getChangedData()).toBe(year);
 			});
 		});
 
-		describe("same button", () => {
+		test.describe("same button", () => {
 			let startWidget: DateWidgetPO;
 			let endWidget: DateWidgetPO;
 
-			beforeAll(async () => {
+			test.beforeAll(async () => {
 				await form.setState({
 					schema: {type: "object", properties: {start: {type: "string"}, end: {type: "string"}}},
 					uiSchema: {
@@ -152,16 +151,16 @@ describe("Date & time widgets", () => {
 				endWidget = form.getDateWidget("end");
 			});
 
-			it("not displayed by if showButtons true", async () => {
-				expect(await isDisplayed(startWidget.buttons.$same)).toBe(false);
+			test("not displayed by if showButtons true", async () => {
+				await expect(startWidget.buttons.$same).not.toBeVisible();
 			});
 
-			it("displayed if showButtons has {same: true}", async () => {
-				expect(await isDisplayed(endWidget.buttons.$same)).toBe(true);
+			test("displayed if showButtons has {same: true}", async () => {
+				await expect(endWidget.buttons.$same).toBeVisible();
 			});
 
-			it("click works", async () => {
-				await updateValue(startWidget.$input, "2.4.2012");
+			test("click works", async () => {
+				await form.updateValue(startWidget.$input, "2.4.2012");
 				await endWidget.buttons.$same.click();
 
 				expect(await endWidget.$input.getAttribute("value")).toBe("02.04.2012");
@@ -170,62 +169,62 @@ describe("Date & time widgets", () => {
 		});
 	});
 
-	describe("DateWidget", () => {
+	test.describe("DateWidget", () => {
 
 		const uiSchema = {
 			"ui:widget": "DateWidget",
 		};
 
-		beforeAll(async () => {
+		test.beforeAll(async () => {
 			await form.setState({schema, uiSchema, formData});
 		});
 
-		it("renders date button", async () => {
-			expect(await isDisplayed(widget.buttons.$date)).toBe(true);
+		test("renders date button", async () => {
+			await expect(widget.buttons.$date).toBeVisible();
 		});
 
-		it("doesn't render time button", async () => {
-			expect(await isDisplayed(widget.buttons.$time)).not.toBe(true);
+		test("doesn't render time button", async () => {
+			await expect(widget.buttons.$time).not.toBeVisible();
 		});
 
-		it("clears time if typed", async () => {
-			await updateValue(widget.$input, `${today.format(displayDateFormat)}, 10.00`);
+		test("clears time if typed", async () => {
+			await form.updateValue(widget.$input, `${today.format(displayDateFormat)}, 10.00`);
 
 			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 	});
 
-	describe("TimeWidget", () => {
+	test.describe("TimeWidget", () => {
 
 		const uiSchema = {
 			"ui:widget": "TimeWidget",
 		};
 
-		beforeAll(async () => {
-			await updateValue(widget.$input, "");
+		test.beforeAll(async () => {
+			await form.updateValue(widget.$input, "");
 			await form.setState({schema, uiSchema});
 		});
 
-		it("renders time button", async () => {
-			expect(await isDisplayed(widget.buttons.$time)).toBe(true);
+		test("renders time button", async () => {
+			await expect(widget.buttons.$time).toBeVisible();
 		});
 
-		it("doesn't render date button", async () => {
-			expect(await isDisplayed(widget.buttons.$date)).not.toBe(true);
+		test("doesn't render date button", async () => {
+			await expect(widget.buttons.$date).not.toBeVisible();
 		});
 
-		it("time can be typed", async () => {
-			await updateValue(widget.$input, "10.00");
+		test("time can be typed", async () => {
+			await form.updateValue(widget.$input, "10.00");
 
 			expect(await widget.$input.getAttribute("value")).toBe("10.00");
 			expect(await form.getChangedData()).toBe("10:00");
 		});
 
-		it("showTimeList hides time button", async () => {
+		test("showTimeList hides time button", async () => {
 			await form.setState({uiSchema: {...uiSchema, "ui:options": {showTimeList: false}}});
 
-			expect(await isDisplayed(widget.buttons.$time)).toBe(false);
+			await expect(widget.buttons.$time).not.toBeVisible();
 		});
 	});
 });

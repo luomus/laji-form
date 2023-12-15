@@ -73,7 +73,6 @@ export default class _FieldTemplate extends React.Component {
 			displayLabel,
 			schema,
 			uiSchema,
-			formContext,
 			label: _label,
 			forceDisplayLabel
 		} = this.props;
@@ -89,7 +88,7 @@ export default class _FieldTemplate extends React.Component {
 		}
 		const inlineHelp = uiSchema["ui:inlineHelp"];
 		const belowHelp = uiSchema["ui:belowHelp"];
-		const htmlId = this.state.id ? `_laji-form_${formContext.contextId}_${this.state.id}` : undefined;
+		const htmlId = this.state.id ? `_laji-form_${this.state.id}` : undefined;
 
 		const _displayLabel = forceDisplayLabel ||
 			((schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel);

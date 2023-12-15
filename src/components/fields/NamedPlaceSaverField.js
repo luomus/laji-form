@@ -109,7 +109,7 @@ class PlaceSaverDialog extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 10000}).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,

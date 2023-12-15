@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import getContext from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
-import LajiForm from "../LajiForm";
+import LajiForm, { MediaMetadata } from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
@@ -781,9 +781,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
-			let mediaMetadata : any =
+			let mediaMetadata: any =
 				this.props.formContext.mediaMetadata
-				|| {intellectualRights: "MZ.intellectualRightsARR"};
+				|| {intellectualRights: "MZ.intellectualRightsARR"} as MediaMetadata;
 			const MACode = this.props.formContext.uiSchemaContext.creator;
 
 			return ("capturerVerbatim" in mediaMetadata)
@@ -796,7 +796,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 							intellectualOwner: fullName
 						}
 					)).catch(() => Promise.resolve(mediaMetadata))
-					: mediaMetadata;
+					: Promise.resolve(mediaMetadata);
 		}
 
 		getMaxFileSizeAsString = () => {

@@ -1,8 +1,10 @@
-import { Form, createForm, updateValue, UnitListShorthandArrayFieldPOI, isDisplayed, EC } from "./test-utils";
+import { test, expect } from "@playwright/test";
+import { DemoPageForm, createForm, UnitListShorthandArrayFieldPO } from "./test-utils";
 import { JSONSchema7 } from "json-schema";
-import {browser} from "protractor";
 
-describe("UnitListShorthandArrayField", () => {
+test.describe.configure({ mode: "serial" });
+
+test.describe("UnitListShorthandArrayField", () => {
 
 	const schema: JSONSchema7 = {
 		type: "array",
@@ -38,31 +40,28 @@ describe("UnitListShorthandArrayField", () => {
 
 	const formData: any = [];
 
-	let form: Form;
-	let component: UnitListShorthandArrayFieldPOI;
+	let form: DemoPageForm;
+	let component: UnitListShorthandArrayFieldPO;
 
-	beforeAll(async () => {
-		form = await createForm({schema, uiSchema, formData});
+	test.beforeAll(async ({browser}) => {
+		form = await createForm(await browser.newPage(), {schema, uiSchema, formData});
 		component = form.getUnitListShorthandArrayField("");
 	});
 
-	it("button renders", async () => {
-		expect(await isDisplayed(component.$button)).toBe(true);
+	test("button renders", async () => {
+		await expect(component.$button).toBeVisible();
 	});
 
-	it("button click shows modal", async () => {
+	test("button click shows modal", async () => {
 		await component.$button.click();
 
-		await browser.wait(EC.visibilityOf(component.modal.$addButton), 100, "Modal didn't show up");
+		await expect(component.modal.$addButton).toBeVisible();
 	});
 
-	it("typing species in and submitting gets the formData", async () => {
-		await updateValue(component.modal.$input, "susi, kettu");
-
+	test("typing species in and submitting gets the formData", async () => {
+		await form.updateValue(component.modal.$input, "susi, kettu");
 		await component.modal.$addButton.click();
-
-		await form.waitUntilBlockingLoaderHides(5000);
-
+		await expect(form.$blocker).not.toBeVisible(); 
 		const formData = await form.getChangedData();
 
 		expect(formData[0]["informalTaxonGroups"]).toContain("MVL.2");

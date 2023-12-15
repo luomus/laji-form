@@ -63,7 +63,7 @@ if (mockApi) {
 	window.mockResponses = mockResponses;
 	window.mockQueues = mockQueues;
 	const getKey = (path, queryObject) => queryObject
-		? `${path}?${queryString.stringify(queryObject)})}`
+		? `${path}?${queryString.stringify(queryObject)}`
 		: path;
 	window.getMockQueryKey = getKey;
 	const createMock = () => {
