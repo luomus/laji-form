@@ -56,6 +56,6 @@ test.describe("Bird point count (MHL.75)", () => {
 
 		await form.$locateButton("gatherings.0.units.0", "delete").click();
 
-		expect(await taxonAutosuggest1.$input.getAttribute("value")).toBe("mustarastas");
+		await expect(taxonAutosuggest1.$input).toHaveValue("mustarastas");
 	});
 });

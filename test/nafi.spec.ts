@@ -53,7 +53,7 @@ test.describe("NAFI (MHL.6)", () => {
 			await autocompleteMock.resolve(taxonAutocompleteResponse);
 			await taxonAutosuggest.$suggestions.first().click();
 
-			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+			await expect(taxonAutosuggest.$input).toHaveValue("kettu");
 
 			await autocompleteMock.remove();
 		});

@@ -109,7 +109,7 @@ test.describe("Trip report (JX.519)", () => {
 					await page.locator(".table-field .row").nth(1).locator("button").click(); // eslint-disable-line protractor/use-first-last
 
 					await expect(form.$locate("gatheringEvent.1.leg")).not.toBeVisible();
-					expect(await form.$getInputWidget("gatheringEvent.0.leg").getAttribute("value")).toBe("");
+					await expect(form.$getInputWidget("gatheringEvent.0.leg")).toHaveValue("");
 				});
 			});
 		});
@@ -430,7 +430,7 @@ test.describe("Trip report (JX.519)", () => {
 		});
 
 		test("gatherings map shows unit with different color", async () => {
-			expect(await $$gatheringMarkerPaths.count()).toBe(2);
+			await expect($$gatheringMarkerPaths).toHaveCount(2);
 			const firstFill = await $$gatheringMarkerPaths.first().getAttribute("fill");
 			const secondFill = await $$gatheringMarkerPaths.last().getAttribute("fill");
 
