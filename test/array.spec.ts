@@ -184,7 +184,7 @@ test.describe("Array", () => {
 	});
 
 	test.describe("keyboard shortcut", () => {
-		let form: Form;
+		let form: DemoPageForm;
 
 		let page: Page;
 

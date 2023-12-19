@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { Form, createForm, DateWidgetPO, updateValue } from "./test-utils";
+import { DemoPageForm, createForm, DateWidgetPO, updateValue } from "./test-utils";
 import moment from "moment";
 
 test.describe("Date & time widgets", () => {
-	let form: Form;
+	let form: DemoPageForm;
 	let widget: DateWidgetPO;
 
 	const schema = {
