@@ -15,7 +15,7 @@
     "version": "bin/update-changelog.sh",
     "postversion": "npm run build &&  git push & git push --tags && npm publish",
     "lint": "eslint -c .eslintrc.prod.json src playground",
-    "test": "npx playwright test --project chromium"
+    "test": "npx playwright test"
   },
   "keywords": [
     "react-jsonschema-form",
