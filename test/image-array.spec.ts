@@ -66,7 +66,7 @@ test.describe("Image array", () => {
 		await imgArrayField.$$imgRemoves.first().click();
 		await imgArrayField.$imgRemoveConfirmButton("0").click();
 
-		expect(await imgArrayField.$$imgs.count()).toBe(0);
+		await expect(imgArrayField.$$imgs).toHaveCount(0);
 
 		await resolve();
 		await remove();

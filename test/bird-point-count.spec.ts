@@ -22,7 +22,7 @@ test.describe("Bird point count (MHL.75)", () => {
 		await form.$getInputWidget("gatherings.0.units.0.unitFact.pairCountInner").fill(text);
 		await getFocusedElement(page).press("Alt+u");
 
-		expect(await form.$getInputWidget("gatherings.0.units.0.unitFact.pairCountInner").getAttribute("value")).toBe(text);
+		await expect(form.$getInputWidget("gatherings.0.units.0.unitFact.pairCountInner")).toHaveValue(text);
 
 		// Cleanup
 		await form.$locateButton("gatherings.0.units.0", "delete").click();

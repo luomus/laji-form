@@ -77,16 +77,16 @@ test.describe("Geocoder", () => {
 		const {resolve, remove} = await form.setMockResponse("/coordinates/location", false);
 		await form.setState({schema, uiSchema, formData});
 
-		expect(await form.$locate("country").locator("input").getAttribute("value")).toBe("");
-		expect(await form.$locate("municipality").locator("input").getAttribute("value")).toBe("");
-		expect(await form.$locate("biologicalProvince").locator("input").getAttribute("value")).toBe("");
+		await expect(form.$getInputWidget("country")).toHaveValue("");
+		await expect(form.$getInputWidget("municipality")).toHaveValue("");
+		await expect(form.$getInputWidget("biologicalProvince")).toHaveValue("");
 
 		await resolve(response);
 		await remove();
 
-		expect(await form.$locate("country").locator("input").getAttribute("value")).toBe("Suomi");
-		expect(await form.$locate("municipality").locator("input").getAttribute("value")).toBe("Helsinki");
-		expect(await form.$locate("biologicalProvince").locator("input").getAttribute("value")).toBe("Nylandia");
+		await expect(form.$getInputWidget("country")).toHaveValue("Suomi");
+		await expect(form.$getInputWidget("municipality")).toHaveValue("Helsinki");
+		await expect(form.$getInputWidget("biologicalProvince")).toHaveValue("Nylandia");
 	});
 
 	test("blocks submit until done", async ({page}) => {
@@ -100,7 +100,7 @@ test.describe("Geocoder", () => {
 		await remove();
 
 		await expect(form.$runningJobs).not.toBeVisible();
-		expect(await form.$locate("country").locator("input").getAttribute("value")).toBe("Suomi");
+		await expect(form.$getInputWidget("country")).toHaveValue("Suomi");
 		expect(await form.getSubmittedData()).not.toBe(undefined);
 	});
 

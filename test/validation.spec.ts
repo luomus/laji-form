@@ -201,8 +201,8 @@ test.describe("Validations", () => {
 		await form.submit();
 
 		expect(await form.getSubmittedData()).not.toEqual(formData);
-		expect(await form.errors.$$all.count()).toBe(2);
-		expect(await form.warnings.$$all.count()).toBe(2);
+		await expect(form.errors.$$all).toHaveCount(2);
+		await expect(form.warnings.$$all).toHaveCount(2);
 	});
 
 	const response = {
@@ -343,11 +343,11 @@ test.describe("Validations", () => {
 		const {resolve: imageResolve, remove: imageRemove} = await form.mockImageUpload("c");
 		await form.submit();
 
-		expect(await form.errors.$$all.count()).toBe(0);
+		await expect(form.errors.$$all).toHaveCount(0);
 
 		await imageResolve();
 
-		expect(await form.errors.$$all.count()).toBe(0);
+		await expect(form.errors.$$all).toHaveCount(0);
 
 		await resolve({});
 		await remove();
@@ -361,7 +361,7 @@ test.describe("Validations", () => {
 		const {resolve: imageResolve, remove: imageRemove} = await form.mockImageUpload("c");
 		await form.submit();
 
-		expect(await form.errors.$$all.count()).toBe(0);
+		await expect(form.errors.$$all).toHaveCount(0);
 
 		await imageResolve();
 		await resolve({});
