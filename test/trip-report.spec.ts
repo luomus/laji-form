@@ -1,6 +1,5 @@
 import { test, expect, Page, Locator } from "@playwright/test";
 import { DemoPageForm, createForm, Mock, NamedPlaceChooserPO, lajiFormLocator, getRemoveUnit } from "./test-utils";
-const { googleApiKey } = require("../properties.json");
 
 const _testWidget = (form: DemoPageForm) => async (path: string, type?: string) => {
 	const parsePointer = (container: any, path: string): any => {
