@@ -473,7 +473,7 @@ test.describe("Trip report (JX.519)", () => {
 			await form.$locateButton("gatherings", "add").click();
 			await clickLocationButtonAndAddLocation(1, 0);
 
-			expect(await $$gatheringMarkerPaths.count()).toBe(1);
+			await expect($$gatheringMarkerPaths).toHaveCount(1);
 
 			await form.$locateButton("gatherings.1", "delete").click();
 			await form.$locateButton("gatherings.1", "delete-confirm-yes", true).click();
@@ -500,7 +500,7 @@ test.describe("Trip report (JX.519)", () => {
 			await resolve();
 			await form.$locate("gatherings.0.units.1").locator("td").first().click();
 
-			expect(await form.getImageArrayField("gatherings.0.units.1").$$imgs.count()).toBe(1);
+			await expect(form.getImageArrayField("gatherings.0.units.1").$$imgs).toHaveCount(1);
 			await remove();
 			await removeUnit(0, 1);
 		});
