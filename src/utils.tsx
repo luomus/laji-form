@@ -267,8 +267,8 @@ export interface ReactUtilsType {
 }
 
 export const ReactUtils = (context: FormContext): ReactUtilsType => ({
-	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
-	getSchemaElementById: _getSchemaElementById(context),
+	findNearestParentSchemaElemId,
+	getSchemaElementById,
 	focusById: _focusById(context),
 	focusAndScroll: _focusAndScroll(context),
 	shouldSyncScroll: _shouldSyncScroll(context),
@@ -344,23 +344,17 @@ export const focusNextInput = (formContext: FormContext) => (reverseDirection = 
 	return false;
 };
 
-const _findNearestParentSchemaElemId = ({contextId}: Pick<FormContext, "contextId">) => (elem: HTMLElement) => {
-	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
-	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
-};
-export const findNearestParentSchemaElemId = (contextId: number, elem: HTMLElement) => {
-	return _findNearestParentSchemaElemId({contextId})(elem);
+export const findNearestParentSchemaElemId = (elem: HTMLElement) => {
+	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById("_laji-form_root");
+	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace("_laji-form_", "") : undefined;
 };
 
-const _getSchemaElementById = ({contextId}: Pick<FormContext, "contextId">) => (id: string) => {
-	return document.getElementById(`_laji-form_${contextId}_${id}`);
-};
-export const getSchemaElementById = (contextId: number, id: string) => {
-	return _getSchemaElementById({contextId})(id);
+export const getSchemaElementById = (id: string) => {
+	return document.getElementById(`_laji-form_${id}`);
 };
 
 const _focusById = (context: FormContext) => (id: string, focus = true) => {
-	const elem = getSchemaElementById(context.contextId, id);
+	const elem = getSchemaElementById(id);
 
 	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
@@ -385,7 +379,7 @@ const _focusAndScroll = (context: FormContext) => (idToFocus?: string, idToScrol
 	if (idToFocus && !context.utils.focusById(getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
 		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
-		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
+		const elemToFocus = getSchemaElementById(getKeyHandlerTargetId(idToFocus, _context));
 		if (!elemToScroll || !elemToFocus) {
 			return end();
 		}

@@ -1,12 +1,12 @@
-import { createForm, Form } from "./test-utils";
-import { browser, protractor } from "protractor";
+import { test, expect, Page } from "@playwright/test";
+import { createForm, DemoPageForm, getFocusedElement } from "./test-utils";
 import { JSONSchema7 } from "json-schema";
 
-describe("Array", () => {
+test.describe("Array", () => {
 
-	let form: Form;
+	let form: DemoPageForm;
 
-	describe("copy button", () => {
+	test.describe("copy button", () => {
 
 		const uiSchemaForCopy = (type: string, filter: string[]): any => ({
 			"ui:options": {
@@ -16,11 +16,11 @@ describe("Array", () => {
 			}
 		});
 
-		beforeAll(async () => {
-			form = await createForm();
+		test.beforeAll(async ({browser}) => {
+			form = await createForm(await browser.newPage());
 		});
 
-		describe("nested object", () => {
+		test.describe("nested object", () => {
 			const schema = {
 				type: "array",
 				items: {
@@ -72,7 +72,7 @@ describe("Array", () => {
 				}
 			}];
 
-			it("works with whitelist", async () => {
+			test("works with whitelist", async () => {
 				await form.setState({schema, formData: allButDefaultFilled, uiSchema: uiSchemaForCopy("whitelist", ["a", "/1/a", "/1/2/a"])});
 				await form.$locateButton("", "copy").click();
 
@@ -91,18 +91,18 @@ describe("Array", () => {
 				});
 			});
 
-			it("works with blacklist", async () => {
+			test("works with blacklist", async () => {
 				await form.setState({schema, formData: allButDefaultFilled, uiSchema: uiSchemaForCopy("blacklist", ["a", "/1/a", "/1/2/a"])});
 				await form.$locateButton("", "copy").click();
 
 				expect((await form.getChangedData())[1]).toEqual({
-					a: null,
+					a: undefined,
 					b: "foo",
 					1: {
-						a: null,
+						a: undefined,
 						b: "foo",
 						2: {
-							a: null,
+							a: undefined,
 							b: "foo",
 							default: "default",
 							3: {
@@ -116,7 +116,7 @@ describe("Array", () => {
 			});
 		});
 
-		describe("copying form nonexisting array item", () => {
+		test.describe("copying form nonexisting array item", () => {
 			const schema = {
 				type: "array",
 				items: {
@@ -144,7 +144,7 @@ describe("Array", () => {
 				}]
 			}];
 
-			it("works with whitelist", async () => {
+			test("works with whitelist", async () => {
 				await form.setState({schema, formData, uiSchema: uiSchemaForCopy("whitelist", ["/arr/0/a", "/arr/1/b"])});
 				await form.$locateButton("", "copy").click();
 
@@ -155,26 +155,26 @@ describe("Array", () => {
 							default: "default"
 						},
 						{
-							b: null,
+							b: undefined,
 							default: "default"
 						}
 					]
 				});
 			});
 
-			it("works with blacklist", async () => {
+			test("works with blacklist", async () => {
 				await form.setState({schema, formData, uiSchema: uiSchemaForCopy("blacklist", ["/arr/0/a", "/arr/1/b"])});
 				await form.$locateButton("", "copy").click();
 
 				expect((await form.getChangedData())[1]).toEqual({
 					arr: [
 						{
-							a: null,
+							a: undefined,
 							b: "foo",
 							default: "default"
 						},
 						{
-							b: null,
+							b: undefined,
 							default: "default"
 						}
 					]
@@ -183,37 +183,40 @@ describe("Array", () => {
 		});
 	});
 
-	describe("keyboard shortcut", () => {
+	test.describe("keyboard shortcut", () => {
 		let form: Form;
 
-		beforeAll(async () => {
+		let page: Page;
+
+		test.beforeAll(async ({browser}) => {
 			const shortcuts = {"alt+i": {fn: "insert"}};
 			const props = {schema: {type: "array", items: {type:"string"}} as JSONSchema7, uiSchema: {"ui:shortcuts": shortcuts}};
-			form = await createForm(props);
+			page = await browser.newPage();
+			form = await createForm(page, props);
 		});
 
-		afterEach(async () => {
+		test.afterEach(async () => {
 			await form.setState({formData: []});
 		});
 
-		describe("insert", () => {
-			it("works", async () => {
+		test.describe("insert", async () => {
+			test("works", async () => {
 				await form.$locateButton("", "add").click();
 
-				expect(await form.$locate("0").isDisplayed()).toBe(true);
+				await expect(form.$locate("0")).toBeVisible();
 
-				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+				await getFocusedElement(page).press("Alt+i");
 
-				expect(await form.$locate("1").isDisplayed()).toBe(true);
+				await expect(form.$locate("1")).toBeVisible();
 			});
 
-			it("keeps entered value", async () => {
+			test("keeps entered value", async () => {
 				await form.$locateButton("", "add").click();
-				await browser.driver.switchTo().activeElement().sendKeys("test");
-				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+				await getFocusedElement(page).fill("test");
+				await getFocusedElement(page).press("Alt+i");
 
-				expect(await form.$locate("1").isDisplayed()).toBe(true);
-				expect(await form.$getInputWidget("0").getAttribute("value")).toBe("test");
+				await expect(form.$locate("1")).toBeVisible();
+				await expect(form.$getInputWidget("0")).toHaveValue("test");
 			});
 		});
 	});

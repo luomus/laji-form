@@ -10,9 +10,7 @@
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:react/recommended",
-		"plugin:react-hooks/recommended",
-		"plugin:protractor/recommended",
-		"plugin:jasmine/recommended"
+		"plugin:react-hooks/recommended"
 	],
     "parserOptions": {
 		"ecmaVersion": 2020,
@@ -53,7 +51,6 @@
         "react/no-find-dom-node": "off",
         "react/jsx-no-bind": 2,
         "jasmine/no-spec-dupes": [1, "branch"],
-        "protractor/no-describe-selectors": "off",
         "no-console": "off",
         "keyword-spacing": 1,
 		"@typescript-eslint/no-explicit-any": "off",
@@ -63,16 +60,10 @@
 		"prefer-const": "off",
 		"react/no-deprecated": "off",
 		"@typescript-eslint/no-this-alias": "off",
-		"react/no-string-refs": "off",
-		"protractor/no-browser-sleep": "off",
-		"protractor/no-repetitive-selectors": "off",
-		"protractor/no-repetitive-locators": "off",
 		"react/no-string-refs": "off"
     },
     "plugins": [
-        "react",
-		"protractor",
-		"jasmine"
+        "react"
     ],
 	"globals": {
 		"L": true

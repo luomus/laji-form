@@ -1,0 +1,24 @@
+[
+    {
+        "key": "MX.46587",
+        "value": "kettu",
+        "payload": {
+            "matchingName": "kettu",
+            "informalTaxonGroups": [
+                {
+                    "id": "MVL.2",
+                    "name": "Nisäkkäät"
+                }
+            ],
+            "scientificName": "Vulpes vulpes",
+            "scientificNameAuthorship": "(Linnaeus, 1758)",
+            "taxonRankId": "MX.species",
+            "matchType": "exactMatches",
+            "cursiveName": true,
+            "finnish": true,
+            "species": true,
+            "nameType": "MX.vernacularName",
+            "vernacularName": "kettu"
+        }
+    }
+]
