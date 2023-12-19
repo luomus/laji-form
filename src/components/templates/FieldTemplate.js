@@ -73,7 +73,6 @@ export default class _FieldTemplate extends React.Component {
 			displayLabel,
 			schema,
 			uiSchema,
-			formContext,
 			label: _label,
 			forceDisplayLabel
 		} = this.props;

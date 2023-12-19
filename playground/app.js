@@ -77,7 +77,6 @@ if (mockApi) {
 	};
 
 	window.setMockResponse = (path, query) => {
-		console.log('set mock', path, query);
 		const key = getKey(path, query);
 		const mock = createMock();
 		mock.remove = () => {
@@ -106,7 +105,6 @@ if (mockApi) {
 		const key = getKey(path, query);
 		const keyWithoutQuery = getKey(path, false);
 		let mock = mockResponses[key] || mockResponses[keyWithoutQuery];
-		console.log('fetch', path, !!mock);
 		if (Array.isArray(mock)) {
 			const queue = mockQueues[key] || mockQueues[keyWithoutQuery];
 			const {pointer} = queue;
