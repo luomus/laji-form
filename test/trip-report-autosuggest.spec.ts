@@ -298,6 +298,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 				}
 			}]);
 
+			await expect(taxonAutosuggest.$suggestions.first()).toBeVisible();
 			await taxonAutosuggest.$input.press("Enter");
 			await mockKuusi.remove();
 
