@@ -13,7 +13,8 @@
     "build": "npm run build:lib && npm run build:dist && npm run build:tests",
     "preversion": "npm run lint && npm test",
     "version": "bin/update-changelog.sh",
-    "postversion": "npm run build &&  git push & git push --tags && npm publish",
+    "postversion": "npm publish",
+		"prepack": "npm run build &&  git push & git push --tags",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "npx playwright test"
   },
