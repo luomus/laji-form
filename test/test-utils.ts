@@ -68,16 +68,16 @@ interface DemoPageProps {
 }
 
 export class Form {
-	constructor(protected page: Page, protected locator = page.locator(".laji-form")) { }
+	constructor(protected page: Page, protected $locator = page.locator(".laji-form")) { }
 
-	$form = this.page.locator(".laji-form .rjsf");
+	$form = this.$locator.locator(".rjsf");
 
 	$locate(path: string) {
-		return this.page.locator(lajiFormLocator(path));
+		return this.$locator.locator(lajiFormLocator(path));
 	}
 
 	$locateButton(path: string, selector: string, locateFromBody = false) {
-		return (locateFromBody ? this.page : this.locator).locator(`#root${typeof path === "string" && path.length > 0 ? `_${path.replace(/\./g, "_")}` : ""}-${selector}`);
+		return (locateFromBody ? this.page : this.$locator).locator(`#root${typeof path === "string" && path.length > 0 ? `_${path.replace(/\./g, "_")}` : ""}-${selector}`);
 	}
 
 	$locateAddition(path: string, selector: string, locateFromBody = false) {
@@ -121,22 +121,22 @@ export class Form {
 	}
 
 	createValidatorPO = (type: "error" | "warning") => ({
-		$$all: this.page.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
-		$panel: this.page.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
+		$$all: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
+		$panel: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
 	})
 
 	errors = this.createValidatorPO("error")
 	warnings = this.createValidatorPO("warning")
 	failedJobs = {
-		$container: this.page.locator(".laji-form-failed-jobs-list"),
-		$$errors: this.page.locator(".laji-form-failed-jobs-list .list-group-item")
+		$container: this.$locator.locator(".laji-form-failed-jobs-list"),
+		$$errors: this.$locator.locator(".laji-form-failed-jobs-list .list-group-item")
 	}
 
-	$runningJobs = this.page.locator(".running-jobs");
+	$runningJobs = this.$locator.locator(".running-jobs");
 
-	$acknowledgeWarnings = this.page.locator(".laji-form-warning-list .panel-footer button")
+	$acknowledgeWarnings = this.$locator.locator(".laji-form-warning-list .panel-footer button")
 	$blocker = this.page.locator(".laji-form.blocking-loader");
-	$mapFieldFullscreenMap = this.page.locator(".laji-form.fullscreen .laji-form-map");
+	$mapFieldFullscreenMap = this.$locator.locator(".laji-form.fullscreen .laji-form-map");
 
 	getBooleanWidget(str: string) {
 		const $container = this.$locate(str).locator(".btn-toolbar");
@@ -220,7 +220,7 @@ export class Form {
 		const autosuggest = this.getAutosuggestWidget(lajiFormLocator);
 		return {
 			...autosuggest,
-			$powerUserButton: this.page.locator(".power-user-addon"),
+			$powerUserButton: this.$locator.locator(".power-user-addon"),
 			$suggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-ok"),
 			$nonsuggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-warning-sign"),
 		};
@@ -425,6 +425,7 @@ export const filterUUIDs = (any: any): any => {
 
 export const maybeJSONPointerToLocator = (pointer: string) => pointer[0] === "/" ? pointer.slice(1).replace(/\//g, "_") : pointer;
 
+/** Fills value into given input and presses tab to unfocus it. Useful for inputs with debounce */
 export const updateValue = async ($input: Locator, value: string) => {
 	await $input.fill(value);
 	await $input.press("Tab");
