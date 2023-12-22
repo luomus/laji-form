@@ -180,16 +180,5 @@ If you run into issues with browser dependencies etc, there's also a dockerized 
 npm run test:docker
 
 # Or if you want to give playwright params, run certain tests etc:
-npm run test:docker:build # build first
-npm run test:docker:run -- test/mobile-form.spec.ts --project chromium # pass params to playwright
+npm run test:docker -- test/mobile-form.spec.ts --project chromium
 ```
-
-### Test parameters
-
-Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome npm test`
-
-Option         | Default | Description
----------------|---------|-----------------------------------------------------------------------------------------------
-TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
-HEADLESS       | `true`  | Run the tests in a visible browser window if `true`.
-THREADS        | 4       | How many browser instances to use for parallel testing.
