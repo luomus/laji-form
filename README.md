@@ -181,7 +181,7 @@ npm run test:docker
 
 # Or if you want to give playwright params, run certain tests etc:
 npm run test:docker:build # build first
-npm run test:docker:run -- test/mobile-form-spec.ts --project chromium # pass params to playwright
+npm run test:docker:run -- test/mobile-form.spec.ts --project chromium # pass params to playwright
 ```
 
 ### Test parameters
