@@ -159,13 +159,13 @@ http://localhost:8083?id=MHL.1&localFormData=true Line transect form with local 
 
 ## Tests
 
-You need to update the webdriver before testing: 
+You might need to install playwright dependencies to run the tests:
 
 ```
-webdriver-manager update
+npx playwright install
 ```
 
-The playground server must be running before running the tests.
+The playground server can be running or or not. If it's not running, it will be automatically started.
 
 Run the tests with `npm test`.
 
