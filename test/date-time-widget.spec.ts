@@ -47,7 +47,7 @@ test.describe("Date & time widgets", () => {
 			await widget.buttons.$date.click();
 			await widget.calendar.$today.click();
 
-			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
+			await expect(widget.$input).toHaveValue(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 
@@ -55,35 +55,35 @@ test.describe("Date & time widgets", () => {
 			await widget.buttons.$time.click();
 			await widget.clock["$01:00"].click();
 
-			expect(await widget.$input.getAttribute("value")).toBe(today0100.format(displayFullFormat));
+			await expect(widget.$input).toHaveValue(today0100.format(displayFullFormat));
 			expect(await form.getChangedData()).toBe(today0100.format(ISO8601FullFormat));
 		});
 
 		test("time can be typed", async () => {
 			await updateValue(widget.$input, `${today.format(displayDateFormat)}, 10`);
 
-			expect(await widget.$input.getAttribute("value")).toBe(`${today.format(displayDateFormat)}, 10.00`);
+			await expect(widget.$input).toHaveValue(`${today.format(displayDateFormat)}, 10.00`);
 			expect(await form.getChangedData()).toBe(`${today.format(ISO8601DateFormat)}T10:00`);
 		});
 
 		test("time can be removed by clearing it from input", async () => {
 			await updateValue(widget.$input, today.format(displayDateFormat));
 
-			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
+			await expect(widget.$input).toHaveValue(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 
 		test("whole value can be cleared", async () => {
 			await updateValue(widget.$input, "");
 
-			expect(await widget.$input.getAttribute("value")).toBe("");
+			await expect(widget.$input).toHaveValue("");
 			expect(await form.getChangedData()).toBe(undefined);
 		});
 
 		test("date can be typed", async () => {
 			await updateValue(widget.$input, "2.4.2012");
 
-			expect(await widget.$input.getAttribute("value")).toBe("02.04.2012");
+			await expect(widget.$input).toHaveValue("02.04.2012");
 			expect(await form.getChangedData()).toBe("2012-04-02");
 		});
 
@@ -103,14 +103,14 @@ test.describe("Date & time widgets", () => {
 			test("yesterday works", async () => {
 				await widget.buttons.$yesterday.click();
 
-				expect(await widget.$input.getAttribute("value")).toBe(yesterday.format(displayDateFormat));
+				await expect(widget.$input).toHaveValue(yesterday.format(displayDateFormat));
 				expect(await form.getChangedData()).toBe(yesterday.format(ISO8601DateFormat));
 			});
 
 			test("today works", async () => {
 				await widget.buttons.$today.click();
 
-				expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
+				await expect(widget.$input).toHaveValue(today.format(displayDateFormat));
 				expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 			});
 		});
@@ -121,7 +121,7 @@ test.describe("Date & time widgets", () => {
 			test("is off should enter full date", async () => {
 				await updateValue(widget.$input, year);
 
-				expect(await widget.$input.getAttribute("value")).toBe(`01.01.${year}`);
+				await expect(widget.$input).toHaveValue(`01.01.${year}`);
 				expect(await form.getChangedData()).toBe(today.format(`${year}-01-01`));
 			});
 
@@ -129,7 +129,7 @@ test.describe("Date & time widgets", () => {
 				await form.setState({uiSchema: {...uiSchema, "ui:options": {allowOnlyYear: true}}});
 				await updateValue(widget.$input, year);
 
-				expect(await widget.$input.getAttribute("value")).toBe(year);
+				await expect(widget.$input).toHaveValue(year);
 				expect(await form.getChangedData()).toBe(year);
 			});
 		});
@@ -163,7 +163,7 @@ test.describe("Date & time widgets", () => {
 				await updateValue(startWidget.$input, "2.4.2012");
 				await endWidget.buttons.$same.click();
 
-				expect(await endWidget.$input.getAttribute("value")).toBe("02.04.2012");
+				await expect(endWidget.$input).toHaveValue("02.04.2012");
 				expect((await form.getChangedData()).end).toBe("2012-04-02");
 			});
 		});
@@ -175,7 +175,7 @@ test.describe("Date & time widgets", () => {
 			"ui:widget": "DateWidget",
 		};
 
-		test.beforeAll(async ({browser}) => {
+		test.beforeAll(async () => {
 			await form.setState({schema, uiSchema, formData});
 		});
 
@@ -190,7 +190,7 @@ test.describe("Date & time widgets", () => {
 		test("clears time if typed", async () => {
 			await updateValue(widget.$input, `${today.format(displayDateFormat)}, 10.00`);
 
-			expect(await widget.$input.getAttribute("value")).toBe(today.format(displayDateFormat));
+			await expect(widget.$input).toHaveValue(today.format(displayDateFormat));
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 	});
@@ -201,7 +201,7 @@ test.describe("Date & time widgets", () => {
 			"ui:widget": "TimeWidget",
 		};
 
-		test.beforeAll(async ({browser}) => {
+		test.beforeAll(async () => {
 			await updateValue(widget.$input, "");
 			await form.setState({schema, uiSchema});
 		});
@@ -217,7 +217,7 @@ test.describe("Date & time widgets", () => {
 		test("time can be typed", async () => {
 			await updateValue(widget.$input, "10.00");
 
-			expect(await widget.$input.getAttribute("value")).toBe("10.00");
+			await expect(widget.$input).toHaveValue("10.00");
 			expect(await form.getChangedData()).toBe("10:00");
 		});
 

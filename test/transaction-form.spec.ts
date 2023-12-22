@@ -26,10 +26,8 @@ test.describe("transaction form (MHL.930)", () => {
 	test("sets correct name and email when clicking a me button", async () => {
 		await form.$locate("localPerson").locator("button").click();
 
-		const $input = form.$locate("localPerson").locator("input");
-		expect(await $input.getAttribute("value")).toBe("Test, User");
-		const $input2 = form.$locate("localPersonEmail").locator("input");
-		expect(await $input2.getAttribute("value")).toBe("user.test@email.com");
+		await expect(form.$getInputWidget("localPerson")).toHaveValue("Test, User");
+		await expect(form.$getInputWidget("localPersonEmail")).toHaveValue("user.test@email.com");
 
 		const formData = await form.getChangedData();
 		expect(formData.localPerson).toBe("Test, User");

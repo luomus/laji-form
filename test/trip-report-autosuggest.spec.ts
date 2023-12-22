@@ -33,7 +33,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 
 			await $deleteObserver.click();
 
-			expect(await observer1$.getAttribute("value")).toBe("teppo");
+			await expect(observer1$).toHaveValue("teppo");
 		});
 	});
 

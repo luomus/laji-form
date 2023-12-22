@@ -44,8 +44,7 @@ test.describe("dataset form (MHL.731)", () => {
 	test("sets correct name to personsResponsible field when clicking a me button", async () => {
 		await form.$locate("personsResponsible").locator("button").click();
 
-		const $input = form.$locate("personsResponsible").locator("input");
-		expect(await $input.getAttribute("value")).toBe("Test, User");
+		await expect(form.$getInputWidget("personsResponsible")).toHaveValue("Test, User");
 		const formData = await form.getChangedData();
 		expect(formData.personsResponsible).toBe("Test, User");
 	});
