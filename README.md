@@ -167,7 +167,22 @@ npx playwright install
 
 The playground server can be running or or not. If it's not running, it will be automatically started.
 
-Run the tests with `npm test`.
+Run the tests:
+
+```
+npm test
+```
+
+If you run into issues with browser dependencies etc, there's also a dockerized runner:
+
+```
+# Run all tests (builds docker image & runs it)
+npm run test:docker
+
+# Or if you want to give playwright params, run certain tests etc:
+npm run test:docker:build # build first
+npm run test:docker:run -- test/mobile-form-spec.ts --project chromium # pass params to playwright
+```
 
 ### Test parameters
 

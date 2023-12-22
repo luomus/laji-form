@@ -11,12 +11,16 @@
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build:tests": "rimraf test-export && NODE_ENV=production tsc -p tsconfig.test.json",
     "build": "npm run build:lib && npm run build:dist && npm run build:tests",
-    "preversion": "npm run lint && npm test",
+    "preversion": "npm run lint && npm run test:lightweight",
     "version": "bin/update-changelog.sh",
     "postversion": "npm publish",
     "prepublishOnly": "npm run build && git push && git push --tags",
     "lint": "eslint -c .eslintrc.prod.json src playground",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+		"test:docker": "npm run test:docker:build && npm run test:docker:run",
+		"test:lightweight": "npx playwright test --project chromium",
+		"test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
+		"test:docker:run": "docker run laji-form-test"
   },
   "keywords": [
     "react-jsonschema-form",
