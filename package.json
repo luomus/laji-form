@@ -31,8 +31,8 @@
   "repository": "https://github.com/luomus/laji-form.git",
   "license": "MIT",
   "dependencies": {
-    "@luomus/laji-map": "^5.0.1",
-    "@luomus/laji-validate": "0.0.120",
+    "@luomus/laji-map": "^5.0.2",
+    "@luomus/laji-validate": "^0.0.121",
     "@rjsf/core": "~5.1.0",
     "@rjsf/utils": "~5.1.0",
     "@rjsf/validator-ajv6": "~5.1.0",
