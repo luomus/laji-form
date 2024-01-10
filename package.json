@@ -17,10 +17,10 @@
     "prepublishOnly": "npm run build && git push && git push --tags",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "npx playwright test",
-		"test:docker": "npm run test:docker:build && npm run test:docker:run --",
-		"test:lightweight": "npx playwright test --project chromium",
-		"test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
-		"test:docker:run": "docker run laji-form-test"
+    "test:docker": "npm run test:docker:build && npm run test:docker:run --",
+    "test:lightweight": "npx playwright test --project chromium",
+    "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
+    "test:docker:run": "docker run laji-form-test"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -31,7 +31,7 @@
   "repository": "https://github.com/luomus/laji-form.git",
   "license": "MIT",
   "dependencies": {
-    "@luomus/laji-map": "^4.0.3",
+    "@luomus/laji-map": "^5.0.1",
     "@luomus/laji-validate": "0.0.120",
     "@rjsf/core": "~5.1.0",
     "@rjsf/utils": "~5.1.0",
