@@ -480,7 +480,7 @@ class LocationButton extends React.Component {
 	}
 
 	onModalMapKeyDown = (e) => {
-		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e.nativeEvent)) {
+		if (e.key === "Escape" && !this.modalMapRef.map.keyHandlerForType("keydown", e.nativeEvent)) {
 			this.onHide();
 		}
 	}
