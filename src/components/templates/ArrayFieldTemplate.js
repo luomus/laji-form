@@ -217,7 +217,7 @@ export function handlesArrayKeys(ComposedComponent) {
 			const context = getContext(this.props.formContext.contextId);
 			if (target === "last") {
 				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
-				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
+				context.idToScroll = `_laji-form_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
 			} else {
 				console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
 			}

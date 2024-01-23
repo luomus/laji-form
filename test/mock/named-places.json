@@ -1,0 +1,52 @@
+{
+    "currentPage": 1,
+    "pageSize": 10000,
+    "total": 36,
+    "results": [
+        {
+            "name": "test",
+            "prepopulatedDocument": {
+                "gatherings": [
+                    {
+                        "geometry": {
+                            "geometries": [
+                                {
+                                    "coordinates": [
+                                        27.665099,
+                                        63.275408
+                                    ],
+                                    "type": "Point"
+                                }
+                            ],
+                            "type": "GeometryCollection"
+                        },
+                        "country": "Suomi",
+                        "biologicalProvince": "Pohjois-Savo",
+                        "municipality": "Lapinlahti"
+                    }
+                ]
+            },
+            "geometry": {
+                "geometries": [
+                    {
+                        "coordinates": [
+                            27.665099,
+                            63.275408
+                        ],
+                        "type": "Point"
+                    }
+                ],
+                "type": "GeometryCollection"
+            },
+            "public": false,
+            "owners": [
+                "MA.308"
+            ],
+            "id": "MNP.50675",
+            "@type": "MNP.namedPlace",
+            "@context": "https://store-dev.luomus.fi/json-ld-context/MNP.namedPlace.json"
+        }
+    ],
+    "lastPage": 1,
+    "@context": "http://schema.laji.fi/context/namedPlace.jsonld"
+}

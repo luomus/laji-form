@@ -82,7 +82,7 @@ if (mockApi) {
 		mock.remove = () => {
 			delete mockResponses[key];
 		};
-		mockResponses[key] =  mock;
+		mockResponses[key] = mock;
 		return mock;
 	};
 	window.createMockResponseQueue = (path, query) => {

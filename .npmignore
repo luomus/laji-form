@@ -3,9 +3,10 @@ src/
 playground/
 test/
 forms/
-protractor*
 webpack*
 .*
 bin/
 build/
 yalc.lock
+playwright.config.ts
+tsconfig*

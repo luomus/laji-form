@@ -1,0 +1,128 @@
+[
+    {
+        "address_components": [
+            {
+                "long_name": "Pohjois-Savo",
+                "short_name": "PS",
+                "types": [
+                    "biogeographicalProvince"
+                ]
+            }
+        ],
+        "formatted_address": "Pohjois-Savo (PS)",
+        "geometry": {
+            "bounds": {
+                "northeast": {
+                    "lat": 64.036978,
+                    "lng": 29.430093
+                },
+                "southwest": {
+                    "lat": 61.902989,
+                    "lng": 26.138652
+                }
+            },
+            "location": {
+                "lat": "62.969983",
+                "lng": "27.784372"
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "northeast": {
+                    "lat": 64.036978,
+                    "lng": 29.430093
+                },
+                "southwest": {
+                    "lat": 61.902989,
+                    "lng": 26.138652
+                }
+            }
+        },
+        "place_id": "ML.261",
+        "types": [
+            "biogeographicalProvince"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "short_name": "Pohjois-Savo",
+                "types": [
+                    "region"
+                ]
+            }
+        ],
+        "formatted_address": "Pohjois-Savo",
+        "geometry": {
+            "bounds": {
+                "northeast": {
+                    "lat": 64.020603976642,
+                    "lng": 29.185336636005
+                },
+                "southwest": {
+                    "lat": 62.14727440846,
+                    "lng": 26.064926616355
+                }
+            },
+            "location": {
+                "lat": "63.083939",
+                "lng": "27.625132"
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "northeast": {
+                    "lat": 64.020603976642,
+                    "lng": 29.185336636005
+                },
+                "southwest": {
+                    "lat": 62.14727440846,
+                    "lng": 26.064926616355
+                }
+            }
+        },
+        "types": [
+            "region"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "short_name": "Lapinlahti",
+                "types": [
+                    "municipality"
+                ]
+            }
+        ],
+        "formatted_address": "Lapinlahti",
+        "geometry": {
+            "bounds": {
+                "northeast": {
+                    "lat": 63.550113,
+                    "lng": 28.130517
+                },
+                "southwest": {
+                    "lat": 63.153755,
+                    "lng": 27.119072
+                }
+            },
+            "location": {
+                "lat": "63.351934",
+                "lng": "27.624795"
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "northeast": {
+                    "lat": 63.550113,
+                    "lng": 28.130517
+                },
+                "southwest": {
+                    "lat": 63.153755,
+                    "lng": 27.119072
+                }
+            }
+        },
+        "place_id": "ML.576",
+        "types": [
+            "municipality"
+        ]
+    }
+]

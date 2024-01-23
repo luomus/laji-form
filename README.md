@@ -159,22 +159,26 @@ http://localhost:8083?id=MHL.1&localFormData=true Line transect form with local 
 
 ## Tests
 
-You need to update the webdriver before testing: 
+You might need to install playwright dependencies to run the tests:
 
 ```
-webdriver-manager update
+npx playwright install
 ```
 
-The playground server must be running before running the tests.
+The playground server can be running or or not. If it's not running, it will be automatically started.
 
-Run the tests with `npm test`.
+Run the tests:
 
-### Test parameters
+```
+npm test
+```
 
-Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome npm test`
+If you run into issues with browser dependencies etc, there's also a dockerized runner:
 
-Option         | Default | Description
----------------|---------|-----------------------------------------------------------------------------------------------
-TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
-HEADLESS       | `true`  | Run the tests in a visible browser window if `true`.
-THREADS        | 4       | How many browser instances to use for parallel testing.
+```
+# Run all tests (builds docker image & runs it)
+npm run test:docker
+
+# Or if you want to give playwright params, run certain tests etc:
+npm run test:docker -- test/mobile-form.spec.ts --project chromium
+```

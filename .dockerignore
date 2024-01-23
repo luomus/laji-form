@@ -1,0 +1,8 @@
+node_modules
+build
+lib
+dist
+.git
+.idea
+test-results
+bin

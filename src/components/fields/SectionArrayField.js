@@ -380,8 +380,12 @@ class SectionArrayFieldTemplate extends React.Component {
 
 	onNewSectionKeyDown = (e) => {
 		if (e.key === "Enter") {
-			this.sectorIsValid(this.state.newSection) && this.addSection();
+			if (!this.sectorIsValid(this.state.newSection)) {
+				return;
+			}
+			this.addSection();
 			this.hideAddSection();
+			e.stopPropagation();
 		}
 	}
 

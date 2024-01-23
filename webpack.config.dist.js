@@ -17,7 +17,7 @@ module.exports = {
 	plugins: [
 		new MiniCssExtractPlugin({filename: "[name].css"}),
 		new CopyPlugin({patterns: [{from: "src/img/*.png", to: "images/[name][ext]"}]}),
-		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
+		new webpack.IgnorePlugin({resourceRegExp: /^(buffertools)$/}), // unwanted "deeper" dependency
 		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""})
 	],
 	module: {
