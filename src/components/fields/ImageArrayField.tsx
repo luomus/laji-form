@@ -874,7 +874,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 		const addLink = this.props.downloadLink && linkUrl;
 
 		let img = url ? <img src={url} /> : null;
-		img = addLink ? <a href={linkUrl} target="_blank" download>{img}</a> : img;
+		img = addLink ? <a href={linkUrl} target="_blank" rel="noopener noreferrer" download>{img}</a> : img;
 
 		return (!url || this.props.loading)
 			?  <div className="media-loading">{img}<Spinner /></div>
