@@ -319,7 +319,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				if (!medias || !medias[item]) return null;
 				return (
 					<div key={i} className="media-container">
-						<a>{(this as any).renderLoadingMedia(medias[item])}</a>
+						<div className="media-container-link">{(this as any).renderLoadingMedia(medias[item])}</div>
 					</div>
 				);
 			});

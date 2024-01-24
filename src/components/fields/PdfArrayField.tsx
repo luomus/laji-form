@@ -17,7 +17,7 @@ export default class PdfArrayField extends React.Component<FieldProps, MediaArra
 	METADATA_FORM_ID = ""
 
 	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} downloadLink={true} />
-	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} downloadLink={true} />
+	renderLoadingMedia = () => <Thumbnail loading={true} apiClient={this.props.formContext.apiClient} apiEndpoint={this.ENDPOINT} downloadLink={true} />
 	onMediaClick = () => null
 
 	formatValue(value: string[], options: any, props: FieldProps) {
