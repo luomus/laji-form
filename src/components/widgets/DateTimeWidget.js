@@ -247,6 +247,16 @@ export default class DateTimeWidget extends React.Component {
 				className: "same",
 				label: translations.Same,
 				onClick: this.setSameAsToday
+			},
+			plusSixMonths: {
+				className: "plusSixMonths",
+				label: translations.plusSixMonths,
+				onClick: this.setPlusSixMonths
+			},
+			plusYear: {
+				className: "plusYear",
+				label: translations.plusYear,
+				onClick: this.setPlusYear
 			}
 		};
 
@@ -287,9 +297,25 @@ export default class DateTimeWidget extends React.Component {
 		}
 	}
 
+	setPlusSixMonths = () => {
+		this.onChange(this.getCurrentDateOrNow().add(6, "M").format("YYYY-MM-DD"));
+	}
+
+	setPlusYear = () => {
+		this.onChange(this.getCurrentDateOrNow().add(1, "y").format("YYYY-MM-DD"));
+	}
+
 	formatValue(value, options, props) {
 		if (!value) return value;
 		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, date: true, time: true, value});
 		return dateLocalizer.format(value, format, props.formContext.lang);
+	}
+
+	getCurrentDateOrNow() {
+		const date = moment(this.props.value);
+		if (date.isValid()) {
+			return date;
+		}
+		return moment();
 	}
 }

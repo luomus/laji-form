@@ -19,6 +19,16 @@
 		"en": "Yesterday",
 		"sv": "Igår"
 	},
+	"plusSixMonths": {
+		"fi": "+6k",
+		"en": "+6m",
+		"sv": "+6m"
+	},
+	"plusYear": {
+		"fi": "+1v",
+		"en": "+1y",
+		"sv": "+1å"
+	},
 	"dd/mm/yyyy": {
 		"fi": "pp/kk/vvvv",
 		"en": "dd/mm/yyyy",
