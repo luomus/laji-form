@@ -52,6 +52,9 @@ export default class ApiClient {
 			if (!failSilently && response.status >= 400) {
 				throw new Error("Request failed");
 			}
+			if (response.status === 204) {
+				return undefined as unknown as T;
+			}
 			return response.json() as T;
 		}).catch(() => {
 			if (this.cache[path]) delete this.cache[path][this.getCacheKey(query, options)];
