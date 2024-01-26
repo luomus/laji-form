@@ -249,12 +249,12 @@ export default class DateTimeWidget extends React.Component {
 				onClick: this.setSameAsToday
 			},
 			plusSixMonths: {
-				className: "plusSixMonths",
+				className: "plus-six-months",
 				label: translations.plusSixMonths,
 				onClick: this.setPlusSixMonths
 			},
 			plusYear: {
-				className: "plusYear",
+				className: "plus-year",
 				label: translations.plusYear,
 				onClick: this.setPlusYear
 			}

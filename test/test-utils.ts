@@ -26,6 +26,8 @@ export interface DateWidgetPO {
 		$same: Locator;
 		$date: Locator;
 		$time: Locator;
+		$plusSixMonths: Locator;
+		$plusYear: Locator;
 	}
 	calendar: {
 		$today: Locator;
@@ -173,7 +175,9 @@ export class Form {
 				$yesterday: $widget.locator(".yesterday"),
 				$same: $widget.locator(".same"),
 				$date: $widget.locator(".rw-i-calendar"),
-				$time: $widget.locator(".rw-i-clock-o")
+				$time: $widget.locator(".rw-i-clock-o"),
+				$plusSixMonths: $widget.locator(".plus-six-months"),
+				$plusYear: $widget.locator(".plus-year"),
 			},
 			calendar: {
 				$today: $widget.locator(".rw-calendar-footer button"),

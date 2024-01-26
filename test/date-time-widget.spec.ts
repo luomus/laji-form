@@ -14,6 +14,9 @@ test.describe("Date & time widgets", () => {
 	const today = moment();
 	const today0100 = moment(`${moment().format("YYYY-MM-DD")}T01:00`);
 	const yesterday = moment().add(-1, "days");
+	const todayPlusSixMonths = moment().add(6, "months");
+	const todayPlusYear = moment().add(1, "years");
+	const todayPlusTwoYears = moment().add(2, "years");
 	const ISO8601DateFormat = "YYYY-MM-DD";
 	const ISO8601TimeFormat = "HH:mm";
 	const ISO8601FullFormat = `${ISO8601DateFormat}T${ISO8601TimeFormat}`;
@@ -131,6 +134,53 @@ test.describe("Date & time widgets", () => {
 
 				await expect(widget.$input).toHaveValue(year);
 				expect(await form.getChangedData()).toBe(year);
+			});
+		});
+
+		test.describe("plus six months & plus year buttons", () => {
+			test.describe.configure({mode: "serial"});
+
+			test.beforeAll(async () => {
+				await widget.$input.clear();
+			});
+
+			test("not displayed by default", async () => {
+				await expect(widget.buttons.$plusSixMonths).not.toBeVisible();
+				await expect(widget.buttons.$plusYear).not.toBeVisible();
+			});
+
+			test("not displayed if showButtons is true", async () => {
+				await form.setState({uiSchema: {...uiSchema, "ui:options": {showButtons: true}}});
+				await expect(widget.buttons.$plusSixMonths).not.toBeVisible();
+				await expect(widget.buttons.$plusYear).not.toBeVisible();
+			});
+
+			test("displayed if showButtons has the buttons", async () => {
+				await form.setState({uiSchema: {...uiSchema, "ui:options": {showButtons: {plusSixMonths: true, plusYear: true}}}});
+
+				await expect(widget.buttons.$plusSixMonths).toBeVisible();
+				await expect(widget.buttons.$plusYear).toBeVisible();
+			});
+
+			test("plus six months works", async () => {
+				await widget.buttons.$plusSixMonths.click();
+
+				await expect(widget.$input).toHaveValue(todayPlusSixMonths.format(displayDateFormat));
+				expect(await form.getChangedData()).toBe(todayPlusSixMonths.format(ISO8601DateFormat));
+			});
+
+			test("plus six months works second time", async () => {
+				await widget.buttons.$plusSixMonths.click();
+
+				await expect(widget.$input).toHaveValue(todayPlusYear.format(displayDateFormat));
+				expect(await form.getChangedData()).toBe(todayPlusYear.format(ISO8601DateFormat));
+			});
+
+			test("plus year works", async () => {
+				await widget.buttons.$plusYear.click();
+
+				await expect(widget.$input).toHaveValue(todayPlusTwoYears.format(displayDateFormat));
+				expect(await form.getChangedData()).toBe(todayPlusTwoYears.format(ISO8601DateFormat));
 			});
 		});
 
