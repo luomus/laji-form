@@ -141,14 +141,21 @@ export class TagInputComponent extends React.Component {
 			onKeyDown: this.onKeyDown
 		};
 
-		const {showDeleteButton = true} = getUiOptions(uiSchema);
+		const {showDeleteButton = true, showAsLink = false, linkPrefix = ""} = getUiOptions(uiSchema);
+
+		const tagElems = tags.map(item => {
+			if (showAsLink) {
+				return <a href={`${linkPrefix}${item}`} target="_blank">{item}</a>
+			}
+			return item;
+		});
 
 		return (
 			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
 				onClick={this.onClick}>
 				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
-						{tags.map((item, idx) => 
+						{tagElems.map((item, idx) =>
 							<li key={idx} className="rw-multiselect-tag" onClick={this.onTagClick(idx)}>
 								{item}
 								{showDeleteButton ? <span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.props.formContext.utils.keyboardClick(this.onRemove(idx))}>×</span> : ""}
