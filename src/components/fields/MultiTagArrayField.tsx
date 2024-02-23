@@ -181,7 +181,9 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 		}
 	})
 
-	onTagClick = memoize((fromField: string) => (idx: number) => {
+	onTagClick = memoize((fromField: string) => (idx: number, e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+
 		const {activeButtonIdx} = this.state;
 		if (activeButtonIdx === undefined) {
 			return;

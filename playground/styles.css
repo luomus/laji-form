@@ -1788,7 +1788,7 @@ min-height: 20px;
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical {
 	margin-right: 17px;
 }
-.laji-form-multi-tag-array-field.laji-form-multi-tag-array-field-active .rw-multiselect-tag:hover {
+.laji-form-multi-tag-array-field.laji-form-multi-tag-array-field-active .rw-multiselect-tag:hover, .laji-form-multi-tag-array-field.laji-form-multi-tag-array-field-active .rw-multiselect-tag:hover a {
 	cursor: crosshair;
 }
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical button.active::before {

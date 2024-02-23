@@ -113,9 +113,9 @@ export class TagInputComponent extends React.Component {
 		});
 	}
 
-	onTagClick = memoize((idx) => () => {
+	onTagClick = memoize((idx) => (e) => {
 		const {onTagClick} = getUiOptions(this.props.uiSchema);
-		onTagClick?.(idx);
+		onTagClick?.(idx, e);
 	});
 
 	getTrimmedValue() {
