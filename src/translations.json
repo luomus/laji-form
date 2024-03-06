@@ -74,6 +74,11 @@
 		"en": "Unknown organization",
 		"sv": "Okänd organisation"
 	},
+	"unknownCollection": {
+		"fi": "Tuntematon kokoelma",
+		"en": "Unknown collection",
+		"sv": "Okänd samling"
+	},
 	"fix": {
 		"fi": "Korjaa",
 		"en": "Fix",
