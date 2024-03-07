@@ -340,18 +340,10 @@ class OrganizationAutosuggestWidget extends React.Component {
 
 	getSuggestionFromValue(value) {
 		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/organization/by-id/${value}`).then(({abbreviation, organizationLevel4, organizationLevel3, organizationLevel2, organizationLevel1}) => {
-				if (organizationLevel1) {
-					const addAbbr = str => abbreviation ? `${abbreviation} - ${str}` : str;
-					const fullName = [
-						organizationLevel4,
-						organizationLevel3,
-						organizationLevel2,
-						organizationLevel1
-					].filter(name => !!name).join(', ');
-
+			return this.props.formContext.apiClient.fetchCached(`/organization/by-id/${value}`).then(({fullName}) => {
+				if (fullName) {
 					return {
-						value: addAbbr(fullName),
+						value: fullName,
 						key: value
 					};
 				}
