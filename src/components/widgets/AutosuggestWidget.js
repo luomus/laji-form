@@ -33,6 +33,8 @@ export default class _AutosuggestWidget extends React.Component {
 				return <FriendsAutosuggestWidget {...this.props} />;
 			case "organization":
 				return <OrganizationAutosuggestWidget {...this.props} />;
+			case "collection":
+				return <CollectionAutosuggestWidget {...this.props} />;
 			default: 
 				return <RangeAutosuggestWidget {...this.props} />;
 			}
@@ -56,6 +58,9 @@ export default class _AutosuggestWidget extends React.Component {
 				break;
 			case "organization":
 				component = OrganizationAutosuggestWidget;
+				break;
+			case "collection":
+				component = CollectionAutosuggestWidget;
 				break;
 			default:
 				component = RangeAutosuggestWidget;
@@ -367,6 +372,55 @@ class OrganizationAutosuggestWidget extends React.Component {
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
 			Wrapper: OrganizationWrapper,
+			findExactMatch: this.findExactMatch
+		};
+
+		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+	}
+}
+
+class CollectionAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
+	constructor(props) {
+		super(props);
+		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
+		this.isValueSuggested = this.isValueSuggested.bind(this);
+	}
+
+	getSuggestionFromValue(value) {
+		if (this.isValueSuggested(value)) {
+			return this.props.formContext.apiClient.fetchCached(`/collection/by-id/${value}`).then(({collectionName}) => {
+				if (collectionName) {
+					return {
+						value: collectionName,
+						key: value
+					};
+				}
+			});
+		} else {
+			return Promise.reject();
+		}
+	}
+
+	isValueSuggested(value) {
+		return !isEmptyString(value) && value.match(/HR\.\d+/);
+	}
+
+	findExactMatch = (suggestions, inputValue) => {
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
+	}
+
+	render() {
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
+
+		const options = {
+			query: {
+				includeSelf: true,
+				...propsOptions.queryOptions
+			},
+			getSuggestionFromValue: this.getSuggestionFromValue,
+			isValueSuggested: this.isValueSuggested,
+			Wrapper: CollectionWrapper,
 			findExactMatch: this.findExactMatch
 		};
 
@@ -1367,28 +1421,19 @@ class ReactAutosuggest extends React.Component {
 	}
 }
 
-const FriendsWrapper = React.forwardRef(({formContext, children, id, inputValue, isSuggested}, ref) => {
+const getWrapper = (unknownValueLabel) => React.forwardRef(({formContext, children, id, inputValue, isSuggested}, ref) => {
 	const {Tooltip} = React.useContext(ReactContext).theme;
 	if (!inputValue || isSuggested) {
 		return children;
 	}
 	const tooltip = (
-		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownName}</Tooltip>
+		<Tooltip id={`${id}-tooltip`}>{formContext.translations[unknownValueLabel]}</Tooltip>
 	);
 	return (
 		<OverlayTrigger overlay={tooltip} placement="top" ref={ref}>{children}</OverlayTrigger>
 	);
 });
 
-const OrganizationWrapper = React.forwardRef(({formContext, children, id, inputValue, isSuggested}, ref) => {
-	const {Tooltip} = React.useContext(ReactContext).theme;
-	if (!inputValue || isSuggested) {
-		return children;
-	}
-	const tooltip = (
-		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownOrganization}</Tooltip>
-	);
-	return (
-		<OverlayTrigger overlay={tooltip} placement="top" ref={ref}>{children}</OverlayTrigger>
-	);
-});
+const FriendsWrapper = getWrapper('UnknownName');
+const OrganizationWrapper = getWrapper('UnknownOrganization');
+const CollectionWrapper = getWrapper('UnknownCollection');
