@@ -145,7 +145,7 @@ export class TagInputComponent extends React.Component {
 
 		const tagElems = tags.map(item => {
 			if (showAsLink) {
-				return <a href={`${linkPrefix}${item}`} target="_blank">{item}</a>
+				return <a href={`${linkPrefix}${item}`} target="_blank" rel="noopener noreferrer">{item}</a>;
 			}
 			return item;
 		});
