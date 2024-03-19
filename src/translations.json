@@ -225,29 +225,34 @@
 		"sv": "Mb"
 	},
 	"allowedFileFormats": {
-		"fi": "Sallitut kuvaformaatit ovat",
-		"en": "Allowed image formats are",
-		"sv": "Tillåtna filformat för bilderna är"
+		"fi": "Sallitut tiedostoformaatit ovat",
+		"en": "Allowed file formats are",
+		"sv": "Tillåtna filformat är"
+	},
+	"allowedFileFormat": {
+		"fi": "Sallittu tiedostoformaatti on",
+		"en": "Allowed file format is",
+		"sv": "Tillåtet filformat är"
 	},
 	"allowedFileSize": {
-		"fi": "Kuvan suurin sallittu koko on",
+		"fi": "Tiedoston suurin sallittu koko on",
 		"en": "The maximum allowed file size is",
-		"sv": "Den största tillåtna storleken på en bild är"
+		"sv": "Den största tillåtna filstorleken är"
 	},
 	"invalidFile": {
-		"fi": "Kuvatiedosto oli virheellinen.",
+		"fi": "Tiedosto oli virheellinen.",
 		"en": "The file was invalid.",
 		"sv": "Filen var ogiltig."
 	},
 	"insufficientSpace": {
-		"fi": "Kuvapalvelin ei pysty käsittelemään latauspyyntöä riittämättömän levytilan vuoksi.",
-		"en": "The image server can't process the upload request because of insufficient space.",
-		"sv": "Bildservern kan inte bearbeta uppladdnings begäran på grund av otillräckligt utrymme."
+		"fi": "Mediapalvelin ei pysty käsittelemään latauspyyntöä riittämättömän levytilan vuoksi.",
+		"en": "The media server can't process the upload request because of insufficient space.",
+		"sv": "Mediaservern kan inte bearbeta uppladdnings begäran på grund av otillräckligt utrymme."
 	},
 	"filesLengthDiffer": {
-		"fi": "Kaikki kuvat eivät tallentuneet. Tarkista kuvat.",
-		"en": "All the images weren't saved. Please verify the images.",
-		"sv": "Alla bilder sparades inte. Vänligen kontrollera bilderna."
+		"fi": "Kaikki tiedostot eivät tallentuneet. Tarkista tiedostot.",
+		"en": "All the files weren't saved. Please verify the files.",
+		"sv": "Alla filer sparades inte. Vänligen kontrollera filerna."
 	},
 	"error": {
 		"fi": "Virhe",

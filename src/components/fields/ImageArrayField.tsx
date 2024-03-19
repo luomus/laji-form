@@ -234,7 +234,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>
 					<span>{translations.DropOrSelectFiles}. </span>
 					<span>
-						{translations.AllowedFileFormats} {this.getAllowedMediaFormatsAsString()} {translations.and} {translations.allowedFileSize} {this.getMaxFileSizeAsString()}.
+						{translations[this.getAllowedMediaFormatsTranslationKey()]} {this.getAllowedMediaFormatsAsString()} {translations.and} {translations.allowedFileSize} {this.getMaxFileSizeAsString()}.
 					</span>
 				</Tooltip>
 			);
@@ -677,7 +677,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}, new FormData());
 
 				if (noValidData && invalidFile) {
-					fail("AllowedFileFormats", this.getAllowedMediaFormatsAsString() + ".");
+					fail(this.getAllowedMediaFormatsTranslationKey(), this.getAllowedMediaFormatsAsString() + ".");
 					return;
 				} else if (noValidData && fileTooLarge) {
 					fail("AllowedFileSize", this.getMaxFileSizeAsString() + ".");
@@ -806,6 +806,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		getMaxFileSizeAsString = () => {
 			let maxSize = this.MAX_FILE_SIZE.toString().substring(0, this.MAX_FILE_SIZE.toString().length - 6);
 			return maxSize + " " + `${this.props.formContext.translations.Mb}`;
+		}
+
+		getAllowedMediaFormatsTranslationKey = () => {
+			return this.ALLOWED_FILE_TYPES.length === 1 ? "AllowedFileFormat" : "AllowedFileFormats";
 		}
 
 		getAllowedMediaFormatsAsString = () => {
