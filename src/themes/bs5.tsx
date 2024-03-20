@@ -107,6 +107,13 @@ _Dropdown.Toggle = React.forwardRef<HTMLButtonElement, DropdownToggleProps>(({va
 	<Dropdown.Toggle variant={mapVariant(variant)} {...props} ref={ref} />
 ));
 
+const _Popover = React.forwardRef<typeof Popover, any>(({children, ...props}, ref) => (
+	<Popover {...props} ref={ref}>
+		{props.title ? <Popover.Header>{props.title}</Popover.Header> : null}
+		<Popover.Body>{children}</Popover.Body>
+	</Popover>
+));
+
 const theme: Theme = {
 	Panel,
 	Table,
@@ -116,7 +123,7 @@ const theme: Theme = {
 	ButtonToolbar,
 	Overlay: React.forwardRef<typeof Overlay, OverlayProps>((props, ref) => <Overlay {...props as any} ref={ref} />),
 	OverlayTrigger: (props) => <OverlayTrigger {...props as any} />,
-	Popover,
+	Popover: _Popover,
 	Tooltip,
 	Glyphicon,
 	Modal: _Modal,
