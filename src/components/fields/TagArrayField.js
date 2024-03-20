@@ -11,7 +11,15 @@ export default class TagArrayField extends React.Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				separatorKeys: PropTypes.arrayOf(PropTypes.string),
-				showDeleteButton: PropTypes.bool
+				showDeleteButton: PropTypes.bool,
+				showAsLink: PropTypes.bool,
+				linkPrefix: PropTypes.string,
+				replacements: PropTypes.arrayOf(
+					PropTypes.shape({
+						searchRegexp: PropTypes.string.isRequired,
+						replaceValue: PropTypes.string.isRequired
+					})
+				)
 			})
 		}),
 		schema: PropTypes.shape({
@@ -52,7 +60,7 @@ export class TagInputComponent extends React.Component {
 	}
 
 	onKeyDown = (e) => {
-		const value = this.getTrimmedValue();
+		const value = this.processValue(this.state.value);
 		const {tags = []} = this.props;
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
@@ -80,7 +88,7 @@ export class TagInputComponent extends React.Component {
 	onBlur = (e) => {
 		this.setState({focused: false});
 		triggerParentComponent("onBlur", e, this.props);
-		const value = this.getTrimmedValue();
+		const value = this.processValue(this.state.value);
 		if (!isEmptyString(value)) {
 			this.props.onChange([...(this.props.tags || []), value], "blur");
 		}
@@ -103,7 +111,7 @@ export class TagInputComponent extends React.Component {
 		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		const splitted = separatorKeys.reduce((splitted, separator) => 
 			splitted.reduce((_splitted, i) => ([..._splitted, ...i.split(separator)]), []),
-		[value]).map(s => s.trim()).filter(s => !isEmptyString(s));
+		[value]).map(s => this.processValue(s)).filter(s => !isEmptyString(s));
 
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
@@ -118,9 +126,19 @@ export class TagInputComponent extends React.Component {
 		onTagClick?.(idx, e);
 	});
 
-	getTrimmedValue() {
-		const {value} = this.state;
-		return value?.trim();
+	processValue(value) {
+		if (!value) {
+			return value;
+		}
+
+		value = value.trim();
+
+		const {replacements = []} = getUiOptions(this.props.uiSchema);
+		replacements.forEach(replacement => {
+			value = value.replace(new RegExp(replacement.searchRegexp), replacement.replaceValue);
+		});
+
+		return value;
 	}
 
 	render() {

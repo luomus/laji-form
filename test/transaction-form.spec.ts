@@ -64,5 +64,14 @@ test.describe("transaction form (MHL.930)", () => {
 			expect(formData.returnedIDs).toEqual(["abc", "efg"]);
 			expect(formData.missingIDs).toEqual(["cde"]);
 		});
+
+		test("adds HA. prefix to H-numbers", async () => {
+			const $input = form.$getInputWidget("awayIDs");
+			await $input.fill("H9123456 ABCDE");
+			await $input.press("Tab");
+
+			let formData = await form.getChangedData();
+			expect(formData.awayIDs).toEqual(["HA.H9123456", "ABCDE"]);
+		});
 	});
 });
