@@ -99,11 +99,24 @@ class SelectWidget extends React.Component {
 		this.props.onChange(this.getEnum(item.value));
 	}
 
-	onClick = () => {
-		!this.props.disabled && !this.props.readonly && this.setState({open: true});
+	onMouseDown = (e) => {
+		if (e.button === 0) {
+			this.onMouseLeftButtonDown();
+		}
 	}
 
-	onFocus = () => this.setState({open: true});
+	onMouseLeftButtonDown = () => {
+		const open = !this.state.open;
+		!this.props.disabled && !this.props.readonly && this.setState({open, skipNextOnFocus: open});
+	}
+
+	onFocus = () => {
+		if (this.state.skipNextOnFocus) {
+			this.setState({skipNextOnFocus: false});
+			return;
+		}
+		this.setState({open: true});
+	}
 
 	onBlur = () => this.setState({open: false});
 
@@ -173,8 +186,9 @@ class SelectWidget extends React.Component {
 				{...commonOptions}
 				onChange={this.selectOnChange}
 				ref={this.setRef}
-				onClick={this.onClick}
 				onSelect={this.onSelect}
+				onMouseDown={this.onMouseDown}
+				onTouchStart={this.onMouseLeftButtonDown}
 			/>
 		);
 
