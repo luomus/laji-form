@@ -40,6 +40,18 @@ DateWidget.propTypes = {
 						PropTypes.shape({
 							path: PropTypes.string
 						})
+					]),
+					plusSixMonths: PropTypes.oneOfType([
+						PropTypes.bool,
+						PropTypes.shape({
+							path: PropTypes.string
+						})
+					]),
+					plusSixYear: PropTypes.oneOfType([
+						PropTypes.bool,
+						PropTypes.shape({
+							path: PropTypes.string
+						})
 					])
 				})
 			]),

@@ -28,6 +28,18 @@ export default class DateTimeWidget extends React.Component {
 							PropTypes.shape({
 								path: PropTypes.string
 							})
+						]),
+						plusSixMonths: PropTypes.oneOfType([
+							PropTypes.bool,
+							PropTypes.shape({
+								path: PropTypes.string
+							})
+						]),
+						plusSixYear: PropTypes.oneOfType([
+							PropTypes.bool,
+							PropTypes.shape({
+								path: PropTypes.string
+							})
 						])
 					})
 				]),
@@ -298,11 +310,21 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	setPlusSixMonths = () => {
-		this.onChange(this.getCurrentDateOrNow().add(6, "M").format("YYYY-MM-DD"));
+		const plusSixMonthOptions = getUiOptions(this.props).showButtons.plusSixMonths || {};
+		const {path} = plusSixMonthOptions;
+		const date = this.getCurrentDateOrPathDate(path);
+		if (date) {
+			this.onChange(date.add(6, "M").format("YYYY-MM-DD"));
+		}
 	}
 
 	setPlusYear = () => {
-		this.onChange(this.getCurrentDateOrNow().add(1, "y").format("YYYY-MM-DD"));
+		const plusYearOptions = getUiOptions(this.props).showButtons.plusYear || {};
+		const {path} = plusYearOptions;
+		const date = this.getCurrentDateOrPathDate(path);
+		if (date) {
+			this.onChange(date.add(1, "y").format("YYYY-MM-DD"))
+		}
 	}
 
 	formatValue(value, options, props) {
@@ -311,11 +333,17 @@ export default class DateTimeWidget extends React.Component {
 		return dateLocalizer.format(value, format, props.formContext.lang);
 	}
 
-	getCurrentDateOrNow() {
-		const date = moment(this.props.value);
+	getCurrentDateOrPathDate(path) {
+		const formData = this.props.formContext.services.rootInstance.getFormData();
+
+		const value = this.props.value || (path ? parseJSONPointer(formData, path, !!"safely") : undefined);
+		if (!value) {
+			return;
+		}
+
+		const date = moment(value);
 		if (date.isValid()) {
 			return date;
 		}
-		return moment();
 	}
 }
