@@ -252,7 +252,6 @@ test.describe("Date & time widgets", () => {
 		};
 
 		test.beforeAll(async () => {
-			await updateValue(widget.$input, "");
 			await form.setState({schema, uiSchema});
 		});
 
