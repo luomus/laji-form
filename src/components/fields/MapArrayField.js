@@ -15,6 +15,7 @@ import { getPropsForFields } from "./NestField";
 import { getButton } from "../templates/ArrayFieldTemplate";
 import { onArrayFieldChange } from "./ArrayField";
 import { getTemplate } from "@rjsf/utils";
+import { getLineTransectStartEndDistancesForIdx } from "@luomus/laji-map/lib/utils";
 
 export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
@@ -587,6 +588,7 @@ class LineTransectMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {showLTTools: false};
+		this.props.onChange(syncLineTransectStartEnd(this.props.formData));
 	}
 	
 	getOptions() {
@@ -718,6 +720,7 @@ class LineTransectMapArrayField extends React.Component {
 		});
 		const afterState = () => {
 			if (formDataChanged) {
+				formData = syncLineTransectStartEnd(formData);
 				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 			}
 			if ("activeIdx" in state) {
@@ -2113,4 +2116,29 @@ export const getFeatureStyleWithHighlight = style => {
 		? combineColors(style.color, "#ffffff", 30)
 		: undefined;
 	return {...style, color, fillOpacity: saneOpacityRange(style.fillOpacity || 0.4 + 0.4)};
+};
+
+const syncLineTransectStartEnd = (formData) => {
+	const lineTransectFeature = Object.keys((formData || [])[0].geometry || {}).length 
+		? {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)}}
+		: undefined;
+	if (lineTransectFeature) {
+		return formData.map((item, idx) => {
+			const [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, idx, 10);
+			if (!item.gatheringFact) {
+				item.gatheringFact = {};
+			}
+			item.gatheringFact.lineTransectSegmentMetersStart = start;
+			item.gatheringFact.lineTransectSegmentMetersEnd = end;
+			return {
+				...item,
+				gatheringFact: {
+					...(item.gatheringFact || {}),
+					lineTransectSegmentMetersStart: start,
+					lineTransectSegmentMetersEnd: end
+				}
+			};
+		});
+	}
+	return formData;
 };

@@ -11,7 +11,6 @@ import { copyItemFunction } from "./ArrayField";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
-import { getLineTransectStartEndDistancesForIdx } from "@luomus/laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 import * as memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";
@@ -1120,11 +1119,8 @@ const headerFormatters = {
 	},
 	lineTransect: {
 		component: (props) => {
-			let start, end;
-			const lineTransectFeature = Object.keys((props.that.props.formData || [])[0].geometry || {}).length 
-				? {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: props.that.props.formData.map(item => item.geometry.coordinates)}}
-				: undefined;
-			if (lineTransectFeature) [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
+			const item = props.that.props.formData[props.idx];
+			const [start, end] = [item.gatheringFact.lineTransectSegmentMetersStart, item.gatheringFact.lineTransectSegmentMetersEnd];
 			return props.idx !== undefined && end ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
 		}
 	},
