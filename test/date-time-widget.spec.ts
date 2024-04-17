@@ -2,6 +2,8 @@ import { test, expect } from "@playwright/test";
 import { DemoPageForm, createForm, DateWidgetPO, updateValue } from "./test-utils";
 import moment from "moment";
 
+test.describe.configure({mode: "serial"});
+
 test.describe("Date & time widgets", () => {
 	let form: DemoPageForm;
 	let widget: DateWidgetPO;
@@ -138,10 +140,8 @@ test.describe("Date & time widgets", () => {
 		});
 
 		test.describe("plus six months & plus year buttons", () => {
-			test.describe.configure({mode: "serial"});
-
 			test.beforeAll(async () => {
-				await widget.$input.clear();
+				await updateValue(widget.$input, "");
 			});
 
 			test("not displayed by default", async () => {
@@ -279,6 +279,7 @@ test.describe("Date & time widgets", () => {
 		};
 
 		test.beforeAll(async () => {
+			await updateValue(widget.$input, "");
 			await form.setState({schema, uiSchema});
 		});
 
