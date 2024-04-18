@@ -618,7 +618,7 @@ export class OverlayTrigger extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {show: false};
+		this.state = {};
 	}
 
 	componentWillUnmount() {
@@ -628,36 +628,26 @@ export class OverlayTrigger extends React.Component {
 	}
 
 	overlayTriggerMouseOver = () => {
-		this.overlayTriggerMouseIn = true;
-		this.setState({show: true});
+		this.setState({hoveringElem: true});
 	};
 
 	overlayTriggerMouseOut = () => {
-		this.overlayTriggerMouseIn = false;
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
 		this.overlayTimeout = this.props.formContext.setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
-				this.setState({show: false});
+				this.setState({hoveringElem: false});
 			}
 		}, 200);
 	};
 
 	overlayMouseOver = () => {
-		this.overlayMouseIn = true;
+		this.setState({hoveringOverlay: true});
 	}
 
 	overlayMouseOut = () => {
-		this.overlayMouseIn = false;
-		if (this.overlayTimeout) {
-			clearTimeout(this.overlayTimeout);
-		}
-		this.overlayTimeout = this.props.formContext.setTimeout(() => {
-			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn) {
-				this.setState({show: false});
-			}
-		}, 200);
+		this.setState({hoveringOverlay: false, hoveringElem: false});
 	}
 
 	render() {
@@ -677,6 +667,8 @@ export class OverlayTrigger extends React.Component {
 
 		let _overlay = React.cloneElement(overlay, {onMouseOver: this.overlayMouseOver, onMouseOut: this.overlayMouseOut});
 
+		const show = this.state.hoveringElem || this.state.hoveringOverlay;
+
 		return (
 			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
 				<OverlayTrigger
@@ -685,7 +677,7 @@ export class OverlayTrigger extends React.Component {
 					trigger={[]}
 					placement={this.props.placement || "top"}
 					overlay={_overlay}
-					show={this.state.show}
+					show={show}
 				>
 					{children}
 				</OverlayTrigger>
