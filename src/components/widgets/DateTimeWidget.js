@@ -323,7 +323,7 @@ export default class DateTimeWidget extends React.Component {
 		const {path} = plusYearOptions;
 		const date = this.getCurrentDateOrPathDate(path);
 		if (date) {
-			this.onChange(date.add(1, "y").format("YYYY-MM-DD"))
+			this.onChange(date.add(1, "y").format("YYYY-MM-DD"));
 		}
 	}
 
