@@ -348,7 +348,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	getMemoizedFormContext(props: LajiFormProps): FormContext {
-		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext", "settings", "schema", "uiSchemaContext", "lajiGeoServerAddress"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext", "settings", "schema", "uiSchemaContext", "mediaMetadata", "lajiGeoServerAddress"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
 		}, {} as Record<keyof LajiFormProps, any>);

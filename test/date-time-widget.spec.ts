@@ -2,6 +2,8 @@ import { test, expect } from "@playwright/test";
 import { DemoPageForm, createForm, DateWidgetPO, updateValue } from "./test-utils";
 import moment from "moment";
 
+test.describe.configure({mode: "serial"});
+
 test.describe("Date & time widgets", () => {
 	let form: DemoPageForm;
 	let widget: DateWidgetPO;
@@ -138,10 +140,8 @@ test.describe("Date & time widgets", () => {
 		});
 
 		test.describe("plus six months & plus year buttons", () => {
-			test.describe.configure({mode: "serial"});
-
 			test.beforeAll(async () => {
-				await widget.$input.clear();
+				await updateValue(widget.$input, "");
 			});
 
 			test("not displayed by default", async () => {
@@ -162,7 +162,14 @@ test.describe("Date & time widgets", () => {
 				await expect(widget.buttons.$plusYear).toBeVisible();
 			});
 
-			test("plus six months works", async () => {
+			test("plus six months doesn't do anything if there is no value", async () => {
+				await widget.buttons.$plusSixMonths.click();
+
+				await expect(widget.$input).toHaveValue("");
+			});
+
+			test("plus six months works when there is a value", async () => {
+				await updateValue(widget.$input, today.format(displayDateFormat));
 				await widget.buttons.$plusSixMonths.click();
 
 				await expect(widget.$input).toHaveValue(todayPlusSixMonths.format(displayDateFormat));
@@ -181,6 +188,26 @@ test.describe("Date & time widgets", () => {
 
 				await expect(widget.$input).toHaveValue(todayPlusTwoYears.format(displayDateFormat));
 				expect(await form.getChangedData()).toBe(todayPlusTwoYears.format(ISO8601DateFormat));
+			});
+
+			test("plus year works with a path option", async () => {
+				await form.setState({
+					schema: {type: "object", properties: {start: {type: "string"}, end: {type: "string"}}},
+					uiSchema: {
+						start: {...uiSchema, "ui:options": {showButtons: true}},
+						end: {...uiSchema, "ui:options": {showButtons: {plusYear: {path: "/start"}}}}
+					},
+					formData: {}
+				});
+				const startWidget = form.getDateWidget("start");
+				const endWidget = form.getDateWidget("end");
+
+				await updateValue(startWidget.$input, today.format(displayDateFormat));
+
+				await endWidget.buttons.$plusYear.click();
+
+				await expect(endWidget.$input).toHaveValue(todayPlusYear.format(displayDateFormat));
+				expect((await form.getChangedData()).end).toBe(todayPlusYear.format(ISO8601DateFormat));
 			});
 		});
 
@@ -252,6 +279,7 @@ test.describe("Date & time widgets", () => {
 		};
 
 		test.beforeAll(async () => {
+			await updateValue(widget.$input, "");
 			await form.setState({schema, uiSchema});
 		});
 
