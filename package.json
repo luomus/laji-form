@@ -4,6 +4,13 @@
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+	"files": [
+		"lib",
+		"dist",
+		"test-export",
+		"README.md",
+		"CHANGELOG.md"
+	],
   "scripts": {
     "start": "npx webpack serve",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
