@@ -514,7 +514,7 @@ export default class ScopeField extends React.Component {
 
 		if (this._globals) {
 			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
-			let globalsEntry = this._globals || {};
+			let globalsEntry = this._globals ? { ...this._globals } : {};
 			if (additionalsPersistenceField) {
 				let additionalsKeys = this.props.schema.properties[additionalsPersistenceField].type === "array"
 					? additionalsPersistenceVal
