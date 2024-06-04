@@ -5,7 +5,7 @@ import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import ReactContext from "../../ReactContext";
 
-const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"];
+const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave", "audio/flac"];
 
 @MediaArrayField
 export default class AudioArrayField extends React.Component {
@@ -82,10 +82,12 @@ const AudioButton = React.forwardRef((props, ref) => {
 const LajiAudio = React.forwardRef((props, ref) => {
 	const [mp3Url, setMp3Url] = useState(null);
 	const [wavUrl, setWavUrl] = useState(null);
+	const [flacUrl, setFlacUrl] = useState(null);
 	useEffect(() => {
 		props.apiClient.fetchCached(`/audio/${props.id}`, undefined, {failSilently: true}).then(response => {
 			setMp3Url(response.mp3URL);
 			setWavUrl(response.wavURL);
+			setFlacUrl(response.flacURL);
 			props.onLoaded && props.onLoaded(true);
 		});
 	});
@@ -101,7 +103,12 @@ const LajiAudio = React.forwardRef((props, ref) => {
 								<a href={wavUrl} download>{`${props.translations.Download} wav`}</a>
 							</React.Fragment>
 					}
-
+					{flacUrl &&
+						<React.Fragment>
+							{" | "}
+							<a href={flacUrl} download>{`${props.translations.Download} flac`}</a>
+						</React.Fragment>
+					}
 				</React.Fragment>
 			)}
 		</div>
