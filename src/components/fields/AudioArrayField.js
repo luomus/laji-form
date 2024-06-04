@@ -104,10 +104,10 @@ const LajiAudio = React.forwardRef((props, ref) => {
 							</React.Fragment>
 					}
 					{flacUrl &&
-						<React.Fragment>
-							{" | "}
-							<a href={flacUrl} download>{`${props.translations.Download} flac`}</a>
-						</React.Fragment>
+							<React.Fragment>
+								{" | "}
+								<a href={flacUrl} download>{`${props.translations.Download} flac`}</a>
+							</React.Fragment>
 					}
 				</React.Fragment>
 			)}
