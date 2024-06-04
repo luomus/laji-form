@@ -12,7 +12,7 @@ export default class AudioArrayField extends React.Component {
 	static contextType = ReactContext;
 	ALLOWED_FILE_TYPES = FILE_TYPES;
 	ACCEPT_FILE_TYPES = ["audio/*"];
-	MAX_FILE_SIZE = 20000000;
+	MAX_FILE_SIZE = 100000000;
 	KEY = "AUDIO";
 	ENDPOINT = "audio";
 	GLYPH = "headphones";
