@@ -45,7 +45,7 @@ interface MediaMetadataSchema {
 export default class ImageArrayField extends React.Component<FieldProps, ImageArrayFieldState> {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
-	MAX_FILE_SIZE = 20000000;
+	MAX_FILE_SIZE = 20 * 1024 * 1024;
 	KEY = "IMAGE";
 	ENDPOINT = "images";
 	GLYPH = "camera";
