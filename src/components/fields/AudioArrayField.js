@@ -5,7 +5,7 @@ import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import ReactContext from "../../ReactContext";
 
-const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave", "audio/flac"];
+const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave", "audio/flac", "audio/x-flac"];
 
 @MediaArrayField
 export default class AudioArrayField extends React.Component {
