@@ -47,7 +47,7 @@ export default class AutosuggestField extends React.Component {
 			"ui:options": PropTypes.shape({
 				autosuggestField: PropTypes.string.isRequired,
 				suggestionInputField: PropTypes.string.isRequired,
-				allowNonsuggestedValue: PropTypes.boolean,
+				allowNonsuggestedValue: PropTypes.bool,
 				suggestionReceivers: PropTypes.object.isRequired,
 				inputTransformer: PropTypes.shape({
 					regexp: PropTypes.string.isRequired,

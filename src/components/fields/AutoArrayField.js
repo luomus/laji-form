@@ -8,7 +8,7 @@ export default class AutoArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				autofocus: PropTypes.boolean
+				autofocus: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({

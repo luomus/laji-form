@@ -54,7 +54,7 @@ export default class MapField extends React.Component {
 				mapOptions: PropTypes.object,
 				height: PropTypes.number,
 				emptyHelp: PropTypes.string,
-				geometryCollection: PropTypes.boolean,
+				geometryCollection: PropTypes.bool,
 			})
 		}),
 		schema: PropTypes.shape({

@@ -70,7 +70,7 @@ export default class ConditionalUiSchemaField extends React.Component {
 					casePropType,
 					PropTypes.arrayOf(casePropType)
 				]),
-				cache: PropTypes.boolean
+				cache: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({

@@ -22,7 +22,7 @@ export default class FilterArrayField extends React.Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				rules: arrayRulesPropType,
-				cache: PropTypes.boolean
+				cache: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({

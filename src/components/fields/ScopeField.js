@@ -59,7 +59,7 @@ export default class ScopeField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				includeAdditionalFieldsChooserButton: PropTypes.boolean,
+				includeAdditionalFieldsChooserButton: PropTypes.bool,
 				additionalsGroupingPath: PropTypes.string,
 				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
 				additionalsPersistenceKey: PropTypes.string,

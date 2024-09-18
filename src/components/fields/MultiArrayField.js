@@ -17,7 +17,7 @@ export default class MultiArrayField extends React.Component {
 					operationPropType,
 					PropTypes.arrayOf(operationPropType)
 				]),
-				cache: PropTypes.boolean
+				cache: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({

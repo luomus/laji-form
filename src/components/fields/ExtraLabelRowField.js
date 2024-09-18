@@ -17,7 +17,7 @@ export default class ExtraLabelRowField extends React.Component {
 				md: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 				sm: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 				xs: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-				hiddenXs: PropTypes.boolean
+				hiddenXs: PropTypes.bool
 			})
 		}).isRequired,
 		schema: PropTypes.shape({
