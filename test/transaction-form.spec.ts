@@ -36,7 +36,7 @@ test.describe("transaction form (MHL.930)", () => {
 
 	test.describe("specimen fields", () => {
 		test("adds the ids", async () => {
-			const $input = form.$getInputWidget("awayIDs");
+			const $input = form.$getInputWidget("specimenIDs.awayIDs");
 			await $input.fill("abc cde efg");
 			await $input.press("Tab");
 
@@ -57,7 +57,7 @@ test.describe("transaction form (MHL.930)", () => {
 			const markAsMissingButton$ = page.locator(".laji-form-multi-tag-array-field-buttons button").nth(3);
 			await markAsMissingButton$.click();
 
-			const tags$ = form.$locate("returnedIDs").locator(".rw-multiselect-tag");
+			const tags$ = form.$locate("specimenIDs.returnedIDs").locator(".rw-multiselect-tag");
 			await tags$.nth(1).click();
 
 			const formData = await form.getChangedData();
@@ -66,12 +66,23 @@ test.describe("transaction form (MHL.930)", () => {
 		});
 
 		test("adds HA. prefix to H-numbers", async () => {
-			const $input = form.$getInputWidget("awayIDs");
+			const $input = form.$getInputWidget("specimenIDs.awayIDs");
 			await $input.fill("H9123456 ABCDE");
 			await $input.press("Tab");
 
 			let formData = await form.getChangedData();
 			expect(formData.awayIDs).toEqual(["HA.H9123456", "ABCDE"]);
+		});
+
+		test("shows correct total counts", async () => {
+			const $input = form.$getInputWidget("specimenCounts.returnedCount");
+			await $input.fill("4");
+			await $input.press("Tab");
+
+			await expect(form.$locate("totalAwayCount").locator('.plainText')).toHaveText('2');
+			await expect(form.$locate("totalReturnedCount").locator('.plainText')).toHaveText('6');
+			await expect(form.$locate("totalMissingCount").locator('.plainText')).toHaveText('1');
+			await expect(form.$locate("totalCount").locator('.plainText')).toHaveText('9');
 		});
 	});
 });

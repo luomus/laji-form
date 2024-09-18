@@ -4,15 +4,17 @@ import { immutableDelete, parseJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
- * Combines values of two fields into one value which can be used for displaying (editing that value doesn't change formData)
+ * Combines values of two (or more) fields into one value which can be used for displaying (editing that value doesn't change formData)
  * Combine types:
  * timeDifference: combines the values by calculating their time difference
+ * totalCount: combines the values by summing their counts together. if the value is an array the count is its length and if it is a number the count is the value
  * stringJoin (default): combines the values by joining them. delimiter is added between if given
  */
 
 const combinedPropType = PropTypes.shape({
 	firstField: PropTypes.string.isRequired,
 	secondField: PropTypes.string.isRequired,
+	additionalFields: PropTypes.arrayOf(PropTypes.string),
 	name: PropTypes.string,
 	title: PropTypes.string,
 	combineType: PropTypes.string,
@@ -46,7 +48,7 @@ export default class CombinedValueDisplayField extends React.Component {
 		const combined = Array.isArray(uiOptions.combined) ? uiOptions.combined : [uiOptions.combined];
 
 		combined.forEach(options => {
-			const {name, title, combineType, firstField, secondField} = options;
+			const {name, title, combineType, firstField, secondField, additionalFields = []} = options;
 
 			schema = {...schema, properties: {...schema.properties, [name || ""]: {title: title || "", type: "string" }}};
 
@@ -57,8 +59,11 @@ export default class CombinedValueDisplayField extends React.Component {
 
 			let value = undefined;
 
-			const firstValue = firstField[0] === "/" ? parseJSONPointer(formData, firstField, !!"safely") : formData[firstField];
-			const secondValue = secondField[0] === "/" ? parseJSONPointer(formData, secondField, !!"safely") : formData[secondField];
+			const firstValue = this.getFieldValue(formData, firstField);
+			const secondValue = this.getFieldValue(formData, secondField);
+			const additionalValues = additionalFields.map(field => this.getFieldValue(formData, field));
+			const allValues = [firstValue, secondValue].concat(additionalValues);
+
 			if (combineType === "timeDifference") {
 				if (firstValue && secondValue) {
 					const difference = this.toMinutes(secondValue) - this.toMinutes(formData[firstField]);
@@ -68,11 +73,16 @@ export default class CombinedValueDisplayField extends React.Component {
 						value = hours + " h " + minutes + " min";
 					}
 				}
+			} else if (combineType === "totalCount") {
+				value = allValues.reduce((result, current) => result + this.getCount(current), 0);
 			} else {
 				const delimiter = options.delimiter || "";
-				value = [];
-				if (firstValue) value.push(firstValue);
-				if (secondValue) value.push(secondValue);
+				value = allValues.reduce((result, current) => {
+					if (current) {
+						result.push(current);
+					}
+					return result;
+				}, []);
 				value = value.join(delimiter);
 			}
 
@@ -82,10 +92,18 @@ export default class CombinedValueDisplayField extends React.Component {
 		return {schema, idSchema, formData, onChange: this.onChange};
 	}
 
+	getFieldValue = (formData, field) => {
+		return field[0] === "/" ? parseJSONPointer(formData, field, !!"safely") : formData[field];
+	}
+
 	toMinutes = (time) => {
 		const parts = time.split(":");
 		return Number(parts[0]) * 60 + Number(parts[1]);
 	};
+
+	getCount = (value) => {
+		return Array.isArray(value) ? value.length : (typeof value === "number" ? value : 0);
+	}
 
 	onChange = (formData) => {
 		const uiOptions = this.getUiOptions();

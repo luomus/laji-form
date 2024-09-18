@@ -6,7 +6,7 @@ import { MediaArrayField, MediaArrayState, Thumbnail } from "./ImageArrayField";
 export default class PdfArrayField extends React.Component<FieldProps, MediaArrayState> {
 	ALLOWED_FILE_TYPES = ["application/pdf"];
 	ACCEPT_FILE_TYPES = ["application/pdf"];
-	MAX_FILE_SIZE = 20000000;
+	MAX_FILE_SIZE = 20 * 1024 * 1024;
 	KEY = "PDF";
 	ENDPOINT = "pdf";
 	GLYPH = "paperclip";

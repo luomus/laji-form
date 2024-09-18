@@ -4,7 +4,7 @@
     "properties":{
       "owner":{
         "type":"string",
-        "title":"Tietueen omistaja"
+        "title":"Owner of record"
       },
       "attachments":{
         "type":"array",
@@ -22,84 +22,88 @@
           },
           {
             "const":"HRX.statusInProcess",
-            "title":""
+            "title":"In process"
           },
           {
             "const":"HRX.statusOutstanding",
-            "title":""
+            "title":"Outstanding"
           },
           {
             "const":"HRX.statusClosed",
-            "title":""
+            "title":"Closed"
+          },
+          {
+            "const":"HRX.statusOnLoan",
+            "title":"On loan"
           }
         ],
-        "title":"Transaktion status"
+        "title":"Transaction status"
       },
       "type":{
         "type":"string",
         "oneOf":[
           {
             "const":"HRX.typeLoanIncoming",
-            "title":""
-          },
-          {
-            "const":"HRX.typeGiftIncoming",
-            "title":""
-          },
-          {
-            "const":"HRX.typeExchangeIncoming",
-            "title":""
+            "title":"Loan, incoming"
           },
           {
             "const":"HRX.typeLoanOutgoing",
-            "title":""
+            "title":"Loan, outgoing"
+          },
+          {
+            "const":"HRX.typeGiftIncoming",
+            "title":"Gift, incoming"
           },
           {
             "const":"HRX.typeGiftOutgoing",
-            "title":""
+            "title":"Gift, outgoing"
+          },
+          {
+            "const":"HRX.typeExchangeIncoming",
+            "title":"Exchange, incoming"
           },
           {
             "const":"HRX.typeExchangeOutgoing",
-            "title":""
+            "title":"Exchange, outgoing"
           },
           {
             "const":"HRX.typeFieldCollection",
-            "title":""
+            "title":"Field collection"
           },
           {
             "const":"HRX.typeImportNotice",
-            "title":""
+            "title":"Import notice only (maahantuonti-ilmoitus)"
           },
           {
             "const":"HRX.typeABSNegotiations",
-            "title":""
+            "title":"ABS negotiations"
           },
           {
             "const":"HRX.typeVirtualLoanOutgoing",
-            "title":""
+            "title":"Virtual loan, outgoing"
           },
           {
             "const":"HRX.typeDeaccession",
-            "title":""
+            "title":"Deaccession / Discarding"
           }
         ],
-        "title":"Transaktion tyyppi"
+        "title":"Transaction type"
       },
       "requestReceived":{
         "type":"string",
-        "title":"Pyynnön päiväys"
+        "title":"Date requested"
       },
       "incomingReceived":{
         "type":"string",
-        "title":"Vastaanottopäivä"
+        "title":"Date received"
       },
       "incomingReturned":{
         "type":"string",
-        "title":"Palautuspäivä"
+        "title":"Date returned"
       },
       "material":{
         "type":"string",
-        "title":"Materiaali"
+        "title":"Material description"
       },
       "harmonizedSystemCode":{
         "type":"string",
@@ -107,19 +111,19 @@
       },
       "externalID":{
         "type":"string",
-        "title":"Lähettäjän transaktiotunniste"
+        "title":"Transaction ID by counterparty"
       },
       "publicRemarks":{
         "type":"string",
-        "title":"Julkiset huomiot"
+        "title":"Public remarks"
       },
       "internalRemarks":{
         "type":"string",
-        "title":"Yksityiset huomiot"
+        "title":"Internal remarks"
       },
       "legacyID":{
         "type":"string",
-        "title":"Vanha lainatunniste"
+        "title":"Old transaction number"
       },
       "transportMethod":{
         "type":"string",
@@ -130,66 +134,66 @@
           },
           {
             "const":"HRX.transportMethodPriority",
-            "title":""
+            "title":"Priority mail"
           },
           {
             "const":"HRX.transportMethodEconomy",
-            "title":""
+            "title":"Economy mail"
           },
           {
             "const":"HRX.transportMethodCourier",
-            "title":""
+            "title":"Courier, see remarks"
           },
           {
             "const":"HRX.transportMethodCarried",
-            "title":""
+            "title":"Carried, see remarks"
           },
           {
             "const":"HRX.transportMethodOther",
-            "title":""
+            "title":"Other, see remarks"
           },
           {
             "const":"HRX.transportMethodImage",
-            "title":""
+            "title":"Image(s) (virtual loan)"
           }
         ],
-        "title":"Lähetystapa"
+        "title":"Sent by"
       },
       "numberOfParcels":{
         "type":"string",
-        "title":"Pakettien määrä"
+        "title":"Number of parcels"
       },
       "outgoingSent":{
         "type":"string",
-        "title":"Uloslähtevä laina lähetetty"
+        "title":"Outgoing transaction sent"
       },
       "dueDate":{
         "type":"string",
-        "title":"Eräpäivä"
+        "title":"Due date"
       },
       "receiptReturned":{
         "type":"string",
-        "title":"Kuittaus palautettu"
+        "title":"Receipt returned"
       },
       "outgoingReturned":{
         "type":"string",
-        "title":"Uloslähtevän laina palautettu"
+        "title":"Outgoing loan returned"
       },
       "correspondentOrganization":{
         "type":"string",
-        "title":"Vastaanottava/lähettävä organisaatio"
+        "title":"Counterparty organization"
       },
       "correspondentPerson":{
         "type":"string",
-        "title":"Vastaanottava/lähettävä henkilö"
+        "title":"Counterparty person/contact info"
       },
       "correspondentResearcher":{
         "type":"string",
-        "title":"Vastaanottava tutkija"
+        "title":"Receiving researcher"
       },
       "localHandler":{
         "type":"string",
-        "title":"Käsittelijä"
+        "title":"Handler"
       },
       "localHandlerEmail":{
         "type":"string",
@@ -197,31 +201,31 @@
       },
       "localPerson":{
         "type":"string",
-        "title":"Vastuuhenkilö"
+        "title":"Person responsible"
       },
       "localPersonEmail":{
         "type":"string",
-        "title":"Sähköpostiosoite"
+        "title":"Person responsible email"
       },
       "localResearcher":{
         "type":"string",
-        "title":"Vastaanottava tutkija"
+        "title":"Receiving researcher"
       },
       "collectionID":{
         "type":"string",
-        "title":"Kokoelma"
+        "title":"Collection"
       },
       "geneticResourceAcquisitionDate":{
         "type":"string",
-        "title":"Saannin päivämäärä"
+        "title":"Acquisition date"
       },
       "geneticResourceAcquisitionCountry":{
         "type":"string",
-        "title":"Saantipaikka/maa"
+        "title":"Acquisition country"
       },
       "underNagoya":{
         "type":"boolean",
-        "title":"Päteekö Nagoyan protokolla?"
+        "title":"Does Nagoya protocol apply?"
       },
       "availableForGeneticResearch":{
         "type":"string",
@@ -232,22 +236,22 @@
           },
           {
             "const":"HRX.availableForGeneticResearchYes",
-            "title":""
+            "title":"Yes, freely"
           },
           {
             "const":"HRX.availableForGeneticResearchWithRestrictions",
-            "title":""
+            "title":"Yes, with restrictions"
           },
           {
             "const":"HRX.availableForGeneticResearchNo",
-            "title":""
+            "title":"No"
           }
         ],
-        "title":"Onko geneettinen tutkimus sallittua geenivaroilla?"
+        "title":"Is genetic research allowed on the genetic resource(s)?"
       },
       "geneticResourceRightsAndObligations":{
         "type":"string",
-        "title":"Oikeudet ja velvollisuudet"
+        "title":"Rights and obligations"
       },
       "geneticResourceType":{
         "type":"string",
@@ -258,51 +262,69 @@
           },
           {
             "const":"HRX.geneticResourceTypeAnimal",
-            "title":""
+            "title":"Animal"
           },
           {
             "const":"HRX.geneticResourceTypePlant",
-            "title":""
+            "title":"Plant"
           },
           {
             "const":"HRX.geneticResourceTypeFungus",
-            "title":""
+            "title":"Fungus"
           },
           {
             "const":"HRX.geneticResourceTypeMicrobe",
-            "title":""
+            "title":"Microbe"
           },
           {
             "const":"HRX.geneticResourceTypeSoil",
-            "title":""
+            "title":"Soil"
           },
           {
             "const":"HRX.geneticResourceTypeAqua",
-            "title":""
+            "title":"Aqua"
           }
         ],
-        "title":"Resurssin tyyppi"
+        "title":"Type of resource"
       },
       "hasIRCC":{
         "type":"boolean",
-        "title":"Onko IRCC-numero?",
+        "title":"Do you have IRCC number?",
         "default":false
       },
       "IRCC":{
         "type":"string",
-        "title":"IRCC numero"
+        "title":"IRCC number"
       },
       "resourceImported":{
         "type":"string",
-        "title":"Mitä tuot maahan?"
+        "oneOf":[
+          {
+            "const":"",
+            "title":""
+          },
+          {
+            "const":"HRX.resourceImportedGeneticResources",
+            "title":"Genetic resources"
+          },
+          {
+            "const":"HRX.resourceImportedTraditionalKnowledge",
+            "title":"Traditional knowledge"
+          },
+          {
+            "const":"HRX.resourceImportedBoth",
+            "title":"Both"
+          }
+        ],
+        "title":"What are you importing?"
       },
       "geneticResourceDescription":{
         "type":"string",
-        "title":"Kuvaus"
+        "title":"Description"
       },
       "geneticResourceSource":{
         "type":"string",
-        "title":"Alkuperä tai saannin taho"
+        "title":"Source"
       },
       "permits":{
         "type":"array",
@@ -318,31 +340,31 @@
                 },
                 {
                   "const":"HRA.permitTypePIC",
-                  "title":""
+                  "title":"PIC"
                 },
                 {
                   "const":"HRA.permitTypeMAT",
-                  "title":""
+                  "title":"MAT"
                 },
                 {
                   "const":"HRA.permitTypeMTA",
-                  "title":""
+                  "title":"MTA"
                 },
                 {
                   "const":"HRA.permitCollectingPermit",
-                  "title":""
+                  "title":"Collecting permit"
                 },
                 {
                   "const":"HRA.permitTypeExportPermit",
-                  "title":""
+                  "title":"Export permit"
                 },
                 {
                   "const":"HRA.permitTypeOther",
-                  "title":""
+                  "title":"Other"
                 },
                 {
                   "const":"HRA.permitTypeMemorandumOfUnderstanding",
-                  "title":""
+                  "title":"Memorandum of Understanding (MOU)"
                 }
               ],
               "title":"Permit type"
@@ -356,11 +378,11 @@
                 },
                 {
                   "const":"HRA.permitStatusAvailable",
-                  "title":""
+                  "title":"Available"
                 },
                 {
                   "const":"HRA.permitStatusNotRequired",
-                  "title":""
+                  "title":"Not required"
                 }
               ],
               "title":"Permit status"
@@ -386,7 +408,7 @@
 
           ]
         },
-        "title":"Luvat"
+        "title":"Permits"
       },
       "transactionEvents":{
         "type":"array",
@@ -398,11 +420,11 @@
               "oneOf":[
                 {
                   "const":"HRX.eventTypeReturn",
-                  "title":""
+                  "title":"Returned specimens"
                 },
                 {
                   "const":"HRX.eventTypeAddition",
-                  "title":""
+                  "title":"Added specimens"
                 }
               ],
               "title":"Event type"
@@ -418,21 +440,16 @@
             "eventNotes":{
               "type":"string",
               "title":"Notes"
-            },
-            "eventDocumentIDs":{
-              "type":"array",
-              "items":{
-                "type":"string"
-              },
-              "title":"Specimen IDs"
             }
           },
           "required":[
             "eventType",
-            "eventDate"
+            "eventDate",
+            "eventHandler",
+            "eventNotes"
           ]
         },
-        "title":"Transaktion tapahtumat"
+        "title":"Transaction events"
       },
       "awayIDs":{
         "type":"array",
@@ -498,7 +515,7 @@
     "$.missingCount"
   ],
   "name":"Kotka - Transaction",
-  "language":"fi",
+  "language":"en",
   "title":"Kotka - Transaction",
   "options":{
     "useSchemaCommentsAsHelpTexts":true,
@@ -506,6 +523,114 @@
     "strict":false
   },
   "uiSchema":{
+    "owner":{
+      "ui:help":"Team or organisation that owns the record and can edit it."
+    },
+    "status":{
+      "ui:help":"Whether the transaction is closed, outstanding or in process."
+    },
+    "type":{
+      "ui:help":"What kind of transaction this is."
+    },
+    "requestReceived":{
+      "ui:help":"When loan request was received here."
+    },
+    "incomingReceived":{
+      "ui:help":"Date when incoming transaction was received."
+    },
+    "incomingReturned":{
+      "ui:help":"Date when the incoming loan was returned to the sender."
+    },
+    "material":{
+      "ui:help":"Description of the material included in this transaction."
+    },
+    "externalID":{
+      "ui:help":"Sender's ID for the transaction."
+    },
+    "publicRemarks":{
+      "ui:help":"Remarks that are shown to both parties of the transaction."
+    },
+    "internalRemarks":{
+      "ui:help":"Private remarks that are shown only in Kotka and not to the corresponding organisation."
+    },
+    "legacyID":{
+      "ui:help":"Loan/transaction number used in paper loan catalogs or old software (e.g. Curator)"
+    },
+    "transportMethod":{
+      "ui:help":"Means of sending, mail, courier etc."
+    },
+    "numberOfParcels":{
+      "ui:help":"In how many parcels was the transaction sent/carried."
+    },
+    "outgoingSent":{
+      "ui:help":"When the transaction was sent out from us"
+    },
+    "dueDate":{
+      "ui:help":"Date when the loan needs to be returned."
+    },
+    "receiptReturned":{
+      "ui:help":"When signed loan receipt was received from the loanee"
+    },
+    "outgoingReturned":{
+      "ui:help":"Date when the outgoing loan was returned to us"
+    },
+    "correspondentOrganization":{
+      "ui:help":"Select the correspondent organization from a list. If not found on the list, you need to add the new organization first."
+    },
+    "correspondentPerson":{
+      "ui:help":"Name of the corresponding person. If the transaction goes to a private person, write their postal address here."
+    },
+    "correspondentResearcher":{
+      "ui:help":"Receicing researcher in the correspondent organisation for outgoing transactions."
+    },
+    "localHandler":{
+      "ui:help":"Person handling the transaction at local Kotka institution."
+    },
+    "localPerson":{
+      "ui:help":"Person responsible for the transaction in our museum/local Kotka institution"
+    },
+    "localPersonEmail":{
+      "ui:help":"Contact email for the person responsible in our museum."
+    },
+    "localResearcher":{
+      "ui:help":"For incoming loans, name of the researcher receiving the loan at our local institution."
+    },
+    "collectionID":{
+      "ui:help":"For statistical purposes. The collection where the transaction is directed to. Record transactions directed to different collections as separate transactions if you use this field."
+    },
+    "geneticResourceAcquisitionDate":{
+      "ui:help":"Date when the genetic resource or traditional knowledge was aqcuired."
+    },
+    "geneticResourceAcquisitionCountry":{
+      "ui:help":"Country where the genetic resource or traditional knowledge was acquired from, provider country, country of origin. List of countries in Kotka is based on ISO 3166 Country Codes -standard and may differ from the country list in ABSCH."
+    },
+    "underNagoya":{
+      "ui:help":"Is it e.g. non-human genetic material that is going to be used for genetic research as is defined by the protocol?"
+    },
+    "availableForGeneticResearch":{
+      "ui:help":"If you choose \"Yes, with restrictions\", explain the restrictions in the following field \"Rights and obligations\"."
+    },
+    "geneticResourceRightsAndObligations":{
+      "ui:help":"Presence or absence of rights and obligations relating to access and benefit sharing, including rights and obligations regarding subsequent applications and commercialization. Instruction source EU DECLARE user manual and QA."
+    },
+    "geneticResourceType":{
+      "ui:help":"Choose the type of the genetic resource for statistical and reporting purposes."
+    },
+    "hasIRCC":{
+      "ui:help":"Whether the resource has an IRCC number or not. If not, more information needs to be filled in."
+    },
+    "IRCC":{
+      "ui:help":"Internationally Recognized Certificate of Compliance. Kotka checks from the ABS Clearing House that the entered IRCC number exists and is valid."
+    },
+    "resourceImported":{
+      "ui:help":"Are you importing genetic resources, traditional knowledge associated to genetic resources or both?"
+    },
+    "geneticResourceDescription":{
+      "ui:help":"Description of the genetic resource or traditional knowledge (possible identifiers, taxa, number of specimens, region etc.). Instruction source EU DECLARE User manual and QA."
+    },
+    "geneticResourceSource":{
+      "ui:help":"Person or legal entity from whom the user obtained the genetic resources directly, i.e. the previous actor in the value chain. Often a museum or other organization. If a genetic resource is obtained directly from the provider country, the name of the country should be provided. Instruction source EU DECLARE User manual and QA."
+    },
     "ui:functions":[
       {
         "ui:field":"ScopeField",
@@ -587,7 +712,8 @@
                   "requestReceived",
                   "outgoingSent",
                   "outgoingReturned",
-                  "correspondentResearcher"
+                  "correspondentResearcher",
+                  "collectionID"
                 ],
                 "uiSchema":{
                   "incomingReceived":{
@@ -601,6 +727,14 @@
                   },
                   "awayCount":{
                     "ui:title":"On loan count"
+                  },
+                  "specimens":{
+                    "totalAwayCount":{
+                      "ui:title":"On loan"
+                    },
+                    "totalReturnedCount":{
+                      "ui:widget":"PlainTextWidget"
+                    }
                   },
                   "transactionEvents":{
                     "items":{
@@ -666,6 +800,14 @@
                   },
                   "awayCount":{
                     "ui:title":"On loan count"
+                  },
+                  "specimens":{
+                    "totalAwayCount":{
+                      "ui:title":"On loan"
+                    },
+                    "totalReturnedCount":{
+                      "ui:widget":"PlainTextWidget"
+                    }
                   },
                   "transactionEvents":{
                     "items":{
@@ -742,9 +884,13 @@
                   "localResearcher",
                   "returnedCount",
                   "returnedIDs",
-                  "dueDate"
+                  "dueDate",
+                  "requestReceived"
                 ],
                 "uiSchema":{
+                  "outgoingSent":{
+                    "ui:required":true
+                  },
                   "correspondentOrganization":{
                     "ui:required":true
                   }
@@ -779,10 +925,14 @@
                   "localResearcher",
                   "returnedCount",
                   "returnedIDs",
-                  "dueDate"
+                  "dueDate",
+                  "requestReceived"
                 ],
                 "uiSchema":{
                   "correspondentOrganization":{
+                    "ui:required":true
+                  },
+                  "outgoingSent":{
                     "ui:required":true
                   }
                 }
@@ -806,6 +956,14 @@
                   },
                   "correspondentOrganization":{
                     "ui:required":true
+                  },
+                  "outgoingSent":{
+                    "ui:required":true
+                  },
+                  "specimens":{
+                    "totalMissingCount":{
+                      "ui:widget":"HiddenWidget"
+                    }
                   },
                   "specimenIDs":{
                     "ui:options":{
@@ -890,11 +1048,19 @@
                   "missingIDs"
                 ],
                 "uiSchema":{
+                  "outgoingSent":{
+                    "ui:required":true
+                  },
                   "correspondent":{
                     "ui:field":"HiddenField"
                   },
                   "nagoyaWrapper":{
                     "ui:field":"HiddenField"
+                  },
+                  "specimens":{
+                    "totalMissingCount":{
+                      "ui:widget":"HiddenWidget"
+                    }
                   },
                   "specimenIDs":{
                     "ui:options":{
@@ -1007,7 +1173,7 @@
           ]
         },
         "specimenIDs":{
-          "title":"",
+          "title":"Specimens with IDs",
           "fields":[
             "awayIDs",
             "returnedIDs",
@@ -1015,24 +1181,18 @@
           ]
         },
         "specimenCounts":{
-          "title":"",
+          "title":"Specimens without IDs",
           "fields":[
             "awayCount",
             "returnedCount",
             "missingCount"
           ]
         },
-        "specimenCountsWrapper":{
-          "title":"Number of specimens without IDs",
-          "fields":[
-            "specimenCounts"
-          ]
-        },
         "specimens":{
-          "title":"Specimens",
+          "title":"",
           "fields":[
             "specimenIDs",
-            "specimenCountsWrapper"
+            "specimenCounts"
           ]
         }
       }
@@ -1064,13 +1224,32 @@
           "allowNonsuggestedValue":true,
           "suggestionReceive":"key",
           "displayValidationState":true,
-          "minFetchLength":0,
+          "minFetchLength":1,
           "query":{
             "onlyOwnOrganizations":true
           }
         }
       },
       "attachments":{
+        "ui:functions":{
+          "ui:field":"ConditionalUiSchemaField",
+          "ui:options":{
+            "cases":{
+              "rules":[
+                {
+                  "rule":"isEdit",
+                  "complement":true
+                }
+              ],
+              "operations":{
+                "type":"merge",
+                "uiSchema":{
+                  "ui:field":"HiddenField"
+                }
+              }
+            }
+          }
+        },
         "ui:field":"PdfArrayField"
       }
     },
@@ -1120,8 +1299,12 @@
           "ui:options":{
             "dateFormat":"DD.MM.YYYY",
             "showButtons":{
-              "plusSixMonths":true,
-              "plusYear":true
+              "plusSixMonths":{
+                "path":"/outgoingSent"
+              },
+              "plusYear":{
+                "path":"/outgoingSent"
+              }
             }
           }
         },
@@ -1156,7 +1339,7 @@
             "allowNonsuggestedValue":true,
             "suggestionReceive":"key",
             "displayValidationState":true,
-            "minFetchLength":0
+            "minFetchLength":1
           }
         },
         "correspondentPerson":{
@@ -1216,8 +1399,7 @@
             "allowNonsuggestedValue":true,
             "suggestionReceive":"key",
             "displayValidationState":true,
-            "minFetchLength":3,
-            "limit":20
+            "minFetchLength":1
           }
         }
       }
@@ -1322,9 +1504,30 @@
             "xs":12
           },
           "permitFile":{
-            "ui:functions":{
-              "ui:field":"AsArrayField"
-            },
+            "ui:functions":[
+              {
+                "ui:field":"AsArrayField"
+              },
+              {
+                "ui:field":"ConditionalUiSchemaField",
+                "ui:options":{
+                  "cases":{
+                    "rules":[
+                      {
+                        "rule":"isEdit",
+                        "complement":true
+                      }
+                    ],
+                    "operations":{
+                      "type":"merge",
+                      "uiSchema":{
+                        "ui:field":"HiddenField"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
             "ui:field":"PdfArrayField"
           },
           "permitStartDate":{
@@ -1385,29 +1588,66 @@
         },
         "eventNotes":{
           "ui:widget":"textarea"
-        },
-        "eventDocumentIDs":{
-          "ui:field":"TagArrayField",
-          "ui:options":{
-            "separatorKeys":[
-              "Enter",
-              ",",
-              ";",
-              " "
-            ],
-            "showAsLink":true,
-            "linkPrefix":"https://kotkatest.luomus.fi/view?uri=",
-            "replacements":[
-              {
-                "searchRegexp":"^(H[0-9]{7,8})$",
-                "replaceValue":"HA.$1"
-              }
-            ]
-          }
         }
       }
     },
     "specimens":{
+      "ui:functions":[
+        {
+          "ui:field":"CombinedValueDisplayField",
+          "ui:options":{
+            "combined":[
+              {
+                "firstField":"/specimenIDs/awayIDs",
+                "secondField":"/specimenCounts/awayCount",
+                "name":"totalAwayCount",
+                "title":"Included in",
+                "combineType":"totalCount"
+              },
+              {
+                "firstField":"/specimenIDs/returnedIDs",
+                "secondField":"/specimenCounts/returnedCount",
+                "name":"totalReturnedCount",
+                "title":"Returned",
+                "combineType":"totalCount"
+              },
+              {
+                "firstField":"/specimenIDs/missingIDs",
+                "secondField":"/specimenCounts/missingCount",
+                "name":"totalMissingCount",
+                "title":"Missing",
+                "combineType":"totalCount"
+              },
+              {
+                "firstField":"totalAwayCount",
+                "secondField":"totalReturnedCount",
+                "additionalFields":[
+                  "totalMissingCount"
+                ],
+                "name":"totalCount",
+                "title":"Total",
+                "combineType":"totalCount"
+              }
+            ]
+          }
+        },
+        {
+          "ui:field":"NestField",
+          "ui:options":{
+            "nests":{
+              "specimenTotalCounts":{
+                "title":"Total specimen counts",
+                "fields":[
+                  "totalAwayCount",
+                  "totalReturnedCount",
+                  "totalMissingCount",
+                  "totalCount"
+                ]
+              }
+            }
+          }
+        }
+      ],
       "ui:field":"HiddenField",
       "specimenIDs":{
         "ui:classNames":"specimen-id-fields",
@@ -1451,23 +1691,35 @@
           "ui:title":"Included in IDs"
         }
       },
-      "specimenCountsWrapper":{
+      "specimenCounts":{
         "ui:grid":{
-          "lg":6,
-          "md":6,
-          "sm":8,
+          "lg":2,
+          "md":3,
+          "sm":3,
           "xs":12
         },
-        "specimenCounts":{
-          "ui:grid":{
-            "lg":4,
-            "md":4,
-            "sm":4,
-            "xs":12
-          },
-          "awayCount":{
-            "ui:title":"Included in count"
-          }
+        "awayCount":{
+          "ui:title":"Included in count"
+        }
+      },
+      "specimenTotalCounts":{
+        "ui:grid":{
+          "lg":2,
+          "md":3,
+          "sm":3,
+          "xs":12
+        },
+        "totalAwayCount":{
+          "ui:widget":"PlainTextWidget"
+        },
+        "totalReturnedCount":{
+          "ui:widget":"HiddenWidget"
+        },
+        "totalMissingCount":{
+          "ui:widget":"PlainTextWidget"
+        },
+        "totalCount":{
+          "ui:widget":"PlainTextWidget"
         }
       }
     }
@@ -1505,7 +1757,11 @@
       "crossCheck":{
         "check":"type",
         "onlyWhenCheckIn":[
-          "HRX.typeLoanOutgoing"
+          "HRX.typeLoanOutgoing",
+          "HRX.typeGiftOutgoing",
+          "HRX.typeExchangeOutgoing",
+          "HRX.typeVirtualLoanOutgoing",
+          "HRX.typeDeaccession"
         ],
         "message":"Required field."
       }
@@ -1547,6 +1803,12 @@
           "HRX.typeVirtualLoanOutgoing"
         ],
         "message":"Required field."
+      }
+    },
+    "collectionID":{
+      "format":{
+        "pattern":"(^$)|(^HR\\.\\d+$)",
+        "message":"Unknown collection"
       }
     },
     "geneticResourceAcquisitionDate":{
@@ -1798,17 +2060,7 @@
     }
   },
   "warnings":{
-    "outgoingSent":{
-      "crossCheck":{
-        "check":"type",
-        "onlyWhenCheckIn":[
-          "HRX.typeGiftOutgoing",
-          "HRX.typeExchangeOutgoing",
-          "HRX.typeVirtualLoanOutgoing"
-        ],
-        "message":"Field is empty."
-      }
-    }
+
   },
   "attributes":{
     "id":"MHL.930"

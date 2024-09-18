@@ -1,7 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getInnerUiSchema, getUiOptions, uiSchemaJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
+import {
+	getInnerUiSchema,
+	getUiOptions,
+	parseJSONPointer,
+	uiSchemaJSONPointer,
+	updateSafelyWithJSONPointer
+} from "../../utils";
+import * as merge from "deepmerge";
 
 @VirtualSchemaField
 export default class InputWithDefaultValueButtonField extends React.Component {
@@ -31,14 +38,17 @@ export default class InputWithDefaultValueButtonField extends React.Component {
 		const {buttonField, buttonLabel} = getUiOptions(uiSchema);
 
 		const innerUiSchema = getInnerUiSchema(uiSchema);
-		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, buttonField);
-		uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
+
+		const buttonFieldJSONPointer = uiSchemaJSONPointer(schema, buttonField);
+		const buttonFieldUiSchema = merge(parseJSONPointer(innerUiSchema, buttonFieldJSONPointer) || {}, {
 			"ui:widget": "InputWithDefaultValueButtonWidget",
 			"ui:options": {
 				buttonLabel,
 				onClick: this.onClick
-			},
-		}, _uiSchemaJSONPointer);
+			}
+		});
+
+		uiSchema = updateSafelyWithJSONPointer(innerUiSchema, buttonFieldUiSchema, buttonFieldJSONPointer);
 
 		return {...props, uiSchema};
 	}
