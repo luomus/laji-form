@@ -35,7 +35,7 @@
     "luomus"
   ],
   "author": "Olli Raitio <olli.raitio@helsinki.fi>",
-  "repository": "https://github.com/luomus/laji-form.git",
+  "repository": "git+https://github.com/luomus/laji-form.git",
   "license": "MIT",
   "dependencies": {
     "@luomus/laji-map": "^5.0.2",
