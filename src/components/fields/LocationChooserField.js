@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { GlyphButton, OverlayTrigger } from "../components";
 import getContext from "../../Context";
-import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
 import ReactContext from "../../ReactContext";
 
@@ -308,7 +308,7 @@ class LocationButton extends React.Component {
 				if (!geometryRef || !geometryRef.type) {
 					break;
 				}
-				that.props.onChange(updateFormDataWithJSONPointer(that.props, getDefaultFormState(parseSchemaFromFormDataPointer(that.props.schema, geometryField)), geometryField));
+				that.props.onChange(updateFormDataWithJSONPointer(that.props, undefined, geometryField));
 				break;
 			}
 			case "edit": {
