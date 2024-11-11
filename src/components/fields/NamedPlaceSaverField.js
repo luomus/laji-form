@@ -8,6 +8,7 @@ import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import * as Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
+import * as memoize from "memoizee";
 
 const SAVE = "SAVE", FETCH = "FETCH";
 
@@ -185,28 +186,27 @@ class PlaceSaverDialog extends React.Component {
 		});
 	}
 
-	onOverwriteCurrent = () => {
-		const {namedPlaceID} = this.props.gathering;
+	onOverwriteCurrentFor = memoize((namedPlaceID) => () => {
 		const gathering = this.getGathering(); //eslint-disable-line no-unused-vars
 		this.onSave({
 			...this.state.placeIdsToPlaces[namedPlaceID],
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
 		});
-	}
+	})
 	
-	onOverwriteSelected = (place) => () => {
+	onOverwriteSelected = memoize((place) => () => {
 		const gathering = this.getGathering(); //eslint-disable-line no-unused-vars
 		this.onSave({
 			...place,
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
 		});
-	}
+	})
 
-	onOverwriteExisting = () => {
-		this.onOverwriteSelected(this.state.placeNamesToPlaces[this.state.value])();
-	}
+	onOverwriteExistingFor = memoize((place) => () => {
+		this.onOverwriteSelected(place)();
+	})
 
 	// Hack that fixed autofocus cursor position
 	onFocus = (e) => {
@@ -249,9 +249,9 @@ class PlaceSaverDialog extends React.Component {
 							getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
 						{" "}
 						{this.props.gathering.namedPlaceID ? 
-							getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
+							getButton(this.onOverwriteCurrentFor(this.props.gathering.namedPlaceID), translations.SaveCurrentOverwrite) : null}
 						{existingPlaces.length === 1 && !this.props.gathering.namedPlaceID ? 
-							getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
+							getButton(this.onOverwriteExistingFor(existingPlaces[0]), translations.SaveExistingOverwrite) : null}
 					</FormGroup>
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>
