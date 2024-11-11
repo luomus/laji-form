@@ -112,7 +112,7 @@ export default class NamedPlaceChooserField extends React.Component {
 
 	onPlaceDeleted = (place, success) => {
 		this.apiClient.fetchRaw(`/named-places/${place.id}`, undefined, {method: "DELETE"}).then(response => {
-			if (response.status === 204) {
+			if (response.status < 400) {
 				// It takes a while for API to remove the place, so we remove it locally and then invalidate again after some time.
 				this.removeIds[place.id] = true;
 				this.apiClient.invalidateCachePath("/named-places");
