@@ -178,14 +178,6 @@ export default class CheckboxWidget extends React.Component {
 		this.getToggleMode(this.props) && this.toggle(e);
 	}, [" "]);
 
-	// onTrueKeyDown = this.props.formContext.utils.keyboardClick(() => {
-	// 	if (this.props.disabled || this.props.readonly) {
-	// 		return;
-	// 	}
-	// 	this.onChange(true);
-	// }, [" "]);
-
-
 	onTrueKeyDown = (e) => {
 		const { key } = e;
 		if (key === " ") {
