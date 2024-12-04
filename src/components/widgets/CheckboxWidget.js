@@ -152,7 +152,7 @@ export default class CheckboxWidget extends React.Component {
 						<ToggleButton id={`${id}-undefined`}
 						              ref={this.undefinedRef}
 						              value={"undefined"}
-						              className={classNames(_value === undefined && tabTargetClass)}
+						              className={classNames(value === undefined && tabTargetClass)}
 						              {...commonProps}
 						              onKeyDown={this.onUndefinedKeyDown}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
@@ -178,24 +178,40 @@ export default class CheckboxWidget extends React.Component {
 		this.getToggleMode(this.props) && this.toggle(e);
 	}, [" "]);
 
-	onTrueKeyDown = this.props.formContext.utils.keyboardClick(() => {
-		if (this.props.disabled || this.props.readonly) {
-			return;
+	// onTrueKeyDown = this.props.formContext.utils.keyboardClick(() => {
+	// 	if (this.props.disabled || this.props.readonly) {
+	// 		return;
+	// 	}
+	// 	this.onChange(true);
+	// }, [" "]);
+
+
+	onTrueKeyDown = (e) => {
+		const { key } = e;
+		if (key === " ") {
+			this.onChange(true);
+			e.preventDefault();
+			e.stopPropagation();
 		}
-		this.onChange(true);
-	}, [" "]);
+	}
 
-	onFalseKeyDown = this.props.formContext.utils.keyboardClick(() => {
-		if (this.props.disabled || this.props.readonly) {
-			return;
+	onFalseKeyDown = (e) => {
+		const { key } = e;
+		if (key === " ") {
+			this.onChange(false);
+			e.preventDefault();
+			e.stopPropagation();
 		}
-		this.onChange(false);
-	}, [" "]);
+	}
 
-	onUndefinedKeyDown = this.props.formContext.utils.keyboardClick(() => {
-		this.onChange(undefined);
-	});
-
+	onUndefinedKeyDown = (e) => {
+		const { key } = e;
+		if (key === " ") {
+			this.onChange(undefined);
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
 
 	toggle = (e) => {
 		if (this.props.disabled || this.props.readonly) {
