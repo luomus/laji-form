@@ -466,9 +466,8 @@ export const formDataEquals = (f1: any, f2: any, context: FormContext, id: strin
 	return _formDataEquals(context)(f1, f2, id);
 };
 
-const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
+const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void, keys = [" ", "Enter"]) => {
 	return (e: KeyboardEvent | React.KeyboardEvent) => {
-		let keys = [" ", "Enter"];
 		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
 			const {shortcuts} = getContext(contextId) as any;
 			keys = keys.filter(k => !shortcuts?.[k]);
