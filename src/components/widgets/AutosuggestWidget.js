@@ -727,6 +727,7 @@ export class Autosuggest extends React.Component {
 			onChange: this.onInputChange,
 			onBlur: this.onBlur,
 			onFocus: this.onFocus,
+			autoComplete: "off"
 		};
 
 		let cssClasses = {
