@@ -106,7 +106,7 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-widget, .laji-form .rw-widget-container, .laji-form .rw-list-option {
+.laji-form .form-control, .laji-form .rw-widget, .laji-form .rw-widget-container, .laji-form-multiselect-input-wrapper {
 	border-radius: 2px !important;
 }
 .laji-form label[type="button"] {
@@ -151,7 +151,7 @@ body .laji-form {
 	border-color: #e6e6e6;
 }
 .laji-form ul.rw-list > li.rw-list-option, .rw-selectlist > li.rw-list-option {
-min-height: 20px;
+	min-height: 20px;
 }
 .laji-form .rw-combobox .rw-list, .laji-form .rw-datetimepicker .rw-list, .laji-form .rw-numberpicker .rw-list, .laji-form .rw-dropdownlist .rw-list, .laji-form .rw-multiselect .rw-list {
     max-height: 50vh;
@@ -502,7 +502,7 @@ min-height: 20px;
 .laji-form .laji-form-drop-zone:hover:not(.disabled) span, .laji-form .laji-form-drop-zone.dragging:not(.disabled) span {
 	color: #a7d490;
 }
-.laji-form  .laji-form-drop-zone.disabled, .laji-form  .laji-form-drop-zone.disabled .glyphicon {
+.laji-form  .laji-form-drop-zone.disabled, .laji-form  .laji-form-drop-zone.disabled .glyphicon, .laji-form-multiselect-input-wrapper-readonly {
 	cursor: not-allowed;
 }
 
@@ -782,7 +782,7 @@ min-height: 20px;
 	padding-top: 3px;
 }
 
-.laji-form .has-error .rw-widget {
+.laji-form .has-error .rw-widget .laji-form .has-error .laji-form-multiselect-input-wrapper {
 	border-color: #a94442 !important;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
@@ -851,7 +851,7 @@ min-height: 20px;
 .laji-form .laji-form-error-list .warning-panel .panel-heading {
 	background-color: #f0ad4e;
 }
-.laji-form .laji-form-warning-container .rw-widget, .laji-form .laji-form-warning-container .form-control {
+.laji-form .laji-form-warning-container .rw-widget, .laji-form .laji-form-warning-container .form-control, .laji-form-warning-container .laji-form-multiselect-input-wrapper {
 	border-color: #f0ad4e !important;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
@@ -1803,4 +1803,95 @@ min-height: 20px;
 }
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical button.active.btn-outline-danger::before {
 	border-left: 15px solid rgb(220, 53, 69);
+}
+
+.laji-form .rw-state-disabled .rw-widget-container {
+	background-color: #eee;
+}
+
+.laji-form-dropdown {
+	max-height: 0;
+	z-index: 1006;
+	overflow: hidden;
+	box-shadow: 0 5px 6px #0003;
+	background: white;
+	min-width: 100%;
+	max-width: 50vw;
+}
+.laji-form-dropdown-open {
+	display: block;
+	overflow: auto;
+  transform: translateY(0);
+	max-height: 400px;
+}
+.laji-form-dropdown-item {
+	height: 30px;
+	line-height: 30px;
+	padding: 0px;
+	padding-left: 8px;
+	border-top: none;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.laji-form-dropdown-item:hover {
+	background-color: #f5f5f5;
+}
+.laji-form-dropdown-item.active {
+	background-color: #337ab7;
+	color: white;
+}
+
+.laji-form-multiselect-input-wrapper ul {
+	padding-left: 2px;
+	margin-bottom: 0px;
+}
+
+.laji-form-multiselect ul li {
+	border: 1px solid;
+	margin: 0px 1px;
+	font-size: 11px;
+	padding: 0px;
+	height: 18px;
+	line-height: 18px;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	border-collapse: separate;
+	padding: 0px 2px;
+}
+.laji-form-multiselect ul li span {
+	margin: 0px 2px;
+}
+
+.laji-form-multiselect-input-wrapper {
+	background: white;
+	border: #ccc 1px solid;
+}
+.laji-form-multiselect-input-wrapper input {
+	border: none;
+}
+.laji-form-multiselect-input-wrapper input:focus {
+	outline: none;
+}
+
+.laji-form-dropdown-caret-container {
+	background-color: white;
+	right: 1px;
+	bottom: 1px;
+	height: 23px;
+	width: 23px;
+	line-height: initial;
+	font-size: 20px;
+}
+.laji-form-dropdown-caret {
+	bottom: 2px;
+	position: absolute;
+	right: 3px;
+}
+
+.laji-form-multiselect-input-wrapper-focus {
+	border: #66afe9 1px solid;
+}
+.laji-form-multiselect-input-wrapper-readonly {
+	background-color: #eee;
 }

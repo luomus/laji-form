@@ -1,4 +1,5 @@
-import { Translations, Lang } from "./components/LajiForm";
+import { Translations } from "./components/LajiForm";
+import { Lang } from "./types";
 
 interface Query {
 	[param: string]: any;

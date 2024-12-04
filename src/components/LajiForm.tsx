@@ -8,11 +8,11 @@ import { capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollInt
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
-import { HasMaybeChildren, Theme } from "../themes/theme";
+import { Theme } from "../themes/theme";
 import Context, { ContextProps } from "../ReactContext";
 import StubTheme from "../themes/stub";
 import Form from "@rjsf/core";
-import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, TemplatesType } from "@rjsf/utils";
+import { Field, Widget, TemplatesType } from "@rjsf/utils";
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import instanceContext from "../Context";
 import * as translations from "../translations.json";
@@ -26,6 +26,7 @@ import DOMIdService from "../services/dom-id-service";
 import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
 import SingletonMapService from "../services/singleton-map-service";
+import { HasMaybeChildren, Lang } from "../types";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -240,20 +241,6 @@ export interface FormContext {
 		rootInstance: RootInstanceService,
 		singletonMap: SingletonMapService,
 	}
-}
-
-export type Lang = "fi" | "en" | "sv";
-
-export interface FieldProps extends RJSFFieldProps<any, any, FormContext> {
-	uiSchema: any;
-	errorSchema: any;
-	formContext: FormContext;
-}
-
-export interface WidgetProps extends RJSFWidgetProps<any, any, FormContext> {
-	uiSchema: any;
-	errorSchema: any;
-	formContext: FormContext;
 }
 
 export type NotifyMessager = (msg: string) => void;

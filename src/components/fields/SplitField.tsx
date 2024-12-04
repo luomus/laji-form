@@ -4,8 +4,8 @@ import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import ReactContext from "../../ReactContext";
-import { FieldProps } from "../LajiForm";
 import { getTemplate } from "@rjsf/utils";
+import { FieldProps } from "../../types";
 
 @BaseComponent
 export default class SplitField extends React.Component<FieldProps> {
@@ -33,14 +33,14 @@ export default class SplitField extends React.Component<FieldProps> {
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
-		const {"ui:title": _title} = this.props.uiSchema;
+		const {"ui:title": _title} = this.props.uiSchema || {};
 		const {Row, Col} = this.context.theme;
 		return (
 			<div>
 				<TitleFieldTemplate
 					id={`${this.props.idSchema.$id}__title`}
-					title={_title !== undefined ? _title : this.props.title}
-					required={this.props.required || this.props.uiSchema["ui:required"]}
+					title={_title !== undefined ? _title : this.props.title as any}
+					required={this.props.required || this.props.uiSchema?.["ui:required"]}
 					schema={this.props.schema}
 					uiSchema={this.props.uiSchema}
 					registry={this.props.registry}

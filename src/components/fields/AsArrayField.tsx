@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { FieldProps } from "../LajiForm";
+import { FieldProps } from "../../types";
 
 @VirtualSchemaField
 export default class AsArrayField extends React.Component<FieldProps> {

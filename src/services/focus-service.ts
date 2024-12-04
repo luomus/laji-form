@@ -51,7 +51,9 @@ export default class FocusService {
 			const input = document.querySelector(`#${id}`) as HTMLInputElement;
 
 			if (elem) scrollIntoViewIfNeeded(elem, this.formContext.topOffset, this.formContext.bottomOffset);
-			if (input && input.focus) input.focus();
+			if (input && input.focus) {
+				input.focus();
+			}
 
 			if (!elem) return;
 
@@ -61,7 +63,7 @@ export default class FocusService {
 
 	focusNextInput(reverse = false) {
 		if (!this.formContext.formRef.current) {
-			console.warn("Focus service can't  doesn't have ref to the form");
+			console.warn("Focus service doesn't have ref to the form");
 			return;
 		}
 		return this.formContext.utils.focusNextInput(reverse);

@@ -1,5 +1,5 @@
-import {FieldProps, WidgetProps} from "../components/LajiForm";
-import {getFieldUUID} from "../utils";
+import { FieldProps, WidgetProps } from "../types";
+import { getFieldUUID } from "../utils";
 
 export interface SubmitHook {
 	hook: () => void;
@@ -55,7 +55,6 @@ export default class SubmitHookService {
 		]);
 		return _hook;
 	}
-
 
 	/**
 	 * Add a submit hook for a Field component.

@@ -977,6 +977,7 @@ class TableArrayFieldTemplate extends React.Component {
 										    onClick={this.getOnChangeActive(idx)}
 										    className={className}
 										    tabIndex={idx === activeIdx ? undefined : 0}
+										    role={idx === activeIdx ? undefined : "button"}
 										    id={idx !== activeIdx ? `_laji-form_${ArrayFieldPatched.prototype.getIdSchema(this.props, idx).$id}` : undefined}
 										    ref={setItemRef(idx)}
 										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}

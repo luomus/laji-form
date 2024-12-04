@@ -1,9 +1,10 @@
 import * as React from "react";
 import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID, isDefaultData } from "../../utils";
-import { FieldProps, FormContext } from "../LajiForm";
+import { FormContext } from "../LajiForm";
 import * as memoize from "memoizee";
 import ReactContext from "../../ReactContext";
 import {TooltipComponent} from "../components";
+import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
 const Spinner = require("react-spinner");
 
 interface Options {
@@ -268,7 +269,7 @@ const getIdToOrigIdx = memoize((formData: any[]) => getIdToIdx(formData), {max: 
  * Can be used only if items are objects (non-objects don't have UUIDs which are used for
  * keeping the original order intact upon changes);
  */
-export default class SortArrayField extends React.Component<FieldProps, State> {
+export default class SortArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, State> {
 
 	state: State = {sortCols: []};
 
@@ -278,7 +279,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 	*/
 	sortTimeIdToOrigIdx: Record<string, number> = {};
 
-	constructor(props: FieldProps) {
+	constructor(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>) {
 		super(props);
 		props.formContext.services.settings.bind(this, props);
 		this.syncColumns();
@@ -322,7 +323,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		});
 	}
 
-	getUiShema(props: FieldProps, {sortCols}: State, sortedData: any[]) {
+	getUiShema(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>, {sortCols}: State, sortedData: any[]) {
 		const idToSortedIdx = getIdToSortedIdx(sortedData);
 		const idToOrigIdx = getIdToSortedIdx(props.formData);
 		const nextComponentUiSchema = getInnerUiSchema(props.uiSchema);
@@ -351,7 +352,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 		};
 	}
 
-	getSortableColumns(props: FieldProps) {
+	getSortableColumns(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>) {
 		const {uiSchema, schema} = props;
 		const {sortableColumns, excludeSortableColumns} = getUiOptions(uiSchema) as Options;
 		if (sortableColumns) {
@@ -477,7 +478,7 @@ export default class SortArrayField extends React.Component<FieldProps, State> {
 	}
 
 	render() {
-		const {SchemaField} = this.props.registry.fields;
+		const SchemaField = this.props.registry.fields.SchemaField as any; // TODO as any
 		const nextProps = this.getNextComponentProps(this.props, this.state);
 		return (
 			<SchemaField

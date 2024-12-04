@@ -1,5 +1,5 @@
+import { FieldProps, WidgetProps } from "../types";
 import { getReactComponentName } from "../utils";
-import { FieldProps, WidgetProps } from "./LajiForm";
 
 type Constructor<T> = new(...args: any[]) => T;
 

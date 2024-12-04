@@ -1,11 +1,8 @@
 import * as React from "react";
+import { HasMaybeChildren, HasMaybeClassName } from "../types";
 
 export type Variant = "default" | "primary" | "success" | "info" | "warning" | "danger" | "outline-danger" | string;
 export type ButtonVariant = Variant | "link";
-
-export interface HasMaybeChildren {
-	children?: React.ReactNode;
-}
 
 interface HasMaybeRef {
 	ref?: React.Ref<any> | React.LegacyRef<any>;
@@ -13,10 +10,6 @@ interface HasMaybeRef {
 
 interface HasMaybeStyle {
 	style?: React.CSSProperties;
-}
-
-interface HasMaybeClassName {
-	className?: string;
 }
 
 export interface PanelProps extends HasMaybeRef, HasMaybeClassName, HasMaybeStyle {
@@ -145,8 +138,9 @@ export interface FormControlProps extends React.HTMLProps<any>, HasMaybeRef {
 	validationState?: ValidationState;
 }
 
-export interface ListGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef {
+export interface ListGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeStyle, HasMaybeClassName {
 	fill?: boolean;
+	tabIndex?: number;
 }
 
 export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeClassName {
@@ -154,6 +148,7 @@ export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeCla
 	disabled?: boolean;
 	header?: React.ReactNode;
 	active?: boolean;
+	tabIndex?: number;
 }
 
 export type Breadcrumb = React.ComponentType<any> & {

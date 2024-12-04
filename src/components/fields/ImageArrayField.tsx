@@ -11,7 +11,7 @@ const Spinner = require("react-spinner");
 import * as exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
 import * as moment from "moment";
-import { FieldProps } from "../LajiForm";
+import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
@@ -42,7 +42,7 @@ interface MediaMetadataSchema {
 }
 
 @MediaArrayField
-export default class ImageArrayField extends React.Component<FieldProps, ImageArrayFieldState> {
+export default class ImageArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, ImageArrayFieldState> {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -83,7 +83,7 @@ export interface MediaArrayState {
 }
 
 type Constructor<LFC> = new(...args: any[]) => LFC;
-export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps, MediaArrayState>>>(ComposedComponent: LFC) {
+export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, MediaArrayState>>>(ComposedComponent: LFC) {
 
 	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
@@ -245,7 +245,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const {DescriptionFieldTemplate} = this.props.registry.templates;
 
 			const mediaCount = (this.props.formData || []).length + (this.state.tmpMedias || []).length;
-			const showAdd = isNullOrUndefined(this.props.schema.maxItems) || mediaCount < this.props.schema.maxItems;
+			const showAdd = isNullOrUndefined(this.props.schema.maxItems) || mediaCount < (this.props.schema.maxItems as number);
 
 			return (
 				<Row>

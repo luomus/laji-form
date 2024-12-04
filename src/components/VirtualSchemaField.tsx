@@ -2,7 +2,7 @@ import * as React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
 import BaseComponent from "./BaseComponent";
 import getContext from "../Context";
-import { FieldProps } from "./LajiForm";
+import { FieldProps } from "../types";
 
 export function getPropsWithInnerUiSchema(props: FieldProps): FieldProps {
 	return {

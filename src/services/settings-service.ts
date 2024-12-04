@@ -1,4 +1,4 @@
-import { FieldProps, WidgetProps } from "../components/LajiForm";
+import { FieldProps, WidgetProps } from "../types";
 import { parseJSONPointer } from "../utils";
 const equals = require("deep-equal");
 
@@ -65,7 +65,7 @@ export default class SettingsService {
 	 * @param that this of the React component
 	 * @param props The constructor props
 	 */
-	bind<P extends (FieldProps | WidgetProps)> (that: React.Component<P>, props: P) {
+	bind<P extends (FieldProps<any> | WidgetProps)> (that: React.Component<P>, props: P) {
 		this.loadContextSettings(props, props.formContext.globals);
 		that.state = this.loadStateSettings(props, that.state);
 

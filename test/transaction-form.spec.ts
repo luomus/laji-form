@@ -20,7 +20,7 @@ test.describe("transaction form (MHL.930)", () => {
 		typeEnum$ = form.$getEnumWidget("type");
 
 		await typeEnum$.openEnums();
-		await typeEnum$.$$enums.first().click();
+		await typeEnum$.$$enums.nth(1).click();
 	});
 
 	test("sets correct name and email when clicking a me button", async () => {

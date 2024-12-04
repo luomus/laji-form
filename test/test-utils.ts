@@ -52,8 +52,8 @@ function getEnumWidgetForContainer($container: Locator) {
 	return {
 		$container,
 		openEnums: () => $container.click(),
-		$enumContainer: $container.locator(".rw-popup-container"),
-		$$enums: $container.locator(".rw-list-option"),
+		$enumContainer: $container.locator(".lajii-form-dropdown"),
+		$$enums: $container.locator(".laji-form-dropdown-item"),
 		$input: $container.locator("input")
 	};
 }
@@ -161,7 +161,7 @@ export class Form {
 	}
 
 	$getEnumWidget(str: string){
-		const $container = this.$locate(str).locator(".rw-combobox");
+		const $container = this.$locate(str).locator(".laji-form-dropdown-container");
 		return getEnumWidgetForContainer($container);
 	}
 
@@ -285,7 +285,7 @@ export class Form {
 		const $namedPlaceChooserModal = this.page.locator(".named-place-chooser-modal");
 		const $mapPopupContainer = this.page.locator(".named-place-popup");
 		return {
-			select: getEnumWidgetForContainer(this.page.locator("#named-place-chooser-select")),
+			select: getEnumWidgetForContainer($namedPlaceChooserModal.locator(".laji-form-dropdown-container")),
 			mapPopup: {
 				$container: $mapPopupContainer,
 				$useBtn: $mapPopupContainer.locator(".btn-default")

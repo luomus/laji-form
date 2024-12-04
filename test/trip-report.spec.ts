@@ -25,7 +25,7 @@ const _testWidget = (form: DemoPageForm) => async (path: string, type?: string) 
 		await widget.$container.click();
 		await expect(widget.$$enums.first()).toBeVisible();
 		$secondOption = widget.$$enums.nth(1);
-		$otherOptionThanActive = (await $secondOption.getAttribute("class")).includes("rw-state-selected")
+		$otherOptionThanActive = (await $secondOption.getAttribute("class")).includes("active")
 			? widget.$$enums.first()
 			: $secondOption;
 		await $otherOptionThanActive.click();

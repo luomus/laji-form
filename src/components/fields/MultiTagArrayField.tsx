@@ -4,12 +4,12 @@ import BaseComponent from "../BaseComponent";
 import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
 import { Affix, Button } from "../components";
-import { FieldProps } from "../LajiForm";
 import { ReactInstance } from "react";
 import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
 import * as memoize from "memoizee";
 import { findDOMNode } from "react-dom";
+import { FieldProps, JSONSchemaObject } from "../../types";
 const equals = require("deep-equal");
 
 interface CommonButtonOptions {
@@ -39,7 +39,7 @@ interface State {
 }
 
 @BaseComponent
-export default class MultiTagArrayField extends React.Component<FieldProps, State> {
+export default class MultiTagArrayField extends React.Component<FieldProps<JSONSchemaObject>, State> {
 	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -108,8 +108,14 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 
 		const propertyKeys = Object.keys(schema.properties);
 
+		const containerClassNames = classNames(
+			"laji-form-multi-tag-array-field",
+			activeButtonIdx !== undefined && "laji-form-multi-tag-array-field-active",
+			(disabled || readonly) && "laji-form-multi-tag-array-field-disabled"
+		);
+
 		return (
-			<Row className={classNames("laji-form-multi-tag-array-field", activeButtonIdx !== undefined && "laji-form-multi-tag-array-field-active")} ref={this.setAffixContainer}>
+			<Row className={containerClassNames} ref={this.setAffixContainer}>
 				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"}>
 					<Affix getContainer={this.getAffixContainer}
 					       topOffset={this.props.formContext.topOffset + 15}
@@ -132,7 +138,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps, Stat
 						<SchemaField
 							{...this.props}
 							key={key}
-							schema={{title: "", ...schema.properties[key]}}
+							schema={{title: "", ...schema.properties[key]} as any}
 							uiSchema={{
 								"ui:field": "TagArrayField",
 								...uiSchema[key],

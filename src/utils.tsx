@@ -6,9 +6,10 @@ import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "@luomus/laji-map/lib/utils";
 const deepEquals = require("deep-equal");
-import { UiSchema, RJSFSchema } from "@rjsf/utils";
-import { FormContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
+import { RJSFSchema } from "@rjsf/utils";
+import { FormContext, Translations, ByLang } from "./components/LajiForm";
 import rjsfValidator from "@rjsf/validator-ajv6";
+import { FieldProps, Lang, UiSchema } from "./types";
 
 export const isObject = _isObject;
 
@@ -112,7 +113,7 @@ export function immutableDelete(_obj: any, _delProp: string) {
 
 }
 
-export function getUiOptions(container: UiSchema) {
+export function getUiOptions(container?: UiSchema) {
 	if (container) {
 		const options = container["ui:options"] || container.options;
 		return options ? options : {};
@@ -128,14 +129,18 @@ interface SchemaFieldWrappersContext {
 	[name: string]: boolean;
 }
 
-export function getInnerUiSchema(parentUiSchema: UiSchema) {
-	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && ((getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
+export function getInnerUiSchema(parentUiSchema: UiSchema = {}): UiSchema {
+	let {uiSchema, ...restOfUiSchema} = parentUiSchema;
+	if (uiSchema
+		&& (
+			(getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]]
+			|| (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]
+		) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
 				...(uiSchema["ui:buttons"] || []),
-				...parentUiSchema["ui:buttons"]
+				...(parentUiSchema["ui:buttons"] || [])
 			]
 		};
 	}
@@ -1009,7 +1014,7 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
-export const getUUID = (item: any): number => item ? (item.id || item._lajiFormId) : undefined;
+export const getUUID = (item?: any): number => item ? (item.id || item._lajiFormId) : undefined;
 
 /**
  * Return item UUID or the parent UUID
@@ -1201,3 +1206,15 @@ export function translate(translations: ByLang, key: string, params?: {[key: str
 		translations[key]
 	);
 }
+
+/**
+ * @param value the default value of the setter
+ * @returns [stateValue, setTrue, setFalse]
+ */
+export function useBooleanSetter(value: boolean): [boolean, () => void, () => void] {
+	const [open, setOpen] = React.useState(value);
+	const setTrue = React.useCallback(() => setOpen(true), []);
+	const setFalse = React.useCallback(() => setOpen(false), []);
+	return [open, setTrue, setFalse];
+}
+

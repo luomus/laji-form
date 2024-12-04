@@ -169,7 +169,7 @@ export class TagInputComponent extends React.Component {
 		});
 
 		return (
-			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
+			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${(readonly || disabled) ? " rw-state-disabled" : ""}`}
 				onClick={this.onClick}>
 				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
