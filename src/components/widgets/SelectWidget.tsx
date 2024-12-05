@@ -117,9 +117,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
 		(displayedEnums || []).length,
-		value !== undefined && value !== ""
-			? displayedEnums.findIndex(item => item.value === value)
-			: 0
+		getDefaultActiveIdx(displayedEnums, value)
 	);
 
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
@@ -160,8 +158,13 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			activeIdx !== undefined && displayedEnums && onItemSelected(displayedEnums[activeIdx]);
 			e.preventDefault();
 			break;
+		case "Escape":
+			setInputValue("");
+			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
+			e.preventDefault();
+			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected, setActiveIdx, value]);
 
 	const onFocus = useCallback(() => {
 		show();
@@ -284,6 +287,11 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			activeIdx !== undefined && displayedEnums && onItemSelected(displayedEnums[activeIdx]);
 			e.preventDefault();
 			break;
+		case "Escape":
+			setInputValue("");
+			setActiveIdx(undefined);
+			e.preventDefault();
+			break;
 		case "Backspace":
 			if (inputValue === "" && value?.length) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -292,7 +300,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			}
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, inputValue, onChange, onItemSelected, value]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, inputValue, onChange, onItemSelected, setActiveIdx, value]);
 
 	/* eslint-disable @typescript-eslint/no-non-null-assertion */
 	const onDelete = useCallback((enu: EnumOptionsType) => {
@@ -384,3 +392,8 @@ function ListItem(
 		</div>
 	);
 }
+
+const getDefaultActiveIdx = (displayedEnums: EnumOptionsType<unknown>[], value: string | undefined) => 
+	value !== undefined && value !== ""
+		? displayedEnums.findIndex(item => item.value === value)
+		: 0;
