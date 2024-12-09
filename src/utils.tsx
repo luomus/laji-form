@@ -1217,3 +1217,10 @@ export function useBooleanSetter(value: boolean): [boolean, () => void, () => vo
 	return [open, setTrue, setFalse];
 }
 
+export function usePrevious<T>(value: T): T | undefined {
+	const ref = React.useRef<T>();
+	React.useEffect(() => {
+		ref.current = value;
+	});
+	return ref.current;
+}

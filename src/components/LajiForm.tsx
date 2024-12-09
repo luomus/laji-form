@@ -219,7 +219,7 @@ export interface FormContext {
 	googleApiKey: string;
 	notifier: Notifier;
 	apiClient: ApiClient;
-	Label: React.Component;
+	Label: React.ComponentType<{ label?: string, id: string }>;
 	formDataTransformers?: any[];
 	_parentLajiFormId?: number;
 	mediaMetadata?: MediaMetadata;

@@ -1,15 +1,16 @@
 import * as React from "react";
 // import * as PropTypes from "prop-types";
 import ReactContext from "../../ReactContext";
-import { getUiOptions, isDescendant, classNames, useBooleanSetter } from "../../utils";
+import { getUiOptions, isDescendant, classNames, useBooleanSetter, usePrevious } from "../../utils";
 import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
 import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } from "../../types";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { findDOMNode } from "react-dom";
+const Spinner = require("react-spinner");
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
 	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
-	const [idx, _setIdx] = React.useState<number | undefined>(defaultIdx);
+	const [idx, _setIdx] = useState<number | undefined>(defaultIdx);
 	const setIdx = useCallback((idx?: number) => {
 		let nextIdx: number | undefined = idx;
 		if (idx === undefined || idx < 0 || length === 0) {
@@ -30,8 +31,9 @@ function removeByIndex<T>(array: T[], index: number): T[] {
 	return [...array.slice(0, index), ...array.slice(index + 1)];
 }
 
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty?: true): EnumOptionsType<string | undefined>[];
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty?: undefined | false): EnumOptionsType<string>[];
+function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty: true): EnumOptionsType<string | undefined>[];
+function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty: undefined | false): EnumOptionsType<string>[];
+function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty?: boolean): EnumOptionsType<string | undefined>[];
 function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty = true): EnumOptionsType<string | undefined>[] {
 	const enums: EnumOptionsType[] = (getUiOptions(uiSchema).enumOptions || enumOptions);
 	const emptyIdx = enums.findIndex(e => e.value === "");
@@ -46,18 +48,22 @@ function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEm
 	}
 }
 
+type SelectWidgetCustomProps = {
+	includeEmpty?: boolean;
+	getEnumOptionsAsync?: () => Promise<EnumOptionsType<string>[]>
+}
+
 type SingleSelectWidgetProps = Omit<WidgetProps<JSONSchemaEnum>, "value" | "onChange"> & {
 	value?: string
 	onChange: (value?: string) => void;
-};
+} & SelectWidgetCustomProps;
 type MultiSelectWidgetProps = Omit<WidgetProps<JSONSchemaArray<JSONSchemaEnumOneOf>>, "value" | "onChange"> & {
 	value?: string[]
 	onChange: (value?: string[]) => void;
-};
+} & SelectWidgetCustomProps;
 
 type SelectWidgetProps = SingleSelectWidgetProps | MultiSelectWidgetProps;
 export default function SelectWidget(props: SelectWidgetProps): JSX.Element | null {
-// export default function SelectWidget(props: SelectWidgetProps): Widget<JSONSchemaEnum | JSONSchemaArray<JSONSchemaEnumOneOf>> {
 	return props.schema.type === "array" ? <SearchableMultiDrowndown {...props as MultiSelectWidgetProps} /> : <SearchableDrowndown {...props as SingleSelectWidgetProps} />;
 }
 
@@ -83,14 +89,14 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		getEnumOptions(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
-	const [inputValue, setInputValue] = React.useState(
+	const [inputValue, setInputValue] = useState(
 		value
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			? enumOptions.find(item => item.value === value)!.label
 			: ""
 	);
-	const [inputTouched, setInputTouched] = React.useState(false);
-	const [filterTerm, setFilterTerm] = React.useState("");
+	const [inputTouched, setInputTouched] = useState(false);
+	const [filterTerm, setFilterTerm] = useState("");
 
 	const onInputChange = useCallback((e) => {
 		const {value} = e.target;
@@ -127,7 +133,6 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
 		hide();
 	}, [displayedEnums, hide, onChange, setActiveIdx]);
-
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -201,14 +206,25 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		uiSchema,
 		options,
 		onChange,
+		getEnumOptionsAsync
 	} = props;
-	const enumOptions = React.useMemo(() =>
+	// const enumOptions = React.useMemo(() =>
+	// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	// 	getEnumOptions(options.enumOptions!, uiSchema, false),
+	// [options.enumOptions, uiSchema]);
+	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
+		? undefined
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		getEnumOptions(options.enumOptions!, uiSchema, false),
-	[options.enumOptions, uiSchema]);
+		: getEnumOptions(options.enumOptions!, uiSchema, false)
+	);
 
-	const [inputValue, setInputValue] = React.useState("");
-	const [filterTerm, setFilterTerm] = React.useState("");
+	const [inputValue, setInputValue] = useState("");
+	const [filterTerm, setFilterTerm] = useState("");
+	const [loading, setLoading] = useState<boolean | undefined>(undefined);
+	const [isOpen, show, hide] = useBooleanSetter(false);
+
+	const containerRef = React.useRef<HTMLDivElement>(null);
+	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const onInputChange = useCallback((e) => {
 		const {value} = e.target;
@@ -220,6 +236,9 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 	}, [inputValue]);
 
 	const displayedEnums = React.useMemo(() => {
+		if (!enumOptions) {
+			return [];
+		}
 		const notAlreadySelected = value?.length
 			? enumOptions.filter(({ value: enumValue }) =>
 				!value.includes(enumValue)
@@ -234,11 +253,6 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			: notAlreadySelected;
 			
 	}, [filterTerm, enumOptions, value]);
-
-	const [isOpen, show, hide] = useBooleanSetter(false);
-
-	const containerRef = React.useRef<HTMLDivElement>(null);
-	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
 		(displayedEnums || []).length,
@@ -258,6 +272,52 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 
+	const [isFocused, setFocused, setBlurred] = useBooleanSetter(false);
+
+	const loadEnums = useCallback(() => {
+		const asyncOp = async () => {
+			try {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const enums = await getEnumOptionsAsync!();
+				setEnumOptions(enums);
+			} finally {
+				setLoading(false);
+			}
+		};
+		setLoading(true);
+		void asyncOp();
+	}, [getEnumOptionsAsync]);
+
+	const prevEnumOptions = usePrevious(enumOptions);
+
+	// If the enums are async loaded, this effect takes care of opening the
+	// dropdown once the enums are loaded, if the input if still focused.
+	useEffect(() => {
+		if (!getEnumOptionsAsync) {
+			return;
+		}
+		if (isFocused && !prevEnumOptions?.length && enumOptions?.length) {
+			show();
+		}
+	}, [prevEnumOptions, enumOptions, isFocused, show, getEnumOptionsAsync]);
+
+	// If there is a pre-existing value (or a value is updated from parent after component is rendered) and we are async,
+	// load the enums.
+	useEffect(() => {
+		if (value?.length && getEnumOptionsAsync && !enumOptions && !loading) {
+			loadEnums();
+		}
+	}, [enumOptions, getEnumOptionsAsync, loadEnums, loading, value?.length]);
+
+	const onFocus = useCallback(() => {
+		setFocused();
+		if (!enumOptions?.length && getEnumOptionsAsync) {
+			void loadEnums();
+		} else {
+			show();
+		}
+	}, [enumOptions?.length, getEnumOptionsAsync, loadEnums, setFocused, show]);
+
 	const onBlur = useCallback((e: any) => {
 		// Fixes the problem when user tries to click an enum item, `setOpen(false)`
 		// hides the enum list, so the elem list item is hidden before the click, thus never
@@ -265,13 +325,14 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		if (e.relatedTarget && isDescendant(containerRef.current, e.relatedTarget)) {
 			return;
 		}
+		setBlurred();
 		hide();
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelectedByBlur(displayedEnums[activeIdx]);
 		} else {
 			setInputValue("");
 		}
-	}, [activeIdx, displayedEnums, hide, onItemSelectedByBlur]);
+	}, [activeIdx, displayedEnums, hide, onItemSelectedByBlur, setBlurred]);
 
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
@@ -327,8 +388,8 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} className="laji-form-multiselect" style={{ position: "relative" }}>
 			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput}>
 				<ul style={{listStyle: "none", display: "inline-block"}}>{
-					(value || []).map(v => enumOptions.find(({value: _value}) => v === _value))
-						.map((enu: EnumOptionsType<string>) =>
+					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: v}))
+						.map(enu =>
 							<SelectedMultiValue key={enu.value}
 							                    onDelete={onDelete}
 							                    readonly={readonly || disabled}>{enu}</SelectedMultiValue>
@@ -336,13 +397,14 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 				}</ul>
 				<input disabled={disabled || readonly}
 				       id={id}
-				       onFocus={show}
+				       onFocus={onFocus}
 				       value={inputValue}
 				       onChange={onInputChange}
 				       autoComplete="off"
 				       ref={inputRef} />
+				{ loading && <Spinner /> }
 			</div>
-			<Caret onFocus={show} />
+			<Caret onFocus={onFocus} />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute", zIndex: 99999 }}
