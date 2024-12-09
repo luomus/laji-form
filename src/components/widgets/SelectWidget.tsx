@@ -381,12 +381,13 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 	const wrapperClassNames = classNames(
 		"laji-form-multiselect-input-wrapper",
 		isOpen && "laji-form-multiselect-input-wrapper-focus",
+		isOpen && "input-highlight",
 		(readonly || disabled) && "laji-form-multiselect-input-wrapper-readonly"
 	);
 
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} className="laji-form-multiselect" style={{ position: "relative" }}>
-			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput}>
+			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput} style={{cursor: "text"}}>
 				<ul style={{listStyle: "none", display: "inline-block"}}>{
 					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: v}))
 						.map(enu =>
