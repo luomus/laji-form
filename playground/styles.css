@@ -1884,9 +1884,12 @@ body .laji-form {
 	font-size: 20px;
 }
 .laji-form-dropdown-caret {
-	bottom: 2px;
 	position: absolute;
 	right: 3px;
+	bottom: 0px;
+}
+.laji-form-dropdown-caret img {
+	width: 20px;
 }
 
 .laji-form-multiselect-input-wrapper-focus {

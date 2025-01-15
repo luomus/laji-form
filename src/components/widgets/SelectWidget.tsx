@@ -435,7 +435,7 @@ const SelectedMultiValue = ({ children: enu, onDelete, readonly }:
 
 const Caret = ({onFocus}: {onFocus: () => void}) =>
 	<div className="laji-form-dropdown-caret-container" style={{ position: "absolute", pointerEvents: "none" }}>
-		<span onFocus={onFocus} className="laji-form-dropdown-caret" >⌄</span>
+		<span onFocus={onFocus} className="laji-form-dropdown-caret" ><img src="https://cdn.laji.fi/images/icons/caret-down.svg" /></span>
 	</div>;
 
 function ListItem(
