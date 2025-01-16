@@ -1186,6 +1186,9 @@ body .laji-form {
 	margin-top: 5px;
 }
 
+.laji-form .autosuggest-input-addon {
+	margin-bottom: 0px;
+}
 .laji-form .autosuggest-input-addon.active {
         color: #2980b9 !important;
 }
@@ -1884,9 +1887,12 @@ body .laji-form {
 	font-size: 20px;
 }
 .laji-form-dropdown-caret {
-	bottom: 2px;
 	position: absolute;
 	right: 3px;
+	bottom: 0px;
+}
+.laji-form-dropdown-caret img {
+	width: 20px;
 }
 
 .laji-form-multiselect-input-wrapper-focus {
@@ -1895,3 +1901,7 @@ body .laji-form {
 .laji-form-multiselect-input-wrapper-readonly {
 	background-color: #eee;
 }
+.laji-form-checkbox-buttons .btn {
+	height: 25px;
+}
+
