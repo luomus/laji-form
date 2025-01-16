@@ -342,6 +342,7 @@ class OrganizationAutosuggestWidget extends React.Component {
 		return (
 			<BasicAutosuggestWidget
 				{...this.props}
+				{...this.props.options}
 				nameField={"fullName"}
 				validValueRegexp={"MOS.\\d+"}
 				Wrapper={OrganizationWrapper}
@@ -357,6 +358,7 @@ class CollectionAutosuggestWidget extends React.Component {
 		return (
 			<BasicAutosuggestWidget
 				{...this.props}
+				{...this.props.options}
 				nameField={"collectionName"}
 				validValueRegexp={"HR.\\d+"}
 				Wrapper={CollectionWrapper}
@@ -372,6 +374,7 @@ class DatasetAutosuggestWidget extends React.Component {
 		return (
 			<BasicAutosuggestWidget
 				{...this.props}
+				{...this.props.options}
 				nameField={"datasetName"}
 				validValueRegexp={"GX.\\d+"}
 				Wrapper={DatasetWrapper}
@@ -392,7 +395,7 @@ class BasicAutosuggestWidget extends React.Component {
 		uiSchema: PropTypes.object,
 		nameField: PropTypes.string,
 		validValueRegexp: PropTypes.string,
-		Wrapper: PropTypes.element
+		Wrapper: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -432,12 +435,10 @@ class BasicAutosuggestWidget extends React.Component {
 	}
 
 	render() {
-		const {options: propsOptions, ...propsWithoutOptions} = this.props;
-
 		const options = {
 			query: {
 				includeSelf: true,
-				...propsOptions.queryOptions
+				...this.props.queryOptions
 			},
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
@@ -445,7 +446,7 @@ class BasicAutosuggestWidget extends React.Component {
 			findExactMatch: this.findExactMatch
 		};
 
-		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		return <Autosuggest {...options} {...this.props} />;
 	}
 }
 
