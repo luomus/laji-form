@@ -1186,6 +1186,9 @@ body .laji-form {
 	margin-top: 5px;
 }
 
+.laji-form .autosuggest-input-addon {
+	margin-bottom: 0px;
+}
 .laji-form .autosuggest-input-addon.active {
         color: #2980b9 !important;
 }
@@ -1898,3 +1901,7 @@ body .laji-form {
 .laji-form-multiselect-input-wrapper-readonly {
 	background-color: #eee;
 }
+.laji-form-checkbox-buttons .btn {
+	height: 25px;
+}
+
