@@ -13,6 +13,10 @@ export const rulePropType = PropTypes.oneOfType([
 		valueLengthLessThan: PropTypes.number,
 		complement: PropTypes.bool
 	}),
+	PropTypes.shape({
+		rule: PropTypes.oneOf(["isAdmin", "isEdit"]),
+		complement: PropTypes.bool
+	}),
 	PropTypes.oneOf(["isAdmin", "isEdit"])
 ]);
 
