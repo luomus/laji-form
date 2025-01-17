@@ -35,6 +35,8 @@ export default class _AutosuggestWidget extends React.Component {
 				return <OrganizationAutosuggestWidget {...this.props} />;
 			case "collection":
 				return <CollectionAutosuggestWidget {...this.props} />;
+			case "dataset":
+				return <DatasetAutosuggestWidget {...this.props} />;
 			default: 
 				return <RangeAutosuggestWidget {...this.props} />;
 			}
@@ -61,6 +63,9 @@ export default class _AutosuggestWidget extends React.Component {
 				break;
 			case "collection":
 				component = CollectionAutosuggestWidget;
+				break;
+			case "dataset":
+				component = DatasetAutosuggestWidget;
 				break;
 			default:
 				component = RangeAutosuggestWidget;
@@ -332,55 +337,72 @@ class FriendsAutosuggestWidget extends React.Component {
 
 class OrganizationAutosuggestWidget extends React.Component {
 	static contextType = ReactContext;
-	constructor(props) {
-		super(props);
-		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
-		this.isValueSuggested = this.isValueSuggested.bind(this);
-	}
-
-	getSuggestionFromValue(value) {
-		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/organization/by-id/${value}`).then(({fullName}) => {
-				if (fullName) {
-					return {
-						value: fullName,
-						key: value
-					};
-				}
-			});
-		} else {
-			return Promise.reject();
-		}
-	}
-
-	isValueSuggested(value) {
-		return !isEmptyString(value) && value.match(/MOS\.\d+/);
-	}
-
-	findExactMatch = (suggestions, inputValue) => {
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
-	}
 
 	render() {
-		const {options: propsOptions, ...propsWithoutOptions} = this.props;
-
-		const options = {
-			query: {
-				includeSelf: true,
-				...propsOptions.queryOptions
-			},
-			getSuggestionFromValue: this.getSuggestionFromValue,
-			isValueSuggested: this.isValueSuggested,
-			Wrapper: OrganizationWrapper,
-			findExactMatch: this.findExactMatch
-		};
-
-		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		return (
+			<BasicAutosuggestWidget
+				{...this.props}
+				{...this.props.options}
+				nameField={"fullName"}
+				validValueRegexp={"MOS.\\d+"}
+				Wrapper={OrganizationWrapper}
+			></BasicAutosuggestWidget>
+		);
 	}
 }
 
 class CollectionAutosuggestWidget extends React.Component {
 	static contextType = ReactContext;
+
+	render() {
+		return (
+			<BasicAutosuggestWidget
+				{...this.props}
+				{...this.props.options}
+				nameField={"collectionName"}
+				validValueRegexp={"HR.\\d+"}
+				Wrapper={CollectionWrapper}
+			></BasicAutosuggestWidget>
+		);
+	}
+}
+
+class DatasetAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
+
+	render() {
+		return (
+			<BasicAutosuggestWidget
+				{...this.props}
+				{...this.props.options}
+				nameField={"datasetName"}
+				validValueRegexp={"GX.\\d+"}
+				Wrapper={DatasetWrapper}
+			></BasicAutosuggestWidget>
+		);
+	}
+}
+
+class BasicAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
+
+	static propTypes = {
+		autosuggestField: PropTypes.string.isRequired,
+		allowNonsuggestedValue: PropTypes.bool,
+		onSuggestionSelected: PropTypes.func,
+		onUnsuggestedSelected: PropTypes.func,
+		onInputChange: PropTypes.func,
+		uiSchema: PropTypes.object,
+		nameField: PropTypes.string,
+		validValueRegexp: PropTypes.string,
+		Wrapper: PropTypes.object
+	}
+
+	static defaultProps = {
+		nameField: "name",
+		validValueRegexp: ""
+	}
+
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -388,11 +410,12 @@ class CollectionAutosuggestWidget extends React.Component {
 	}
 
 	getSuggestionFromValue(value) {
+		const { autosuggestField, nameField } = this.props;
 		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/collection/by-id/${value}`).then(({collectionName}) => {
-				if (collectionName) {
+			return this.props.formContext.apiClient.fetchCached(`/${autosuggestField}/by-id/${value}`).then(result => {
+				if (result[nameField]) {
 					return {
-						value: collectionName,
+						value: result[nameField],
 						key: value
 					};
 				}
@@ -403,7 +426,8 @@ class CollectionAutosuggestWidget extends React.Component {
 	}
 
 	isValueSuggested(value) {
-		return !isEmptyString(value) && value.match(/HR\.\d+/);
+		const regexp = new RegExp(this.props.validValueRegexp);
+		return !isEmptyString(value) && value.match(regexp);
 	}
 
 	findExactMatch = (suggestions, inputValue) => {
@@ -411,20 +435,18 @@ class CollectionAutosuggestWidget extends React.Component {
 	}
 
 	render() {
-		const {options: propsOptions, ...propsWithoutOptions} = this.props;
-
 		const options = {
 			query: {
 				includeSelf: true,
-				...propsOptions.queryOptions
+				...this.props.queryOptions
 			},
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
-			Wrapper: CollectionWrapper,
+			Wrapper: this.props.Wrapper,
 			findExactMatch: this.findExactMatch
 		};
 
-		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		return <Autosuggest {...options} {...this.props} />;
 	}
 }
 
@@ -1438,3 +1460,4 @@ const getWrapper = (unknownValueLabel) => React.forwardRef(({formContext, childr
 const FriendsWrapper = getWrapper("UnknownName");
 const OrganizationWrapper = getWrapper("UnknownOrganization");
 const CollectionWrapper = getWrapper("UnknownCollection");
+const DatasetWrapper = getWrapper("UnknownTag");

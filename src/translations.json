@@ -79,6 +79,11 @@
 		"en": "Unknown collection",
 		"sv": "Okänd samling"
 	},
+	"unknownTag": {
+		"fi": "Tuntematon tagi",
+		"en": "Unknown tag",
+		"sv": "Okänd tagg"
+	},
 	"fix": {
 		"fi": "Korjaa",
 		"en": "Fix",
