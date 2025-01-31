@@ -580,8 +580,10 @@ export class Autosuggest extends React.Component {
 			: afterStateChange();
 	}
 
-	selectUnsuggested = (value) => {
-		if (isEmptyString(value) && isEmptyString(this.props.value)) return;
+	selectUnsuggested = (inputValue) => {
+		if (isEmptyString(inputValue) && isEmptyString(this.props.value)) return;
+
+		const value = !isEmptyString(inputValue) ? inputValue : undefined;
 
 		const {onUnsuggestedSelected, onChange} = this.props;
 
@@ -591,7 +593,7 @@ export class Autosuggest extends React.Component {
 				onChange(value);
 		};
 
-		const state = {inputValue: value, suggestion: undefined, suggestionForValue: value};
+		const state = {inputValue, suggestion: undefined, suggestionForValue: inputValue};
 		this.mounted
 			? this.setState(state, afterStateChange)
 			: afterStateChange();
@@ -729,7 +731,7 @@ export class Autosuggest extends React.Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(parsedInputValue);
 		} else if (!allowNonsuggestedValue) {
-			this.setState({inputValue: ""}, () => this.props.onChange && this.props.onChange(""));
+			this.setState({inputValue: ""}, () => this.props.onChange && this.props.onChange(undefined));
 		}
 
 		callback && callback();

@@ -64,7 +64,7 @@ export default class ErrorListTemplate extends React.Component {
 				let _path = path;
 				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
 				else _path = `${_path}/properties/${prop}`;
-				const _defaultTitle = uiSchema["ui:multiLanguage"] ? `${title} (${prop})` : prop;
+				const _defaultTitle = _schema.type === "array" || uiSchema["ui:multiLanguage"] ? `${title} (${prop})` : prop;
 				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop], uiSchema[prop] || {}, _defaultTitle);
 				errors = [...errors, ...childErrors.errors];
 				warnings = [...warnings, ...childErrors.warnings];
