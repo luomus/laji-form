@@ -54,6 +54,13 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			await expect(censusAutosuggest.$suggestedGlyph).toBeVisible();
 			await expect(censusAutosuggest.$input).toHaveValue("Aves");
 		});
+
+		test("sets empty value undefined", async () => {
+			await censusAutosuggest.$input.clear();
+			await censusAutosuggest.$input.press("Enter");
+			await expect(censusAutosuggest.$loadingSpinner).not.toBeVisible();
+			expect((await form.getChangedData()).gatherings[0].taxonCensus[0].censusTaxonID).toBe(undefined);
+		});
 	});
 
 	test.describe("unit taxon", () => {

@@ -217,6 +217,7 @@ export class Form {
 			$input: this.$locate(lajiFormLocator).locator("input"),
 			$suggestionsContainer: this.$locate(lajiFormLocator).locator(".rw-list"),
 			$suggestions: this.$locate(lajiFormLocator).locator(".rw-list-option"),
+			$loadingSpinner: this.$locate(lajiFormLocator).locator(".react-spinner"),
 		};
 	}
 
