@@ -744,8 +744,7 @@ export class Autosuggest extends React.Component {
 		const inputProps = {
 			id: this.props.id,
 			value: inputValue,
-			readonly: props.readonly,
-			disabled: props.disabled,
+			disabled: props.disabled || props.readonly,
 			placeholder: props.placeholder,
 			...(this.props.inputProps || {}),
 			onChange: this.onInputChange,
