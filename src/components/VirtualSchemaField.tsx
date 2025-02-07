@@ -61,7 +61,8 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 				"registry",
 				"onChange",
 				"disabled",
-				"readonly"
+				"readonly",
+				"required"
 			].reduce<FieldProps>((_props, prop) => {
 				if (prop in props) _props[prop] = props[prop];
 				return _props;
