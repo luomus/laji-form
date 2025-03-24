@@ -361,7 +361,11 @@ class MobileEditorMap extends React.Component {
 		super(props);
 		const {center, radius} = this.props;
 
-		this.state = {mapOptions: this.setViewFromCenterAndRadius(center, radius)};
+		this.state = {
+			mapOptions: this.setViewFromCenterAndRadius(center, radius),
+			width: window.innerWidth,
+			height: window.innerHeight
+		};
 	}
 
 	setMobileEditorMapRef = (mapComponent) => {
@@ -376,18 +380,24 @@ class MobileEditorMap extends React.Component {
 		this.okButtonElem = findDOMNode(elem);
 	}
 
+	updateDimensions = () => {
+		this.setState({ width: window.innerWidth, height: window.innerHeight });
+	};
+
 	componentDidMount() {
 		this.mounted = true;
 		this.okButtonElem.focus();
+		window.addEventListener("resize", this.updateDimensions);
 	}
 
 	componenWillUnmount() {
 		this.mounted = false;
+		window.removeEventListener("resize", this.updateDimensions);
 	}
 
 	getCircle(radiusPixels) {
 		return (
-			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
+			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
 				<defs>
 					<mask id="mask" x="0" y="0" width="100%" height="100%">
 						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
@@ -396,6 +406,22 @@ class MobileEditorMap extends React.Component {
 				</defs>
 				<rect x="0" y="0" width="100%" height="100%" mask="url(#mask)" fillOpacity="0.2"></rect>    
 				<circle cx="50%" cy="50%" r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
+				<line
+					x1={this.state.width / 2}
+					y1={this.state.height / 2 - radiusPixels}
+					x2={this.state.width / 2}
+					y2={this.state.height / 2 + radiusPixels}
+					stroke="black"
+					strokeWidth="2"
+				/>
+				<line
+					x1={this.state.width / 2 - radiusPixels}
+					y1={this.state.height / 2}
+					x2={this.state.width / 2 + radiusPixels}
+					y2={this.state.height / 2}
+					stroke="black"
+					strokeWidth="2"
+				/>
 			</svg>
 		);
 	}
