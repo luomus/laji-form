@@ -345,6 +345,7 @@ class OrganizationAutosuggestWidget extends React.Component {
 				{...this.props.options}
 				nameField={"fullName"}
 				validValueRegexp={"MOS.\\d+"}
+				cache={false}
 				Wrapper={OrganizationWrapper}
 			></BasicAutosuggestWidget>
 		);
@@ -361,6 +362,7 @@ class CollectionAutosuggestWidget extends React.Component {
 				{...this.props.options}
 				nameField={"collectionName"}
 				validValueRegexp={"HR.\\d+"}
+				cache={false}
 				Wrapper={CollectionWrapper}
 			></BasicAutosuggestWidget>
 		);
@@ -377,6 +379,7 @@ class DatasetAutosuggestWidget extends React.Component {
 				{...this.props.options}
 				nameField={"datasetName"}
 				validValueRegexp={"GX.\\d+"}
+				cache={false}
 				Wrapper={DatasetWrapper}
 			></BasicAutosuggestWidget>
 		);
@@ -395,12 +398,14 @@ class BasicAutosuggestWidget extends React.Component {
 		uiSchema: PropTypes.object,
 		nameField: PropTypes.string,
 		validValueRegexp: PropTypes.string,
+		cache: PropTypes.bool,
 		Wrapper: PropTypes.object
 	}
 
 	static defaultProps = {
 		nameField: "name",
-		validValueRegexp: ""
+		validValueRegexp: "",
+		cache: true
 	}
 
 	constructor(props) {
@@ -412,7 +417,9 @@ class BasicAutosuggestWidget extends React.Component {
 	getSuggestionFromValue(value) {
 		const { autosuggestField, nameField } = this.props;
 		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/${autosuggestField}/by-id/${value}`).then(result => {
+			const apiClient = this.props.formContext.apiClient;
+			const fetch = this.props.cache ? apiClient.fetchCached : apiClient.fetch;
+			return fetch(`/${autosuggestField}/by-id/${value}`).then(result => {
 				if (result[nameField]) {
 					return {
 						value: result[nameField],
@@ -468,12 +475,14 @@ export class Autosuggest extends React.Component {
 		onInputChange: PropTypes.func,
 		uiSchema: PropTypes.object,
 		informalTaxonGroups: PropTypes.string,
-		onInformalTaxonGroupSelected: PropTypes.func
+		onInformalTaxonGroupSelected: PropTypes.func,
+		cache: PropTypes.bool
 	}
 
 	static defaultProps = {
 		allowNonsuggestedValue: true,
-		suggestionReceive: "key"
+		suggestionReceive: "key",
+		cache: true
 	}
 
 	isValueSuggested = (props) => {
@@ -656,7 +665,8 @@ export class Autosuggest extends React.Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
+			const fetch = this.props.cache ? this.apiClient.fetchCached : this.apiClient.fetch;
+			fetch("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
 				if (this.props.prepareSuggestion) {
 					suggestions = suggestions.map(s => this.props.prepareSuggestion(s));
 				}
