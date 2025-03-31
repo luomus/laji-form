@@ -418,7 +418,7 @@ class BasicAutosuggestWidget extends React.Component {
 		const { autosuggestField, nameField } = this.props;
 		if (this.isValueSuggested(value)) {
 			const apiClient = this.props.formContext.apiClient;
-			const fetch = this.props.cache ? apiClient.fetchCached : apiClient.fetch;
+			const fetch = (this.props.cache ? apiClient.fetchCached : apiClient.fetch).bind(apiClient);
 			return fetch(`/${autosuggestField}/by-id/${value}`).then(result => {
 				if (result[nameField]) {
 					return {
@@ -665,7 +665,7 @@ export class Autosuggest extends React.Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			const fetch = this.props.cache ? this.apiClient.fetchCached : this.apiClient.fetch;
+			const fetch = (this.props.cache ? this.apiClient.fetchCached : this.apiClient.fetch).bind(this.apiClient);
 			fetch("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
 				if (this.props.prepareSuggestion) {
 					suggestions = suggestions.map(s => this.props.prepareSuggestion(s));
