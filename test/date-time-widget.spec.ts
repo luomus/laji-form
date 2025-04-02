@@ -17,8 +17,9 @@ test.describe("Date & time widgets", () => {
 	const today0100 = moment(`${moment().format("YYYY-MM-DD")}T01:00`);
 	const yesterday = moment().add(-1, "days");
 	const todayPlusSixMonths = moment().add(6, "months");
+	const todayPlusSixMonthsTwice = moment().add(6, "months").add(6, "months");
+	const todayPlusSixMonthsTwicePlusYear = moment().add(6, "months").add(6, "months").add(1, "years");
 	const todayPlusYear = moment().add(1, "years");
-	const todayPlusTwoYears = moment().add(2, "years");
 	const ISO8601DateFormat = "YYYY-MM-DD";
 	const ISO8601TimeFormat = "HH:mm";
 	const ISO8601FullFormat = `${ISO8601DateFormat}T${ISO8601TimeFormat}`;
@@ -179,15 +180,15 @@ test.describe("Date & time widgets", () => {
 			test("plus six months works second time", async () => {
 				await widget.buttons.$plusSixMonths.click();
 
-				await expect(widget.$input).toHaveValue(todayPlusYear.format(displayDateFormat));
-				expect(await form.getChangedData()).toBe(todayPlusYear.format(ISO8601DateFormat));
+				await expect(widget.$input).toHaveValue(todayPlusSixMonthsTwice.format(displayDateFormat));
+				expect(await form.getChangedData()).toBe(todayPlusSixMonthsTwice.format(ISO8601DateFormat));
 			});
 
 			test("plus year works", async () => {
 				await widget.buttons.$plusYear.click();
 
-				await expect(widget.$input).toHaveValue(todayPlusTwoYears.format(displayDateFormat));
-				expect(await form.getChangedData()).toBe(todayPlusTwoYears.format(ISO8601DateFormat));
+				await expect(widget.$input).toHaveValue(todayPlusSixMonthsTwicePlusYear.format(displayDateFormat));
+				expect(await form.getChangedData()).toBe(todayPlusSixMonthsTwicePlusYear.format(ISO8601DateFormat));
 			});
 
 			test("plus year works with a path option", async () => {

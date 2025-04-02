@@ -17,6 +17,15 @@ test.describe("dataset form (MHL.731)", () => {
 		nameInFinnishInput$ = form.$locate("datasetName_fi").locator("input");
 	});
 
+	test("owner can be selected", async () => {
+		const autosuggest = form.getAutosuggestWidget("owner");
+		await autosuggest.$input.fill("ict team");
+		await autosuggest.$suggestions.first().click();
+		await expect(autosuggest.$input).toHaveValue("University of Helsinki, Finnish Museum of Natural History, General Services Unit, ICT Team");
+		const formData = await form.getChangedData();
+		expect(formData.owner).toBe("MOS.3100");
+	});
+
 	test("sets correct name to dataset when adding a name in one language", async () => {
 		const name = "name";
 
