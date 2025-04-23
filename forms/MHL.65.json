@@ -1453,10 +1453,10 @@
         "fn": "help",
         "delay": 1
       },
-      "Enter": {
+      "alt+Enter": {
         "fn": "navigate"
       },
-      "shift+Enter": {
+      "alt+shift+Enter": {
         "fn": "navigate",
         "reverse": true
       },

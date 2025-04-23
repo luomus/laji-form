@@ -25,12 +25,6 @@ export default class TextareaWidget extends React.Component {
 		this.textareaRef = React.createRef();
 
 		this._context = getContext(props.formContext.contextId);
-		Object.keys(props.formContext.services.keyHandler.shortcuts).some(keyCombo => {
-			if (keyCombo === "Enter") {
-			//	// Direct mutation should be ok in constructor.
-				this.state.enterReserved = true; // eslint-disable-line react/no-direct-mutation-state
-			}
-		});
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
@@ -72,16 +66,6 @@ export default class TextareaWidget extends React.Component {
 		this.onChange(value);
 	}
 
-	onKeyDown = (e) => {
-		const inputAllowed = !this.props.disabled && !this.props.readonly;
-		const isCtrlEnter = e.ctrlKey && e.key === "Enter";
-		if (this.state.enterReserved && inputAllowed && isCtrlEnter) {
-			this.onChange(this.state.value + "\n");
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}
-
 	render() {
 		const {
 			id, options, placeholder, disabled, readonly, autofocus
@@ -92,7 +76,7 @@ export default class TextareaWidget extends React.Component {
 			required = this.props.required
 		} = options;
 
-		const textarea = <textarea
+		return <textarea
 			id={id}
 			className="form-control"
 			value={typeof value === "undefined" ? "" : value}
@@ -107,12 +91,6 @@ export default class TextareaWidget extends React.Component {
 			onChange={this._onChange}
 			onKeyDown={this.onKeyDown}
 		/>;
-
-		return this.state.enterReserved ? (
-			<TooltipComponent tooltip={`${stringifyKeyCombo("ctrl+Enter")} ${this.props.formContext.translations.textareaHint}`} placement="bottom">
-				{textarea}
-			</TooltipComponent>
-		) : textarea;
 	}
 
 }

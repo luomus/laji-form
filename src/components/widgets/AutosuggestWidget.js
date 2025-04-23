@@ -1313,7 +1313,6 @@ class ReactAutosuggest extends React.Component {
 
 	onInputKeyDown = (e) => {
 		let state, suggestion;
-		const {shortcuts} = this.props.formContext.services.keyHandler;
 		switch (e.key) {
 		case "ArrowDown":
 			e.preventDefault();
@@ -1344,13 +1343,9 @@ class ReactAutosuggest extends React.Component {
 		case "Enter":
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
-			if (shortcuts.Enter) {
-				this.props.formContext.setTimeout(() => {
-					suggestion && this.onSuggestionSelected(suggestion);
-				}, 0);
-			} else {
-				this.inputElem.blur();
-			}
+			this.props.formContext.setTimeout(() => {
+				suggestion && this.onSuggestionSelected(suggestion);
+			}, 0);
 			break;
 		case "Control":
 		case "Meta":

@@ -2261,15 +2261,12 @@
       "alt+F5": {
         "fn": "revalidate"
       },
-      "Enter": {
+      "alt+Enter": {
         "fn": "navigate"
       },
-      "shift+Enter": {
+      "alt+shift+Enter": {
         "fn": "navigate",
         "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
       },
       "alt+ ": {
         "fn": "navigate"

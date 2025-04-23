@@ -213,9 +213,10 @@ export function isSelect(schema: RJSFSchema) {
 const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
 const IMG_ADD_CLASS = "laji-form-drop-zone";
 
-const inputTypes = ["input", "select", "textarea"];
 const tabbableSelectors = [
-	...inputTypes, 
+	"input",
+	"select",
+	"textarea",
 	`.${SWITCH_CLASS}`,
 	`.${IMG_ADD_CLASS}`
 ].map(type => `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`);
@@ -231,7 +232,7 @@ export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLEle
 
 export function isTabbableInput(elem: HTMLElement) {
 	return elem.id.match(/^_laji-form_/)
-	|| inputTypes.includes(elem.tagName.toLowerCase())
+	|| ["input", "select", "textarea"].includes(elem.tagName.toLowerCase())
 	|| elem.className.includes(SWITCH_CLASS)
 	|| elem.className.includes(IMG_ADD_CLASS);
 }
@@ -327,7 +328,18 @@ export const getNextInputInInputs = (formContext: FormContext) => (inputElem: HT
 export const getNextInput = (formContext: FormContext) => (inputElem: HTMLElement, reverseDirection = false) => {
 	const formElem = findDOMNode(formContext.formRef.current) as HTMLElement;
 	const fields = getTabbableFields(formElem);
-	return formContext.utils.getNextInputInInputs(inputElem, reverseDirection, fields);
+	const input = formContext.utils.getNextInputInInputs(inputElem, reverseDirection, fields);
+	if (!input) {
+		// Try to find a "tabbable element" from inside the nearest parent schema element.
+		const nearestParentField = findNearestParentSchemaElem(inputElem);
+		if (nearestParentField) {
+			const nearestTabbableElem = nearestParentField.querySelector(tabbableSelectorsQuery);
+			if (nearestTabbableElem) {
+				return formContext.utils.getNextInputInInputs(nearestTabbableElem as HTMLElement, reverseDirection, fields);
+			}
+		}
+	}
+	return input;
 };
 
 export const focusNextInput = (formContext: FormContext) => (reverseDirection = false) => {
@@ -339,8 +351,6 @@ export const focusNextInput = (formContext: FormContext) => (reverseDirection = 
 	if (uiSchema.autoFocus === false) {
 		return false;
 	}
-	const width = pixelsToBsSize(window.outerWidth);
-	if (width === "xs") return false;
 	const field = formContext.utils.getNextInput(document.activeElement as HTMLElement, reverseDirection);
 	if (field) {
 		field.focus();
@@ -472,7 +482,7 @@ const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e:
 			const {shortcuts} = getContext(contextId) as any;
 			keys = keys.filter(k => !shortcuts?.[k]);
 		}
-		if (keys.every(k => e.key !== k)) {
+		if (e.altKey || e.ctrlKey || keys.every(k => e.key !== k)) {
 			return;
 		}
 		e.preventDefault();

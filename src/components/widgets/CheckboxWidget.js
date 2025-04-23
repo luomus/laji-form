@@ -123,6 +123,10 @@ export default class CheckboxWidget extends React.Component {
 
 		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
+		const {Yes, No} = this.props.registry.formContext.translations;
+		const unarbitraryLabels =  displayUndefined || (trueLabel === Yes && falseLabel === No);
+
+
 		const checkbox = (
 			<ButtonToolbar className={classNames("laji-form-checkbox-buttons", toggleMode && "desktop-layout")}>
 				<ToggleButtonGroup ref={this.groupRef}
@@ -138,14 +142,14 @@ export default class CheckboxWidget extends React.Component {
 				                ref={this.trueRef}
 				                value={true}
 				                onClick={toggleMode ? this.toggle : undefined}
-				                className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label", _value === true && tabTargetClass)}
+				                className={classNames(unarbitraryLabels && _value === false && "laji-form-hide-btn-label", _value === true && tabTargetClass)}
 				                onKeyDown={this.onTrueKeyDown}
 				                {...commonProps} >{trueLabel}</ToggleButton>
 					<ToggleButton id={`${id}-false`}
 					              ref={this.falseRef}
 					              value={false}
 					              onClick={toggleMode ? this.toggle : undefined}
-					              className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label", _value === false && tabTargetClass)}
+					              className={classNames(unarbitraryLabels && _value === true && "laji-form-hide-btn-label", _value === false && tabTargetClass)}
 					              onKeyDown={this.onFalseKeyDown}
 					              {...commonProps}>{falseLabel}</ToggleButton>
 					{(displayUndefined ?
@@ -167,42 +171,32 @@ export default class CheckboxWidget extends React.Component {
 	}
 
 	getToggleMode = (props) => {
-		const {allowUndefined, showUndefined, falseLabel, trueLabel} = this.getOptions(props);
+		const {allowUndefined, showUndefined} = this.getOptions(props);
 		const displayUndefined = (allowUndefined && showUndefined);
-		const {Yes, No} = props.registry.formContext.translations;
-		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
+		return !displayUndefined;
 	}
 
 	onGroupKeyDown = this.props.formContext.utils.keyboardClick((e) => {
 		this.getToggleMode(this.props) && this.toggle(e);
-	}, [" "]);
+	});
 
-	onTrueKeyDown = (e) => {
-		const { key } = e;
-		if (key === " ") {
-			this.onChange(true);
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}
+	onTrueKeyDown = this.props.formContext.utils.keyboardClick((e) => {
+		this.onChange(true);
+		e.preventDefault();
+		e.stopPropagation();
+	})
 
-	onFalseKeyDown = (e) => {
-		const { key } = e;
-		if (key === " ") {
-			this.onChange(false);
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}
+	onFalseKeyDown = this.props.formContext.utils.keyboardClick((e) => {
+		this.onChange(false);
+		e.preventDefault();
+		e.stopPropagation();
+	})
 
-	onUndefinedKeyDown = (e) => {
-		const { key } = e;
-		if (key === " ") {
-			this.onChange(undefined);
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}
+	onUndefinedKeyDown = this.props.formContext.utils.keyboardClick((e) => {
+		this.onChange(undefined);
+		e.preventDefault();
+		e.stopPropagation();
+	})
 
 	toggle = (e) => {
 		if (this.props.disabled || this.props.readonly) {
