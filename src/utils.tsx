@@ -354,6 +354,7 @@ export const focusNextInput = (formContext: FormContext) => (reverseDirection = 
 	const field = formContext.utils.getNextInput(document.activeElement as HTMLElement, reverseDirection);
 	if (field) {
 		field.focus();
+		scrollIntoViewIfNeeded(field, formContext.topOffset, formContext.bottomOffset);
 		return true;
 	}
 	return false;
