@@ -165,7 +165,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : <>
-			<Label label={label} required={required} uiSchema={this.props.uiSchema} contextId={this.props.formContext.contextId} />
+			<Label label={label} required={required} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 			{checkbox}
 		</>;
 	}
