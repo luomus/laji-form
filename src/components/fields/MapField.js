@@ -397,14 +397,14 @@ class MobileEditorMap extends React.Component {
 
 	getCircle(radiusPixels) {
 		return (
-			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
+			<svg width={this.state.width} height={this.state.height} style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
 				<defs>
-					<mask id="mask" x="0" y="0" width="100%" height="100%">
-						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
+					<mask id="mask" x="0" y="0" width={this.state.width} height={this.state.height}>
+						<rect x="0" y="0" width={this.state.width} height={this.state.height} fill="#fff"></rect>
 						<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels}></circle>
 					</mask>
 				</defs>
-				<rect x="0" y="0" width="100%" height="100%" mask="url(#mask)" fillOpacity="0.2"></rect>    
+				<rect x="0" y="0" width={this.state.width} height={this.state.height} mask="url(#mask)" fillOpacity="0.2"></rect>
 				<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
 				<line
 					x1={this.state.width / 2}
