@@ -401,11 +401,11 @@ class MobileEditorMap extends React.Component {
 				<defs>
 					<mask id="mask" x="0" y="0" width="100%" height="100%">
 						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
-						<circle cx="50%" cy="50%" r={radiusPixels}></circle>
+						<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels}></circle>
 					</mask>
 				</defs>
 				<rect x="0" y="0" width="100%" height="100%" mask="url(#mask)" fillOpacity="0.2"></rect>    
-				<circle cx="50%" cy="50%" r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
+				<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
 				<line
 					x1={this.state.width / 2}
 					y1={this.state.height / 2 - radiusPixels}
