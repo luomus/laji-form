@@ -363,8 +363,8 @@ class MobileEditorMap extends React.Component {
 
 		this.state = {
 			mapOptions: this.setViewFromCenterAndRadius(center, radius),
-			width: window.innerWidth,
-			height: window.innerHeight
+			width: window.visualViewport?.width || window.innerWidth,
+			height: window.visualViewport?.height || window.innerHeight,
 		};
 	}
 
@@ -381,7 +381,7 @@ class MobileEditorMap extends React.Component {
 	}
 
 	updateDimensions = () => {
-		this.setState({ width: window.innerWidth, height: window.innerHeight });
+		this.setState({ width: window.visualViewport?.width || window.innerWidth, height: window.visualViewport?.height || window.innerHeight });
 	};
 
 	componentDidMount() {
@@ -442,8 +442,8 @@ class MobileEditorMap extends React.Component {
 
 	computePadding = () => {
 		// If the rendered element wasn't full screen, we couldn't use these as height/width.
-		const height = window.innerHeight;
-		const width = window.innerWidth;
+		const height = window.visualViewport?.height || window.innerHeight;
+		const width = window.visualViewport?.width || window.innerWidth;
 		const topToCircleEdgePixels = parseInt(height / 2 - this.DEFAULT_RADIUS_PIXELS);
 		const leftToCircleEdgePixels = parseInt(width / 2 - this.DEFAULT_RADIUS_PIXELS);
 		const padding = [
