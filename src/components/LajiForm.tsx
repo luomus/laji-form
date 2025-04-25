@@ -36,6 +36,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"NestField",
 	"ArrayBulkField",
 	"ArrayBulkField",
+	"ArrayPropertySumField",
 	"ScopeField",
 	"SelectTreeField",
 	"GridLayoutField",

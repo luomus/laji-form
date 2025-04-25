@@ -363,8 +363,8 @@ class MobileEditorMap extends React.Component {
 
 		this.state = {
 			mapOptions: this.setViewFromCenterAndRadius(center, radius),
-			width: window.innerWidth,
-			height: window.innerHeight
+			width: window.visualViewport?.width || window.innerWidth,
+			height: window.visualViewport?.height || window.innerHeight,
 		};
 	}
 
@@ -381,7 +381,7 @@ class MobileEditorMap extends React.Component {
 	}
 
 	updateDimensions = () => {
-		this.setState({ width: window.innerWidth, height: window.innerHeight });
+		this.setState({ width: window.visualViewport?.width || window.innerWidth, height: window.visualViewport?.height || window.innerHeight });
 	};
 
 	componentDidMount() {
@@ -397,15 +397,15 @@ class MobileEditorMap extends React.Component {
 
 	getCircle(radiusPixels) {
 		return (
-			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
+			<svg width={this.state.width} height={this.state.height} style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
 				<defs>
-					<mask id="mask" x="0" y="0" width="100%" height="100%">
-						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
-						<circle cx="50%" cy="50%" r={radiusPixels}></circle>
+					<mask id="mask" x="0" y="0" width={this.state.width} height={this.state.height}>
+						<rect x="0" y="0" width={this.state.width} height={this.state.height} fill="#fff"></rect>
+						<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels}></circle>
 					</mask>
 				</defs>
-				<rect x="0" y="0" width="100%" height="100%" mask="url(#mask)" fillOpacity="0.2"></rect>    
-				<circle cx="50%" cy="50%" r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
+				<rect x="0" y="0" width={this.state.width} height={this.state.height} mask="url(#mask)" fillOpacity="0.2"></rect>
+				<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
 				<line
 					x1={this.state.width / 2}
 					y1={this.state.height / 2 - radiusPixels}
@@ -442,8 +442,8 @@ class MobileEditorMap extends React.Component {
 
 	computePadding = () => {
 		// If the rendered element wasn't full screen, we couldn't use these as height/width.
-		const height = window.innerHeight;
-		const width = window.innerWidth;
+		const height = window.visualViewport?.height || window.innerHeight;
+		const width = window.visualViewport?.width || window.innerWidth;
 		const topToCircleEdgePixels = parseInt(height / 2 - this.DEFAULT_RADIUS_PIXELS);
 		const leftToCircleEdgePixels = parseInt(width / 2 - this.DEFAULT_RADIUS_PIXELS);
 		const padding = [
