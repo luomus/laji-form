@@ -113,7 +113,7 @@ export default class _FieldTemplate extends React.Component {
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}
 					{inlineHelp
 						? (
-							<div className="pull-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} /></div>
+							<div className="pull-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} focusable={true} standalone={true} /></div>
 						) : null
 					}
 				</div>

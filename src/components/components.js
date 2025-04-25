@@ -199,7 +199,9 @@ export class Affix extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (!this.props.onAffixChange || !prevState || !this.state) return;
+		if (!this.props.onAffixChange || !prevState || !this.state) {
+			return;
+		}
 		if (prevState.affixState !== AFFIXED && this.state.affixState === AFFIXED) {
 			this.props.onAffixChange(true);
 		} else if (prevState.affixState === AFFIXED && this.state.affixState !== AFFIXED) {
@@ -423,19 +425,41 @@ export class Stretch extends React.Component {
 	}
 }
 
-export function Help({help, id}) {
-	const helpGlyph = <span className="laji-form-help-glyph text-muted" />;
+/**
+ * @param standalone If provided, the help icon will handle **accessibility** itself.
+ * If not provided, the parent element must take care of showing the tooltip.
+ *
+ * **accessibility** means that it handles showing the tooltip on focus & hover, and
+ */
+export function Help({help, id, focusable = false, onFocus, onBlur, className, onClick, standalone}) {
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
+	const [focused, setFocused] = React.useState(undefined);
+
+	const onHelpFocus = React.useCallback(() => {
+		setFocused(true);
+	}, []);
+
+	const onHelpBlur = React.useCallback(() => {
+		setFocused(false);
+	}, []);
+
+	const helpGlyph = <span className={classNames("laji-form-help-glyph", "text-muted", className)}
+	                        tabIndex={focusable ? 0 : -1}
+	                        onFocus={standalone ? onHelpFocus : onFocus}
+	                        onBlur={standalone ? onHelpBlur : onBlur}
+	                        onClick={onClick} />;
+	const tooltip = <Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip>;
 	return help ? (
-		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
+		<OverlayTrigger placement="right" overlay={tooltip} show={standalone && focused || undefined}>
 			{helpGlyph}
+			{standalone && <div id={`${id}--help`} style={{ display: "none" }}>{ help }</div>}
 		</OverlayTrigger>
 	) : helpGlyph;
 }
 
 export function Label({label, children, id, required, registry = {}, uiSchema = {}}) {
-	const {"ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement} = uiSchema;
+	const {"ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement, labelComponent} = uiSchema;
 	const showHelp = label && help;
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
@@ -450,21 +474,39 @@ export function Label({label, children, id, required, registry = {}, uiSchema = 
 
 	const requiredHtml = required ? "<span class='text-danger'>*</span>" : "";
 
+	const [focused, setFocused] = React.useState(undefined);
+
+	const onHelpFocus = React.useCallback(() => {
+		setFocused(true);
+	}, []);
+
+	const onHelpBlur = React.useCallback(() => {
+		setFocused(false);
+	}, []);
+
+	const onHelpClick = React.useCallback((e) => {
+		e.preventDefault();
+	}, []);
+
+
+	const LabelComponent = labelComponent || "label";
+
 	const labelElem = (
-		<label htmlFor={id}>
+		<LabelComponent htmlFor={id} aria-describedby={`${id}--help`}>
 			<div>
 				<strong dangerouslySetInnerHTML={{__html: label + requiredHtml}} />
-				{showHelp ? <Help /> : null}
+				{showHelp ? <Help focusable={true} onFocus={onHelpFocus} onBlur={onHelpBlur} onClick={onHelpClick} /> : null}
 			</div>
 			{children}
-		</label>
+		</LabelComponent>
 	);
 
-	return (label || help) ? (
-		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext}>
+	return help ? <>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext} show={focused || undefined}>
 			{labelElem}
 		</OverlayTrigger>
-	) : labelElem;
+		<div id={`${id}--help`} style={{ display: "none" }}>{ help }</div>
+	</> : labelElem;
 }
 
 export class ErrorPanel extends React.Component {
@@ -635,11 +677,15 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.props.formContext.setTimeout(() => {
-			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
-				this.setState({hoveringElem: false});
-			}
-		}, 200);
+		if (this.props.hoverable) {
+			this.overlayTimeout = this.props.formContext.setTimeout(() => {
+				if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
+					this.setState({hoveringElem: false});
+				}
+			}, 200);
+		} else { 
+			this.setState({hoveringElem: false});
+		}
 	};
 
 	overlayMouseOver = () => {
@@ -659,15 +705,12 @@ export class OverlayTrigger extends React.Component {
 		} = this.props;
 
 		const {OverlayTrigger} = this.context.theme;
-		if (!this.props.hoverable) return (
-			<OverlayTrigger {...props} overlay={overlay}>
-				{children}
-			</OverlayTrigger>
-		);
 
 		let _overlay = React.cloneElement(overlay, {onMouseOver: this.overlayMouseOver, onMouseOut: this.overlayMouseOut});
 
-		const show = this.state.hoveringElem || this.state.hoveringOverlay;
+		const show = this.props.show !== undefined
+			? this.props.show
+			: this.state.hoveringElem || this.props.hoverable && this.state.hoveringOverlay;
 
 		return (
 			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>

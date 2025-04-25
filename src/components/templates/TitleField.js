@@ -19,15 +19,31 @@ const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) 
 
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
+	const [focused, setFocused] = React.useState(undefined);
+
+	const onHelpFocus = React.useCallback(() => {
+		setFocused(true);
+	}, []);
+
+	const onHelpBlur = React.useCallback(() => {
+		setFocused(false);
+	}, []);
+
+	const onHelpClick = React.useCallback((e) => {
+		e.preventDefault();
+	}, []);
+
 	if (renderedFormatters.length === 0 && isEmptyString(title)) {
 		return null;
 	}
 
-	const helpComponent = help ? <Help /> : null;
+
+	const helpComponent = help ? <Help focusable={true} onFocus={onHelpFocus} onBlur={onHelpBlur} onClick={onHelpClick} /> : null;
 
 	let titleTextContent = <span>
 		<span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent}
 	</span>;
+
 
 	if (help) {
 		const tooltipElem = (
@@ -40,7 +56,7 @@ const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) 
 		);
 
 		titleTextContent = (
-			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext}>
+			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext} show={focused || undefined}>
 				{titleTextContent}
 			</OverlayTrigger>
 		);

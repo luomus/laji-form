@@ -5,7 +5,7 @@ import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
-import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
+import { DeleteButton, Help, TooltipComponent, Button, Affix, OverlayTrigger } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import getContext from "../../Context";
@@ -1190,6 +1190,20 @@ class AccordionHeader extends React.Component {
 		});
 	}
 
+	static state = { focused: false };
+
+	onHelpFocus = () => {
+		this.setState({ focused: true });
+	}
+
+	onHelpBlur = () => {
+		this.setState({ focused: false });
+	}
+
+	onHelpClick = (e) => {
+		e.preventDefault();
+	}
+
 	render() {
 		const {that, idx} = this.props;
 		const title = getTitle(that.props, idx);
@@ -1197,8 +1211,12 @@ class AccordionHeader extends React.Component {
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];
 
+		const spanProps = hasHelp
+			? { "aria-describedby": `${that.props.idSchema.$id}_${idx}--help` }
+			: {};
+
 		const headerText = (
-			<span>
+			<span {...spanProps} >
 				{title}
 				{this.getFormatters().map((formatter, i) => {
 					const {component: Formatter} = formatter;
@@ -1206,11 +1224,19 @@ class AccordionHeader extends React.Component {
 						<span key={i}> <Formatter that={that} idx={idx} /></span>
 					) || null;
 				})}
-				{hasHelp ? <Help/> : null}
+				{hasHelp && 
+					<>
+						<Help focusable={true} onFocus={this.onHelpFocus} onBlur={this.onHelpBlur} onClick={this.onHelpClick} />
+						<div id={`${that.props.idSchema.$id}_${idx}--help`} style={{ display: "none" }}>{ uiSchema["ui:help"] }</div>
+					</>
+				}
 			</span>
 		);
 
-		const headerTextComponent = hasHelp ? <TooltipComponent tooltip={uiSchema["ui:help"]}>{headerText}</TooltipComponent> : headerText;
+		const {Tooltip} = this.context.theme;
+
+		const tooltip = <Tooltip>{uiSchema["ui:help"]}</Tooltip>;
+		const headerTextComponent = hasHelp ? <OverlayTrigger placement="right" overlay={tooltip} show={this.state && this.state.focused || undefined}>{headerText}</OverlayTrigger> : headerText;
 
 		const header = (
 			<div className={this.props.className}
@@ -1226,7 +1252,6 @@ class AccordionHeader extends React.Component {
 			</div>
 		);
 
-		const {OverlayTrigger, Tooltip} = this.context.theme;
 		return hasData(popupData) ? (
 			<OverlayTrigger placement="left"
 			                overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
