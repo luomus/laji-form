@@ -452,8 +452,10 @@ export function Help({help, id, focusable = false, onFocus, onBlur, className, o
 	const tooltip = <Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip>;
 	return help ? (
 		<OverlayTrigger placement="right" overlay={tooltip} show={standalone && focused || undefined}>
-			{helpGlyph}
-			{standalone && <div id={`${id}--help`} style={{ display: "none" }}>{ help }</div>}
+			<>
+				{helpGlyph}
+				{standalone && <div id={`${id}--help`} style={{ display: "none" }}>{ help }</div>}
+			</>
 		</OverlayTrigger>
 	) : helpGlyph;
 }
