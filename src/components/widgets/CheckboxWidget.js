@@ -123,10 +123,8 @@ export default class CheckboxWidget extends React.Component {
 
 		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
-		const {Yes, No} = this.props.registry.formContext.translations;
-		const unarbitraryLabels =  displayUndefined || (trueLabel === Yes && falseLabel === No);
-
-
+		const selectedValueGlyph = <span className="laji-form-checkbox-selected-value-glyph"></span>
+		const unselectedValueGlyph = <span className="laji-form-checkbox-unselected-value-glyph"></span>
 		const checkbox = (
 			<ButtonToolbar className={classNames("laji-form-checkbox-buttons", toggleMode && "desktop-layout")}>
 				<ToggleButtonGroup ref={this.groupRef}
@@ -142,30 +140,30 @@ export default class CheckboxWidget extends React.Component {
 				                ref={this.trueRef}
 				                value={true}
 				                onClick={toggleMode ? this.toggle : undefined}
-				                className={classNames(unarbitraryLabels && _value === false && "laji-form-hide-btn-label", _value === true && tabTargetClass)}
+				                className={classNames(_value === true && tabTargetClass)}
 				                onKeyDown={this.onTrueKeyDown}
-				                {...commonProps} >{trueLabel}</ToggleButton>
+				                {...commonProps} >{_value === true ? selectedValueGlyph : unselectedValueGlyph}{trueLabel}</ToggleButton>
 					<ToggleButton id={`${id}-false`}
 					              ref={this.falseRef}
 					              value={false}
 					              onClick={toggleMode ? this.toggle : undefined}
-					              className={classNames(unarbitraryLabels && _value === true && "laji-form-hide-btn-label", _value === false && tabTargetClass)}
+					              className={classNames(_value === false && tabTargetClass)}
 					              onKeyDown={this.onFalseKeyDown}
-					              {...commonProps}>{falseLabel}</ToggleButton>
+					              {...commonProps}>{_value === false ? selectedValueGlyph : unselectedValueGlyph}{falseLabel}</ToggleButton>
 					{(displayUndefined ?
 						<ToggleButton id={`${id}-undefined`}
 						              ref={this.undefinedRef}
 						              value={"undefined"}
 						              className={classNames(value === undefined && tabTargetClass)}
 						              {...commonProps}
-						              onKeyDown={this.onUndefinedKeyDown}>{unknownLabel}</ToggleButton> : null)}
+						              onKeyDown={this.onUndefinedKeyDown}>{_value === "undefined" ? selectedValueGlyph : unselectedValueGlyph}{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		);
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : <>
-			<Label label={label} required={required} uiSchema={this.props.uiSchema} registry={this.props.registry} />
+			<Label label={label} required={required} uiSchema={this.props.uiSchema} registry={this.props.registry} id={this.props.id} />
 			{checkbox}
 		</>;
 	}

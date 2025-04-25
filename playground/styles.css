@@ -915,6 +915,22 @@ body .laji-form {
 	display: table;
 }
 
+.laji-form-checkbox-selected-value-glyph, .laji-form-checkbox-unselected-value-glyph {
+	pointer-events: none;
+}
+.laji-form-checkbox-selected-value-glyph:before, .laji-form-checkbox-unselected-value-glyph:before {
+	content: "•";
+	margin-right: 6px;
+	height: 0;
+	font-weight: 900;
+	color: #9e9e9e;
+	font-size: 18px;
+	vertical-align: -2px;
+}
+.laji-form-checkbox-unselected-value-glyph:before {
+	visibility: hidden;
+}
+
 .laji-form.map-dialog .modal-content, .laji-form.map-dialog .modal-body {
 	width: auto;
 	height: inherit;
