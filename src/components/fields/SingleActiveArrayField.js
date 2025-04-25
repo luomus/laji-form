@@ -156,13 +156,7 @@ export default class SingleActiveArrayField extends React.Component {
 	}
 
 	onHeaderAffixChange = (elem, value) => {
-		if (value) {
-			this.setState({scrollHeightFixed: elem.scrollHeight}, () =>  {
-				this.getLocalFormContext().utils.syncScroll(!!"force");
-			});
-		} else {
-			this.setState({scrollHeightFixed: 0});
-		}
+		this.setState({scrollHeightFixed: value ? elem.scrollHeight : 0});
 	}
 
 	getLocalFormContext = () => {
