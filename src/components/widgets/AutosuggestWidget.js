@@ -1343,9 +1343,9 @@ class ReactAutosuggest extends React.Component {
 		case "Enter":
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
-			this.props.formContext.setTimeout(() => {
-				suggestion && this.onSuggestionSelected(suggestion);
-			}, 0);
+			if (suggestion) {
+				this.onSuggestionSelected(suggestion);
+			}
 			break;
 		case "Control":
 		case "Meta":

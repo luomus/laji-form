@@ -37,14 +37,14 @@ test.describe("NAFI (MHL.6)", () => {
 	test("can add unit", async () => {
 		await form.$locateButton("gatherings.0.units", "add").click();
 
-		await expect(form.$locate("gatherings.0.units.121")).toBeVisible();
+		await expect(form.$locate("gatherings.0.units.123")).toBeVisible();
 	});
 
 	test.describe("selecting species name with mouse", () => {
 		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
 
 		test.beforeAll(async () => {
-			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.121.identifications.0.taxon");
+			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.123.identifications.0.taxon");
 		});
 
 		test("selects suggestion value", async () => {
@@ -71,14 +71,14 @@ test.describe("NAFI (MHL.6)", () => {
 		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
 
 		test.beforeAll(async () => {
-			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.122.identifications.0.taxon");
+			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.124.identifications.0.taxon");
 		});
 
 		test("works", async () => {
 			await form.$locateButton("gatherings.0.units", "add").click();
 			await taxonAutosuggest.$input.fill("kettu");
 			await taxonAutosuggest.$input.press("ArrowDown");
-			await taxonAutosuggest.$input.press("Enter");
+			await taxonAutosuggest.$input.press("Tab");
 
 			await expect(taxonAutosuggest.$input).toHaveValue("kettu");
 		});

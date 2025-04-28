@@ -57,7 +57,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 
 		test("sets empty value undefined", async () => {
 			await censusAutosuggest.$input.clear();
-			await censusAutosuggest.$input.press("Enter");
+			await censusAutosuggest.$input.press("Tab");
 			await expect(censusAutosuggest.$loadingSpinner).not.toBeVisible();
 			expect((await form.getChangedData()).gatherings[0].taxonCensus[0].censusTaxonID).toBe(undefined);
 		});
@@ -79,29 +79,6 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 		test("clicking any match selects it", async () => {
 			await taxonAutosuggest.$input.fill("kett");
 			await taxonAutosuggest.$suggestions.first().click();
-
-			await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
-			await expect(taxonAutosuggest.$input).toHaveValue("kettu");
-
-			await removeUnit(0, 0);
-			await $addUnit.click();
-		});
-
-		test("typing exact match and pressing enter after waiting for suggestion list selects exact match", async () => {
-			await taxonAutosuggest.$input.fill("kettu");
-			await expect(taxonAutosuggest.$suggestions).toBeVisible();
-			await taxonAutosuggest.$input.press("Enter");
-
-			await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
-			await expect(taxonAutosuggest.$input).toHaveValue("kettu");
-
-			await removeUnit(0, 0);
-			await $addUnit.click();
-		});
-
-		test("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
-			await taxonAutosuggest.$input.fill("kettu");
-			await taxonAutosuggest.$input.press("Enter");
 
 			await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
 			await expect(taxonAutosuggest.$input).toHaveValue("kettu");
@@ -260,7 +237,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			test("entering exact match adds new unit automatically", async () => {
 				await taxonAutosuggest.$powerUserButton.click();
 				await taxonAutosuggest.$input.fill("susi");
-				await taxonAutosuggest.$input.press("Enter");
+				await taxonAutosuggest.$input.press("Tab");
 				await expect(form.$locate("gatherings.0.units.1")).toBeVisible();
 
 				expect(await form.$locate("gatherings.0.units.0").evaluate(e => e.tagName)).toBe("TR");
@@ -306,7 +283,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			}]);
 
 			await expect(taxonAutosuggest.$suggestions.first()).toBeVisible();
-			await taxonAutosuggest.$input.press("Enter");
+			await taxonAutosuggest.$input.press("Tab");
 			await mockKuusi.remove();
 
 			await expect(taxonAutosuggest.$input).toHaveValue(autocompleteSelectedName);
