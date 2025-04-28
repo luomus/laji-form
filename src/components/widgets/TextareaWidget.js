@@ -1,7 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { stringifyKeyCombo } from "../../utils";
-import { TooltipComponent } from "../components";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";

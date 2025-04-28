@@ -123,8 +123,8 @@ export default class CheckboxWidget extends React.Component {
 
 		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
-		const selectedValueGlyph = <span className="laji-form-checkbox-selected-value-glyph"></span>
-		const unselectedValueGlyph = <span className="laji-form-checkbox-unselected-value-glyph"></span>
+		const selectedValueGlyph = <span className="laji-form-checkbox-selected-value-glyph"></span>;
+		const unselectedValueGlyph = <span className="laji-form-checkbox-unselected-value-glyph"></span>;
 		const checkbox = (
 			<ButtonToolbar className={classNames("laji-form-checkbox-buttons", toggleMode && "desktop-layout")}>
 				<ToggleButtonGroup ref={this.groupRef}
