@@ -70,7 +70,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "title": "Muotoryhmät"
+                    "title": "Eliöryhmät"
                   },
                   "count": {
                     "type": "string",
@@ -153,7 +153,6 @@
   ],
   "id": "MHL.25",
   "name": "Kokoelmakilpailulomake",
-  "category": "MHL.categoryCitizenScience",
   "language": "fi",
   "collectionID": "HR.2629",
   "title": "Kokoelmakilpailulomake",
@@ -161,25 +160,131 @@
   "shortDescription": "Koululaisten kokoelmakilpailulomake",
   "logo": "https://cdn.laji.fi/images/logos/Kokoelmakilpailu-logo-PIENI.png",
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havainto"
+      },
+      "alt+g": {
+        "fn": "insert",
+        "target": "root_gatherings",
+        "targetLabel": "paikka"
+      },
+      "alt+t": {
+        "fn": "autosuggestToggle"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      }
+    },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
       }
     },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
       "ui:field": "NestField",
       "ui:classNames": "well well-sm",
       "ui:order": [
@@ -277,6 +382,16 @@
           }
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "legPublic": {
         "ui:options": {
           "allowUndefined": false
@@ -284,101 +399,49 @@
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "units": {
-          "items": {
-            "informalTaxonGroups": {
-              "items": {},
-              "ui:field": "HiddenField"
-            },
-            "images": {
-              "items": {},
-              "ui:field": "ImageArrayField",
-              "ui:options": {
-                "capturerVerbatimPath": "/gatheringEvent/leg"
-              }
-            },
-            "identifications": {
-              "items": {
-                "detDate": {
-                  "ui:widget": "DateWidget"
-                }
-              }
-            },
-            "ui:functions": [
-              {
-                "ui:field": "AutosuggestField",
-                "ui:options": {
-                  "autosuggestField": "taxon",
-                  "allowNonsuggestedValue": true,
-                  "suggestionInputField": "identifications_0_taxon",
-                  "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
-                  "suggestionReceivers": {
-                    "identifications_0_taxon": "value",
-                    "informalTaxonGroups": "$taxonGroup",
-                    "unitFact_autocompleteSelectedTaxonID": "key"
-                  },
-                  "inputTransformer": {
-                    "regexp": "^(.*)\\?$",
-                    "transformations": {
-                      "taxonConfidence": "MY.taxonConfidenceUnsure"
-                    }
-                  }
-                }
-              }
-            ],
-            "ui:order": [
-              "identifications",
-              "count",
-              "*",
-              "images"
-            ],
-            "ui:grid": {
-              "lg": {
-                "identifications_0_taxon": 3,
-                "count": 1,
-                "notes": 2,
-                "unitGathering_dateBegin": 3,
-                "dateBegin": 3,
-                "*": 2
-              },
-              "md": {
-                "identifications_0_taxon": 3,
-                "count": 1,
-                "unitGathering_dateBegin": 3,
-                "dateBegin": 3,
-                "*": 2
-              },
-              "sm": {
-                "identifications_0_taxon": 2,
-                "count": 2,
-                "unitGathering_dateBegin": 4,
-                "dateBegin": 4,
-                "*": 2
-              },
-              "xs": 12
-            },
-            "unitGathering": {
-              "geometry": {
-                "ui:field": "HiddenField"
-              },
-              "dateBegin": {
-                "ui:widget": "DateTimeWidget",
-                "ui:options": {
-                  "showButtons": true,
-                  "showTimeList": false
-                }
-              }
-            },
-            "unitFact": {
-              "autocompleteSelectedTaxonID": {
-                "ui:widget": "HiddenWidget"
-              }
-            }
+      "ui:field": "AccordionArrayField",
+      "ui:title": "Havainto %{idx}",
+      "ui:options": {
+        "headerFormatters": [
+          "/units/0/identifications/0/taxon",
+          "namedPlace"
+        ],
+        "buttons": [
+          {
+            "fn": "add",
+            "label": "Tee uusi havainto"
           },
-          "ui:title": ""
-        },
+          {
+            "fn": "add",
+            "label": "Tee uusi havainto",
+            "position": "top",
+            "rules": {
+              "minLength": 1
+            }
+          }
+        ],
+        "confirmDelete": true,
+        "focusOnNavigate": false,
+        "focusOnActiveChange": false,
+        "closeButton": true
+      },
+      "items": {
         "dateBegin": {
           "ui:options": {
             "showButtons": true,
@@ -485,169 +548,109 @@
         "ui:order": [
           "geometry",
           "*"
-        ]
-      },
-      "ui:field": "AccordionArrayField",
-      "ui:title": "Havainto %{idx}",
-      "ui:options": {
-        "headerFormatters": [
-          "/units/0/identifications/0/taxon",
-          "namedPlace"
         ],
-        "buttons": [
-          {
-            "fn": "add",
-            "label": "Tee uusi havainto"
+        "units": {
+          "ui:childFunctions": {
+            "ui:field": "FlatField",
+            "ui:options": {
+              "fields": [
+                "identifications",
+                "unitGathering",
+                "unitFact"
+              ]
+            }
           },
-          {
-            "fn": "add",
-            "label": "Tee uusi havainto",
-            "position": "top",
-            "rules": {
-              "minLength": 1
+          "ui:field": "SingleItemArrayField",
+          "ui:title": "",
+          "items": {
+            "ui:functions": [
+              {
+                "ui:field": "AutosuggestField",
+                "ui:options": {
+                  "autosuggestField": "taxon",
+                  "allowNonsuggestedValue": true,
+                  "suggestionInputField": "identifications_0_taxon",
+                  "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+                  "suggestionReceivers": {
+                    "identifications_0_taxon": "value",
+                    "informalTaxonGroups": "$taxonGroup",
+                    "unitFact_autocompleteSelectedTaxonID": "key"
+                  },
+                  "inputTransformer": {
+                    "regexp": "^(.*)\\?$",
+                    "transformations": {
+                      "taxonConfidence": "MY.taxonConfidenceUnsure"
+                    }
+                  }
+                }
+              }
+            ],
+            "ui:order": [
+              "identifications",
+              "count",
+              "*",
+              "images"
+            ],
+            "ui:grid": {
+              "lg": {
+                "identifications_0_taxon": 3,
+                "count": 1,
+                "notes": 2,
+                "unitGathering_dateBegin": 3,
+                "dateBegin": 3,
+                "*": 2
+              },
+              "md": {
+                "identifications_0_taxon": 3,
+                "count": 1,
+                "unitGathering_dateBegin": 3,
+                "dateBegin": 3,
+                "*": 2
+              },
+              "sm": {
+                "identifications_0_taxon": 2,
+                "count": 2,
+                "unitGathering_dateBegin": 4,
+                "dateBegin": 4,
+                "*": 2
+              },
+              "xs": 12
+            },
+            "identifications": {
+              "items": {
+                "detDate": {
+                  "ui:widget": "DateWidget"
+                }
+              }
+            },
+            "informalTaxonGroups": {
+              "ui:field": "HiddenField"
+            },
+            "images": {
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg"
+              }
+            },
+            "unitGathering": {
+              "geometry": {
+                "ui:field": "HiddenField"
+              },
+              "dateBegin": {
+                "ui:widget": "DateTimeWidget",
+                "ui:options": {
+                  "showButtons": true,
+                  "showTimeList": false
+                }
+              }
+            },
+            "unitFact": {
+              "autocompleteSelectedTaxonID": {
+                "ui:widget": "HiddenWidget"
+              }
             }
           }
-        ],
-        "confirmDelete": true,
-        "focusOnNavigate": false,
-        "focusOnActiveChange": false,
-        "closeButton": true
-      }
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "alt+F5": {
-        "fn": "revalidate"
-      },
-      "Enter": {
-        "fn": "navigate"
-      },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
-      "alt+ ": {
-        "fn": "navigate"
-      },
-      "alt+shift+ ": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt+PageDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+PageUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowRight": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowLeft": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+h": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+j": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+k": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+l": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "paikkaan"
-      },
-      "alt+n": {
-        "fn": "navigateArray"
-      },
-      "alt+p": {
-        "fn": "navigateArray",
-        "reverse": true
-      },
-      "alt+Insert": {
-        "fn": "insert"
-      },
-      "alt+i": {
-        "fn": "insert"
-      },
-      "alt+Delete": {
-        "fn": "delete"
-      },
-      "alt+d": {
-        "fn": "delete"
-      },
-      "alt+u": {
-        "fn": "insert",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havainto"
-      },
-      "alt+g": {
-        "fn": "insert",
-        "target": "root_gatherings",
-        "targetLabel": "paikka"
-      },
-      "alt+t": {
-        "fn": "autosuggestToggle"
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors",
-          "secureLevel"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "secureLevel": {
-      "ui:widget": "AnyToBooleanWidget",
-      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-      "ui:options": {
-        "trueValue": "MX.secureLevelNone",
-        "falseValue": "MX.secureLevelKM10",
-        "allowUndefined": false
+        }
       }
     }
   },
@@ -658,7 +661,8 @@
       "sv": "https://laji.fi/about/1107"
     },
     "allowTemplate": true,
-    "simple": true
+    "simple": true,
+    "strict": false
   },
   "validators": {
     "gatheringEvent": {
@@ -752,5 +756,6 @@
   "warnings": {},
   "attributes": {
     "id": "MHL.25"
-  }
+  },
+  "$id": "60ab3f763065bc7e2db2f23efff21313"
 }

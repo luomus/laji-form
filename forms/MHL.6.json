@@ -284,7 +284,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue38",
-                    "title": "Varpu-heinäkallio tai -kivikko"
+                    "title": "Varpu–heinäkallio tai -kivikko"
                   },
                   {
                     "const": "MY.habitatEnumValue39",
@@ -388,7 +388,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue64",
-                    "title": "Oja tai muu kaivanto  (sis. ojanpientareet, metsäojat)"
+                    "title": "Oja tai muu kaivanto (sis. ojanpientareet, metsäojat)"
                   },
                   {
                     "const": "MY.habitatEnumValue65",
@@ -477,6 +477,34 @@
                   {
                     "const": "MY.habitatEnumValue86",
                     "title": "Joutomaa (sis. satamat, ratapihat)"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue88",
+                    "title": "Meri"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue89",
+                    "title": "Murtovesi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue90",
+                    "title": "Karu järvi tai lampi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue91",
+                    "title": "Rehevä järvi tai lampi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue92",
+                    "title": "Lampare tai allikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue93",
+                    "title": "Joki"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue94",
+                    "title": "Koski"
                   }
                 ]
               },
@@ -626,14 +654,14 @@
     "$.gatherings[*].units[*].images",
     "$.gatherings[*].weather"
   ],
-  "id": "MHL.6",
   "name": "Nafi",
+  "description": "Valtakunnallisen päiväperhosseuranan (NAFI) havaintolomake.</p><b>Pakollisina tietoina täytä:</b> <ol><li>Seurantakohteen sijainti, joko YKJ-koordinaattina (10x10km tai tarkempi) tai rajaamalla alue kartalta. Kunta ja eliömaakunta eivät ole pakollisia</li> <li>Ilmoitettavan seurantajakson alku- ja loppupäivämäärä, voit ilmoittaa kauden havainnot useammassa jaksossa esim. viikoittain tai kuukausittain</li> <li>Havaintopäivien määrä</li> <li>Valmiiseen lajilistaan havaitsemiesi päiväperhoslajien yksilömäärää vastaava kokonaisluku</li><ol>",
+  "id": "MHL.6",
   "language": "fi",
   "category": "MHL.categoryCitizenScience",
   "title": "Valtakunnallinen päiväperhosseuranta (NAFI)",
   "shortTitle": "NAFI",
   "collectionID": "HR.175",
-  "description": "Valtakunnallisen päiväperhosseuranan (NAFI) havaintolomake.</p><b>Pakollisina tietoina täytä:</b> <ol><li>Seurantakohteen sijainti, joko YKJ-koordinaattina (10x10km tai tarkempi) tai rajaamalla alue kartalta. Kunta ja eliömaakunta eivät ole pakollisia</li> <li>Ilmoitettavan seurantajakson alku- ja loppupäivämäärä, voit ilmoittaa kauden havainnot useammassa jaksossa esim. viikoittain tai kuukausittain</li> <li>Havaintopäivien määrä</li> <li>Valmiiseen lajilistaan havaitsemiesi päiväperhoslajien yksilömäärää vastaava kokonaisluku</li><ol>",
   "shortDescription": "Ilmoita havaitsemasi päiväperhoset valmiiseen lajilistapohjaan Päiväperhosseurannan teemasivun lomakkeella.",
   "logo": "https://cdn.laji.fi/images/nafi_150x141.png",
   "options": {
@@ -662,6 +690,8 @@
     "hasAdmins": true,
     "warnEditingOldDocument": true,
     "allowTemplate": true,
+    "emptyOnNoCount": true,
+    "strict": false,
     "prepopulatedDocument": {
       "secureLevel": "MX.secureLevelNone",
       "gatheringEvent": {
@@ -793,6 +823,16 @@
                   "taxonID": "MX.60749",
                   "taxonVerbatim": "lauhahiipijä",
                   "taxon": "Thymelicus lineola"
+                }
+              ]
+            },
+            {
+              "recordBasis": "MY.recordBasisHumanObservation",
+              "identifications": [
+                {
+                  "taxonID": "MX.5094958",
+                  "taxonVerbatim": "etelänhiipijä",
+                  "taxon": "Thymelicus sylvestris"
                 }
               ]
             },
@@ -972,7 +1012,7 @@
                 {
                   "taxonID": "MX.60792",
                   "taxonVerbatim": "etelänkeltaperhonen",
-                  "taxon": "Colias crocea"
+                  "taxon": "Colias croceus"
                 }
               ]
             },
@@ -1440,6 +1480,16 @@
               "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
+                  "taxonID": "MX.5104765",
+                  "taxonVerbatim": "kirjoniittyperhonen",
+                  "taxon": "Coenonympha arcania"
+                }
+              ]
+            },
+            {
+              "recordBasis": "MY.recordBasisHumanObservation",
+              "identifications": [
+                {
                   "taxonID": "MX.60965",
                   "taxonVerbatim": "idänniittyperhonen",
                   "taxon": "Coenonympha glycerion"
@@ -1886,32 +1936,27 @@
                 }
               ]
             }
-          ],
-          "geometry": {}
+          ]
         }
       ]
     }
   },
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
       }
     },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. ",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
       "ui:field": "NestField",
       "ui:classNames": "well well-sm",
       "ui:order": [
@@ -2036,6 +2081,16 @@
           }
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. ",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "dateBegin": {
         "ui:widget": "DateTimeWidget",
         "ui:options": {
@@ -2052,31 +2107,22 @@
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "images": {
-          "items": {}
-        },
-        "habitat": {
-          "items": {}
-        },
-        "taxonCensus": {
-          "items": {}
-        },
-        "units": {
-          "items": {
-            "unitType": {
-              "items": {}
-            },
-            "images": {
-              "items": {}
-            },
-            "identifications": {
-              "items": {}
-            }
-          }
-        }
-      },
       "ui:field": "MapArrayField",
       "ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
       "ui:options": {
@@ -2350,7 +2396,9 @@
                         "MX.60808",
                         "MX.60809",
                         "MX.60799",
-                        "MX.60803"
+                        "MX.60803",
+                        "MX.5094958",
+                        "MX.5104765"
                       ]
                     }
                   ],
@@ -2545,29 +2593,6 @@
             "ui:widget": "HiddenWidget"
           }
         }
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors",
-          "secureLevel"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "secureLevel": {
-      "ui:widget": "AnyToBooleanWidget",
-      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-      "ui:options": {
-        "trueValue": "MX.secureLevelNone",
-        "falseValue": "MX.secureLevelKM10",
-        "allowUndefined": false
       }
     }
   },
@@ -2820,7 +2845,14 @@
         ],
         "MY.habitatEnumValue86": [
           "MY.habitatEnumValue79"
-        ]
+        ],
+        "MY.habitatEnumValue88": [],
+        "MY.habitatEnumValue89": [],
+        "MY.habitatEnumValue90": [],
+        "MY.habitatEnumValue91": [],
+        "MY.habitatEnumValue92": [],
+        "MY.habitatEnumValue93": [],
+        "MY.habitatEnumValue94": []
       }
     }
   },
@@ -2918,7 +2950,9 @@
                       "MX.60938",
                       "MX.60833",
                       "MX.60841",
-                      "MX.60820"
+                      "MX.60820",
+                      "MX.5094958",
+                      "MX.5104765"
                     ],
                     "message": "Olet ilmoittanut havaintoja harvinaisesta lajista."
                   }
@@ -3183,7 +3217,14 @@
               "MY.habitatEnumValue71",
               "MY.habitatEnumValue79"
             ]
-          }
+          },
+          "MY.habitatEnumValue88": {},
+          "MY.habitatEnumValue89": {},
+          "MY.habitatEnumValue90": {},
+          "MY.habitatEnumValue91": {},
+          "MY.habitatEnumValue92": {},
+          "MY.habitatEnumValue93": {},
+          "MY.habitatEnumValue94": {}
         },
         "order": [
           "MY.habitatEnumValue1",
@@ -3192,9 +3233,17 @@
           "MY.habitatEnumValue27",
           "MY.habitatEnumValue36",
           "MY.habitatEnumValue44",
-          "MY.habitatEnumValue55"
+          "MY.habitatEnumValue55",
+          "MY.habitatEnumValue88",
+          "MY.habitatEnumValue89",
+          "MY.habitatEnumValue90",
+          "MY.habitatEnumValue91",
+          "MY.habitatEnumValue92",
+          "MY.habitatEnumValue93",
+          "MY.habitatEnumValue94"
         ]
       }
     }
-  }
+  },
+  "$id": "70a8c39582ca8e6ff6403802893e70fd"
 }

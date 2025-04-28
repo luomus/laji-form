@@ -398,16 +398,127 @@
   "shortTitle": "Maatalousympäristön päiväperhosseuranta",
   "description": "",
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+j": {
+        "fn": "navigateSection",
+        "down": true
+      },
+      "alt+k": {
+        "fn": "navigateSection",
+        "up": true
+      },
+      "alt+l": {
+        "fn": "navigateSection",
+        "right": true
+      },
+      "alt+h": {
+        "fn": "navigateSection",
+        "left": true
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateSection",
+        "down": true
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateSection",
+        "up": true
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateSection",
+        "right": true
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateSection",
+        "left": true
+      },
+      "Tab": {
+        "fn": "navigateSection",
+        "right": true,
+        "goOverRow": true
+      },
+      "shift+Tab": {
+        "fn": "navigateSection",
+        "left": true,
+        "goOverRow": true
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
+    "ui:order": [
+      "*",
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:annotations": {
+      "formId": "MHL.21",
+      "container": "modal",
+      "adminOnly": true,
+      "add": {
+        "type": "MAN.typeOpinion",
+        "filter": {
+          "filterType": "blacklist",
+          "filter": [
+            "opinion"
+          ]
+        },
+        "uiSchema": {
+          "addedTags": {
+            "ui:options": {
+              "filterType": "whitelist",
+              "filter": [
+                "MMAN.11",
+                "MMAN.13"
+              ]
+            }
+          }
+        }
+      },
+      "buttonsPath": "/gatheringEvent"
+    },
+    "ui:functions": [
+      {
+        "ui:field": "InjectField",
+        "ui:options": {
+          "injections": [
+            {
+              "fields": [
+                "editors"
+              ],
+              "target": "gatheringEvent"
+            }
+          ]
+        }
+      }
+    ],
+    "namedPlaceID": {
+      "ui:field": "HiddenField"
+    },
     "gatheringEvent": {
+      "count": {
+        "ui:field": "GridLayoutField",
+        "ui:options": {
+          "lg": 2,
+          "md": 3,
+          "sm": 3,
+          "xs": 12
+        }
+      },
+      "dateBegin": {
+        "ui:options": {
+          "showButtons": true
+        },
+        "ui:widget": "DateWidget"
+      },
       "leg": {
-        "items": {},
         "ui:functions": {
           "ui:field": "ConditionalUiSchemaField",
           "ui:options": {
@@ -435,21 +546,6 @@
           "suggestionReceive": "key"
         },
         "ui:widget": "AutosuggestWidget"
-      },
-      "count": {
-        "ui:field": "GridLayoutField",
-        "ui:options": {
-          "lg": 2,
-          "md": 3,
-          "sm": 3,
-          "xs": 12
-        }
-      },
-      "dateBegin": {
-        "ui:options": {
-          "showButtons": true
-        },
-        "ui:widget": "DateWidget"
       },
       "legPublic": {
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä.",
@@ -679,36 +775,13 @@
         "gatheringFact"
       ]
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "units": {
-          "items": {
-            "identifications": {
-              "items": {
-                "taxonID": {
-                  "ui:field": "HiddenField"
-                }
-              },
-              "ui:title": "",
-              "ui:field": "SingleItemArrayField"
-            },
-            "ui:field": "AutosuggestField",
-            "ui:options": {
-              "autosuggestField": "taxon",
-              "suggestionInputField": "/identifications/0/taxonVerbatim",
-              "suggestionValueField": "/identifications/0/taxonID",
-              "suggestionReceivers": {
-                "/identifications/0/taxonVerbatim": "value",
-                "/identifications/0/taxonID": "key"
-              },
-              "query": {
-                "taxonSet": "MX.taxonSetSykeButterflyCensusPapilionoidea,MX.taxonSetSykeButterflyCensusOther"
-              },
-              "taxonCardPlacement": "right"
-            }
-          }
-        }
-      },
       "ui:functions": {
         "ui:field": "MultiArrayField",
         "ui:options": {
@@ -1874,111 +1947,36 @@
             }
           }
         }
-      }
-    },
-    "ui:shortcuts": {
-      "Enter": {
-        "fn": "navigate"
       },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "alt+j": {
-        "fn": "navigateSection",
-        "down": true
-      },
-      "alt+k": {
-        "fn": "navigateSection",
-        "up": true
-      },
-      "alt+l": {
-        "fn": "navigateSection",
-        "right": true
-      },
-      "alt+h": {
-        "fn": "navigateSection",
-        "left": true
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateSection",
-        "down": true
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateSection",
-        "up": true
-      },
-      "alt+ArrowRight": {
-        "fn": "navigateSection",
-        "right": true
-      },
-      "alt+ArrowLeft": {
-        "fn": "navigateSection",
-        "left": true
-      },
-      "Tab": {
-        "fn": "navigateSection",
-        "right": true,
-        "goOverRow": true
-      },
-      "shift+Tab": {
-        "fn": "navigateSection",
-        "left": true,
-        "goOverRow": true
-      }
-    },
-    "ui:order": [
-      "*",
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:annotations": {
-      "formId": "MHL.21",
-      "container": "modal",
-      "adminOnly": true,
-      "add": {
-        "type": "MAN.typeOpinion",
-        "filter": {
-          "filterType": "blacklist",
-          "filter": [
-            "opinion"
-          ]
-        },
-        "uiSchema": {
-          "addedTags": {
+      "items": {
+        "units": {
+          "items": {
+            "ui:field": "AutosuggestField",
             "ui:options": {
-              "filterType": "whitelist",
-              "filter": [
-                "MMAN.11",
-                "MMAN.13"
-              ]
+              "autosuggestField": "taxon",
+              "suggestionInputField": "/identifications/0/taxonVerbatim",
+              "suggestionValueField": "/identifications/0/taxonID",
+              "suggestionReceivers": {
+                "/identifications/0/taxonVerbatim": "value",
+                "/identifications/0/taxonID": "key"
+              },
+              "query": {
+                "taxonSet": "MX.taxonSetSykeButterflyCensusPapilionoidea,MX.taxonSetSykeButterflyCensusOther"
+              },
+              "taxonCardPlacement": "right"
+            },
+            "identifications": {
+              "ui:title": "",
+              "ui:field": "SingleItemArrayField",
+              "items": {
+                "taxonID": {
+                  "ui:field": "HiddenField"
+                }
+              }
             }
           }
         }
-      },
-      "buttonsPath": "/gatheringEvent"
-    },
-    "ui:functions": [
-      {
-        "ui:field": "InjectField",
-        "ui:options": {
-          "injections": [
-            {
-              "fields": [
-                "editors"
-              ],
-              "target": "gatheringEvent"
-            }
-          ]
-        }
       }
-    ],
-    "namedPlaceID": {
-      "ui:field": "HiddenField"
     }
   },
   "options": {
@@ -2002,7 +2000,8 @@
     "hasAdmins": true,
     "warnEditingOldDocument": true,
     "emptyOnNoCount": true,
-    "resultServiceType": "MHL.resultServiceTypeSykeInsectProjects"
+    "resultServiceType": "MHL.resultServiceTypeSykeInsectProjects",
+    "strict": false
   },
   "validators": {
     "gatheringEvent": {
@@ -2089,7 +2088,7 @@
                 "messageKey": "/identifications/0/taxonVerbatim",
                 "arrayPath": "#/gatherings/0/units",
                 "message": {
-                  "isDuplicate": " {value} on ilmoitettu moneen kertaan."
+                  "isDuplicate": "%{value} on ilmoitettu moneen kertaan."
                 }
               }
             }
@@ -2101,5 +2100,6 @@
   "warnings": {},
   "attributes": {
     "id": "MHL.59"
-  }
+  },
+  "$id": "45b7a8f4e359a6082b436785f14ccd2d"
 }

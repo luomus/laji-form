@@ -128,7 +128,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "title": "Muotoryhmät"
+                    "title": "Eliöryhmät"
                   },
                   "notes": {
                     "type": "string",
@@ -254,7 +254,7 @@
                   "broodSize": {
                     "type": "integer",
                     "exclusiveMinimum": 0,
-                    "title": "Pesyekoko"
+                    "title": "Pesuekoko"
                   },
                   "likelyMigrant": {
                     "type": "boolean",
@@ -269,51 +269,51 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum1",
-                        "title": "1 Epätodennäköinen pesintä: havaittu lajin yksilö, havainto ei viittaa pesintään."
+                        "title": "1 Epätodennäköinen pesintä: Havaittu pesimäaikaan lajin yksilö, mutta havainto ei viittaa pesintään kyseisessä atlasruudussa"
                       },
                       {
                         "const": "MY.atlasCodeEnum2",
-                        "title": "2 Mahdollinen pesintä: yksittäinen lintu kerran, on sopivaa pesimäympäristöä."
+                        "title": "2 Mahdollinen pesintä: Havaittu yksittäinen lintu kerran (esim. laulava tai soidinääntelevä koiras, nähty tai kuultu naaras) pesimäaikaan lajille sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista. Paikalla on joko käyty vain kerran tai lintu on tavattu vain kerran useista käynneistä huolimatta"
                       },
                       {
                         "const": "MY.atlasCodeEnum3",
-                        "title": "3 Mahdollinen pesintä: pari kerran, on sopivaa pesimäympäristöä."
+                        "title": "3 Mahdollinen pesintä: havaittu pari kerran pesimäaikaan sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista"
                       },
                       {
                         "const": "MY.atlasCodeEnum4",
-                        "title": "4 Todennäköinen pesintä: koiras reviirillä (esim. laulaa) eri päivinä."
+                        "title": "4 Todennäköinen pesintä: havaittu laulava, soidinmenoja esittävä tai muuten samalla paikalla (eli pysyvällä reviirillä) pesimäaikaan oleskeleva koiras eri päivinä"
                       },
                       {
                         "const": "MY.atlasCodeEnum5",
-                        "title": "5 Todennäköinen pesintä: naaras tai pari reviirillä eri päivinä."
+                        "title": "5 Todennäköinen pesintä: havaittu pesimäaikaan samalla paikalla oleskeleva naaras tai pari eri päivinä"
                       },
                       {
                         "const": "MY.atlasCodeEnum6",
-                        "title": "6 Todennäköinen pesintä: linnun tai parin havainto viittaa vahvasti pesintään."
+                        "title": "6 Todennäköinen pesintä: havaittu lintu tai pari pesimäaikaan tavalla, joka viittaa vahvasti pesintään"
                       },
                       {
                         "const": "MY.atlasCodeEnum61",
-                        "title": "61 Todennäköinen pesintä: lintu tai pari käy usein todennäköisellä pesäpaikalla."
+                        "title": "61 Todennäköinen pesintä: lintu/pari käymässä useasti todennäköisellä pesäpaikalla (esim. laskeutuvan säännöllisesti samaan paikkaan ruoikkoon tai saareen)"
                       },
                       {
                         "const": "MY.atlasCodeEnum62",
-                        "title": "62 Todennäköinen pesintä: lintu tai pari rakentaa pesää tai vie pesämateriaalia."
+                        "title": "62 Todennäköinen pesintä: lintu tai pari rakentamassa pesää (kaivamassa tai hakkaamassa pesäkoloa, kuljettamassa pesänrakennusmateriaalia, tms.)"
                       },
                       {
                         "const": "MY.atlasCodeEnum63",
-                        "title": "63 Todennäköinen pesintä: lintu tai pari varoittelee ehkä pesästä tai poikueesta."
+                        "title": "63 Todennäköinen pesintä: lintu tai pari varoittelemassa, koska pesä tai poikue on ilmeisesti lähistöllä"
                       },
                       {
                         "const": "MY.atlasCodeEnum64",
-                        "title": "64 Todennäköinen pesintä: lintu tai pari houkuttelee pois ehkä pesältä / poikueelta."
+                        "title": "64 Todennäköinen pesintä: lintu tai pari näyttelemässä siipirikkoa tai muulla tavoin houkuttelemassa havainnoijaa pois ilmeisen pesän tai poikueen luota"
                       },
                       {
                         "const": "MY.atlasCodeEnum65",
-                        "title": "65 Todennäköinen pesintä: lintu tai pari hyökkäilee, lähellä ehkä pesä / poikue."
+                        "title": "65 Todennäköinen pesintä: lintu tai pari hyökkäilemässä tai muulla tavoin käyttäytymässä uhkaavasti havainnoijaa kohtaan (esim. pöllöt ja tiirat), koska pesä tai poikue on ilmeisesti lähistöllä"
                       },
                       {
                         "const": "MY.atlasCodeEnum66",
-                        "title": "66 Todennäköinen pesintä; Nähty pesä, jossa samanvuotista rakennusmateriaalia tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista"
+                        "title": "66 Todennäköinen pesintä: nähty pesä, jossa on samanvuotista rakennusmateriaalia (esim. petolintujen koristellut pesät) tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista."
                       },
                       {
                         "const": "MY.atlasCodeEnum7",
@@ -321,19 +321,19 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum71",
-                        "title": "71 Varma pesintä: nähty pesässä saman vuoden munia, kuoria, jäänteitä. Voi olla epäonnistunut."
+                        "title": "71 Varma pesintä: nähty pesä, jossa on pesitty samana vuonna, koska siinä on munia tai niiden kuoria, jätteitä poikasista, sulkatuppien ”hilsettä”, tms."
                       },
                       {
                         "const": "MY.atlasCodeEnum72",
-                        "title": "72 Varma pesintä: käy pesällä pesintään viittaavasti. Munia / poikasia ei havaita (kolo tms.)."
+                        "title": "72 Varma pesintä: havaittu linnun menevän pesään tai lähtevän pesästä tavalla, joka selvästi viittaa pesimiseen (ei kuitenkaan ole nähty munia, tai nähty tai kuultu poikasia; esim. koloihin tai korkealle pesivät lajit)."
                       },
                       {
                         "const": "MY.atlasCodeEnum73",
-                        "title": "73 Varma pesintä: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta."
+                        "title": "73 Varma pesintä: havaittu juuri lentokykyiset poikaset tai untuvikot, jotka voidaan katsoa syntyneiksi ruudun alueella."
                       },
                       {
                         "const": "MY.atlasCodeEnum74",
-                        "title": "74 Varma pesintä: emo kantaa ruokaa tai poikasten ulosteita, pesintä oletettavasti ruudulla."
+                        "title": "74 Varma pesintä: havaittu emo kantamassa tai kuljettamassa ruokaa poikasille tai poikasten ulosteita; pesän voidaan katsoa olevan ruudun alueella."
                       },
                       {
                         "const": "MY.atlasCodeEnum75",
@@ -345,7 +345,7 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum81",
-                        "title": "81 Varma pesintä: kuultu poikasten ääntelyä pesässä (kolo / pesä korkealla)."
+                        "title": "81 Varma pesintä: kuultu poikasten ääntelevän pesässä (esim. koloihin tai korkealle pesivät lajit)."
                       },
                       {
                         "const": "MY.atlasCodeEnum82",
@@ -355,7 +355,9 @@
                     "title": "Pesimävarmuusindeksi"
                   }
                 },
-                "required": []
+                "required": [
+                  "pairCount"
+                ]
               },
               "title": "Havainnot"
             },
@@ -443,10 +445,10 @@
     "$.gatherings[*].units",
     "$.gatherings[*].taxonCensus"
   ],
-  "id": "MHL.1",
   "name": "Linjalaskenta",
+  "description": "Tämä on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusjärjestelmä. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lisätietoa laskennoista ja laskentaohjeita löydät Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sekä havaitut linnut biotoopeittain. Saat lisäohjeita ?-kuvakkeista kenttien vieressä.</li><li>Lomakkeella voit siirtyä kentästä toiseen joko hiiren avulla tai pikanäppäimillä (tab = seuraavaan kenttään, Alt + nuoli ylös = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppipätkät joko kartalta klikkaamalla tai liikkua biotooppipätkästä toiseen nuolinäppäimillä havaintojensyötön yläpuolella. Kirjaa muuttuneet biotoopit ”pääsaran biotooppi” -kenttään.</li><li>Tee mahdolliset muutokset biotooppipätkien pituuteen tai reitin kulkuun kartan työkaluja käyttäen. Voit muokata linjan pistettä ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sitä hiiren oikealla näppäimellä. Jos teit virheen kartan muokkauksessa, käytä ”Kumoa”-työkalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstejä ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun käyttöohjeesta.</li><li>Havaintoja voit syöttää joko ns. pikasyöttötilassa tai erillisten kenttien avulla. Pikasyöttötilaan ja siitä pois siirrytään havaintojensyötön oikean reunan nuolikuvakkeesta. Käytössä ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sekä pikasyöttötilassa lisäksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://tietopankki.luomus.fi/wp-content/uploads/2023/02/Linjalaskenta_kaksikirjaimiset_lajilyhenteet_Luomus.pdf\">https://tietopankki.luomus.fi/wp-content/uploads/2023/02/Linjalaskenta_kaksikirjaimiset_lajilyhenteet_Luomus.pdf</a>). Voit käyttää pieniä tai isoja kirjaimia ja käyttää välilyöntejä tai kirjoittaa kaiken yhteen. Katso ohjetta ”Havainnot”-kentän alla.</li><li>Kun olet syöttänyt havainnot, ja haluat tallentaa ja lähettää tiedot eteenpäin Linnustonseurannalle, paina: ”Tallenna julkisena”.</li><li>Tallennuksen jälkeen tulee näkyviin lista mahdollisista virheistä ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen jälkeen näet koosteen tallentamastasi havaintoerästä, esimerkiksi havaituista lajeista ja parimääristä, pääsarkaprosentista, kokonaislajimäärästä, etenemisnopeudesta jne.</li><li>Pääset tarvittaessa muokkaamaan tallennettua havaintoerää ”Omat havaintoeräni” –kohdasta. Kunkin havaintoerän vasemmassa laidassa on valittavana ”Näytä havaintoerä” ja ”Siirry muokkaussivulle” -kuvakkeet.</li></ol>",
+  "id": "MHL.1",
   "language": "fi",
-  "description": "Tämä on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusjärjestelmä. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lisätietoa laskennoista ja laskentaohjeita löydät Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sekä havaitut linnut biotoopeittain. Saat lisäohjeita ?-kuvakkeista kenttien vieressä.</li><li>Lomakkeella voit siirtyä kentästä toiseen joko hiiren avulla tai pikanäppäimillä (tab = seuraavaan kenttään, Alt + nuoli ylös = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppipätkät joko kartalta klikkaamalla tai liikkua biotooppipätkästä toiseen nuolinäppäimillä havaintojensyötön yläpuolella. Kirjaa muuttuneet biotoopit ”pääsaran biotooppi” -kenttään.</li><li>Tee mahdolliset muutokset biotooppipätkien pituuteen tai reitin kulkuun kartan työkaluja käyttäen. Voit muokata linjan pistettä ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sitä hiiren oikealla näppäimellä. Jos teit virheen kartan muokkauksessa, käytä ”Kumoa”-työkalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstejä ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun käyttöohjeesta.</li><li>Havaintoja voit syöttää joko ns. pikasyöttötilassa tai erillisten kenttien avulla. Pikasyöttötilaan ja siitä pois siirrytään havaintojensyötön oikean reunan nuolikuvakkeesta. Käytössä ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sekä pikasyöttötilassa lisäksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet\">https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet</a>). Voit käyttää pieniä tai isoja kirjaimia ja käyttää välilyöntejä tai kirjoittaa kaiken yhteen. Katso ohjetta ”Havainnot”-kentän alla.</li><li>Kun olet syöttänyt havainnot, ja haluat tallentaa ja lähettää tiedot eteenpäin Linnustonseurannalle, paina: ”Tallenna julkisena”.</li><li>Tallennuksen jälkeen tulee näkyviin lista mahdollisista virheistä ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen jälkeen näet koosteen tallentamastasi havaintoerästä, esimerkiksi havaituista lajeista ja parimääristä, pääsarkaprosentista, kokonaislajimäärästä, etenemisnopeudesta jne.</li><li>Pääset tarvittaessa muokkaamaan tallennettua havaintoerää ”Omat havaintoeräni” –kohdasta. Kunkin havaintoerän vasemmassa laidassa on valittavana ”Näytä havaintoerä” ja ”Siirry muokkaussivulle” -kuvakkeet.</li></ol>",
   "title": "Maalintujen linjalaskennat",
   "shortTitle": "Linjalaskenta",
   "logo": "https://cdn.laji.fi/images/logos/linjalaskentalomake.PNG",
@@ -488,62 +490,147 @@
         "$._status",
         "$.prepopulatedDocument.gatheringEvent.dateBegin"
       ],
-      "chooseDescription": "<p>Tämä on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusjärjestelmä. Täällä voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lisätietoa laskennoista ja laskentaohjeita löydät Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisiä reittien tietoja ja varaustilannetta.</li><li>Tehdä varauksen tulevalle kaudelle ja vapauttaa tekemäsi varauksen.</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, minkä jälkeen valitse oikeasta reunasta ”Katso ja tulosta kartta ja maastolomake”. Lomakkeita ei kannata tulostaa ennen linnustonseurannan lupaa, koska reittiin on voinut tulla hyväksymättömiä reittimuutoksia.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirtyä ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, minkä jälkeen klikkaa ”ilmoita uusi laskenta tälle reitille”.</ol><p>Jos sinulla on kysyttävää, ota yhteyttä <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
+      "chooseDescription": "<p>Tämä on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusjärjestelmä. Täällä voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lisätietoa laskennoista ja laskentaohjeita löydät Linnustonseurannan sivuilta: <a href=\"https://tietopankki.luomus.fi/linnustonseurannat/lintulaskennat-ja-seurannat\" target=\"_blank\" rel=\"noopener noreferref\">https://tietopankki.luomus.fi/linnustonseurannat/lintulaskennat-ja-seurannat/</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisiä reittien tietoja ja varaustilannetta.</li><li>Tehdä varauksen tulevalle kaudelle ja vapauttaa tekemäsi varauksen.</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, minkä jälkeen valitse oikeasta reunasta ”Katso ja tulosta kartta ja maastolomake”. Lomakkeita ei kannata tulostaa ennen linnustonseurannan lupaa, koska reittiin on voinut tulla hyväksymättömiä reittimuutoksia.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirtyä ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, minkä jälkeen klikkaa ”ilmoita uusi laskenta tälle reitille”.</ol><p>Jos sinulla on kysyttävää, ota yhteyttä <a target=\"_blank\" href=\"mailto:linnustonseuranta@helsinki.fi\">linnustonseuranta@helsinki.fi</a></p>",
       "copyLatestDocumentToNamedPlace": true,
       "filterByTags": true,
-      "listColumnsMultisort": true
+      "listColumnsMultisort": true,
+      "includeDescendantCollections": false
     },
-    "saveSuccessMessage": "Linjalaskennan havaintosi on nyt tallennettu. Kiitos osallistumisestasi! Jos sinulla on kysyttävää, ole yhteydessä linnustonseuranta@luomus.fi",
+    "saveSuccessMessage": "Linjalaskennan havaintosi on nyt tallennettu. Kiitos osallistumisestasi! Jos sinulla on kysyttävää, ole yhteydessä linnustonseuranta@helsinki.fi",
     "useNamedPlaces": true,
     "restrictAccess": "MHL.restrictAccessLoose",
     "hasAdmins": true,
     "adminLockable": true,
-    "warnEditingOldDocument": true
+    "warnEditingOldDocument": true,
+    "strict": false
   },
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "väliin"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havainto"
+      },
+      "alt+m": {
+        "fn": "splitLineTransectByMeters",
+        "target": "root_gatherings"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors"
+        ],
+        "target": "gatheringEvent"
+      }
+    },
+    "ui:annotations": {
+      "formId": "MHL.21",
+      "container": "modal",
+      "adminOnly": true,
+      "add": {
+        "type": "MAN.typeOpinion"
+      },
+      "buttonsPath": "/gatheringEvent"
+    },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Laskijan nimi, muodossa: etunimi sukunimi",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
-      "taxonCensus": {
-        "items": {},
-        "ui:field": "AnyToBooleanField",
-        "ui:help": "Valitse <i>Kyllä</i>, vaikka et olisi havainnut yhtään nisäkästä",
-        "ui:options": {
-          "allowUndefined": false,
-          "trueValue": [
-            {
-              "censusTaxonID": "MX.37580",
-              "taxonCensusType": "MY.taxonCensusTypeCounted"
-            },
-            {
-              "censusTaxonID": "MX.37612",
-              "taxonCensusType": "MY.taxonCensusTypeCounted"
-            }
-          ],
-          "falseValue": [
-            {
-              "censusTaxonID": "MX.37580",
-              "taxonCensusType": "MY.taxonCensusTypeCounted"
-            }
-          ]
-        }
-      },
       "ui:field": "NestField",
       "ui:classNames": "well well-sm",
       "ui:order": [
@@ -709,6 +796,16 @@
           "showTimeList": false
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Laskijan nimi, muodossa: etunimi sukunimi",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "legPublic": {
         "ui:options": {
           "allowUndefined": false
@@ -742,25 +839,167 @@
         },
         "ui:help": "Ilmoitettavaa laskentakertaa koskevat huomiot. Pysyvät muutokset ja vinkit kirjoitetaan kenttään: ”Reitin kuvaus”."
       },
+      "taxonCensus": {
+        "ui:field": "AnyToBooleanField",
+        "ui:help": "Valitse <i>Kyllä</i>, vaikka et olisi havainnut yhtään nisäkästä",
+        "ui:options": {
+          "allowUndefined": false,
+          "trueValue": [
+            {
+              "censusTaxonID": "MX.37580",
+              "taxonCensusType": "MY.taxonCensusTypeCounted"
+            },
+            {
+              "censusTaxonID": "MX.37612",
+              "taxonCensusType": "MY.taxonCensusTypeCounted"
+            }
+          ],
+          "falseValue": [
+            {
+              "censusTaxonID": "MX.37580",
+              "taxonCensusType": "MY.taxonCensusTypeCounted"
+            }
+          ]
+        }
+      },
       "startDistanceFromNECorner": {
         "ui:field": "HiddenField"
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "units": {
-          "items": {
-            "informalTaxonGroups": {
-              "items": {},
-              "ui:field": "HiddenField"
+      "ui:functions": {
+        "ui:field": "MapArrayField",
+        "ui:settings": [
+          "/mapOptions/tileLayerName",
+          "/mapOptions/overlayNames",
+          "/mapOptions/tileLayerOpacity",
+          "/mapOptions/tileLayers"
+        ],
+        "ui:options": {
+          "geometryField": "geometry",
+          "geometryMapper": "lineTransect",
+          "mapSizes": {
+            "lg": 4,
+            "md": 4,
+            "sm": 6,
+            "xs": 6
+          },
+          "mapOptions": {
+            "tileLayerName": "maastokartta",
+            "controls": {
+              "location": false
             },
-            "identifications": {
-              "items": {
-                "detDate": {
-                  "ui:widget": "DateWidget"
+            "tileLayerOpacity": 0.5
+          },
+          "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
+          "activeIdx": 0
+        }
+      },
+      "ui:field": "SingleActiveArrayField",
+      "ui:title": "Biotooppipätkä",
+      "ui:help": "Valitse seuraava/edellinen biotooppipätkä joko sivulla olevista nuolista tai kartasta klikkaamalla",
+      "ui:options": {
+        "renderer": "pager",
+        "affixed": true,
+        "headerClassName": "darker-bottom-border",
+        "canAdd": false,
+        "removable": false,
+        "headerFormatters": [
+          "lineTransect"
+        ]
+      },
+      "items": {
+        "ui:field": "NestField",
+        "ui:options": {
+          "nests": {
+            "placeWrapper": {
+              "fields": [
+                "gatheringFact",
+                "habitatClassification",
+                "timeStart",
+                "geometry"
+              ],
+              "rootUiSchema": {
+                "ui:order": [
+                  "*",
+                  "gatheringFact"
+                ],
+                "ui:grid": {
+                  "rows": [
+                    [
+                      "habitatClassification",
+                      "timeStart",
+                      "gatheringFact"
+                    ]
+                  ],
+                  "lg": {
+                    "habitatClassification": 4,
+                    "*": 2
+                  },
+                  "md": {
+                    "habitatClassification": 4,
+                    "*": 2
+                  },
+                  "sm": {
+                    "habitatClassification": 6,
+                    "timeStart": 3,
+                    "gatheringFact": 3
+                  },
+                  "xs": 12
                 }
               }
+            }
+          }
+        },
+        "ui:order": [
+          "*",
+          "units"
+        ],
+        "habitatClassification": {
+          "ui:help": "<u>Biotoopin koodi</u> on kolmiosainen. Alun <b>ISO</b> kirjain kertoo biotoopin ja seuraava numero tai <b>ISO</b> kirjain tarkentaa sitä. Niiden perään merkitään metsäisillä biotoopeilla puuston keskikorkeus ja aukeilla biotoopeilla aukean kokoluokka. <a href=\"https://www.luomus.fi/sites/default/files/files/linjalomake-e.pdf\" target=\"_blank\" rel=\"noreferrer\">Tarkemmat ohjeet</a>",
+          "ui:helpHoverable": true,
+          "ui:widget": "UpperCaseWidget"
+        },
+        "timeStart": {
+          "ui:widget": "TimeWidget",
+          "ui:help": "Biotooppipätkän aloitusaika. Raportoidaan noin 500 m välein. Laita 500m (maastolomakkeen sivun vaihto) väliaika lähimpään biotoopin aloitukseen. Jos biotooppipätkän alkua ei satu lähelle 500m vaihtumista, arvioi tarvittaessa ero.",
+          "ui:options": {
+            "showTimeList": false
+          }
+        },
+        "geometry": {
+          "ui:field": "HiddenField"
+        },
+        "gatheringFact": {
+          "lineTransectSegmentCounted": {
+            "ui:options": {
+              "allowUndefined": false
             },
+            "ui:help": "Jos jouduit jättämään laskennan syystä tai toisesta väliin kyseisellä biotooppipätkällä, valitse <i>Ei</i>"
+          },
+          "lineTransectSegmentMetersStart": {
+            "ui:field": "HiddenField"
+          },
+          "lineTransectSegmentMetersEnd": {
+            "ui:field": "HiddenField"
+          }
+        },
+        "units": {
+          "ui:field": "AutoArrayField",
+          "ui:options": {
+            "orderable": true,
+            "confirmDelete": true,
+            "deleteCorner": true,
+            "canAdd": false
+          },
+          "ui:help": "Syötä havainto pikasyöttökoodein ja paina Enter, jolloin havainto puretaan automaattisesti erillisiin kenttiin",
+          "items": {
             "ui:functions": [
               {
                 "ui:field": "ContextInjectionField",
@@ -914,6 +1153,16 @@
               "ui:belowHelp": "<div> <strong>Kirjoita pikakirjoitukseen LAJI (a) (Lukumäärä) Koodi (A/P)</strong> <p> <table class=\"table table-condensed\"> <thead> <tr> <th>Koodi</th><th>Havainnon laatu</th><th>Ilmoitettava lukumäärä</th> </tr> </thead> <tbody> <tr> <td>x</td><td>Laulava</td><td>Yksilömäärä</td> </tr> <tr> <td>v</td><td>Muuten ääntelevä</td><td>Yksilömäärä</td> </tr> <tr> <td>o</td><td>Näköhavainto</td><td>Yksilömäärä</td> </tr> <tr> <td>k</td><td>Koiras</td><td>Yksilömäärä</td> </tr> <tr> <td>n</td><td>Naaras</td><td>Yksilömäärä</td> </tr> <tr> <td>y</td><td>Ylilentävä</td><td>Yksilömäärä</td> </tr> <tr> <td>a luku o</td><Td>Parvi</Td><td>Yksilömäärä</td> </tr> <tr> <td>a luku y</td><td>Lentoparvi</td><td>Yksilömäärä</td> </tr> <tr> <td>pari</td><td>Pari</td><td>Parimäärä</td> </tr> <tr> <td>poikue</td><td>Poikue</td><td>Parimäärä</td> </tr> <tr> <td>pesä</td><td>Pesä</td><td>Parimäärä</td> </tr> </tbody> </table> </p> <p> <table class=\"table table-condensed\"> <tbody> <tr> <th>LAJI</th><td>Lajin kaksi- tai kuusikirjaiminen koodi. Pakollinen.</td> </tr> <tr> <th>a</th><td>Jos kyseessä on parvihavainto, lukumäärän eteen kirjoitetaan a. Muuten a jätetään kirjoittamatta. </td></tr> <tr> <th>Lukumäärä</th><td>Yksilömäärä tai koodeille \"pari\", \"poikue\", \"pesä\" parimäärä. Jos jätetään kirjoittamatta, lukumääräksi tulee 1. </td></tr> <tr> <th>Koodi</th><td>Luettelo koodeista on yllä. Pakollinen. </td></tr> <tr> <th>A/P</th><td>A = Apusarka, P = Pääsarka. Jos jätetään kirjoittamatta, saraksi tulee A. </td></tr> </tbody> </table> </p> <p> Voit käyttää suuria tai pieniä kirjaimia. Voit käyttää välilyöntejä tai kirjoittaa kaiken yhteen. </p> <p>Koodit koiras, naaras, pari, poikue ja pesä: ei kirjata onko nähty tai kuultu</p> <p> Esimerkkejä: <i>TTX, RRvp, pt2xp, ec2y, CSa6y, CORNIX O P, cornixop, TM2pariP, PD3k</i> </p> <p>Vinkki: Jos havaintoa ei hyväksytä pikasyöttökentässä, kokeile sulkea pikasyöttö ja valita erillisistä kentistä.<p> <p><strong>HUOM!</strong> ilmoita parvet aina parvihavaintoina esim. a2o ja havaitut parit koodilla pari. Pikasyötössä 2o tarkoittaa kahta erillistä näköhavaintoa, jotka tulkitaan kahdeksi pariksi.</p> </div>",
               "ui:help": "Syötä havainto pikasyöttökoodein, oikealla puolella olevat sarakkeet täyttyvät automaattisesti"
             },
+            "identifications": {
+              "items": {
+                "detDate": {
+                  "ui:widget": "DateWidget"
+                }
+              }
+            },
+            "informalTaxonGroups": {
+              "ui:field": "HiddenField"
+            },
             "unitFact": {
               "autocompleteSelectedTaxonID": {
                 "ui:widget": "HiddenWidget"
@@ -982,265 +1231,12 @@
               "notes",
               "*"
             ]
-          },
-          "ui:field": "AutoArrayField",
-          "ui:options": {
-            "orderable": true,
-            "confirmDelete": true,
-            "deleteCorner": true,
-            "canAdd": false
-          },
-          "ui:help": "Syötä havainto pikasyöttökoodein ja paina Enter, jolloin havainto puretaan automaattisesti erillisiin kenttiin"
+          }
         },
         "taxonCensus": {
-          "items": {},
           "ui:field": "HiddenField"
-        },
-        "ui:field": "NestField",
-        "ui:options": {
-          "nests": {
-            "placeWrapper": {
-              "fields": [
-                "gatheringFact",
-                "habitatClassification",
-                "timeStart",
-                "geometry"
-              ],
-              "rootUiSchema": {
-                "ui:order": [
-                  "*",
-                  "gatheringFact"
-                ],
-                "ui:grid": {
-                  "rows": [
-                    [
-                      "habitatClassification",
-                      "timeStart",
-                      "gatheringFact"
-                    ]
-                  ],
-                  "lg": {
-                    "habitatClassification": 4,
-                    "*": 2
-                  },
-                  "md": {
-                    "habitatClassification": 4,
-                    "*": 2
-                  },
-                  "sm": {
-                    "habitatClassification": 6,
-                    "timeStart": 3,
-                    "gatheringFact": 3
-                  },
-                  "xs": 12
-                }
-              }
-            }
-          }
-        },
-        "ui:order": [
-          "*",
-          "units"
-        ],
-        "habitatClassification": {
-          "ui:help": "<u>Biotoopin koodi</u> on kolmiosainen. Alun <b>ISO</b> kirjain kertoo biotoopin ja seuraava numero tai <b>ISO</b> kirjain tarkentaa sitä. Niiden perään merkitään metsäisillä biotoopeilla puuston keskikorkeus ja aukeilla biotoopeilla aukean kokoluokka. <a href=\"https://www.luomus.fi/sites/default/files/files/linjalomake-e.pdf\" target=\"_blank\" rel=\"noreferrer\">Tarkemmat ohjeet</a>",
-          "ui:helpHoverable": true,
-          "ui:widget": "UpperCaseWidget"
-        },
-        "timeStart": {
-          "ui:widget": "TimeWidget",
-          "ui:help": "Biotooppipätkän aloitusaika. Raportoidaan noin 500 m välein. Laita 500m (maastolomakkeen sivun vaihto) väliaika lähimpään biotoopin aloitukseen. Jos biotooppipätkän alkua ei satu lähelle 500m vaihtumista, arvioi tarvittaessa ero.",
-          "ui:options": {
-            "showTimeList": false
-          }
-        },
-        "geometry": {
-          "ui:field": "HiddenField"
-        },
-        "gatheringFact": {
-          "lineTransectSegmentCounted": {
-            "ui:options": {
-              "allowUndefined": false
-            },
-            "ui:help": "Jos jouduit jättämään laskennan syystä tai toisesta väliin kyseisellä biotooppipätkällä, valitse <i>Ei</i>"
-          },
-          "lineTransectSegmentMetersStart": {
-            "ui:field": "HiddenField"
-          },
-          "lineTransectSegmentMetersEnd": {
-            "ui:field": "HiddenField"
-          }
         }
-      },
-      "ui:functions": {
-        "ui:field": "MapArrayField",
-        "ui:settings": [
-          "/mapOptions/tileLayerName",
-          "/mapOptions/overlayNames",
-          "/mapOptions/tileLayerOpacity",
-          "/mapOptions/tileLayers"
-        ],
-        "ui:options": {
-          "geometryField": "geometry",
-          "geometryMapper": "lineTransect",
-          "mapSizes": {
-            "lg": 4,
-            "md": 4,
-            "sm": 6,
-            "xs": 6
-          },
-          "mapOptions": {
-            "tileLayerName": "maastokartta",
-            "controls": {
-              "location": false
-            },
-            "tileLayerOpacity": 0.5
-          },
-          "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
-          "activeIdx": 0
-        }
-      },
-      "ui:field": "SingleActiveArrayField",
-      "ui:title": "Biotooppipätkä",
-      "ui:help": "Valitse seuraava/edellinen biotooppipätkä joko sivulla olevista nuolista tai kartasta klikkaamalla",
-      "ui:options": {
-        "renderer": "pager",
-        "affixed": true,
-        "headerClassName": "darker-bottom-border",
-        "canAdd": false,
-        "removable": false,
-        "headerFormatters": [
-          "lineTransect"
-        ]
       }
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "Enter": {
-        "fn": "navigate"
-      },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
-      "alt+ ": {
-        "fn": "navigate"
-      },
-      "alt+shift+ ": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt+PageDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+PageUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+ArrowRight": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+ArrowLeft": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+h": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+j": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+k": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+l": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "väliin"
-      },
-      "alt+n": {
-        "fn": "navigateArray"
-      },
-      "alt+p": {
-        "fn": "navigateArray",
-        "reverse": true
-      },
-      "alt+Insert": {
-        "fn": "insert"
-      },
-      "alt+i": {
-        "fn": "insert"
-      },
-      "alt+Delete": {
-        "fn": "delete"
-      },
-      "alt+d": {
-        "fn": "delete"
-      },
-      "alt+u": {
-        "fn": "insert",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havainto"
-      },
-      "alt+m": {
-        "fn": "splitLineTransectByMeters",
-        "target": "root_gatherings"
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "ui:annotations": {
-      "formId": "MHL.21",
-      "container": "modal",
-      "adminOnly": true,
-      "add": {
-        "type": "MAN.typeOpinion"
-      },
-      "buttonsPath": "/gatheringEvent"
     }
   },
   "validators": {
@@ -1391,7 +1387,7 @@
             "geometry": {
               "requireShape": true,
               "message": {
-                "missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio."
+                "missingGeometries": "Havaintopaikka täytyy merkitä kartalle."
               }
             }
           }
@@ -1553,5 +1549,6 @@
   },
   "attributes": {
     "id": "MHL.1"
-  }
+  },
+  "$id": "a68f0f5776d491cef95ee84cbd841bed"
 }

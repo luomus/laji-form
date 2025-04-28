@@ -1,499 +1,497 @@
 {
-  "schema":{
-    "type":"object",
-    "properties":{
-      "owner":{
-        "type":"string",
-        "title":"Owner of record"
+  "schema": {
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "title": "Tietueen omistaja"
       },
-      "attachments":{
-        "type":"array",
-        "items":{
-          "type":"string"
+      "attachments": {
+        "type": "array",
+        "items": {
+          "type": "string"
         },
-        "title":"Attachments"
+        "title": "Attachments"
       },
-      "status":{
-        "type":"string",
-        "oneOf":[
+      "status": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "",
+            "title": ""
           },
           {
-            "const":"HRX.statusInProcess",
-            "title":"In process"
+            "const": "HRX.statusInProcess",
+            "title": ""
           },
           {
-            "const":"HRX.statusOutstanding",
-            "title":"Outstanding"
+            "const": "HRX.statusOutstanding",
+            "title": ""
           },
           {
-            "const":"HRX.statusClosed",
-            "title":"Closed"
+            "const": "HRX.statusClosed",
+            "title": ""
           },
           {
-            "const":"HRX.statusOnLoan",
-            "title":"On loan"
+            "const": "HRX.statusOnLoan",
+            "title": ""
           }
         ],
-        "title":"Transaction status"
+        "title": "Transaktion status"
       },
-      "type":{
-        "type":"string",
-        "oneOf":[
+      "type": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"HRX.typeLoanIncoming",
-            "title":"Loan, incoming"
+            "const": "HRX.typeLoanIncoming",
+            "title": ""
           },
           {
-            "const":"HRX.typeLoanOutgoing",
-            "title":"Loan, outgoing"
+            "const": "HRX.typeLoanOutgoing",
+            "title": ""
           },
           {
-            "const":"HRX.typeGiftIncoming",
-            "title":"Gift, incoming"
+            "const": "HRX.typeGiftIncoming",
+            "title": ""
           },
           {
-            "const":"HRX.typeGiftOutgoing",
-            "title":"Gift, outgoing"
+            "const": "HRX.typeGiftOutgoing",
+            "title": ""
           },
           {
-            "const":"HRX.typeExchangeIncoming",
-            "title":"Exchange, incoming"
+            "const": "HRX.typeExchangeIncoming",
+            "title": ""
           },
           {
-            "const":"HRX.typeExchangeOutgoing",
-            "title":"Exchange, outgoing"
+            "const": "HRX.typeExchangeOutgoing",
+            "title": ""
           },
           {
-            "const":"HRX.typeFieldCollection",
-            "title":"Field collection"
+            "const": "HRX.typeFieldCollection",
+            "title": ""
           },
           {
-            "const":"HRX.typeImportNotice",
-            "title":"Import notice only (maahantuonti-ilmoitus)"
+            "const": "HRX.typeImportNotice",
+            "title": ""
           },
           {
-            "const":"HRX.typeABSNegotiations",
-            "title":"ABS negotiations"
+            "const": "HRX.typeABSNegotiations",
+            "title": ""
           },
           {
-            "const":"HRX.typeVirtualLoanOutgoing",
-            "title":"Virtual loan, outgoing"
+            "const": "HRX.typeVirtualLoanOutgoing",
+            "title": ""
           },
           {
-            "const":"HRX.typeDeaccession",
-            "title":"Deaccession / Discarding"
+            "const": "HRX.typeDeaccession",
+            "title": ""
           }
         ],
-        "title":"Transaction type"
+        "title": "Transaktion tyyppi"
       },
-      "requestReceived":{
-        "type":"string",
-        "title":"Date requested"
+      "requestReceived": {
+        "type": "string",
+        "title": "Pyynnön päiväys"
       },
-      "incomingReceived":{
-        "type":"string",
-        "title":"Date received"
+      "incomingReceived": {
+        "type": "string",
+        "title": "Vastaanottopäivä"
       },
-      "incomingReturned":{
-        "type":"string",
-        "title":"Date returned"
+      "incomingReturned": {
+        "type": "string",
+        "title": "Palautuspäivä"
       },
-      "material":{
-        "type":"string",
-        "title":"Material description"
+      "material": {
+        "type": "string",
+        "title": "Materiaalin kuvaus"
       },
-      "harmonizedSystemCode":{
-        "type":"string",
-        "title":"HS Code for customs"
+      "harmonizedSystemCode": {
+        "type": "string",
+        "title": "HS Code for customs"
       },
-      "externalID":{
-        "type":"string",
-        "title":"Transaction ID by counterparty"
+      "externalID": {
+        "type": "string",
+        "title": "Lähettäjän transaktiotunniste"
       },
-      "publicRemarks":{
-        "type":"string",
-        "title":"Public remarks"
+      "publicRemarks": {
+        "type": "string",
+        "title": "Julkiset huomiot"
       },
-      "internalRemarks":{
-        "type":"string",
-        "title":"Internal remarks"
+      "internalRemarks": {
+        "type": "string",
+        "title": "Yksityiset huomiot"
       },
-      "legacyID":{
-        "type":"string",
-        "title":"Old transaction number"
+      "legacyID": {
+        "type": "string",
+        "title": "Vanha lainatunniste"
       },
-      "transportMethod":{
-        "type":"string",
-        "oneOf":[
+      "transportMethod": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodPriority",
-            "title":"Priority mail"
+            "const": "HRX.transportMethodPriority",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodEconomy",
-            "title":"Economy mail"
+            "const": "HRX.transportMethodEconomy",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodCourier",
-            "title":"Courier, see remarks"
+            "const": "HRX.transportMethodCourier",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodCarried",
-            "title":"Carried, see remarks"
+            "const": "HRX.transportMethodCarried",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodOther",
-            "title":"Other, see remarks"
+            "const": "HRX.transportMethodOther",
+            "title": ""
           },
           {
-            "const":"HRX.transportMethodImage",
-            "title":"Image(s) (virtual loan)"
+            "const": "HRX.transportMethodImage",
+            "title": ""
           }
         ],
-        "title":"Sent by"
+        "title": "Lähetystapa"
       },
-      "numberOfParcels":{
-        "type":"string",
-        "title":"Number of parcels"
+      "numberOfParcels": {
+        "type": "string",
+        "title": "Pakettien määrä"
       },
-      "outgoingSent":{
-        "type":"string",
-        "title":"Outgoing transaction sent"
+      "outgoingSent": {
+        "type": "string",
+        "title": "Outgoing transaction sent"
       },
-      "dueDate":{
-        "type":"string",
-        "title":"Due date"
+      "dueDate": {
+        "type": "string",
+        "title": "Eräpäivä"
       },
-      "receiptReturned":{
-        "type":"string",
-        "title":"Receipt returned"
+      "receiptReturned": {
+        "type": "string",
+        "title": "Kuittaus palautettu"
       },
-      "outgoingReturned":{
-        "type":"string",
-        "title":"Outgoing loan returned"
+      "outgoingReturned": {
+        "type": "string",
+        "title": "Uloslähtevän laina palautettu"
       },
-      "correspondentOrganization":{
-        "type":"string",
-        "title":"Counterparty organization"
+      "correspondentOrganization": {
+        "type": "string",
+        "title": "Vastaanottava/lähettävä organisaatio"
       },
-      "correspondentPerson":{
-        "type":"string",
-        "title":"Counterparty person/contact info"
+      "correspondentPerson": {
+        "type": "string",
+        "title": "Vastaanottava/lähettävä henkilö"
       },
-      "correspondentResearcher":{
-        "type":"string",
-        "title":"Receiving researcher"
+      "correspondentResearcher": {
+        "type": "string",
+        "title": "Vastaanottava tutkija"
       },
-      "localHandler":{
-        "type":"string",
-        "title":"Handler"
+      "localHandler": {
+        "type": "string",
+        "title": "Käsittelijä"
       },
-      "localHandlerEmail":{
-        "type":"string",
-        "title":"Handler email"
+      "localHandlerEmail": {
+        "type": "string",
+        "title": "Handler email"
       },
-      "localPerson":{
-        "type":"string",
-        "title":"Person responsible"
+      "localPerson": {
+        "type": "string",
+        "title": "Vastuuhenkilö"
       },
-      "localPersonEmail":{
-        "type":"string",
-        "title":"Person responsible email"
+      "localPersonEmail": {
+        "type": "string",
+        "title": "Sähköpostiosoite"
       },
-      "localResearcher":{
-        "type":"string",
-        "title":"Receiving researcher"
+      "localResearcher": {
+        "type": "string",
+        "title": "Vastaanottava tutkija"
       },
-      "collectionID":{
-        "type":"string",
-        "title":"Collection"
+      "collectionID": {
+        "type": "string",
+        "title": "Kokoelma"
       },
-      "geneticResourceAcquisitionDate":{
-        "type":"string",
-        "title":"Acquisition date"
+      "geneticResourceAcquisitionDate": {
+        "type": "string",
+        "title": "Saannin päivämäärä"
       },
-      "geneticResourceAcquisitionCountry":{
-        "type":"string",
-        "title":"Acquisition country"
+      "geneticResourceAcquisitionCountry": {
+        "type": "string",
+        "title": "Saantipaikka/maa"
       },
-      "underNagoya":{
-        "type":"boolean",
-        "title":"Does Nagoya protocol apply?"
+      "underNagoya": {
+        "type": "boolean",
+        "title": "Päteekö Nagoyan protokolla?"
       },
-      "availableForGeneticResearch":{
-        "type":"string",
-        "oneOf":[
+      "availableForGeneticResearch": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "",
+            "title": ""
           },
           {
-            "const":"HRX.availableForGeneticResearchYes",
-            "title":"Yes, freely"
+            "const": "HRX.availableForGeneticResearchYes",
+            "title": ""
           },
           {
-            "const":"HRX.availableForGeneticResearchWithRestrictions",
-            "title":"Yes, with restrictions"
+            "const": "HRX.availableForGeneticResearchWithRestrictions",
+            "title": ""
           },
           {
-            "const":"HRX.availableForGeneticResearchNo",
-            "title":"No"
+            "const": "HRX.availableForGeneticResearchNo",
+            "title": ""
           }
         ],
-        "title":"Is genetic research allowed on the genetic resource(s)?"
+        "title": "Onko geneettinen tutkimus sallittua geenivaroilla?"
       },
-      "geneticResourceRightsAndObligations":{
-        "type":"string",
-        "title":"Rights and obligations"
+      "geneticResourceRightsAndObligations": {
+        "type": "string",
+        "title": "Oikeudet ja velvollisuudet"
       },
-      "geneticResourceType":{
-        "type":"string",
-        "oneOf":[
+      "geneticResourceType": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypeAnimal",
-            "title":"Animal"
+            "const": "HRX.geneticResourceTypeAnimal",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypePlant",
-            "title":"Plant"
+            "const": "HRX.geneticResourceTypePlant",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypeFungus",
-            "title":"Fungus"
+            "const": "HRX.geneticResourceTypeFungus",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypeMicrobe",
-            "title":"Microbe"
+            "const": "HRX.geneticResourceTypeMicrobe",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypeSoil",
-            "title":"Soil"
+            "const": "HRX.geneticResourceTypeSoil",
+            "title": ""
           },
           {
-            "const":"HRX.geneticResourceTypeAqua",
-            "title":"Aqua"
+            "const": "HRX.geneticResourceTypeAqua",
+            "title": ""
           }
         ],
-        "title":"Type of resource"
+        "title": "Resurssin tyyppi"
       },
-      "hasIRCC":{
-        "type":"boolean",
-        "title":"Do you have IRCC number?",
-        "default":false
+      "hasIRCC": {
+        "type": "boolean",
+        "title": "Onko IRCC-numero?",
+        "default": false
       },
-      "IRCC":{
-        "type":"string",
-        "title":"IRCC number"
+      "IRCC": {
+        "type": "string",
+        "title": "IRCC numero"
       },
-      "resourceImported":{
-        "type":"string",
-        "oneOf":[
+      "resourceImported": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "",
+            "title": ""
           },
           {
-            "const":"HRX.resourceImportedGeneticResources",
-            "title":"Genetic resources"
+            "const": "HRX.resourceImportedGeneticResources",
+            "title": ""
           },
           {
-            "const":"HRX.resourceImportedTraditionalKnowledge",
-            "title":"Traditional knowledge"
+            "const": "HRX.resourceImportedTraditionalKnowledge",
+            "title": ""
           },
           {
-            "const":"HRX.resourceImportedBoth",
-            "title":"Both"
+            "const": "HRX.resourceImportedBoth",
+            "title": ""
           }
         ],
-        "title":"What are you importing?"
+        "title": "Mitä tuot maahan?"
       },
-      "geneticResourceDescription":{
-        "type":"string",
-        "title":"Description"
+      "geneticResourceDescription": {
+        "type": "string",
+        "title": "Kuvaus"
       },
-      "geneticResourceSource":{
-        "type":"string",
-        "title":"Source"
+      "geneticResourceSource": {
+        "type": "string",
+        "title": "Alkuperä tai saannin taho"
       },
-      "permits":{
-        "type":"array",
-        "items":{
-          "type":"object",
-          "properties":{
-            "permitType":{
-              "type":"string",
-              "oneOf":[
+      "permits": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "permitType": {
+              "type": "string",
+              "oneOf": [
                 {
-                  "const":"",
-                  "title":""
+                  "const": "",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypePIC",
-                  "title":"PIC"
+                  "const": "HRA.permitTypePIC",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypeMAT",
-                  "title":"MAT"
+                  "const": "HRA.permitTypeMAT",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypeMTA",
-                  "title":"MTA"
+                  "const": "HRA.permitTypeMTA",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitCollectingPermit",
-                  "title":"Collecting permit"
+                  "const": "HRA.permitCollectingPermit",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypeExportPermit",
-                  "title":"Export permit"
+                  "const": "HRA.permitTypeExportPermit",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypeOther",
-                  "title":"Other"
+                  "const": "HRA.permitTypeOther",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitTypeMemorandumOfUnderstanding",
-                  "title":"Memorandum of Understanding (MOU)"
+                  "const": "HRA.permitTypeMemorandumOfUnderstanding",
+                  "title": ""
                 }
               ],
-              "title":"Permit type"
+              "title": "Permit type"
             },
-            "permitStatus":{
-              "type":"string",
-              "oneOf":[
+            "permitStatus": {
+              "type": "string",
+              "oneOf": [
                 {
-                  "const":"",
-                  "title":""
+                  "const": "",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitStatusAvailable",
-                  "title":"Available"
+                  "const": "HRA.permitStatusAvailable",
+                  "title": ""
                 },
                 {
-                  "const":"HRA.permitStatusNotRequired",
-                  "title":"Not required"
+                  "const": "HRA.permitStatusNotRequired",
+                  "title": ""
                 }
               ],
-              "title":"Permit status"
+              "title": "Permit status"
             },
-            "permitFile":{
-              "type":"string",
-              "title":"File"
+            "permitFile": {
+              "type": "string",
+              "title": "File"
             },
-            "permitStartDate":{
-              "type":"string",
-              "title":"Start date"
+            "permitStartDate": {
+              "type": "string",
+              "title": "Start date"
             },
-            "permitEndDate":{
-              "type":"string",
-              "title":"End date"
+            "permitEndDate": {
+              "type": "string",
+              "title": "End date"
             },
-            "permitNotes":{
-              "type":"string",
-              "title":"Notes"
+            "permitNotes": {
+              "type": "string",
+              "title": "Notes"
             }
           },
-          "required":[
-
-          ]
+          "required": []
         },
-        "title":"Permits"
+        "title": "Luvat"
       },
-      "transactionEvents":{
-        "type":"array",
-        "items":{
-          "type":"object",
-          "properties":{
-            "eventType":{
-              "type":"string",
-              "oneOf":[
+      "transactionEvents": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "eventType": {
+              "type": "string",
+              "oneOf": [
                 {
-                  "const":"HRX.eventTypeReturn",
-                  "title":"Returned specimens"
+                  "const": "HRX.eventTypeReturn",
+                  "title": ""
                 },
                 {
-                  "const":"HRX.eventTypeAddition",
-                  "title":"Added specimens"
+                  "const": "HRX.eventTypeAddition",
+                  "title": ""
                 }
               ],
-              "title":"Event type"
+              "title": "Event type"
             },
-            "eventDate":{
-              "type":"string",
-              "title":"Date"
+            "eventDate": {
+              "type": "string",
+              "title": "Date"
             },
-            "eventHandler":{
-              "type":"string",
-              "title":"Handler"
+            "eventHandler": {
+              "type": "string",
+              "title": "Handler"
             },
-            "eventNotes":{
-              "type":"string",
-              "title":"Notes"
+            "eventNotes": {
+              "type": "string",
+              "title": "Notes"
             }
           },
-          "required":[
+          "required": [
             "eventType",
             "eventDate",
             "eventHandler",
             "eventNotes"
           ]
         },
-        "title":"Transaction events"
+        "title": "Transaktion tapahtumat"
       },
-      "awayIDs":{
-        "type":"array",
-        "items":{
-          "type":"string"
+      "awayIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
         },
-        "title":"Included in/On loan IDs"
+        "title": "Included in/On loan IDs"
       },
-      "returnedIDs":{
-        "type":"array",
-        "items":{
-          "type":"string"
+      "returnedIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
         },
-        "title":"Returned IDs"
+        "title": "Returned IDs"
       },
-      "missingIDs":{
-        "type":"array",
-        "items":{
-          "type":"string"
+      "missingIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
         },
-        "title":"Missing IDs"
+        "title": "Missing IDs"
       },
-      "awayCount":{
-        "type":"integer",
-        "minimum":0,
-        "title":"Included in/On loan count"
+      "awayCount": {
+        "type": "integer",
+        "minimum": 0,
+        "title": "Included in/On loan count"
       },
-      "returnedCount":{
-        "type":"integer",
-        "minimum":0,
-        "title":"Returned count"
+      "returnedCount": {
+        "type": "integer",
+        "minimum": 0,
+        "title": "Returned count"
       },
-      "missingCount":{
-        "type":"integer",
-        "minimum":0,
-        "title":"Missing count"
+      "missingCount": {
+        "type": "integer",
+        "minimum": 0,
+        "title": "Missing count"
       }
     },
-    "required":[
+    "required": [
       "owner",
       "type"
     ]
   },
-  "excludeFromCopy":[
+  "excludeFromCopy": [
     "$.geneticResourceAcquisitionDate",
     "$.geneticResourceAcquisitionCountry",
     "$.underNagoya",
@@ -514,137 +512,29 @@
     "$.returnedCount",
     "$.missingCount"
   ],
-  "name":"Kotka - Transaction",
-  "language":"en",
-  "title":"Kotka - Transaction",
-  "options":{
-    "useSchemaCommentsAsHelpTexts":true,
-    "allowTemplate":true,
-    "strict":false
+  "name": "Kotka - Transaction",
+  "language": "fi",
+  "title": "Kotka - Transaction",
+  "options": {
+    "useSchemaCommentsAsHelpTexts": true,
+    "allowTemplate": true,
+    "strict": false
   },
-  "uiSchema":{
-    "owner":{
-      "ui:help":"Team or organisation that owns the record and can edit it."
-    },
-    "status":{
-      "ui:help":"Whether the transaction is closed, outstanding or in process."
-    },
-    "type":{
-      "ui:help":"What kind of transaction this is."
-    },
-    "requestReceived":{
-      "ui:help":"When loan request was received here."
-    },
-    "incomingReceived":{
-      "ui:help":"Date when incoming transaction was received."
-    },
-    "incomingReturned":{
-      "ui:help":"Date when the incoming loan was returned to the sender."
-    },
-    "material":{
-      "ui:help":"Description of the material included in this transaction."
-    },
-    "externalID":{
-      "ui:help":"Sender's ID for the transaction."
-    },
-    "publicRemarks":{
-      "ui:help":"Remarks that are shown to both parties of the transaction."
-    },
-    "internalRemarks":{
-      "ui:help":"Private remarks that are shown only in Kotka and not to the corresponding organisation."
-    },
-    "legacyID":{
-      "ui:help":"Loan/transaction number used in paper loan catalogs or old software (e.g. Curator)"
-    },
-    "transportMethod":{
-      "ui:help":"Means of sending, mail, courier etc."
-    },
-    "numberOfParcels":{
-      "ui:help":"In how many parcels was the transaction sent/carried."
-    },
-    "outgoingSent":{
-      "ui:help":"When the transaction was sent out from us"
-    },
-    "dueDate":{
-      "ui:help":"Date when the loan needs to be returned."
-    },
-    "receiptReturned":{
-      "ui:help":"When signed loan receipt was received from the loanee"
-    },
-    "outgoingReturned":{
-      "ui:help":"Date when the outgoing loan was returned to us"
-    },
-    "correspondentOrganization":{
-      "ui:help":"Select the correspondent organization from a list. If not found on the list, you need to add the new organization first."
-    },
-    "correspondentPerson":{
-      "ui:help":"Name of the corresponding person. If the transaction goes to a private person, write their postal address here."
-    },
-    "correspondentResearcher":{
-      "ui:help":"Receicing researcher in the correspondent organisation for outgoing transactions."
-    },
-    "localHandler":{
-      "ui:help":"Person handling the transaction at local Kotka institution."
-    },
-    "localPerson":{
-      "ui:help":"Person responsible for the transaction in our museum/local Kotka institution"
-    },
-    "localPersonEmail":{
-      "ui:help":"Contact email for the person responsible in our museum."
-    },
-    "localResearcher":{
-      "ui:help":"For incoming loans, name of the researcher receiving the loan at our local institution."
-    },
-    "collectionID":{
-      "ui:help":"For statistical purposes. The collection where the transaction is directed to. Record transactions directed to different collections as separate transactions if you use this field."
-    },
-    "geneticResourceAcquisitionDate":{
-      "ui:help":"Date when the genetic resource or traditional knowledge was aqcuired."
-    },
-    "geneticResourceAcquisitionCountry":{
-      "ui:help":"Country where the genetic resource or traditional knowledge was acquired from, provider country, country of origin. List of countries in Kotka is based on ISO 3166 Country Codes -standard and may differ from the country list in ABSCH."
-    },
-    "underNagoya":{
-      "ui:help":"Is it e.g. non-human genetic material that is going to be used for genetic research as is defined by the protocol?"
-    },
-    "availableForGeneticResearch":{
-      "ui:help":"If you choose \"Yes, with restrictions\", explain the restrictions in the following field \"Rights and obligations\"."
-    },
-    "geneticResourceRightsAndObligations":{
-      "ui:help":"Presence or absence of rights and obligations relating to access and benefit sharing, including rights and obligations regarding subsequent applications and commercialization. Instruction source EU DECLARE user manual and QA."
-    },
-    "geneticResourceType":{
-      "ui:help":"Choose the type of the genetic resource for statistical and reporting purposes."
-    },
-    "hasIRCC":{
-      "ui:help":"Whether the resource has an IRCC number or not. If not, more information needs to be filled in."
-    },
-    "IRCC":{
-      "ui:help":"Internationally Recognized Certificate of Compliance. Kotka checks from the ABS Clearing House that the entered IRCC number exists and is valid."
-    },
-    "resourceImported":{
-      "ui:help":"Are you importing genetic resources, traditional knowledge associated to genetic resources or both?"
-    },
-    "geneticResourceDescription":{
-      "ui:help":"Description of the genetic resource or traditional knowledge (possible identifiers, taxa, number of specimens, region etc.). Instruction source EU DECLARE User manual and QA."
-    },
-    "geneticResourceSource":{
-      "ui:help":"Person or legal entity from whom the user obtained the genetic resources directly, i.e. the previous actor in the value chain. Often a museum or other organization. If a genetic resource is obtained directly from the provider country, the name of the country should be provided. Instruction source EU DECLARE User manual and QA."
-    },
-    "ui:functions":[
+  "uiSchema": {
+    "ui:functions": [
       {
-        "ui:field":"ScopeField",
-        "ui:options":{
-          "fields":[
+        "ui:field": "ScopeField",
+        "ui:options": {
+          "fields": [
             "owner",
             "attachments",
             "status",
             "type"
           ],
-          "fieldScopes":{
-            "type":{
-              "+":{
-                "fields":[
+          "fieldScopes": {
+            "type": {
+              "+": {
+                "fields": [
                   "requestReceived",
                   "incomingReceived",
                   "incomingReturned",
@@ -689,174 +579,170 @@
                   "returnedIDs",
                   "missingIDs"
                 ],
-                "uiSchema":{
-                  "correspondent":{
-                    "ui:field":""
+                "uiSchema": {
+                  "correspondent": {
+                    "ui:field": ""
                   },
-                  "local":{
-                    "ui:field":""
+                  "local": {
+                    "ui:field": ""
                   },
-                  "nagoyaWrapper":{
-                    "ui:field":""
+                  "nagoyaWrapper": {
+                    "ui:field": ""
                   },
-                  "transactionEvents":{
-                    "ui:field":""
+                  "transactionEvents": {
+                    "ui:field": ""
                   },
-                  "specimens":{
-                    "ui:field":""
+                  "specimens": {
+                    "ui:field": ""
                   }
                 }
               },
-              "HRX.typeLoanIncoming":{
-                "excludeFields":[
+              "HRX.typeLoanIncoming": {
+                "excludeFields": [
                   "requestReceived",
                   "outgoingSent",
                   "outgoingReturned",
                   "correspondentResearcher",
                   "collectionID"
                 ],
-                "uiSchema":{
-                  "incomingReceived":{
-                    "ui:required":true
+                "uiSchema": {
+                  "incomingReceived": {
+                    "ui:required": true
                   },
-                  "correspondentOrganization":{
-                    "ui:required":true
+                  "correspondentOrganization": {
+                    "ui:required": true
                   },
-                  "awayIDs":{
-                    "ui:title":"On loan IDs"
+                  "awayIDs": {
+                    "ui:title": "On loan IDs"
                   },
-                  "awayCount":{
-                    "ui:title":"On loan count"
+                  "awayCount": {
+                    "ui:title": "On loan count"
                   },
-                  "specimens":{
-                    "totalAwayCount":{
-                      "ui:title":"On loan"
+                  "specimens": {
+                    "totalAwayCount": {
+                      "ui:title": "On loan"
                     },
-                    "totalReturnedCount":{
-                      "ui:widget":"PlainTextWidget"
+                    "totalReturnedCount": {
+                      "ui:widget": "PlainTextWidget"
                     }
                   },
-                  "transactionEvents":{
-                    "items":{
-                      "eventType":{
-                        "ui:options":{
-                          "filter":[
-
-                          ]
+                  "transactionEvents": {
+                    "items": {
+                      "eventType": {
+                        "ui:options": {
+                          "filter": []
                         }
                       }
                     }
                   },
-                  "specimenIDs":{
-                    "ui:options":{
-                      "buttons":[
+                  "specimenIDs": {
+                    "ui:options": {
+                      "buttons": [
                         {
-                          "operation":"moveAll",
-                          "fromField":"awayIDs",
-                          "toField":"returnedIDs",
-                          "label":"Mark all as returned",
-                          "className":"mt-1 mb-3"
+                          "operation": "moveAll",
+                          "fromField": "awayIDs",
+                          "toField": "returnedIDs",
+                          "label": "Mark all as returned",
+                          "className": "mt-1 mb-3"
                         },
                         {
-                          "operation":"move",
-                          "toField":"awayIDs",
-                          "label":"Mark as on loan"
+                          "operation": "move",
+                          "toField": "awayIDs",
+                          "label": "Mark as on loan"
                         },
                         {
-                          "operation":"move",
-                          "toField":"returnedIDs",
-                          "label":"Mark as returned"
+                          "operation": "move",
+                          "toField": "returnedIDs",
+                          "label": "Mark as returned"
                         },
                         {
-                          "operation":"move",
-                          "toField":"missingIDs",
-                          "label":"Mark as missing",
-                          "className":"mb-3"
+                          "operation": "move",
+                          "toField": "missingIDs",
+                          "label": "Mark as missing",
+                          "className": "mb-3"
                         },
                         {
-                          "operation":"delete",
-                          "label":"Delete"
+                          "operation": "delete",
+                          "label": "Delete"
                         }
                       ]
                     }
                   }
                 }
               },
-              "HRX.typeLoanOutgoing":{
-                "excludeFields":[
+              "HRX.typeLoanOutgoing": {
+                "excludeFields": [
                   "incomingReceived",
                   "incomingReturned",
                   "localResearcher"
                 ],
-                "uiSchema":{
-                  "correspondentOrganization":{
-                    "ui:required":true
+                "uiSchema": {
+                  "correspondentOrganization": {
+                    "ui:required": true
                   },
-                  "outgoingSent":{
-                    "ui:required":true
+                  "outgoingSent": {
+                    "ui:required": true
                   },
-                  "awayIDs":{
-                    "ui:title":"On loan IDs"
+                  "awayIDs": {
+                    "ui:title": "On loan IDs"
                   },
-                  "awayCount":{
-                    "ui:title":"On loan count"
+                  "awayCount": {
+                    "ui:title": "On loan count"
                   },
-                  "specimens":{
-                    "totalAwayCount":{
-                      "ui:title":"On loan"
+                  "specimens": {
+                    "totalAwayCount": {
+                      "ui:title": "On loan"
                     },
-                    "totalReturnedCount":{
-                      "ui:widget":"PlainTextWidget"
+                    "totalReturnedCount": {
+                      "ui:widget": "PlainTextWidget"
                     }
                   },
-                  "transactionEvents":{
-                    "items":{
-                      "eventType":{
-                        "ui:options":{
-                          "filter":[
-
-                          ]
+                  "transactionEvents": {
+                    "items": {
+                      "eventType": {
+                        "ui:options": {
+                          "filter": []
                         }
                       }
                     }
                   },
-                  "specimenIDs":{
-                    "ui:options":{
-                      "buttons":[
+                  "specimenIDs": {
+                    "ui:options": {
+                      "buttons": [
                         {
-                          "operation":"moveAll",
-                          "fromField":"awayIDs",
-                          "toField":"returnedIDs",
-                          "label":"Mark all as returned",
-                          "className":"mt-1 mb-3"
+                          "operation": "moveAll",
+                          "fromField": "awayIDs",
+                          "toField": "returnedIDs",
+                          "label": "Mark all as returned",
+                          "className": "mt-1 mb-3"
                         },
                         {
-                          "operation":"move",
-                          "toField":"awayIDs",
-                          "label":"Mark as on loan"
+                          "operation": "move",
+                          "toField": "awayIDs",
+                          "label": "Mark as on loan"
                         },
                         {
-                          "operation":"move",
-                          "toField":"returnedIDs",
-                          "label":"Mark as returned"
+                          "operation": "move",
+                          "toField": "returnedIDs",
+                          "label": "Mark as returned"
                         },
                         {
-                          "operation":"move",
-                          "toField":"missingIDs",
-                          "label":"Mark as missing",
-                          "className":"mb-3"
+                          "operation": "move",
+                          "toField": "missingIDs",
+                          "label": "Mark as missing",
+                          "className": "mb-3"
                         },
                         {
-                          "operation":"delete",
-                          "label":"Delete"
+                          "operation": "delete",
+                          "label": "Delete"
                         }
                       ]
                     }
                   }
                 }
               },
-              "HRX.typeGiftIncoming":{
-                "excludeFields":[
+              "HRX.typeGiftIncoming": {
+                "excludeFields": [
                   "requestReceived",
                   "incomingReturned",
                   "outgoingSent",
@@ -867,17 +753,17 @@
                   "returnedIDs",
                   "dueDate"
                 ],
-                "uiSchema":{
-                  "incomingReceived":{
-                    "ui:required":true
+                "uiSchema": {
+                  "incomingReceived": {
+                    "ui:required": true
                   },
-                  "correspondentOrganization":{
-                    "ui:required":true
+                  "correspondentOrganization": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeGiftOutgoing":{
-                "excludeFields":[
+              "HRX.typeGiftOutgoing": {
+                "excludeFields": [
                   "incomingReceived",
                   "incomingReturned",
                   "outgoingReturned",
@@ -887,17 +773,17 @@
                   "dueDate",
                   "requestReceived"
                 ],
-                "uiSchema":{
-                  "outgoingSent":{
-                    "ui:required":true
+                "uiSchema": {
+                  "outgoingSent": {
+                    "ui:required": true
                   },
-                  "correspondentOrganization":{
-                    "ui:required":true
+                  "correspondentOrganization": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeExchangeIncoming":{
-                "excludeFields":[
+              "HRX.typeExchangeIncoming": {
+                "excludeFields": [
                   "requestReceived",
                   "incomingReturned",
                   "outgoingSent",
@@ -908,17 +794,17 @@
                   "returnedIDs",
                   "dueDate"
                 ],
-                "uiSchema":{
-                  "incomingReceived":{
-                    "ui:required":true
+                "uiSchema": {
+                  "incomingReceived": {
+                    "ui:required": true
                   },
-                  "correspondentOrganization":{
-                    "ui:required":true
+                  "correspondentOrganization": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeExchangeOutgoing":{
-                "excludeFields":[
+              "HRX.typeExchangeOutgoing": {
+                "excludeFields": [
                   "incomingReceived",
                   "incomingReturned",
                   "outgoingReturned",
@@ -928,17 +814,17 @@
                   "dueDate",
                   "requestReceived"
                 ],
-                "uiSchema":{
-                  "correspondentOrganization":{
-                    "ui:required":true
+                "uiSchema": {
+                  "correspondentOrganization": {
+                    "ui:required": true
                   },
-                  "outgoingSent":{
-                    "ui:required":true
+                  "outgoingSent": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeVirtualLoanOutgoing":{
-                "excludeFields":[
+              "HRX.typeVirtualLoanOutgoing": {
+                "excludeFields": [
                   "incomingReceived",
                   "incomingReturned",
                   "outgoingReturned",
@@ -950,36 +836,33 @@
                   "missingIDs",
                   "dueDate"
                 ],
-                "uiSchema":{
-                  "requestReceived":{
-                    "ui:required":true
+                "uiSchema": {
+                  "correspondentOrganization": {
+                    "ui:required": true
                   },
-                  "correspondentOrganization":{
-                    "ui:required":true
+                  "outgoingSent": {
+                    "ui:required": true
                   },
-                  "outgoingSent":{
-                    "ui:required":true
-                  },
-                  "specimens":{
-                    "totalMissingCount":{
-                      "ui:widget":"HiddenWidget"
+                  "specimens": {
+                    "totalMissingCount": {
+                      "ui:widget": "HiddenWidget"
                     }
                   },
-                  "specimenIDs":{
-                    "ui:options":{
-                      "buttons":[
+                  "specimenIDs": {
+                    "ui:options": {
+                      "buttons": [
                         {
-                          "operation":"delete",
-                          "label":"Delete",
-                          "className":"mt-4"
+                          "operation": "delete",
+                          "label": "Delete",
+                          "className": "mt-4"
                         }
                       ]
                     }
                   }
                 }
               },
-              "HRX.typeFieldCollection":{
-                "excludeFields":[
+              "HRX.typeFieldCollection": {
+                "excludeFields": [
                   "requestReceived",
                   "incomingReturned",
                   "outgoingSent",
@@ -992,8 +875,8 @@
                   "returnedIDs"
                 ]
               },
-              "HRX.typeImportNotice":{
-                "excludeFields":[
+              "HRX.typeImportNotice": {
+                "excludeFields": [
                   "requestReceived",
                   "incomingReturned",
                   "outgoingSent",
@@ -1006,14 +889,14 @@
                   "returnedCount",
                   "returnedIDs"
                 ],
-                "uiSchema":{
-                  "correspondentOrganization":{
-                    "ui:required":true
+                "uiSchema": {
+                  "correspondentOrganization": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeABSNegotiations":{
-                "excludeFields":[
+              "HRX.typeABSNegotiations": {
+                "excludeFields": [
                   "requestReceived",
                   "incomingReturned",
                   "outgoingSent",
@@ -1025,14 +908,14 @@
                   "returnedCount",
                   "returnedIDs"
                 ],
-                "uiSchema":{
-                  "correspondentOrganization":{
-                    "ui:required":true
+                "uiSchema": {
+                  "correspondentOrganization": {
+                    "ui:required": true
                   }
                 }
               },
-              "HRX.typeDeaccession":{
-                "excludeFields":[
+              "HRX.typeDeaccession": {
+                "excludeFields": [
                   "incomingReceived",
                   "incomingReturned",
                   "publicRemarks",
@@ -1047,28 +930,28 @@
                   "missingCount",
                   "missingIDs"
                 ],
-                "uiSchema":{
-                  "outgoingSent":{
-                    "ui:required":true
+                "uiSchema": {
+                  "outgoingSent": {
+                    "ui:required": true
                   },
-                  "correspondent":{
-                    "ui:field":"HiddenField"
+                  "correspondent": {
+                    "ui:field": "HiddenField"
                   },
-                  "nagoyaWrapper":{
-                    "ui:field":"HiddenField"
+                  "nagoyaWrapper": {
+                    "ui:field": "HiddenField"
                   },
-                  "specimens":{
-                    "totalMissingCount":{
-                      "ui:widget":"HiddenWidget"
+                  "specimens": {
+                    "totalMissingCount": {
+                      "ui:widget": "HiddenWidget"
                     }
                   },
-                  "specimenIDs":{
-                    "ui:options":{
-                      "buttons":[
+                  "specimenIDs": {
+                    "ui:options": {
+                      "buttons": [
                         {
-                          "operation":"delete",
-                          "label":"Delete",
-                          "className":"mt-4"
+                          "operation": "delete",
+                          "label": "Delete",
+                          "className": "mt-4"
                         }
                       ]
                     }
@@ -1080,19 +963,19 @@
         }
       }
     ],
-    "ui:field":"NestField",
-    "ui:options":{
-      "nests":{
-        "generalFields":{
-          "title":"",
-          "fields":[
+    "ui:field": "NestField",
+    "ui:options": {
+      "nests": {
+        "generalFields": {
+          "title": "",
+          "fields": [
             "owner",
             "attachments"
           ]
         },
-        "transactionFields":{
-          "title":"",
-          "fields":[
+        "transactionFields": {
+          "title": "",
+          "fields": [
             "status",
             "type",
             "requestReceived",
@@ -1112,29 +995,29 @@
             "outgoingReturned"
           ]
         },
-        "transaction":{
-          "title":"Transaction",
-          "fields":[
+        "transaction": {
+          "title": "Transaction",
+          "fields": [
             "transactionFields"
           ]
         },
-        "correspondentFields":{
-          "title":"",
-          "fields":[
+        "correspondentFields": {
+          "title": "",
+          "fields": [
             "correspondentOrganization",
             "correspondentPerson",
             "correspondentResearcher"
           ]
         },
-        "correspondent":{
-          "title":"Counterparty",
-          "fields":[
+        "correspondent": {
+          "title": "Counterparty",
+          "fields": [
             "correspondentFields"
           ]
         },
-        "localFields":{
-          "title":"",
-          "fields":[
+        "localFields": {
+          "title": "",
+          "fields": [
             "localHandler",
             "localHandlerEmail",
             "localPerson",
@@ -1143,15 +1026,15 @@
             "collectionID"
           ]
         },
-        "local":{
-          "title":"Our museum",
-          "fields":[
+        "local": {
+          "title": "Our museum",
+          "fields": [
             "localFields"
           ]
         },
-        "nagoyaFields":{
-          "title":"",
-          "fields":[
+        "nagoyaFields": {
+          "title": "",
+          "fields": [
             "geneticResourceAcquisitionDate",
             "geneticResourceAcquisitionCountry",
             "underNagoya",
@@ -1165,50 +1048,50 @@
             "geneticResourceSource"
           ]
         },
-        "nagoyaWrapper":{
-          "title":"Permits (Nagoya protocol etc.)",
-          "fields":[
+        "nagoyaWrapper": {
+          "title": "Permits (Nagoya protocol etc.)",
+          "fields": [
             "nagoyaFields",
             "permits"
           ]
         },
-        "specimenIDs":{
-          "title":"Specimens with IDs",
-          "fields":[
+        "specimenIDs": {
+          "title": "",
+          "fields": [
             "awayIDs",
             "returnedIDs",
             "missingIDs"
           ]
         },
-        "specimenCounts":{
-          "title":"Specimens without IDs",
-          "fields":[
+        "specimenCounts": {
+          "title": "Specimens without IDs",
+          "fields": [
             "awayCount",
             "returnedCount",
             "missingCount"
           ]
         },
-        "specimens":{
-          "title":"",
-          "fields":[
+        "specimens": {
+          "title": "Specimens with IDs",
+          "fields": [
             "specimenIDs",
             "specimenCounts"
           ]
         }
       }
     },
-    "ui:order":[
+    "ui:order": [
       "*",
       "transactionEvents",
       "specimens"
     ],
-    "generalFields":{
-      "ui:grid":{
-        "lg":6,
-        "md":7,
-        "sm":8,
-        "xs":12,
-        "rows":[
+    "generalFields": {
+      "ui:grid": {
+        "lg": 6,
+        "md": 7,
+        "sm": 8,
+        "xs": 12,
+        "rows": [
           [
             "owner"
           ],
@@ -1217,210 +1100,226 @@
           ]
         ]
       },
-      "owner":{
-        "ui:widget":"AutosuggestWidget",
-        "ui:options":{
-          "autosuggestField":"organization",
-          "allowNonsuggestedValue":true,
-          "suggestionReceive":"key",
-          "displayValidationState":true,
-          "minFetchLength":1,
-          "query":{
-            "onlyOwnOrganizations":true
+      "owner": {
+        "ui:functions": {
+          "ui:field": "ConditionalUiSchemaField",
+          "ui:options": {
+            "cases": {
+              "rules": "isAdmin",
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "ui:options": {
+                    "minFetchLength": 1,
+                    "query": {
+                      "onlyOwnOrganizations": false
+                    }
+                  }
+                }
+              }
+            }
           }
+        },
+        "ui:widget": "AutosuggestWidget",
+        "ui:options": {
+          "autosuggestField": "organization",
+          "allowNonsuggestedValue": false,
+          "minFetchLength": 0,
+          "query": {
+            "onlyOwnOrganizations": true
+          },
+          "placeholder": "Search..."
         }
       },
-      "attachments":{
-        "ui:functions":{
-          "ui:field":"ConditionalUiSchemaField",
-          "ui:options":{
-            "cases":{
-              "rules":[
+      "attachments": {
+        "ui:functions": {
+          "ui:field": "ConditionalUiSchemaField",
+          "ui:options": {
+            "cases": {
+              "rules": [
                 {
-                  "rule":"isEdit",
-                  "complement":true
+                  "rule": "isEdit",
+                  "complement": true
                 }
               ],
-              "operations":{
-                "type":"merge",
-                "uiSchema":{
-                  "ui:field":"HiddenField"
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "ui:field": "HiddenField"
                 }
               }
             }
           }
         },
-        "ui:field":"PdfArrayField"
+        "ui:field": "PdfArrayField"
       }
     },
-    "transaction":{
-      "ui:grid":{
-        "lg":6,
-        "md":7,
-        "sm":8,
-        "xs":12
+    "transaction": {
+      "ui:grid": {
+        "lg": 6,
+        "md": 7,
+        "sm": 8,
+        "xs": 12
       },
-      "transactionFields":{
-        "requestReceived":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+      "transactionFields": {
+        "requestReceived": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "incomingReceived":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "incomingReceived": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "incomingReturned":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "incomingReturned": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "material":{
-          "ui:widget":"textarea"
+        "material": {
+          "ui:widget": "textarea"
         },
-        "publicRemarks":{
-          "ui:widget":"textarea"
+        "publicRemarks": {
+          "ui:widget": "textarea"
         },
-        "internalRemarks":{
-          "ui:widget":"textarea"
+        "internalRemarks": {
+          "ui:widget": "textarea"
         },
-        "outgoingSent":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "outgoingSent": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "dueDate":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY",
-            "showButtons":{
-              "plusSixMonths":{
-                "path":"/outgoingSent"
+        "dueDate": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY",
+            "showButtons": {
+              "plusSixMonths": {
+                "path": "/outgoingSent"
               },
-              "plusYear":{
-                "path":"/outgoingSent"
+              "plusYear": {
+                "path": "/outgoingSent"
               }
             }
           }
         },
-        "receiptReturned":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "receiptReturned": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "outgoingReturned":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "outgoingReturned": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         }
       }
     },
-    "correspondent":{
-      "ui:field":"HiddenField",
-      "ui:grid":{
-        "lg":6,
-        "md":7,
-        "sm":8,
-        "xs":12
+    "correspondent": {
+      "ui:field": "HiddenField",
+      "ui:grid": {
+        "lg": 6,
+        "md": 7,
+        "sm": 8,
+        "xs": 12
       },
-      "correspondentFields":{
-        "correspondentOrganization":{
-          "ui:classNames":"correspondent-organization",
-          "ui:widget":"AutosuggestWidget",
-          "ui:options":{
-            "autosuggestField":"organization",
-            "allowNonsuggestedValue":true,
-            "suggestionReceive":"key",
-            "displayValidationState":true,
-            "minFetchLength":1
+      "correspondentFields": {
+        "correspondentOrganization": {
+          "ui:classNames": "correspondent-organization",
+          "ui:widget": "AutosuggestWidget",
+          "ui:options": {
+            "autosuggestField": "organization",
+            "allowNonsuggestedValue": false,
+            "minFetchLength": 1,
+            "placeholder": "Search..."
           }
         },
-        "correspondentPerson":{
-          "ui:widget":"textarea"
+        "correspondentPerson": {
+          "ui:widget": "textarea"
         }
       }
     },
-    "local":{
-      "ui:field":"HiddenField",
-      "ui:grid":{
-        "lg":6,
-        "md":7,
-        "sm":8,
-        "xs":12
+    "local": {
+      "ui:field": "HiddenField",
+      "ui:grid": {
+        "lg": 6,
+        "md": 7,
+        "sm": 8,
+        "xs": 12
       },
-      "localFields":{
-        "ui:functions":[
+      "localFields": {
+        "ui:functions": [
           {
-            "ui:field":"InputWithDefaultValueButtonField",
-            "ui:options":{
-              "buttonLabel":"me",
-              "buttonField":"localHandler",
-              "valueFields":[
+            "ui:field": "InputWithDefaultValueButtonField",
+            "ui:options": {
+              "buttonLabel": "me",
+              "buttonField": "localHandler",
+              "valueFields": [
                 {
-                  "field":"localHandler",
-                  "contextFieldForDefaultValue":"userName"
+                  "field": "localHandler",
+                  "contextFieldForDefaultValue": "userName"
                 },
                 {
-                  "field":"localHandlerEmail",
-                  "contextFieldForDefaultValue":"userEmail"
+                  "field": "localHandlerEmail",
+                  "contextFieldForDefaultValue": "userEmail"
                 }
               ]
             }
           },
           {
-            "ui:field":"InputWithDefaultValueButtonField",
-            "ui:options":{
-              "buttonLabel":"me",
-              "buttonField":"localPerson",
-              "valueFields":[
+            "ui:field": "InputWithDefaultValueButtonField",
+            "ui:options": {
+              "buttonLabel": "me",
+              "buttonField": "localPerson",
+              "valueFields": [
                 {
-                  "field":"localPerson",
-                  "contextFieldForDefaultValue":"userName"
+                  "field": "localPerson",
+                  "contextFieldForDefaultValue": "userName"
                 },
                 {
-                  "field":"localPersonEmail",
-                  "contextFieldForDefaultValue":"userEmail"
+                  "field": "localPersonEmail",
+                  "contextFieldForDefaultValue": "userEmail"
                 }
               ]
             }
           }
         ],
-        "collectionID":{
-          "ui:widget":"AutosuggestWidget",
-          "ui:options":{
-            "autosuggestField":"collection",
-            "allowNonsuggestedValue":true,
-            "suggestionReceive":"key",
-            "displayValidationState":true,
-            "minFetchLength":1
+        "collectionID": {
+          "ui:widget": "AutosuggestWidget",
+          "ui:options": {
+            "autosuggestField": "collection",
+            "allowNonsuggestedValue": false,
+            "minFetchLength": 1,
+            "placeholder": "Search..."
           }
         }
       }
     },
-    "nagoyaWrapper":{
-      "ui:field":"HiddenField",
-      "ui:grid":{
-        "lg":{
-          "permits":12,
-          "*":6
+    "nagoyaWrapper": {
+      "ui:field": "HiddenField",
+      "ui:grid": {
+        "lg": {
+          "permits": 12,
+          "*": 6
         },
-        "md":{
-          "permits":12,
-          "*":7
+        "md": {
+          "permits": 12,
+          "*": 7
         },
-        "sm":{
-          "permits":12,
-          "*":8
+        "sm": {
+          "permits": 12,
+          "*": 8
         },
-        "xs":12,
-        "rows":[
+        "xs": 12,
+        "rows": [
           [
             "nagoyaFields"
           ],
@@ -1429,13 +1328,13 @@
           ]
         ]
       },
-      "nagoyaFields":{
-        "ui:classNames":"nagoya-fields",
-        "ui:functions":[
+      "nagoyaFields": {
+        "ui:classNames": "nagoya-fields",
+        "ui:functions": [
           {
-            "ui:field":"ScopeField",
-            "ui:options":{
-              "fields":[
+            "ui:field": "ScopeField",
+            "ui:options": {
+              "fields": [
                 "geneticResourceAcquisitionDate",
                 "geneticResourceAcquisitionCountry",
                 "underNagoya",
@@ -1447,13 +1346,13 @@
                 "geneticResourceDescription",
                 "geneticResourceSource"
               ],
-              "fieldScopes":{
-                "hasIRCC":{
-                  "true":{
-                    "fields":[
+              "fieldScopes": {
+                "hasIRCC": {
+                  "true": {
+                    "fields": [
                       "IRCC"
                     ],
-                    "excludeFields":[
+                    "excludeFields": [
                       "resourceImported",
                       "geneticResourceDescription",
                       "geneticResourceSource"
@@ -1464,180 +1363,180 @@
             }
           }
         ],
-        "geneticResourceAcquisitionDate":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "geneticResourceAcquisitionDate": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "geneticResourceRightsAndObligations":{
-          "ui:widget":"textarea"
+        "geneticResourceRightsAndObligations": {
+          "ui:widget": "textarea"
         },
-        "hasIRCC":{
-          "ui:options":{
-            "allowUndefined":false
+        "hasIRCC": {
+          "ui:options": {
+            "allowUndefined": false
           }
         },
-        "geneticResourceDescription":{
-          "ui:widget":"textarea"
+        "geneticResourceDescription": {
+          "ui:widget": "textarea"
         }
       },
-      "permits":{
-        "items":{
-          "ui:classNames":"card card-body bg-light",
-          "ui:order":[
+      "permits": {
+        "items": {
+          "ui:classNames": "card card-body bg-light",
+          "ui:order": [
             "permitFile",
             "*"
           ],
-          "ui:grid":{
-            "lg":{
-              "permitFile":12,
-              "permitNotes":12,
-              "*":3
+          "ui:grid": {
+            "lg": {
+              "permitFile": 12,
+              "permitNotes": 12,
+              "*": 3
             },
-            "md":{
-              "permitFile":12,
-              "permitNotes":12,
-              "*":3
+            "md": {
+              "permitFile": 12,
+              "permitNotes": 12,
+              "*": 3
             },
-            "sm":12,
-            "xs":12
+            "sm": 12,
+            "xs": 12
           },
-          "permitFile":{
-            "ui:functions":[
+          "permitFile": {
+            "ui:functions": [
               {
-                "ui:field":"AsArrayField"
+                "ui:field": "AsArrayField"
               },
               {
-                "ui:field":"ConditionalUiSchemaField",
-                "ui:options":{
-                  "cases":{
-                    "rules":[
+                "ui:field": "ConditionalUiSchemaField",
+                "ui:options": {
+                  "cases": {
+                    "rules": [
                       {
-                        "rule":"isEdit",
-                        "complement":true
+                        "rule": "isEdit",
+                        "complement": true
                       }
                     ],
-                    "operations":{
-                      "type":"merge",
-                      "uiSchema":{
-                        "ui:field":"HiddenField"
+                    "operations": {
+                      "type": "merge",
+                      "uiSchema": {
+                        "ui:field": "HiddenField"
                       }
                     }
                   }
                 }
               }
             ],
-            "ui:field":"PdfArrayField"
+            "ui:field": "PdfArrayField"
           },
-          "permitStartDate":{
-            "ui:widget":"DateWidget",
-            "ui:options":{
-              "dateFormat":"DD.MM.YYYY"
+          "permitStartDate": {
+            "ui:widget": "DateWidget",
+            "ui:options": {
+              "dateFormat": "DD.MM.YYYY"
             }
           },
-          "permitEndDate":{
-            "ui:widget":"DateWidget",
-            "ui:options":{
-              "dateFormat":"DD.MM.YYYY"
+          "permitEndDate": {
+            "ui:widget": "DateWidget",
+            "ui:options": {
+              "dateFormat": "DD.MM.YYYY"
             }
           }
         }
       }
     },
-    "transactionEvents":{
-      "ui:field":"HiddenField",
-      "ui:options":{
-        "confirmDelete":true
+    "transactionEvents": {
+      "ui:field": "HiddenField",
+      "ui:options": {
+        "confirmDelete": true
       },
-      "items":{
-        "ui:classNames":"card card-body bg-light",
-        "ui:grid":{
-          "lg":{
-            "eventType":6,
-            "eventHandler":6,
-            "*":12
+      "items": {
+        "ui:classNames": "card card-body bg-light",
+        "ui:grid": {
+          "lg": {
+            "eventType": 6,
+            "eventHandler": 6,
+            "*": 12
           },
-          "md":{
-            "eventType":6,
-            "eventHandler":6,
-            "*":12
+          "md": {
+            "eventType": 6,
+            "eventHandler": 6,
+            "*": 12
           },
-          "sm":12,
-          "xs":12
+          "sm": 12,
+          "xs": 12
         },
-        "eventType":{
-          "ui:options":{
-            "filter":[
+        "eventType": {
+          "ui:options": {
+            "filter": [
               "HRX.eventTypeReturn"
             ]
           }
         },
-        "eventDate":{
-          "ui:widget":"DateWidget",
-          "ui:options":{
-            "dateFormat":"DD.MM.YYYY"
+        "eventDate": {
+          "ui:widget": "DateWidget",
+          "ui:options": {
+            "dateFormat": "DD.MM.YYYY"
           }
         },
-        "eventHandler":{
-          "ui:widget":"InputWithDefaultValueButtonWidget",
-          "ui:options":{
-            "buttonLabel":"me",
-            "contextFieldForDefaultValue":"userName"
+        "eventHandler": {
+          "ui:widget": "InputWithDefaultValueButtonWidget",
+          "ui:options": {
+            "buttonLabel": "me",
+            "contextFieldForDefaultValue": "userName"
           }
         },
-        "eventNotes":{
-          "ui:widget":"textarea"
+        "eventNotes": {
+          "ui:widget": "textarea"
         }
       }
     },
-    "specimens":{
-      "ui:functions":[
+    "specimens": {
+      "ui:functions": [
         {
-          "ui:field":"CombinedValueDisplayField",
-          "ui:options":{
-            "combined":[
+          "ui:field": "CombinedValueDisplayField",
+          "ui:options": {
+            "combined": [
               {
-                "firstField":"/specimenIDs/awayIDs",
-                "secondField":"/specimenCounts/awayCount",
-                "name":"totalAwayCount",
-                "title":"Included in",
-                "combineType":"totalCount"
+                "firstField": "/specimenIDs/awayIDs",
+                "secondField": "/specimenCounts/awayCount",
+                "name": "totalAwayCount",
+                "title": "Included in",
+                "combineType": "totalCount"
               },
               {
-                "firstField":"/specimenIDs/returnedIDs",
-                "secondField":"/specimenCounts/returnedCount",
-                "name":"totalReturnedCount",
-                "title":"Returned",
-                "combineType":"totalCount"
+                "firstField": "/specimenIDs/returnedIDs",
+                "secondField": "/specimenCounts/returnedCount",
+                "name": "totalReturnedCount",
+                "title": "Returned",
+                "combineType": "totalCount"
               },
               {
-                "firstField":"/specimenIDs/missingIDs",
-                "secondField":"/specimenCounts/missingCount",
-                "name":"totalMissingCount",
-                "title":"Missing",
-                "combineType":"totalCount"
+                "firstField": "/specimenIDs/missingIDs",
+                "secondField": "/specimenCounts/missingCount",
+                "name": "totalMissingCount",
+                "title": "Missing",
+                "combineType": "totalCount"
               },
               {
-                "firstField":"totalAwayCount",
-                "secondField":"totalReturnedCount",
-                "additionalFields":[
+                "firstField": "totalAwayCount",
+                "secondField": "totalReturnedCount",
+                "additionalFields": [
                   "totalMissingCount"
                 ],
-                "name":"totalCount",
-                "title":"Total",
-                "combineType":"totalCount"
+                "name": "totalCount",
+                "title": "Total",
+                "combineType": "totalCount"
               }
             ]
           }
         },
         {
-          "ui:field":"NestField",
-          "ui:options":{
-            "nests":{
-              "specimenTotalCounts":{
-                "title":"Total specimen counts",
-                "fields":[
+          "ui:field": "NestField",
+          "ui:options": {
+            "nests": {
+              "specimenTotalCounts": {
+                "title": "Total specimen counts",
+                "fields": [
                   "totalAwayCount",
                   "totalReturnedCount",
                   "totalMissingCount",
@@ -1648,150 +1547,131 @@
           }
         }
       ],
-      "ui:field":"HiddenField",
-      "specimenIDs":{
-        "ui:classNames":"specimen-id-fields",
-        "ui:field":"MultiTagArrayField",
-        "ui:options":{
-          "separatorKeys":[
+      "ui:field": "HiddenField",
+      "specimenIDs": {
+        "ui:classNames": "specimen-id-fields",
+        "ui:field": "MultiTagArrayField",
+        "ui:options": {
+          "separatorKeys": [
             "Enter",
             ",",
             ";",
             " "
           ],
-          "showDeleteButton":false,
-          "showAsLink":true,
-          "linkPrefix":"https://kotkatest.luomus.fi/view?uri=",
-          "replacements":[
+          "showDeleteButton": false,
+          "showAsLink": true,
+          "linkPrefix": "https://kotkatest.luomus.fi/view?uri=",
+          "replacements": [
             {
-              "searchRegexp":"^(H[0-9]{7,8})$",
-              "replaceValue":"HA.$1"
+              "searchRegexp": "^(H[0-9]{7,8})$",
+              "replaceValue": "HA.$1"
             }
           ],
-          "buttons":[
+          "buttons": [
             {
-              "operation":"move",
-              "toField":"awayIDs",
-              "label":"Mark as included in",
-              "className":"mt-1"
+              "operation": "move",
+              "toField": "awayIDs",
+              "label": "Mark as included in",
+              "className": "mt-1"
             },
             {
-              "operation":"move",
-              "toField":"missingIDs",
-              "label":"Mark as missing",
-              "className":"mb-3"
+              "operation": "move",
+              "toField": "missingIDs",
+              "label": "Mark as missing",
+              "className": "mb-3"
             },
             {
-              "operation":"delete",
-              "label":"Delete"
+              "operation": "delete",
+              "label": "Delete"
             }
           ]
         },
-        "awayIDs":{
-          "ui:title":"Included in IDs"
+        "awayIDs": {
+          "ui:title": "Included in IDs"
         }
       },
-      "specimenCounts":{
-        "ui:grid":{
-          "lg":2,
-          "md":3,
-          "sm":3,
-          "xs":12
+      "specimenCounts": {
+        "ui:grid": {
+          "lg": 2,
+          "md": 3,
+          "sm": 3,
+          "xs": 12
         },
-        "awayCount":{
-          "ui:title":"Included in count"
+        "awayCount": {
+          "ui:title": "Included in count"
         }
       },
-      "specimenTotalCounts":{
-        "ui:grid":{
-          "lg":2,
-          "md":3,
-          "sm":3,
-          "xs":12
+      "specimenTotalCounts": {
+        "ui:grid": {
+          "lg": 2,
+          "md": 3,
+          "sm": 3,
+          "xs": 12
         },
-        "totalAwayCount":{
-          "ui:widget":"PlainTextWidget"
+        "totalAwayCount": {
+          "ui:widget": "PlainTextWidget"
         },
-        "totalReturnedCount":{
-          "ui:widget":"HiddenWidget"
+        "totalReturnedCount": {
+          "ui:widget": "HiddenWidget"
         },
-        "totalMissingCount":{
-          "ui:widget":"PlainTextWidget"
+        "totalMissingCount": {
+          "ui:widget": "PlainTextWidget"
         },
-        "totalCount":{
-          "ui:widget":"PlainTextWidget"
+        "totalCount": {
+          "ui:widget": "PlainTextWidget"
         }
       }
     }
   },
-  "context":"specimenTransaction",
-  "id":"MHL.930",
-  "validators":{
-    "owner":{
-      "format":{
-        "pattern":"^MOS\\.\\d+$",
-        "message":"Unknown organization"
-      }
-    },
-    "requestReceived":{
-      "crossCheck":{
-        "check":"type",
-        "onlyWhenCheckIn":[
-          "HRX.typeVirtualLoanOutgoing"
-        ],
-        "message":"Required field."
-      }
-    },
-    "incomingReceived":{
-      "crossCheck":{
-        "check":"type",
-        "onlyWhenCheckIn":[
+  "context": "specimenTransaction",
+  "id": "MHL.930",
+  "validators": {
+    "incomingReceived": {
+      "crossCheck": {
+        "check": "type",
+        "onlyWhenCheckIn": [
           "HRX.typeLoanIncoming",
           "HRX.typeGiftIncoming",
           "HRX.typeExchangeIncoming"
         ],
-        "message":"Required field."
+        "message": "Required field."
       }
     },
-    "outgoingSent":{
-      "crossCheck":{
-        "check":"type",
-        "onlyWhenCheckIn":[
+    "outgoingSent": {
+      "crossCheck": {
+        "check": "type",
+        "onlyWhenCheckIn": [
           "HRX.typeLoanOutgoing",
           "HRX.typeGiftOutgoing",
           "HRX.typeExchangeOutgoing",
           "HRX.typeVirtualLoanOutgoing",
           "HRX.typeDeaccession"
         ],
-        "message":"Required field."
+        "message": "Required field."
       }
     },
-    "dueDate":{
-      "compareDate":{
-        "isAfter":"outgoingSent",
-        "message":"Date can't be earlier than the outgoing loan sent date."
+    "dueDate": {
+      "compareDate": {
+        "isAfter": "outgoingSent",
+        "message": "Date can't be earlier than the outgoing loan sent date."
       }
     },
-    "receiptReturned":{
-      "compareDate":{
-        "isAfter":"outgoingSent",
-        "message":"Date can't be earlier than the outgoing loan sent date."
+    "receiptReturned": {
+      "compareDate": {
+        "isAfter": "outgoingSent",
+        "message": "Date can't be earlier than the outgoing loan sent date."
       }
     },
-    "outgoingReturned":{
-      "compareDate":{
-        "isAfter":"outgoingSent",
-        "message":"Date can't be earlier than the outgoing loan sent date."
+    "outgoingReturned": {
+      "compareDate": {
+        "isAfter": "outgoingSent",
+        "message": "Date can't be earlier than the outgoing loan sent date."
       }
     },
-    "correspondentOrganization":{
-      "format":{
-        "pattern":"(^$)|(^MOS\\.\\d+$)",
-        "message":"Unknown organization"
-      },
-      "crossCheck":{
-        "check":"type",
-        "onlyWhenCheckIn":[
+    "correspondentOrganization": {
+      "crossCheck": {
+        "check": "type",
+        "onlyWhenCheckIn": [
           "HRX.typeLoanIncoming",
           "HRX.typeGiftIncoming",
           "HRX.typeExchangeIncoming",
@@ -1802,267 +1682,260 @@
           "HRX.typeABSNegotiations",
           "HRX.typeVirtualLoanOutgoing"
         ],
-        "message":"Required field."
+        "message": "Required field."
       }
     },
-    "collectionID":{
-      "format":{
-        "pattern":"(^$)|(^HR\\.\\d+$)",
-        "message":"Unknown collection"
-      }
-    },
-    "geneticResourceAcquisitionDate":{
-      "crossCheck":{
-        "checkOptions":[
+    "geneticResourceAcquisitionDate": {
+      "crossCheck": {
+        "checkOptions": [
           {
-            "check":"underNagoya",
-            "onlyWhenCheckIn":[
+            "check": "underNagoya",
+            "onlyWhenCheckIn": [
               true
             ]
           },
           {
-            "check":"availableForGeneticResearch",
-            "onlyWhenCheckIn":[
+            "check": "availableForGeneticResearch",
+            "onlyWhenCheckIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "check":"hasIRCC",
-            "onlyWhenCheckIn":[
+            "check": "hasIRCC",
+            "onlyWhenCheckIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number this must be filled."
+        "message": "Since available for genetic research and no IRCC number this must be filled."
       }
     },
-    "geneticResourceAcquisitionCountry":{
-      "crossCheck":{
-        "checkOptions":[
+    "geneticResourceAcquisitionCountry": {
+      "crossCheck": {
+        "checkOptions": [
           {
-            "check":"underNagoya",
-            "onlyWhenCheckIn":[
+            "check": "underNagoya",
+            "onlyWhenCheckIn": [
               true
             ]
           },
           {
-            "check":"availableForGeneticResearch",
-            "onlyWhenCheckIn":[
+            "check": "availableForGeneticResearch",
+            "onlyWhenCheckIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "check":"hasIRCC",
-            "onlyWhenCheckIn":[
+            "check": "hasIRCC",
+            "onlyWhenCheckIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number this must be filled."
+        "message": "Since available for genetic research and no IRCC number this must be filled."
       }
     },
-    "availableForGeneticResearch":{
-      "crossCheck":{
-        "check":"underNagoya",
-        "onlyWhenCheckIn":[
+    "availableForGeneticResearch": {
+      "crossCheck": {
+        "check": "underNagoya",
+        "onlyWhenCheckIn": [
           true
         ],
-        "message":"Since under Nagoya this must be filled."
+        "message": "Since under Nagoya this must be filled."
       }
     },
-    "geneticResourceRightsAndObligations":{
-      "crossCheck":{
-        "check":"availableForGeneticResearch",
-        "onlyWhenCheckIn":[
+    "geneticResourceRightsAndObligations": {
+      "crossCheck": {
+        "check": "availableForGeneticResearch",
+        "onlyWhenCheckIn": [
           "HRX.availableForGeneticResearchWithRestrictions"
         ],
-        "message":"Rights and obligations have to be filled when \"Yes, with restrictions\" is selected."
+        "message": "Rights and obligations have to be filled when \"Yes, with restrictions\" is selected."
       }
     },
-    "IRCC":{
-      "crossCheck":{
-        "checkOptions":[
+    "IRCC": {
+      "crossCheck": {
+        "checkOptions": [
           {
-            "check":"underNagoya",
-            "onlyWhenCheckIn":[
+            "check": "underNagoya",
+            "onlyWhenCheckIn": [
               true
             ]
           },
           {
-            "check":"availableForGeneticResearch",
-            "onlyWhenCheckIn":[
+            "check": "availableForGeneticResearch",
+            "onlyWhenCheckIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "check":"hasIRCC",
-            "onlyWhenCheckIn":[
+            "check": "hasIRCC",
+            "onlyWhenCheckIn": [
               true
             ]
           }
         ],
-        "message":"Since available for genetic research you have must tell the IRCC number if you have it."
+        "message": "Since available for genetic research you have must tell the IRCC number if you have it."
       },
-      "remote":{
-        "validator":"kotkaIRCCNumber"
+      "remote": {
+        "validator": "kotkaIRCCNumber"
       }
     },
-    "geneticResourceDescription":{
-      "crossCheck":{
-        "checkOptions":[
+    "geneticResourceDescription": {
+      "crossCheck": {
+        "checkOptions": [
           {
-            "check":"underNagoya",
-            "onlyWhenCheckIn":[
+            "check": "underNagoya",
+            "onlyWhenCheckIn": [
               true
             ]
           },
           {
-            "check":"availableForGeneticResearch",
-            "onlyWhenCheckIn":[
+            "check": "availableForGeneticResearch",
+            "onlyWhenCheckIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "check":"hasIRCC",
-            "onlyWhenCheckIn":[
+            "check": "hasIRCC",
+            "onlyWhenCheckIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number this must be filled."
+        "message": "Since available for genetic research and no IRCC number this must be filled."
       }
     },
-    "geneticResourceSource":{
-      "crossCheck":{
-        "checkOptions":[
+    "geneticResourceSource": {
+      "crossCheck": {
+        "checkOptions": [
           {
-            "check":"underNagoya",
-            "onlyWhenCheckIn":[
+            "check": "underNagoya",
+            "onlyWhenCheckIn": [
               true
             ]
           },
           {
-            "check":"availableForGeneticResearch",
-            "onlyWhenCheckIn":[
+            "check": "availableForGeneticResearch",
+            "onlyWhenCheckIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "check":"hasIRCC",
-            "onlyWhenCheckIn":[
+            "check": "hasIRCC",
+            "onlyWhenCheckIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number this must be filled."
+        "message": "Since available for genetic research and no IRCC number this must be filled."
       }
     },
-    "permits":{
-      "valueInArray_0":{
-        "value":"HRA.permitTypePIC",
-        "arrayField":"permits",
-        "arrayFieldKey":"permitType",
-        "conditions":[
+    "permits": {
+      "valueInArray_0": {
+        "value": "HRA.permitTypePIC",
+        "arrayField": "permits",
+        "arrayFieldKey": "permitType",
+        "conditions": [
           {
-            "onlyWhenField":"underNagoya",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "underNagoya",
+            "onlyWhenFieldIn": [
               true
             ]
           },
           {
-            "onlyWhenField":"availableForGeneticResearch",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "availableForGeneticResearch",
+            "onlyWhenFieldIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "onlyWhenField":"hasIRCC",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "hasIRCC",
+            "onlyWhenFieldIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number you have to have PIC permit."
+        "message": "Since available for genetic research and no IRCC number you have to have PIC permit."
       },
-      "valueInArray_1":{
-        "value":"HRA.permitTypeMAT",
-        "arrayField":"permits",
-        "arrayFieldKey":"permitType",
-        "conditions":[
+      "valueInArray_1": {
+        "value": "HRA.permitTypeMAT",
+        "arrayField": "permits",
+        "arrayFieldKey": "permitType",
+        "conditions": [
           {
-            "onlyWhenField":"underNagoya",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "underNagoya",
+            "onlyWhenFieldIn": [
               true
             ]
           },
           {
-            "onlyWhenField":"availableForGeneticResearch",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "availableForGeneticResearch",
+            "onlyWhenFieldIn": [
               "HRX.availableForGeneticResearchYes",
               "HRX.availableForGeneticResearchWithRestrictions"
             ]
           },
           {
-            "onlyWhenField":"hasIRCC",
-            "onlyWhenFieldIn":[
+            "onlyWhenField": "hasIRCC",
+            "onlyWhenFieldIn": [
               false
             ]
           }
         ],
-        "message":"Since available for genetic research and no IRCC number you have to have MAT permit."
+        "message": "Since available for genetic research and no IRCC number you have to have MAT permit."
       },
-      "items":{
-        "properties":{
-          "permitFile":{
-            "crossCheck":{
-              "check":"permitStatus",
-              "onlyWhenCheckIn":[
+      "items": {
+        "properties": {
+          "permitFile": {
+            "crossCheck": {
+              "check": "permitStatus",
+              "onlyWhenCheckIn": [
                 "HRA.permitStatusAvailable"
               ],
-              "message":"You have to upload the permit when available."
+              "message": "You have to upload the permit when available."
             }
           }
         }
       }
     },
-    "awayIDs":{
-      "arrayDuplicateCheck":{
-        "checkFields":[
+    "awayIDs": {
+      "arrayDuplicateCheck": {
+        "checkFields": [
           "returnedIDs",
           "missingIDs"
         ],
-        "message":"Duplicate specimen ID %{value}."
+        "message": "Duplicate specimen ID %{value}."
       }
     },
-    "returnedIDs":{
-      "arrayDuplicateCheck":{
-        "checkFields":[
+    "returnedIDs": {
+      "arrayDuplicateCheck": {
+        "checkFields": [
           "awayIDs",
           "missingIDs"
         ],
-        "message":"Duplicate specimen ID %{value}."
+        "message": "Duplicate specimen ID %{value}."
       }
     },
-    "missingIDs":{
-      "arrayDuplicateCheck":{
-        "checkFields":[
+    "missingIDs": {
+      "arrayDuplicateCheck": {
+        "checkFields": [
           "awayIDs",
           "returnedIDs"
         ],
-        "message":"Duplicate specimen ID %{value}."
+        "message": "Duplicate specimen ID %{value}."
       }
     }
   },
-  "warnings":{
-
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.930"
   },
-  "attributes":{
-    "id":"MHL.930"
-  }
+  "$id": "174d21c257ee2932b9587d894a6d5d86"
 }

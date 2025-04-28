@@ -382,28 +382,58 @@
     "useNamedPlaces": true,
     "restrictAccess": "MHL.restrictAccessStrict",
     "hasAdmins": true,
-    "documentsViewableForAll": true
+    "documentsViewableForAll": true,
+    "resultServiceType": "MHL.resultServiceTypeInvasiveControl",
+    "strict": false
   },
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      }
+    },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings",
+      "*"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel",
+          "keywords"
+        ],
+        "target": "gatheringEvent"
       }
     },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
       "ui:field": "NestField",
       "ui:classNames": "well well-sm",
       "ui:order": [
@@ -521,6 +551,16 @@
           }
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "dateBegin": {
         "ui:widget": "DateTimeWidget",
         "ui:options": {
@@ -537,203 +577,25 @@
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
     "keywords": {
-      "items": {},
       "ui:field": "TagArrayField"
     },
     "gatherings": {
-      "items": {
-        "images": {
-          "items": {},
-          "ui:field": "ImageArrayField",
-          "ui:options": {
-            "capturerVerbatimPath": "/gatheringEvent/leg"
-          }
-        },
-        "invasiveControlMethods": {
-          "items": {}
-        },
-        "units": {
-          "items": {
-            "images": {
-              "items": {},
-              "ui:field": "ImageArrayField",
-              "ui:options": {
-                "capturerVerbatimPath": "/gatheringEvent/leg"
-              }
-            },
-            "identifications": {
-              "items": {
-                "taxonID": {
-                  "ui:disabled": true,
-                  "ui:widget": "AutosuggestWidget",
-                  "ui:options": {
-                    "autosuggestField": "taxon"
-                  }
-                },
-                "taxonVerbatim": {
-                  "ui:field": "HiddenField"
-                }
-              }
-            },
-            "ui:order": [
-              "identifications",
-              "areaInSquareMeters",
-              "individualCount",
-              "notes",
-              "images",
-              "*"
-            ],
-            "ui:grid": {
-              "lg": {
-                "identifications_0_taxonID": 6,
-                "areaInSquareMeters": 6,
-                "notes": 6,
-                "*": 6
-              },
-              "md": {
-                "identifications_0_taxonID": 6,
-                "areaInSquareMeters": 6,
-                "notes": 6,
-                "*": 6
-              },
-              "sm": {
-                "identifications_0_taxonID": 6,
-                "areaInSquareMeters": 6,
-                "notes": 6,
-                "*": 6
-              },
-              "xs": 12,
-              "rows": [
-                [
-                  "identifications_0_taxonID",
-                  "areaInSquareMeters",
-                  "individualCount",
-                  "notes",
-                  "images"
-                ]
-              ]
-            },
-            "unitGathering": {
-              "geometry": {
-                "ui:field": "HiddenField"
-              }
-            },
-            "areaInSquareMeters": {
-              "ui:disabled": true,
-              "ui:help": "Rajataan kartalta"
-            }
-          },
-          "ui:childFunctions": {
-            "ui:field": "FlatField",
-            "ui:options": {
-              "fields": [
-                "identifications",
-                "unitGathering"
-              ]
-            }
-          },
-          "ui:field": "SingleItemArrayField",
-          "ui:title": ""
-        },
-        "ui:functions": [
-          {
-            "ui:field": "NestField",
-            "ui:options": {
-              "nests": {
-                "placeWrapper": {
-                  "title": "Torjuntapaikan tiedot",
-                  "rootUiSchema": {
-                    "ui:classNames": "well well-sm"
-                  },
-                  "fields": [
-                    "municipality",
-                    "locality",
-                    "eventTime"
-                  ]
-                },
-                "targetTaxonWrapper": {
-                  "title": "Torjunnan kohde",
-                  "rootUiSchema": {
-                    "ui:classNames": "well well-sm",
-                    "ui:description": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"/%{lang}/observation/map?target=%{#/gatherings/0/units/0/identifications/0/taxonVerbatim}&coordinates=%{bbox(#/gatherings/0/geometry)}\">Tarkastele vieraslajihavaintoja kartalla</a>"
-                  },
-                  "fields": [
-                    "units"
-                  ]
-                },
-                "invasiveWrapper": {
-                  "title": "Torjuntatoimet",
-                  "rootUiSchema": {
-                    "ui:classNames": "well well-sm"
-                  },
-                  "fields": [
-                    "invasiveControlAreaKnown",
-                    "invasiveControlDangerous",
-                    "invasiveControlDangerousDescription",
-                    "invasiveControlMethods",
-                    "invasiveControlMethodsDescription",
-                    "invasiveControlEffectiveness",
-                    "invasiveControlEffectivenessNotes",
-                    "invasiveControlOpen",
-                    "invasiveControlOpenDescription",
-                    "gatheringFact",
-                    "images"
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        "ui:order": [
-          "*"
-        ],
-        "geometry": {
-          "ui:field": "HiddenField"
-        },
-        "locality": {
-          "ui:disabled": true
-        },
-        "municipality": {
-          "ui:disabled": true
-        },
-        "invasiveControlAreaKnown": {
-          "ui:options": {
-            "allowUndefined": false
-          }
-        },
-        "invasiveControlDangerous": {
-          "ui:options": {
-            "allowUndefined": false
-          }
-        },
-        "invasiveControlOpen": {
-          "ui:options": {
-            "allowUndefined": false
-          }
-        },
-        "invasiveControlEffectiveness": {
-          "ui:help": "”Torjunnan taso”-arviointi vaikuttaa siihen, että voidaanko kohde merkitä torjutuksi kokonaan tai vain osittain. Jos kohdetta ei syytä tai toisesta torjuttu tai sitä ei löydetty, ei kohdetta raportoida torjutuksi. Tämän rajauksen perusteella merkitään torjutuksi myös aiemmat tähän paikkaan sijoittuvat Lajitietokeskuksen tietovarastoon tallennetut havainnot samasta lajista/taksonista."
-        },
-        "invasiveControlEffectivenessNotes": {
-          "ui:widget": "textarea",
-          "ui:options": {
-            "rows": 2
-          }
-        },
-        "invasiveControlDangerousDescription": {
-          "ui:widget": "textarea",
-          "ui:options": {
-            "rows": 2
-          }
-        },
-        "invasiveControlMethodsDescription": {
-          "ui:widget": "textarea",
-          "ui:options": {
-            "rows": 2
-          }
-        }
-      },
       "ui:field": "MapArrayField",
       "ui:settings": [
         "/mapOptions/tileLayerName",
@@ -778,66 +640,195 @@
         "resizeTimeout": 210,
         "computeAreaField": "/units/0/areaInSquareMeters"
       },
+      "items": {
+        "ui:functions": [
+          {
+            "ui:field": "NestField",
+            "ui:options": {
+              "nests": {
+                "placeWrapper": {
+                  "title": "Torjuntapaikan tiedot",
+                  "rootUiSchema": {
+                    "ui:classNames": "well well-sm"
+                  },
+                  "fields": [
+                    "municipality",
+                    "locality",
+                    "eventTime"
+                  ]
+                },
+                "targetTaxonWrapper": {
+                  "title": "Torjunnan kohde",
+                  "rootUiSchema": {
+                    "ui:classNames": "well well-sm",
+                    "ui:description": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"/%{lang}/observation/map?target=%{#/gatherings/0/units/0/identifications/0/taxonID}&coordinates=%{bbox(#/gatherings/0/geometry)}\">Tarkastele vieraslajihavaintoja kartalla</a>"
+                  },
+                  "fields": [
+                    "units"
+                  ]
+                },
+                "invasiveWrapper": {
+                  "title": "Torjuntatoimet",
+                  "rootUiSchema": {
+                    "ui:classNames": "well well-sm"
+                  },
+                  "fields": [
+                    "invasiveControlAreaKnown",
+                    "invasiveControlDangerous",
+                    "invasiveControlDangerousDescription",
+                    "invasiveControlMethods",
+                    "invasiveControlMethodsDescription",
+                    "invasiveControlEffectiveness",
+                    "invasiveControlEffectivenessNotes",
+                    "invasiveControlOpen",
+                    "invasiveControlOpenDescription",
+                    "gatheringFact",
+                    "images"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "ui:order": [
+          "*"
+        ],
+        "geometry": {
+          "ui:field": "HiddenField"
+        },
+        "locality": {
+          "ui:disabled": true
+        },
+        "municipality": {
+          "ui:disabled": true
+        },
+        "images": {
+          "ui:field": "ImageArrayField",
+          "ui:options": {
+            "capturerVerbatimPath": "/gatheringEvent/leg"
+          }
+        },
+        "invasiveControlAreaKnown": {
+          "ui:options": {
+            "allowUndefined": false
+          }
+        },
+        "invasiveControlDangerous": {
+          "ui:options": {
+            "allowUndefined": false
+          }
+        },
+        "invasiveControlOpen": {
+          "ui:options": {
+            "allowUndefined": false
+          }
+        },
+        "invasiveControlEffectiveness": {
+          "ui:help": "”Torjunnan taso”-arviointi vaikuttaa siihen, että voidaanko kohde merkitä torjutuksi kokonaan tai vain osittain. Jos kohdetta ei syytä tai toisesta torjuttu tai sitä ei löydetty, ei kohdetta raportoida torjutuksi. Tämän rajauksen perusteella merkitään torjutuksi myös aiemmat tähän paikkaan sijoittuvat Lajitietokeskuksen tietovarastoon tallennetut havainnot samasta lajista/taksonista."
+        },
+        "invasiveControlEffectivenessNotes": {
+          "ui:widget": "textarea",
+          "ui:options": {
+            "rows": 2
+          }
+        },
+        "invasiveControlDangerousDescription": {
+          "ui:widget": "textarea",
+          "ui:options": {
+            "rows": 2
+          }
+        },
+        "invasiveControlMethodsDescription": {
+          "ui:widget": "textarea",
+          "ui:options": {
+            "rows": 2
+          }
+        },
+        "units": {
+          "ui:childFunctions": {
+            "ui:field": "FlatField",
+            "ui:options": {
+              "fields": [
+                "identifications",
+                "unitGathering"
+              ]
+            }
+          },
+          "ui:field": "SingleItemArrayField",
+          "ui:title": "",
+          "items": {
+            "ui:order": [
+              "identifications",
+              "areaInSquareMeters",
+              "individualCount",
+              "notes",
+              "images",
+              "*"
+            ],
+            "ui:grid": {
+              "lg": {
+                "identifications_0_taxonID": 6,
+                "areaInSquareMeters": 6,
+                "notes": 6,
+                "*": 6
+              },
+              "md": {
+                "identifications_0_taxonID": 6,
+                "areaInSquareMeters": 6,
+                "notes": 6,
+                "*": 6
+              },
+              "sm": {
+                "identifications_0_taxonID": 6,
+                "areaInSquareMeters": 6,
+                "notes": 6,
+                "*": 6
+              },
+              "xs": 12,
+              "rows": [
+                [
+                  "identifications_0_taxonID",
+                  "areaInSquareMeters",
+                  "individualCount",
+                  "notes",
+                  "images"
+                ]
+              ]
+            },
+            "images": {
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg"
+              }
+            },
+            "identifications": {
+              "items": {
+                "taxonID": {
+                  "ui:disabled": true,
+                  "ui:widget": "AutosuggestWidget",
+                  "ui:options": {
+                    "autosuggestField": "taxon"
+                  }
+                },
+                "taxonVerbatim": {
+                  "ui:field": "HiddenField"
+                }
+              }
+            },
+            "unitGathering": {
+              "geometry": {
+                "ui:field": "HiddenField"
+              }
+            },
+            "areaInSquareMeters": {
+              "ui:disabled": true,
+              "ui:help": "Rajataan kartalta"
+            }
+          }
+        }
+      },
       "uiSchema": {
         "ui:field": "SingleItemArrayField"
-      }
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "alt+F5": {
-        "fn": "revalidate"
-      },
-      "Enter": {
-        "fn": "navigate"
-      },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
-      "alt+ ": {
-        "fn": "navigate"
-      },
-      "alt+shift+ ": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt+n": {
-        "fn": "navigateArray"
-      },
-      "alt+p": {
-        "fn": "navigateArray",
-        "reverse": true
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings",
-      "*"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors",
-          "secureLevel",
-          "keywords"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "secureLevel": {
-      "ui:widget": "AnyToBooleanWidget",
-      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-      "ui:options": {
-        "trueValue": "MX.secureLevelNone",
-        "falseValue": "MX.secureLevelKM10",
-        "allowUndefined": false
       }
     },
     "namedPlaceID": {
@@ -988,5 +979,6 @@
   },
   "attributes": {
     "id": "MHL.33"
-  }
+  },
+  "$id": "3132c51a58c2a044b429fd6891f711d9"
 }

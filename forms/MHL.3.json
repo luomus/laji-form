@@ -897,7 +897,8 @@
                 "properties": {
                   "recordBasis": {
                     "type": "string",
-                    "title": "Havainnointitapa"
+                    "title": "Havainnointitapa",
+                    "default": "MY.recordBasisHumanObservation"
                   },
                   "unitType": {
                     "type": "array",
@@ -1156,10 +1157,23 @@
       "sv": "2846"
     },
     "prepopulatedDocument": {
+      "gatheringEvent": {
+        "legPublic": true
+      },
       "gatherings": [
         {
+          "taxonCensus": [
+            {
+              "censusTaxonID": "MX.37580",
+              "taxonCensusType": "MY.taxonCensusTypeCounted"
+            }
+          ],
+          "gatheringFact": {
+            "observerCount": 1
+          },
           "units": [
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.25860",
@@ -1168,6 +1182,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26277",
@@ -1176,6 +1191,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26280",
@@ -1184,6 +1200,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26373",
@@ -1192,6 +1209,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26415",
@@ -1200,6 +1218,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26427",
@@ -1208,6 +1227,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26435",
@@ -1216,6 +1236,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26440",
@@ -1224,6 +1245,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26442",
@@ -1232,6 +1254,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26530",
@@ -1240,6 +1263,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26647",
@@ -1248,6 +1272,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26639",
@@ -1256,6 +1281,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26931",
@@ -1264,6 +1290,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26921",
@@ -1272,6 +1299,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26926",
@@ -1280,6 +1308,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.26928",
@@ -1288,6 +1317,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27048",
@@ -1296,6 +1326,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27152",
@@ -1304,6 +1335,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27381",
@@ -1312,6 +1344,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27774",
@@ -1320,6 +1353,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27748",
@@ -1328,6 +1362,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27750",
@@ -1336,6 +1371,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27759",
@@ -1344,6 +1380,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.200535",
@@ -1352,6 +1389,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.27960",
@@ -1360,6 +1398,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.29008",
@@ -1368,6 +1407,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.29011",
@@ -1376,6 +1416,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.30530",
@@ -1384,6 +1425,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.30504",
@@ -1392,6 +1434,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.30443",
@@ -1400,6 +1443,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.30428",
@@ -1408,6 +1452,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.30453",
@@ -1416,6 +1461,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.32065",
@@ -1424,6 +1470,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.32608",
@@ -1432,6 +1479,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.32625",
@@ -1440,6 +1488,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.32801",
@@ -1448,6 +1497,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.33106",
@@ -1456,6 +1506,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.33117",
@@ -1464,6 +1515,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.33118",
@@ -1472,6 +1524,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.33954",
@@ -1480,6 +1533,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34505",
@@ -1488,6 +1542,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34535",
@@ -1496,6 +1551,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34542",
@@ -1504,6 +1560,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34553",
@@ -1512,6 +1569,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34549",
@@ -1520,6 +1578,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34574",
@@ -1528,6 +1587,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34567",
@@ -1536,6 +1596,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34586",
@@ -1544,6 +1605,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.34616",
@@ -1552,6 +1614,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.32570",
@@ -1560,6 +1623,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37090",
@@ -1568,6 +1632,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37095",
@@ -1576,6 +1641,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37122",
@@ -1584,6 +1650,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37135",
@@ -1592,6 +1659,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37142",
@@ -1600,6 +1668,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37156",
@@ -1608,6 +1677,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.73566",
@@ -1616,6 +1686,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.37178",
@@ -1624,6 +1695,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36817",
@@ -1632,6 +1704,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36573",
@@ -1640,6 +1713,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36589",
@@ -1648,6 +1722,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36237",
@@ -1656,6 +1731,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36239",
@@ -1664,6 +1740,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36283",
@@ -1672,6 +1749,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36306",
@@ -1680,6 +1758,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36287",
@@ -1688,6 +1767,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36310",
@@ -1696,6 +1776,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36308",
@@ -1704,6 +1785,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.73545",
@@ -1712,6 +1794,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36358",
@@ -1720,6 +1803,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36356",
@@ -1728,6 +1812,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36355",
@@ -1736,6 +1821,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36351",
@@ -1744,6 +1830,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.36366",
@@ -1752,6 +1839,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.35189",
@@ -1760,6 +1848,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.35146",
@@ -1768,6 +1857,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.35182",
@@ -1776,6 +1866,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.50106",
@@ -1784,6 +1875,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.50386",
@@ -1792,6 +1884,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.48089",
@@ -1800,6 +1893,7 @@
               ]
             },
             {
+              "recordBasis": "MY.recordBasisHumanObservation",
               "identifications": [
                 {
                   "taxonID": "MX.47507",
@@ -1809,6 +1903,9 @@
             }
           ]
         }
+      ],
+      "dataOrigin": [
+        "MY.dataOriginWebForm"
       ]
     },
     "namedPlaceOptions": {
@@ -1841,47 +1938,178 @@
     "hasAdmins": true,
     "adminLockable": true,
     "warnEditingOldDocument": true,
-    "emptyOnNoCount": true
+    "emptyOnNoCount": true,
+    "strict": false
   },
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoriviin"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoriviin"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoriviin"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoriviin"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutNavigateHelp"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "@unitShortcutInsertHelp"
+      },
+      "alt+g": {
+        "fn": "insert",
+        "target": "root_gatherings",
+        "targetLabel": "@gatheringShortcutInsertHelp"
+      },
+      "alt+t": {
+        "fn": "autosuggestToggle"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
-    "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:functions": {
-          "ui:field": "ConditionalUiSchemaField",
-          "ui:options": {
-            "cases": {
-              "rules": [
-                "isAdmin"
-              ],
-              "operations": {
-                "type": "merge",
-                "uiSchema": {
-                  "ui:options": {
-                    "autosuggestField": "person"
-                  }
-                }
-              }
+    "ui:order": [
+      "*",
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:annotations": {
+      "formId": "MHL.21",
+      "container": "modal",
+      "adminOnly": true,
+      "add": {
+        "type": "MAN.typeOpinion",
+        "filter": {
+          "filterType": "blacklist",
+          "filter": [
+            "opinion"
+          ]
+        },
+        "uiSchema": {
+          "addedTags": {
+            "ui:options": {
+              "filterType": "whitelist",
+              "filter": [
+                "MMAN.11",
+                "MMAN.13"
+              ]
             }
           }
-        },
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa.",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$",
-          "showID": true
         }
       },
+      "buttonsPath": "/gatheringEvent"
+    },
+    "ui:functions": [
+      {
+        "ui:field": "InjectField",
+        "ui:options": {
+          "injections": [
+            {
+              "fields": [
+                "editors",
+                "/gatherings/0/gatheringFact/observerCount",
+                "dataOrigin"
+              ],
+              "target": "gatheringEvent"
+            },
+            {
+              "fields": [
+                "/gatheringEvent/namedPlaceNotes"
+              ],
+              "target": "/gatherings/0"
+            }
+          ]
+        }
+      }
+    ],
+    "namedPlaceID": {
+      "ui:field": "HiddenField"
+    },
+    "gatheringEvent": {
       "ui:functions": [
         {
           "ui:field": "SumField",
@@ -2046,6 +2274,35 @@
         "legPublic",
         "eventTime"
       ],
+      "leg": {
+        "ui:functions": {
+          "ui:field": "ConditionalUiSchemaField",
+          "ui:options": {
+            "cases": {
+              "rules": [
+                "isAdmin"
+              ],
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "ui:options": {
+                    "autosuggestField": "person"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$",
+          "showID": true
+        }
+      },
       "dateBegin": {
         "ui:widget": "DateWidget",
         "ui:options": {
@@ -2085,28 +2342,13 @@
         "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
       }
     },
+    "editors": {
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "images": {
-          "items": {}
-        },
-        "taxonCensus": {
-          "items": {}
-        },
-        "units": {
-          "items": {
-            "unitType": {
-              "items": {}
-            },
-            "identifications": {
-              "items": {}
-            }
-          }
-        },
-        "country": {
-          "ui:widget": "HiddenWidget"
-        }
-      },
       "ui:field": "UiFieldMapperArrayField",
       "ui:options": {
         "functions": [
@@ -3363,10 +3605,14 @@
             }
           }
         }
+      },
+      "items": {
+        "country": {
+          "ui:widget": "HiddenWidget"
+        }
       }
     },
     "dataOrigin": {
-      "items": {},
       "ui:field": "AnyToBooleanField",
       "ui:options": {
         "trueValue": [
@@ -3378,80 +3624,6 @@
         "allowUndefined": false
       },
       "ui:help": "Jos olet tallentamassa havaintoja, jotka on alun perin kirjattu Talvilintuilaskennan paperiselle lomakkeelle, valitse tähän Kyllä."
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoriviin"
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoriviin"
-      }
-    },
-    "ui:order": [
-      "*",
-      "gatheringEvent",
-      "gatherings"
-    ],
-    "ui:annotations": {
-      "formId": "MHL.21",
-      "container": "modal",
-      "adminOnly": true,
-      "add": {
-        "type": "MAN.typeOpinion",
-        "filter": {
-          "filterType": "blacklist",
-          "filter": [
-            "opinion"
-          ]
-        },
-        "uiSchema": {
-          "addedTags": {
-            "ui:options": {
-              "filterType": "whitelist",
-              "filter": [
-                "MMAN.11",
-                "MMAN.13"
-              ]
-            }
-          }
-        }
-      },
-      "buttonsPath": "/gatheringEvent"
-    },
-    "ui:functions": [
-      {
-        "ui:field": "InjectField",
-        "ui:options": {
-          "injections": [
-            {
-              "fields": [
-                "editors",
-                "/gatherings/0/gatheringFact/observerCount",
-                "dataOrigin"
-              ],
-              "target": "gatheringEvent"
-            },
-            {
-              "fields": [
-                "/gatheringEvent/namedPlaceNotes"
-              ],
-              "target": "/gatherings/0"
-            }
-          ]
-        }
-      }
-    ],
-    "namedPlaceID": {
-      "ui:field": "HiddenField"
     }
   },
   "validators": {
@@ -4109,5 +4281,6 @@
   },
   "attributes": {
     "id": "MHL.3"
-  }
+  },
+  "$id": "ce28c872eb411c5c83b36b6108ebac15"
 }

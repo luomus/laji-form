@@ -1,93 +1,119 @@
 {
-  "schema":{
-    "type":"object",
-    "properties":{
-      "owner":{
-        "type":"string",
-        "title":"Tietueen omistaja"
+  "schema": {
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "title": "Tietueen omistaja"
       },
-      "datasetType":{
-        "type":"string",
-        "oneOf":[
+      "datasetType": {
+        "type": "string",
+        "oneOf": [
           {
-            "const":"",
-            "title":""
+            "const": "GX.datasetTypeBasic",
+            "title": ""
           },
           {
-            "const":"GX.datasetTypeProject",
-            "title":""
+            "const": "GX.datasetTypeProject",
+            "title": ""
           }
         ],
-        "title":"Datasetin tyyppi"
+        "title": "Tagin tyyppi",
+        "default": "GX.datasetTypeBasic"
       },
-      "datasetName":{
-        "type":"object",
-        "properties":{
-          "fi":{
-            "type":"string"
+      "datasetName": {
+        "type": "object",
+        "properties": {
+          "fi": {
+            "type": "string"
           },
-          "sv":{
-            "type":"string"
+          "sv": {
+            "type": "string"
           },
-          "en":{
-            "type":"string"
+          "en": {
+            "type": "string"
           }
         },
-        "title":"Nimi"
+        "title": "Nimi"
       },
-      "personsResponsible":{
-        "type":"string",
-        "title":"Vastuuhenkilö(t)"
+      "personsResponsible": {
+        "type": "string",
+        "title": "Vastuuhenkilö(t)"
       },
-      "description":{
-        "type":"object",
-        "properties":{
-          "fi":{
-            "type":"string"
+      "description": {
+        "type": "object",
+        "properties": {
+          "fi": {
+            "type": "string"
           },
-          "sv":{
-            "type":"string"
+          "sv": {
+            "type": "string"
           },
-          "en":{
-            "type":"string"
+          "en": {
+            "type": "string"
           }
         },
-        "title":"Kuvaus"
+        "title": "Kuvaus"
+      },
+      "researchFundingSource": {
+        "type": "string",
+        "title": "Tutkimusrahoituksen lähde"
+      },
+      "researchFundingRecipient": {
+        "type": "string",
+        "title": "Tutkimusrahoituksen saaja"
+      },
+      "researchFundingDuration": {
+        "type": "string",
+        "title": "Tutkimusrahoituksen kesto"
+      },
+      "researchCollaborator": {
+        "type": "string",
+        "title": "Yhteistyötaho(t)"
+      },
+      "benefitsDerivedAndShared": {
+        "type": "string",
+        "title": "Saadut ja jaetut hyödyt"
       }
     },
-    "required":[
+    "required": [
+      "owner",
+      "datasetType",
       "datasetName",
-      "personsResponsible"
+      "personsResponsible",
+      "description"
     ]
   },
-  "excludeFromCopy":[
-
-  ],
-  "name":"Kotka - Dataset",
-  "language":"fi",
-  "title":"Kotka - Dataset",
-  "uiSchema":{
-    "datasetName":{
-      "ui:multiLanguage":true,
-      "en":{
-        "ui:required":true
+  "excludeFromCopy": [],
+  "name": "Kotka - Dataset",
+  "language": "fi",
+  "title": "Kotka - Dataset",
+  "options": {
+    "useSchemaCommentsAsHelpTexts": true,
+    "strict": false
+  },
+  "uiSchema": {
+    "datasetName": {
+      "ui:multiLanguage": true,
+      "en": {
+        "ui:required": true
       }
     },
-    "description":{
-      "ui:multiLanguage":true,
-      "en":{
-        "ui:required":true
+    "description": {
+      "ui:multiLanguage": true,
+      "en": {
+        "ui:required": true
       },
-      "ui:options":{
-        "inputType":"textarea"
+      "ui:options": {
+        "inputType": "textarea"
       }
     },
-    "ui:grid":{
-      "lg":6,
-      "md":7,
-      "sm":8,
-      "xs":12,
-      "rows":[
+    "ui:grid": {
+      "lg": 6,
+      "md": 7,
+      "sm": 8,
+      "xs": 12,
+      "rows": [
         [
           "owner"
         ],
@@ -102,56 +128,127 @@
         ],
         [
           "description"
+        ],
+        [
+          "researchFundingSource"
+        ],
+        [
+          "researchFundingRecipient"
+        ],
+        [
+          "researchFundingDuration"
+        ],
+        [
+          "researchCollaborator"
+        ],
+        [
+          "benefitsDerivedAndShared"
         ]
       ]
     },
-    "owner":{
-      "ui:widget":"AutosuggestWidget",
-      "ui:options":{
-        "autosuggestField":"organization",
-        "allowNonsuggestedValue":true,
-        "suggestionReceive":"key",
-        "displayValidationState":true,
-        "minFetchLength":0
-      }
-    },
-    "personsResponsible":{
-      "ui:widget":"InputWithDefaultValueButtonWidget",
-      "ui:options":{
-        "buttonLabel":"me",
-        "contextFieldForDefaultValue":"defaultPersonsResponsible"
-      }
-    }
-  },
-  "context":"dataset",
-  "id":"MHL.731",
-  "validators":{
-    "datasetName":{
-      "properties":{
-        "en":{
-          "presence":{
-            "message":"Required field."
+    "ui:field": "ScopeField",
+    "ui:options": {
+      "fields": [
+        "owner",
+        "datasetType",
+        "datasetName",
+        "personsResponsible",
+        "description"
+      ],
+      "fieldScopes": {
+        "datasetType": {
+          "GX.datasetTypeProject": {
+            "fields": [
+              "researchFundingSource",
+              "researchFundingRecipient",
+              "researchFundingDuration",
+              "researchCollaborator",
+              "benefitsDerivedAndShared"
+            ]
           }
         }
       }
     },
-    "description":{
-      "properties":{
-        "en":{
-          "presence":{
-            "message":"Required field."
+    "owner": {
+      "ui:functions": {
+        "ui:field": "ConditionalUiSchemaField",
+        "ui:options": {
+          "cases": {
+            "rules": "isAdmin",
+            "operations": {
+              "type": "merge",
+              "uiSchema": {
+                "ui:options": {
+                  "minFetchLength": 1,
+                  "query": {
+                    "onlyOwnOrganizations": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ui:widget": "AutosuggestWidget",
+      "ui:options": {
+        "autosuggestField": "organization",
+        "allowNonsuggestedValue": false,
+        "minFetchLength": 0,
+        "query": {
+          "onlyOwnOrganizations": true
+        },
+        "placeholder": "Search..."
+      }
+    },
+    "personsResponsible": {
+      "ui:widget": "InputWithDefaultValueButtonWidget",
+      "ui:options": {
+        "buttonLabel": "me",
+        "contextFieldForDefaultValue": "userName"
+      }
+    },
+    "benefitsDerivedAndShared": {
+      "ui:widget": "textarea"
+    }
+  },
+  "context": "dataset",
+  "id": "MHL.731",
+  "validators": {
+    "datasetName": {
+      "properties": {
+        "en": {
+          "presence": {
+            "message": "Required field."
+          },
+          "remote": {
+            "validator": "kotkaDatasetNameUnique"
+          }
+        },
+        "fi": {
+          "remote": {
+            "validator": "kotkaDatasetNameUnique"
+          }
+        },
+        "sv": {
+          "remote": {
+            "validator": "kotkaDatasetNameUnique"
+          }
+        }
+      }
+    },
+    "description": {
+      "properties": {
+        "en": {
+          "presence": {
+            "message": "Required field."
           }
         }
       }
     }
   },
-  "warnings":{
-
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.731"
   },
-  "attributes":{
-    "id":"MHL.731"
-  },
-  "options":{
-
-  }
+  "$id": "eb6fd109552cb5dbb7fdbf6c506960ce"
 }

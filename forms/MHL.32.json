@@ -46,6 +46,10 @@
             {
               "const": "MNP.tagHabitatMountain",
               "title": "Tunturi"
+            },
+            {
+              "const": "MNP.tagSuitable",
+              "title": "Soveltuu liito-oravalle satelliittikuvan perusteella"
             }
           ]
         },
@@ -128,7 +132,8 @@
     "hideDraftButton": true,
     "namedPlaceOptions": {
       "allowAddingPublic": true
-    }
+    },
+    "strict": false
   },
   "uiSchema": {
     "ui:classNames": "well well-sm",
@@ -176,7 +181,7 @@
       "ui:options": {
         "rows": 3
       },
-      "ui:widget": "textarea"
+      "ui:widget": "TextareaWidget"
     },
     "alternativeIDs": {
       "ui:field": "TagArrayField",
@@ -521,6 +526,23 @@
               "geometry",
               "alternativeIDs"
             ]
+          },
+          "HR.4511": {
+            "fields": [
+              "geometry",
+              "alternativeIDs",
+              "notes",
+              "keywords"
+            ]
+          },
+          "HR.6018": {
+            "fields": [
+              "geometry",
+              "municipality",
+              "biogeographicalProvince",
+              "notes",
+              "deviceID"
+            ]
           }
         }
       }
@@ -605,5 +627,6 @@
   "warnings": {},
   "attributes": {
     "id": "MHL.32"
-  }
+  },
+  "$id": "83c7068c77dfd034bc8884bbcd8e4e6f"
 }

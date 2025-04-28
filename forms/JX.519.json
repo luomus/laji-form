@@ -1177,6 +1177,10 @@
                           "title": "Etanoli 96 %"
                         },
                         {
+                          "const": "MY.preservationEthanolMinus20C",
+                          "title": "Etanoli -20 °C"
+                        },
+                        {
                           "const": "MY.preservationEthanolDenatured",
                           "title": "Denaturoitu etanoli"
                         },
@@ -1331,51 +1335,51 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum1",
-                        "title": "1 Epätodennäköinen pesintä: havaittu lajin yksilö, havainto ei viittaa pesintään."
+                        "title": "1 Epätodennäköinen pesintä: Havaittu pesimäaikaan lajin yksilö, mutta havainto ei viittaa pesintään kyseisessä atlasruudussa"
                       },
                       {
                         "const": "MY.atlasCodeEnum2",
-                        "title": "2 Mahdollinen pesintä: yksittäinen lintu kerran, on sopivaa pesimäympäristöä."
+                        "title": "2 Mahdollinen pesintä: Havaittu yksittäinen lintu kerran (esim. laulava tai soidinääntelevä koiras, nähty tai kuultu naaras) pesimäaikaan lajille sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista. Paikalla on joko käyty vain kerran tai lintu on tavattu vain kerran useista käynneistä huolimatta"
                       },
                       {
                         "const": "MY.atlasCodeEnum3",
-                        "title": "3 Mahdollinen pesintä: pari kerran, on sopivaa pesimäympäristöä."
+                        "title": "3 Mahdollinen pesintä: havaittu pari kerran pesimäaikaan sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista"
                       },
                       {
                         "const": "MY.atlasCodeEnum4",
-                        "title": "4 Todennäköinen pesintä: koiras reviirillä (esim. laulaa) eri päivinä."
+                        "title": "4 Todennäköinen pesintä: havaittu laulava, soidinmenoja esittävä tai muuten samalla paikalla (eli pysyvällä reviirillä) pesimäaikaan oleskeleva koiras eri päivinä"
                       },
                       {
                         "const": "MY.atlasCodeEnum5",
-                        "title": "5 Todennäköinen pesintä: naaras tai pari reviirillä eri päivinä."
+                        "title": "5 Todennäköinen pesintä: havaittu pesimäaikaan samalla paikalla oleskeleva naaras tai pari eri päivinä"
                       },
                       {
                         "const": "MY.atlasCodeEnum6",
-                        "title": "6 Todennäköinen pesintä: linnun tai parin havainto viittaa vahvasti pesintään."
+                        "title": "6 Todennäköinen pesintä: havaittu lintu tai pari pesimäaikaan tavalla, joka viittaa vahvasti pesintään"
                       },
                       {
                         "const": "MY.atlasCodeEnum61",
-                        "title": "61 Todennäköinen pesintä: lintu tai pari käy usein todennäköisellä pesäpaikalla."
+                        "title": "61 Todennäköinen pesintä: lintu/pari käymässä useasti todennäköisellä pesäpaikalla (esim. laskeutuvan säännöllisesti samaan paikkaan ruoikkoon tai saareen)"
                       },
                       {
                         "const": "MY.atlasCodeEnum62",
-                        "title": "62 Todennäköinen pesintä: lintu tai pari rakentaa pesää tai vie pesämateriaalia."
+                        "title": "62 Todennäköinen pesintä: lintu tai pari rakentamassa pesää (kaivamassa tai hakkaamassa pesäkoloa, kuljettamassa pesänrakennusmateriaalia, tms.)"
                       },
                       {
                         "const": "MY.atlasCodeEnum63",
-                        "title": "63 Todennäköinen pesintä: lintu tai pari varoittelee ehkä pesästä tai poikueesta."
+                        "title": "63 Todennäköinen pesintä: lintu tai pari varoittelemassa, koska pesä tai poikue on ilmeisesti lähistöllä"
                       },
                       {
                         "const": "MY.atlasCodeEnum64",
-                        "title": "64 Todennäköinen pesintä: lintu tai pari houkuttelee pois ehkä pesältä / poikueelta."
+                        "title": "64 Todennäköinen pesintä: lintu tai pari näyttelemässä siipirikkoa tai muulla tavoin houkuttelemassa havainnoijaa pois ilmeisen pesän tai poikueen luota"
                       },
                       {
                         "const": "MY.atlasCodeEnum65",
-                        "title": "65 Todennäköinen pesintä: lintu tai pari hyökkäilee, lähellä ehkä pesä / poikue."
+                        "title": "65 Todennäköinen pesintä: lintu tai pari hyökkäilemässä tai muulla tavoin käyttäytymässä uhkaavasti havainnoijaa kohtaan (esim. pöllöt ja tiirat), koska pesä tai poikue on ilmeisesti lähistöllä"
                       },
                       {
                         "const": "MY.atlasCodeEnum66",
-                        "title": "66 Todennäköinen pesintä; Nähty pesä, jossa samanvuotista rakennusmateriaalia tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista"
+                        "title": "66 Todennäköinen pesintä: nähty pesä, jossa on samanvuotista rakennusmateriaalia (esim. petolintujen koristellut pesät) tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista."
                       },
                       {
                         "const": "MY.atlasCodeEnum7",
@@ -1383,19 +1387,19 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum71",
-                        "title": "71 Varma pesintä: nähty pesässä saman vuoden munia, kuoria, jäänteitä. Voi olla epäonnistunut."
+                        "title": "71 Varma pesintä: nähty pesä, jossa on pesitty samana vuonna, koska siinä on munia tai niiden kuoria, jätteitä poikasista, sulkatuppien ”hilsettä”, tms."
                       },
                       {
                         "const": "MY.atlasCodeEnum72",
-                        "title": "72 Varma pesintä: käy pesällä pesintään viittaavasti. Munia / poikasia ei havaita (kolo tms.)."
+                        "title": "72 Varma pesintä: havaittu linnun menevän pesään tai lähtevän pesästä tavalla, joka selvästi viittaa pesimiseen (ei kuitenkaan ole nähty munia, tai nähty tai kuultu poikasia; esim. koloihin tai korkealle pesivät lajit)."
                       },
                       {
                         "const": "MY.atlasCodeEnum73",
-                        "title": "73 Varma pesintä: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta."
+                        "title": "73 Varma pesintä: havaittu juuri lentokykyiset poikaset tai untuvikot, jotka voidaan katsoa syntyneiksi ruudun alueella."
                       },
                       {
                         "const": "MY.atlasCodeEnum74",
-                        "title": "74 Varma pesintä: emo kantaa ruokaa tai poikasten ulosteita, pesintä oletettavasti ruudulla."
+                        "title": "74 Varma pesintä: havaittu emo kantamassa tai kuljettamassa ruokaa poikasille tai poikasten ulosteita; pesän voidaan katsoa olevan ruudun alueella."
                       },
                       {
                         "const": "MY.atlasCodeEnum75",
@@ -1407,7 +1411,7 @@
                       },
                       {
                         "const": "MY.atlasCodeEnum81",
-                        "title": "81 Varma pesintä: kuultu poikasten ääntelyä pesässä (kolo / pesä korkealla)."
+                        "title": "81 Varma pesintä: kuultu poikasten ääntelevän pesässä (esim. koloihin tai korkealle pesivät lajit)."
                       },
                       {
                         "const": "MY.atlasCodeEnum82",
@@ -1612,12 +1616,20 @@
                         "title": ""
                       },
                       {
-                        "const": "MY.lifeStageEgg",
-                        "title": "muna"
+                        "const": "MY.lifeStageAdult",
+                        "title": "aikuinen"
+                      },
+                      {
+                        "const": "MY.lifeStageNymph",
+                        "title": "nymfi"
                       },
                       {
                         "const": "MY.lifeStageLarva",
                         "title": "toukka"
+                      },
+                      {
+                        "const": "MY.lifeStageEgg",
+                        "title": "muna"
                       },
                       {
                         "const": "MY.lifeStagePupa",
@@ -1628,20 +1640,12 @@
                         "title": "nuori"
                       },
                       {
-                        "const": "MY.lifeStageNymph",
-                        "title": "nymfi"
-                      },
-                      {
                         "const": "MY.lifeStageSubimago",
                         "title": "subimago"
                       },
                       {
                         "const": "MY.lifeStageImmature",
                         "title": "keskenkasvuinen"
-                      },
-                      {
-                        "const": "MY.lifeStageAdult",
-                        "title": "aikuinen"
                       },
                       {
                         "const": "MY.lifeStageFertile",
@@ -1690,6 +1694,10 @@
                       {
                         "const": "MY.lifeStageTriungulin",
                         "title": "triunguliini"
+                      },
+                      {
+                        "const": "MY.lifeStageExuvia",
+                        "title": "toukkanahka"
                       }
                     ],
                     "title": "Elinvaihe"
@@ -2133,7 +2141,7 @@
                         "title": "eteläkaakko"
                       },
                       {
-                        "const": "MY.MovingDirectionS",
+                        "const": "MY.movingDirectionS",
                         "title": "etelä"
                       },
                       {
@@ -2218,6 +2226,396 @@
                   "alive": {
                     "type": "boolean",
                     "title": "Elossa"
+                  },
+                  "habitat": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "oneOf": [
+                        {
+                          "const": "",
+                          "title": ""
+                        },
+                        {
+                          "const": "MY.habitatEnumValue1",
+                          "title": "Metsät"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue2",
+                          "title": "Kangasmetsät"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue3",
+                          "title": "Tuore kangas"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue4",
+                          "title": "Lehtomainen kangas"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue5",
+                          "title": "Kuivahko kangas"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue6",
+                          "title": "Karukkokangas"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue7",
+                          "title": "Lehdot"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue8",
+                          "title": "Kuiva lehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue9",
+                          "title": "Tuore lehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue10",
+                          "title": "Kostea lehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue11",
+                          "title": "Jalopuulehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue12",
+                          "title": "Tunturikoivulehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue13",
+                          "title": "Tunturikoivikko, ei lehto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue14",
+                          "title": "Suot"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue15",
+                          "title": "Avosuot"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue16",
+                          "title": "Letto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue17",
+                          "title": "Neva"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue18",
+                          "title": "Avoluhta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue19",
+                          "title": "Puustoiset suot"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue20",
+                          "title": "Räme"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue21",
+                          "title": "Korpi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue22",
+                          "title": "Pensaikkoluhta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue23",
+                          "title": "Metsäluhta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue24",
+                          "title": "Vedet"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue25",
+                          "title": "Lähteikkö"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue26",
+                          "title": "Puro tai noro (kausikuiva)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue27",
+                          "title": "Rannat"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue28",
+                          "title": "Tulvametsä ja metsäluhta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue29",
+                          "title": "Rantapensaikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue30",
+                          "title": "Luhtaranta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue31",
+                          "title": "Niittyranta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue32",
+                          "title": "Ruovikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue33",
+                          "title": "Sora-, somerikko- tai kivikkoranta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue34",
+                          "title": "Hietikkoranta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue35",
+                          "title": "Avoin tulvaranta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue36",
+                          "title": "Kalliot ja kivikot"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue87",
+                          "title": "Karut tai keskiravinteinen kalliot (\"tavalliset kalliot\")"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue37",
+                          "title": "Jäkäläkallio tai -kivikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue38",
+                          "title": "Varpu–heinäkallio tai -kivikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue39",
+                          "title": "Niukkapuustoinen kallio tai kivikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue40",
+                          "title": "Kalliometsä"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue41",
+                          "title": "Kalkkikallio tai -louhos, myös paljas kalkkimaa"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue42",
+                          "title": "Serpentiinikallio tai -maa"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue43",
+                          "title": "Kallioketo"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue44",
+                          "title": "Tunturipaljakat"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue45",
+                          "title": "Tunturikangas"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue46",
+                          "title": "Tunturiniitty"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue47",
+                          "title": "Lumenviipymä"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue48",
+                          "title": "Tunturikangaspensaikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue49",
+                          "title": "Paljakan lähteikkö tai tihkupinta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue50",
+                          "title": "Paljakan kallio tai kivikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue51",
+                          "title": "Paljakan suo"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue52",
+                          "title": "Paljakan järvi tai lampi (sis. ranta)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue53",
+                          "title": "Paljakan virtavesi (sis. ranta)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue54",
+                          "title": "Jyrkänne tai pahta"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue55",
+                          "title": "Perinneympäristöt tai muut ihmisen muuttamat ympäristöt"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue56",
+                          "title": "Perinneympäristöt"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue57",
+                          "title": "Kuiva niitty tai keto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue58",
+                          "title": "Nummi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue59",
+                          "title": "Tuore niitty"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue60",
+                          "title": "Hakamaa, lehdesniitty tai metsälaidun"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue61",
+                          "title": "Kostea niitty (muu kuin rantaniitty)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue62",
+                          "title": "Suoniitty"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue63",
+                          "title": "Kallioketo"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue64",
+                          "title": "Oja tai muu kaivanto (sis. ojanpientareet, metsäojat)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue65",
+                          "title": "Tienvieri (piennar, luiska) ja -pohja"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue66",
+                          "title": "Viljelymaat"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue67",
+                          "title": "Pelto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue68",
+                          "title": "Kylvönurmi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue69",
+                          "title": "Puu- tai pensasviljelmä"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue70",
+                          "title": "Hylätty pelto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue71",
+                          "title": "Puistot, pihamaat, puutarhat"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue72",
+                          "title": "Puisto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue73",
+                          "title": "Kartanopuisto"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue74",
+                          "title": "Hautausmaa"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue75",
+                          "title": "Pihamaa"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue76",
+                          "title": "Puutarha"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue77",
+                          "title": "Avoin nurmialue"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue78",
+                          "title": "Pensaikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue79",
+                          "title": "Uuselinympäristöt"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue80",
+                          "title": "Tienvieri (piennar, luiska) ja -pohja"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue81",
+                          "title": "Maankaatopaikka"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue82",
+                          "title": "Täyttömaa-alue"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue83",
+                          "title": "Hiekka- tai sorakuoppa"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue84",
+                          "title": "Turpeennostoalue"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue85",
+                          "title": "Louhos- tai kaivosalue"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue86",
+                          "title": "Joutomaa (sis. satamat, ratapihat)"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue88",
+                          "title": "Meri"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue89",
+                          "title": "Murtovesi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue90",
+                          "title": "Karu järvi tai lampi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue91",
+                          "title": "Rehevä järvi tai lampi"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue92",
+                          "title": "Lampare tai allikko"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue93",
+                          "title": "Joki"
+                        },
+                        {
+                          "const": "MY.habitatEnumValue94",
+                          "title": "Koski"
+                        }
+                      ]
+                    },
+                    "uniqueItems": false,
+                    "title": "Elinympäristö"
                   }
                 },
                 "required": []
@@ -2260,13 +2658,6 @@
       },
       "alt+F5": {
         "fn": "revalidate"
-      },
-      "alt+Enter": {
-        "fn": "navigate"
-      },
-      "alt+shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
       },
       "alt+ ": {
         "fn": "navigate"
@@ -2361,6 +2752,13 @@
       },
       "alt+t": {
         "fn": "autosuggestToggle"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
     "ui:order": [
@@ -3029,7 +3427,8 @@
                     "notes",
                     "informalTaxonGroups",
                     "taxonConfidence",
-                    "recordBasis"
+                    "recordBasis",
+                    "habitat"
                   ],
                   "fieldScopes": {
                     "informalTaxonGroups": {
@@ -3205,7 +3604,6 @@
                               "filterType": "whitelist",
                               "filter": [
                                 "MY.lifeStageJuvenile",
-                                "MY.lifeStageSubimago",
                                 "MY.lifeStageAdult"
                               ]
                             }
@@ -3306,6 +3704,7 @@
                 "identifications_0_identificationBasis": 2,
                 "unitGathering_dateBegin": 3,
                 "unitGathering_dateEnd": 3,
+                "habitat": 6,
                 "*": 2
               },
               "md": {
@@ -3320,6 +3719,7 @@
                 "identifications_0_detDate": 3,
                 "twitched": 3,
                 "breeding": 3,
+                "habitat": 6,
                 "*": 2
               },
               "sm": {
@@ -3329,6 +3729,7 @@
                 "unitGathering_dateBegin": 4,
                 "unitGathering_dateEnd": 4,
                 "notes": 6,
+                "habitat": 8,
                 "*": 4
               },
               "xs": 12,
@@ -3440,6 +3841,30 @@
             },
             "additionalIDs": {
               "ui:field": "TagArrayField"
+            },
+            "habitat": {
+              "items": {
+                "ui:field": "ContextInjectionField",
+                "ui:options": {
+                  "injections": {
+                    "/ui:options/tree": "/habitat/tree"
+                  }
+                },
+                "uiSchema": {
+                  "ui:field": "SelectTreeField",
+                  "ui:options": {},
+                  "uiSchema": {
+                    "ui:field": "GridLayoutField",
+                    "ui:options": {
+                      "lg": 3,
+                      "md": 3,
+                      "sm": 3,
+                      "xs": 12,
+                      "label": false
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -3454,7 +3879,8 @@
     },
     "allowExcel": true,
     "allowTemplate": true,
-    "simple": true
+    "simple": true,
+    "strict": false
   },
   "extra": {
     "habitat": {
@@ -3764,10 +4190,6 @@
       }
     },
     "gatherings": {
-      "presence": {
-        "message": "Vähintään yksi paikka täytyy ilmoittaa.",
-        "allowEmpty": false
-      },
       "items": {
         "properties": {
           "dateBegin": {
@@ -4164,5 +4586,6 @@
         ]
       }
     }
-  }
+  },
+  "$id": "763470e412bc915d01794b0927dc90b3"
 }

@@ -92,6 +92,7 @@
           }
         },
         "required": [
+          "gatheringFact",
           "leg"
         ],
         "title": ""
@@ -583,28 +584,124 @@
     "useNamedPlaces": true,
     "hasAdmins": true,
     "adminLockable": true,
-    "warnEditingOldDocument": true
+    "warnEditingOldDocument": true,
+    "strict": false,
+    "resultServiceType": "MHL.resultServiceTypeWaterBirdCount"
   },
   "uiSchema": {
-    "editors": {
-      "items": {},
-      "ui:help": "@editorsHelp",
-      "ui:options": {
-        "allowUndefined": false
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings",
+      "*"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
+      }
+    },
+    "namedPlaceID": {
+      "ui:field": "HiddenField"
+    },
     "gatheringEvent": {
-      "leg": {
-        "items": {},
-        "ui:widget": "AutosuggestWidget",
-        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa.",
-        "ui:options": {
-          "autosuggestField": "friends",
-          "allowNonsuggestedValue": true,
-          "suggestionReceive": "key",
-          "preventTypingPattern": "^MA\\.\\d+$"
-        }
-      },
       "ui:field": "NestField",
       "ui:order": [
         "legEditor",
@@ -712,6 +809,16 @@
           }
         }
       },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
       "legPublic": {
         "ui:options": {
           "allowUndefined": false
@@ -809,28 +916,22 @@
         }
       }
     },
+    "editors": {
+      "ui:help": "@editorsHelp",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
     "gatherings": {
-      "items": {
-        "taxonCensus": {
-          "items": {}
-        },
-        "images": {
-          "items": {}
-        },
-        "units": {
-          "items": {
-            "identifications": {
-              "items": {}
-            },
-            "unitType": {
-              "items": {}
-            }
-          }
-        },
-        "skipped": {
-          "ui:field": "HiddenField"
-        }
-      },
       "ui:field": "MapArrayField",
       "ui:settings": [
         "/mapOptions/tileLayerName",
@@ -1446,130 +1547,11 @@
             }
           }
         }
-      }
-    },
-    "ui:shortcuts": {
-      "alt": {
-        "fn": "help",
-        "delay": 1
       },
-      "alt+Enter": {
-        "fn": "navigate"
-      },
-      "alt+shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
-      "alt+ ": {
-        "fn": "navigate"
-      },
-      "alt+shift+ ": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "alt+PageDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+PageUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+ArrowRight": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+ArrowLeft": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+ArrowUp": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+ArrowDown": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+h": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+j": {
-        "fn": "navigateArray",
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+k": {
-        "fn": "navigateArray",
-        "reverse": true,
-        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-        "targetLabel": "havaintoon"
-      },
-      "alt+l": {
-        "fn": "navigateArray",
-        "target": "root_gatherings",
-        "targetLabel": "pisteeseen / kiertoon"
-      },
-      "alt+n": {
-        "fn": "navigateArray"
-      },
-      "alt+p": {
-        "fn": "navigateArray",
-        "reverse": true
-      },
-      "alt+Insert": {
-        "fn": "insert"
-      },
-      "alt+i": {
-        "fn": "insert"
-      },
-      "alt+Delete": {
-        "fn": "delete"
-      },
-      "alt+d": {
-        "fn": "delete"
-      }
-    },
-    "ui:order": [
-      "gatheringEvent",
-      "gatherings",
-      "*"
-    ],
-    "ui:field": "InjectField",
-    "ui:options": {
-      "injections": {
-        "fields": [
-          "editors",
-          "secureLevel"
-        ],
-        "target": "gatheringEvent"
-      }
-    },
-    "namedPlaceID": {
-      "ui:field": "HiddenField"
-    },
-    "secureLevel": {
-      "ui:widget": "AnyToBooleanWidget",
-      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-      "ui:options": {
-        "trueValue": "MX.secureLevelNone",
-        "falseValue": "MX.secureLevelKM10",
-        "allowUndefined": false
+      "items": {
+        "skipped": {
+          "ui:field": "HiddenField"
+        }
       }
     }
   },
@@ -2313,5 +2295,6 @@
   },
   "attributes": {
     "id": "MHL.65"
-  }
+  },
+  "$id": "2f392eaa2431eee52e4b781be76c3ea4"
 }

@@ -2331,16 +2331,6 @@
       "alt+F5": {
         "fn": "revalidate"
       },
-      "Enter": {
-        "fn": "navigate"
-      },
-      "shift+Enter": {
-        "fn": "navigate",
-        "reverse": true
-      },
-      "ctrl+Enter": {
-        "fn": "textareaRowInsert"
-      },
       "alt+ ": {
         "fn": "navigate"
       },
@@ -2434,6 +2424,13 @@
       },
       "alt+t": {
         "fn": "autosuggestToggle"
+      },
+      "alt+Enter": {
+        "fn": "navigate"
+      },
+      "alt+shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
       }
     },
     "ui:order": [
@@ -2946,7 +2943,7 @@
             },
             {
               "ui:field": "ArrayPropertySumField",
-              "ui:title": "Havaintojen lukumäärä",
+              "ui:title": "Yksilöiden kokonaismäärä",
               "ui:options": {
                 "propertyField": "count"
               }
@@ -3748,7 +3745,7 @@
           },
           "compareDate": {
             "isAfter": "dateBegin",
-            "message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
+            "message": "Aikavälin lopun %{key} pitää olla sama tai myöhempi kuin alun %{value}"
           }
         }
       }
@@ -3783,7 +3780,7 @@
             },
             "compareDate": {
               "isAfter": "dateBegin",
-              "message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
+              "message": "Aikavälin lopun %{key} pitää olla sama tai myöhempi kuin alun %{value}"
             }
           },
           "geometry": {
@@ -3863,7 +3860,7 @@
                       },
                       "compareDate": {
                         "isAfter": "dateBegin",
-                        "message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
+                        "message": "Aikavälin lopun %{key} pitää olla sama tai myöhempi kuin alun %{value}"
                       }
                     }
                   }
@@ -4179,5 +4176,6 @@
         ]
       }
     }
-  }
+  },
+  "$id": "9bc1f675be5e8ca621053d7f0b315795"
 }
