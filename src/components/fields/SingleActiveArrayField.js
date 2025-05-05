@@ -1136,6 +1136,7 @@ const headerFormatters = {
 
 class AccordionHeader extends React.Component {
 	static contextType = ReactContext;
+
 	onHeaderClick = () => {
 		const {that, idx, canHaveUndefinedIdx = true} = this.props;
 		const formatters = this.getFormatters();
@@ -1198,6 +1199,8 @@ class AccordionHeader extends React.Component {
 		e.preventDefault();
 	}
 
+	onKeyDown = this.props.that.props.formContext.utils.keyboardClick(this.onHeaderClick)
+
 	render() {
 		const {that, idx} = this.props;
 		const title = getTitle(that.props, idx);
@@ -1238,7 +1241,9 @@ class AccordionHeader extends React.Component {
 			     id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-header`}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}
-				   onMouseLeave={this.onMouseLeave} >
+			     onMouseLeave={this.onMouseLeave}
+			     onKeyDown={this.onKeyDown}
+			     tabIndex="0" >
 				<div className={this.props.wrapperClassName}>
 					{headerTextComponent}
 					{this.props.children}
