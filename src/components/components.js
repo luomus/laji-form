@@ -504,7 +504,7 @@ export function Label({label, children, id, required, registry = {}, uiSchema = 
 	);
 
 	return help ? <>
-		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext} show={focused || undefined}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext} show={focused || undefined} style={{ display: "inline-block" }}>
 			{labelElem}
 		</OverlayTrigger>
 		<div id={`${id}--help`} style={{ display: "none" }}>{ help }</div>
@@ -703,6 +703,7 @@ export class OverlayTrigger extends React.Component {
 			children,
 			overlay,
 			contextId, //eslint-disable-line @typescript-eslint/no-unused-vars
+			style,
 			...props
 		} = this.props;
 
@@ -715,7 +716,7 @@ export class OverlayTrigger extends React.Component {
 			: this.state.hoveringElem || this.props.hoverable && this.state.hoveringOverlay;
 
 		return (
-			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
+			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut} style={style}>
 				<OverlayTrigger
 					{...props}
 					delay={1}
