@@ -35,6 +35,7 @@ export default class MultiLanguageField extends React.Component {
 					label={schema.title || ""}
 					required={required || uiSchema["ui:required"]}
 					uiSchema={uiSchema}
+					id={this.props.idSchema.$id}
 				/>
 				{ languages.map(_lang => (
 					<SchemaField

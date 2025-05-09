@@ -332,7 +332,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} uiSchema={this.props.uiSchema} registry={this.props.registry} />
+				<Title title={title} label={title} uiSchema={this.props.uiSchema} registry={this.props.registry} id={this.props.idSchema.$id} />
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
