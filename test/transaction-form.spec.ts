@@ -79,10 +79,19 @@ test.describe("transaction form (MHL.930)", () => {
 			await $input.fill("4");
 			await $input.press("Tab");
 
-			await expect(form.$locate("totalAwayCount").locator('.plainText')).toHaveText('2');
-			await expect(form.$locate("totalReturnedCount").locator('.plainText')).toHaveText('6');
-			await expect(form.$locate("totalMissingCount").locator('.plainText')).toHaveText('1');
-			await expect(form.$locate("totalCount").locator('.plainText')).toHaveText('9');
+			await expect(form.$locate("totalAwayCount").locator(".plainText")).toHaveText("2");
+			await expect(form.$locate("totalReturnedCount").locator(".plainText")).toHaveText("6");
+			await expect(form.$locate("totalMissingCount").locator(".plainText")).toHaveText("1");
+			await expect(form.$locate("totalCount").locator(".plainText")).toHaveText("9");
 		});
+	});
+
+	test("attachments field is hidden when the form is readonly", async () => {
+		await expect(form.$locate("attachments")).toBeVisible();
+
+		const { uiSchema } = await form.getProps();
+		await form.setState({uiSchema: {...uiSchema, "ui:readonly": true}});
+
+		await expect(form.$locate("attachments")).not.toBeVisible();
 	});
 });

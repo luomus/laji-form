@@ -1138,8 +1138,7 @@
             "cases": {
               "rules": [
                 {
-                  "rule": "isEdit",
-                  "complement": true
+                  "rule":"isReadonly"
                 }
               ],
               "operations": {
@@ -1413,8 +1412,7 @@
                   "cases": {
                     "rules": [
                       {
-                        "rule": "isEdit",
-                        "complement": true
+                        "rule":"isReadonly"
                       }
                     ],
                     "operations": {

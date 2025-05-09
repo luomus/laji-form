@@ -24,6 +24,7 @@
     "prepublishOnly": "npm run build && git push && git push --tags",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
     "test:docker": "npm run test:docker:build && npm run test:docker:run --",
     "test:lightweight": "npx playwright test --project chromium",
     "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
