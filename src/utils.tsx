@@ -821,10 +821,8 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		let passes;
 
 		// BW compatibility for old string  rule
-		if (rule === "isAdmin") {
-			rule = {rule: "isAdmin"};
-		} else if (rule === "isEdit") {
-			rule = {rule: "isEdit"};
+		if (["isAdmin", "isEdit", "isReadonly"].includes(rule)) {
+			rule = {rule};
 		}
 
 		const {field, regexp, valueIn, valueIncludes, valueLengthLessThan, rule: _rule} = rule;
@@ -833,6 +831,8 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 				passes = props.formContext.uiSchemaContext.isAdmin;
 			} else if (_rule === "isEdit") {
 				passes = props.formContext.uiSchemaContext.isEdit;
+			} else if (_rule === "isReadonly") {
+				passes = props.readonly;
 			}
 		} else {
 			let value = parseJSONPointer(props[prop] || {}, field);

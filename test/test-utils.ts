@@ -348,6 +348,13 @@ export class DemoPageForm extends Form {
 		});
 	}
 
+	getProps() {
+		return this.page.evaluate(() => {
+			const { schema, uiSchema } = (window as any).lajiForm.lajiForm.props;
+			return { schema, uiSchema };
+		});
+	}
+
 	async submit() {
 		await this.e("submit()");
 	}
