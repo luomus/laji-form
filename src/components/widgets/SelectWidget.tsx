@@ -89,12 +89,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		getEnumOptions(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
-	const [inputValue, setInputValue] = useState(
-		value
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			? enumOptions.find(item => item.value === value)!.label
-			: ""
-	);
+	const [inputValue, setInputValue] = useState("");
 	const [inputTouched, setInputTouched] = useState(false);
 	const [filterTerm, setFilterTerm] = useState("");
 
@@ -125,6 +120,17 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		(displayedEnums || []).length,
 		getDefaultActiveIdx(displayedEnums, value)
 	);
+
+	React.useEffect(() => {
+		setInputValue(
+			value
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				? enumOptions.find(item => item.value === value)!.label
+				: ""
+		);
+		setInputTouched(false);
+		setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
+	}, [value, enumOptions, displayedEnums, setActiveIdx]);
 
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);

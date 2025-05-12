@@ -76,4 +76,16 @@ test.describe("SelectWidget", () => {
 		await expect(enumWidget.$input).toHaveValue(enums.b);
 		expect(await form.getChangedData()).toBe("b");
 	});
+
+	test("value can be changed from the parent", async () => {
+		await form.setState({formData: "c"});
+		await expect(enumWidget.$input).toHaveValue(enums.c);
+		expect(await form.getPropsData()).toBe("c");
+	});
+
+	test("value can be changed to undefined from the parent", async () => {
+		await form.setState({formData: undefined});
+		await expect(enumWidget.$input).toHaveValue("");
+		expect(await form.getPropsData()).toBe(undefined);
+	});
 });
