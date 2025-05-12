@@ -109,7 +109,7 @@ body .laji-form {
 .laji-form .form-control, .laji-form .rw-widget, .laji-form .rw-widget-container, .laji-form-multiselect-input-wrapper {
 	border-radius: 2px !important;
 }
-.laji-form label[type="button"] {
+.laji-form label.btn {
 	border-radius: 2px;
 	line-height: 12.5px;
 }
