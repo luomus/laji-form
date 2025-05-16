@@ -1,6 +1,6 @@
 {
   "name": "@luomus/laji-form",
-  "version": "15.1.47",
+  "version": "15.1.48",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
