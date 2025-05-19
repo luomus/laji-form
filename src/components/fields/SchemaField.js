@@ -1,5 +1,5 @@
 import * as React from "react";
-import { isMultiSelect, getUiOptions } from "../../utils";
+import { getUiOptions } from "../../utils";
 import { isObject } from "@luomus/laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "@rjsf/utils";
