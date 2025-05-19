@@ -114,7 +114,10 @@ export default class _SchemaField extends React.Component {
 		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {formContext: _formContext} = registry;
 
-		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
+		// rjsf displays a duplicate label if 'uniqueItems' is true in some cases. We prevent that here.
+		// Example of when it shows duplicate is http://localhost:8083/?id=JX.652&local=true, "Elinympäristö" on gathering
+		// level.
+		if (props.schema.type === "array" && props.uiSchema && props.uiSchema.items && props.uiSchema.items["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
 		}
 
