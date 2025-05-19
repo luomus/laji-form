@@ -190,9 +190,11 @@ export default class MapField extends React.Component {
 		const geometry = this.getGeometry(this.props);
 		if (geometry) {
 			const {center, radius} = getCenterAndRadiusFromGeometry(geometry);
+			const {formData} = this.props;
 			mobileEditorOptions = {
 				center,
-				radius
+				radius,
+				formData
 			};
 		}
 
@@ -359,12 +361,17 @@ class MobileEditorMap extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const {center, radius} = this.props;
+		const {center, radius, formData} = this.props;
+
+		const markerData = formData
+			? [{ geoData: formData}]
+			: null;
 
 		this.state = {
-			mapOptions: this.setViewFromCenterAndRadius(center, radius),
+			mapOptions: markerData ? this.setViewFromData(markerData) : this.setViewFromCenterAndRadius(center, radius),
 			width: window.visualViewport?.width || window.innerWidth,
 			height: window.visualViewport?.height || window.innerHeight,
+			geometry: markerData
 		};
 	}
 
@@ -388,57 +395,55 @@ class MobileEditorMap extends React.Component {
 		this.mounted = true;
 		this.okButtonElem.focus();
 		window.addEventListener("resize", this.updateDimensions);
+
+		if (this.map && this.map.map) {
+			this.map.map.on("click", this.handleMapClick);
+		}
 	}
 
-	componenWillUnmount() {
+	componentWillUnmount() {
 		this.mounted = false;
 		window.removeEventListener("resize", this.updateDimensions);
-	}
 
-	getCircle(radiusPixels) {
-		return (
-			<svg width={this.state.width} height={this.state.height} style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
-				<defs>
-					<mask id="mask" x="0" y="0" width={this.state.width} height={this.state.height}>
-						<rect x="0" y="0" width={this.state.width} height={this.state.height} fill="#fff"></rect>
-						<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels}></circle>
-					</mask>
-				</defs>
-				<rect x="0" y="0" width={this.state.width} height={this.state.height} mask="url(#mask)" fillOpacity="0.2"></rect>
-				<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
-				<line
-					x1={this.state.width / 2}
-					y1={this.state.height / 2 - radiusPixels}
-					x2={this.state.width / 2}
-					y2={this.state.height / 2 + radiusPixels}
-					stroke="black"
-					strokeWidth="2"
-				/>
-				<line
-					x1={this.state.width / 2 - radiusPixels}
-					y1={this.state.height / 2}
-					x2={this.state.width / 2 + radiusPixels}
-					y2={this.state.height / 2}
-					stroke="black"
-					strokeWidth="2"
-				/>
-			</svg>
-		);
+		if (this.map && this.map.map) {
+			this.map.map.off("click", this.handleMapClick);
+		}
 	}
 
 	onChange = () => {
-		const {map} = this.map;
-		const centerLatLng = map.getCenter();
-		const centerPoint = map.latLngToContainerPoint(centerLatLng);
-		const leftEdgeAsLatLng = map.containerPointToLatLng({x: centerPoint.x - this.DEFAULT_RADIUS_PIXELS, y: centerPoint.y});
-		const radius = map.getCenter().distanceTo(leftEdgeAsLatLng);
-		this.props.onChange({
-			type: "Point",
-			coordinates: [centerLatLng.lng, centerLatLng.lat],
-			radius
+		const { map } = this.map;
+		const layers = map._layers;
+		let coordinates;
+
+		Object.keys(layers).forEach((key) => {
+			const layer = layers[key];
+			if (layer instanceof L.Marker) {
+				const latlng = layer.getLatLng();
+				coordinates = [latlng.lng, latlng.lat];
+			}
 		});
+
+		if (coordinates) {
+			this.props.onChange({
+				type: "Point",
+				coordinates
+			});
+		}
 		this.onClose();
 	}
+
+	handleMapClick = (e) => {
+		const { lat, lng } = e.latlng;
+		const markerGeometry = {
+			type: "Point",
+			coordinates: [lng, lat]
+		};
+		const markerData = [{ geoData: markerGeometry }];
+		this.setState({
+			geometry: markerData,
+			mapOptions: { data: markerData }
+		});
+	};
 
 	computePadding = () => {
 		// If the rendered element wasn't full screen, we couldn't use these as height/width.
@@ -473,6 +478,15 @@ class MobileEditorMap extends React.Component {
 			return {center};
 		}
 		return {};
+	}
+
+	setViewFromData = (markerData) => {
+		const data = markerData;
+		const zoomToData = {
+			padding: this.computePadding()
+		};
+
+		return {data, zoomToData};
 	}
 
 	invisibleStyle = () => {
@@ -517,18 +531,21 @@ class MobileEditorMap extends React.Component {
 
 		const {translations} = this.props.formContext;
 
+		const mapComponentProps = {
+			...options,
+			singleton: true,
+			clickBeforeZoomAndPan: false,
+			viewLocked: false,
+			controls: { draw: false },
+			ref: this.setMobileEditorMapRef,
+			formContext: this.props.formContext
+		};
+		if (this.state?.geometry) {
+			mapComponentProps.data = this.state.geometry;
+		}
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
-				<MapComponent
-					{...options}
-					singleton={true}
-					clickBeforeZoomAndPan={false}
-					viewLocked={false}
-					controls={{draw: false}}
-					ref={this.setMobileEditorMapRef}
-					formContext={this.props.formContext} />
-				{/* Circle is rendered inside the map container so the controls z-index can be above the circle mask.*/}
-				{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
+				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
 					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.ChooseThisLocation}</Button>
 					<Button block onClick={this.onClose}>{translations.Cancel}</Button>
