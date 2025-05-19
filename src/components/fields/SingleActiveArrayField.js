@@ -658,7 +658,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
-				<Title title={title} label={title} schema={this.props.schema} uiSchema={titleUiSchema} formData={that.props.formData} registry={this.props.registry} />
+				<Title title={title} label={title} schema={this.props.schema} uiSchema={titleUiSchema} formData={that.props.formData} registry={this.props.registry} id={this.props.idSchema.$id} />
 				<DescriptionFieldTemplate description={this.props.uiSchema["ui:description"]} schema={this.props.schema} />
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
@@ -935,7 +935,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
-				<Title title={title} label={title} uiSchema={uiSchema} schema={schema} formData={formData} registry={this.props.registry} />
+				<Title title={title} label={title} uiSchema={uiSchema} schema={schema} formData={formData} registry={this.props.registry} id={this.props.idSchema.$id} />
 				<DescriptionFieldTemplate description={uiSchema["ui:description"]} schema={this.props.schema} />
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
@@ -948,7 +948,7 @@ class TableArrayFieldTemplate extends React.Component {
 											const {ui, tooltip, ..._sortableHeaderProps} = sortableHeaderProps;
 											const className = classNames("darker", sortableHeaderProps.className);
 											return (
-												<TooltipComponent key={col} tooltip={tooltip} placement="top">
+												<TooltipComponent key={col} tooltip={tooltip} placement="top" id={`${this.props.idSchema[col].$id}-header`}>
 													<th key={col} {..._sortableHeaderProps} className={className}>
 														{((uiSchema.items || {})[col] || {})["ui:title"] || schema.items.properties[col].title}
 														{ui || null}
@@ -1223,7 +1223,7 @@ class AccordionHeader extends React.Component {
 				})}
 				{hasHelp && 
 					<>
-						<Help focusable={true} onFocus={this.onHelpFocus} onBlur={this.onHelpBlur} onClick={this.onHelpClick} />
+						<Help focusable={true} onFocus={this.onHelpFocus} onBlur={this.onHelpBlur} onClick={this.onHelpClick} id={`${that.props.idSchema.$id}_{idx}`}/>
 						<div id={`${that.props.idSchema.$id}_${idx}--help`} style={{ display: "none" }}>{ uiSchema["ui:help"] }</div>
 					</>
 				}
@@ -1232,7 +1232,7 @@ class AccordionHeader extends React.Component {
 
 		const {Tooltip} = this.context.theme;
 
-		const tooltip = <Tooltip>{uiSchema["ui:help"]}</Tooltip>;
+		const tooltip = <Tooltip id={`${that.props.idSchema.$id}_${idx}-help`}>{uiSchema["ui:help"]}</Tooltip>;
 		const headerTextComponent = hasHelp ? <OverlayTrigger placement="right" overlay={tooltip} show={this.state && this.state.focused || undefined}>{headerText}</OverlayTrigger> : headerText;
 
 		const header = (

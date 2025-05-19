@@ -367,7 +367,7 @@ class NamedPlaceChooser extends React.Component {
 						options={{enumOptions: enums, placeholder: `${translations.SelectPlaceFromList}...`}} 
 						onChange={this.onSelectChange} 
 						selectOnChange={false}
-						includeEmpty={false} 
+						includeEmpty={true} 
 						schema={{}} 
 						id="named-place-chooser-select" 
 						formContext={this.props.formContext} />

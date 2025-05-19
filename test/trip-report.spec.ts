@@ -265,7 +265,7 @@ test.describe("Trip report (JX.519)", () => {
 
 			test("selecting from list displays map popup", async () => {
 				await npChooser.select.openEnums();
-				await npChooser.select.$$enums.first().click();
+				await npChooser.select.$$enums.nth(1).click();
 			});
 
 			test("map popup select btn click closes chooser modal", async () => {

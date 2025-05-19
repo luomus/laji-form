@@ -1907,7 +1907,7 @@ body .laji-form {
 	background-color: white;
 	right: 1px;
 	bottom: 1px;
-	height: 23px;
+	height: 21px;
 	width: 23px;
 	line-height: initial;
 	font-size: 20px;
@@ -1916,6 +1916,7 @@ body .laji-form {
 	position: absolute;
 	right: 3px;
 	bottom: 0px;
+	line-height: 21px;
 }
 .laji-form-dropdown-caret img {
 	width: 20px;

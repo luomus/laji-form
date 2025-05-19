@@ -33,7 +33,7 @@ export default class TagArrayField extends React.Component {
 		const {uiSchema} = this.props;
 
 		return (
-			<FieldTemplate {...this.props} forceDisplayLabel={true} rawHelp={uiSchema["ui:help"]} description={uiSchema["ui:description"]} rawErrors={[]}>
+			<FieldTemplate {...this.props} forceDisplayLabel={true} rawHelp={uiSchema["ui:help"]} description={uiSchema["ui:description"]} rawErrors={[]} id={this.props.idSchema.$id} >
 				<TagInputComponent {...this.props} id={this.props.idSchema.$id} tags={this.props.formData} />
 			</FieldTemplate>
 		);

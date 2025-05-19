@@ -7,7 +7,7 @@ test.describe("dataset form (MHL.731)", () => {
 	let nameInFinnishInput$: Locator;
 
 	const uiSchemaContext = {
-		defaultPersonsResponsible: "Test, User"
+		userName: "Test, User"
 	};
 
 	test.beforeAll(async ({browser}) => {

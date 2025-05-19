@@ -4,7 +4,8 @@ import { isEmptyString, parseJSONPointer, classNames, getUiOptions } from "../..
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 
-const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) => {
+const TitleField = (props) => {
+	const {title, id, formData, style, uiSchema = {}, registry = {}} = props;
 	const {
 		"ui:help": help,
 		"ui:helpHoverable": helpHoverable,
@@ -37,8 +38,7 @@ const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) 
 		return null;
 	}
 
-
-	const helpComponent = help ? <Help focusable={true} onFocus={onHelpFocus} onBlur={onHelpBlur} onClick={onHelpClick} /> : null;
+	const helpComponent = help ? <Help focusable={true} onFocus={onHelpFocus} onBlur={onHelpBlur} onClick={onHelpClick} id={id} /> : null;
 
 	let titleTextContent = <span>
 		<span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent}

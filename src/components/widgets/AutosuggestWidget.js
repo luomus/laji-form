@@ -825,6 +825,8 @@ export class Autosuggest extends React.Component {
 		setTimeout(() => this.props.formContext.utils.focusById(this.props.id), 1); // Refocus input
 	}
 
+	onKeyDown = this.props.formContext.utils.keyboardClick(this.onToggle);
+
 	isSuggested = () => {
 		const {suggestion} = this.state;
 		return !!suggestion && this.isValueSuggested(this.props);
@@ -915,7 +917,7 @@ export class Autosuggest extends React.Component {
 			const props = {
 				className: classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active"),
 				onMouseDown: this.onToggle,
-				onKeyDown: this.onToggleByKeyboard
+				onKeyDown: this.onKeyDown
 			};
 
 			if (toggleable && toggleable.glyphClass) {
