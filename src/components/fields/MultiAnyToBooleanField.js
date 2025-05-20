@@ -77,7 +77,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 
-		const {"ui:title": _title} = this.props.uiSchema;
+		const {"ui:title": _title} = this.props.uiSchema || {};
 		let {groups} = getUiOptions(this.props.uiSchema) || [];
 
 		return (
