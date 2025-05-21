@@ -187,16 +187,6 @@ export default class MapField extends React.Component {
 		const {mobileEditor} = this.state;
 
 		let mobileEditorOptions = isObject(mobileEditor) ? mobileEditor : {};
-		const geometry = this.getGeometry(this.props);
-		if (geometry) {
-			const {center, radius} = getCenterAndRadiusFromGeometry(geometry);
-			const {formData} = this.props;
-			mobileEditorOptions = {
-				center,
-				radius,
-				formData
-			};
-		}
 
 		if (this.map && this.map.userLocation) {
 			mobileEditorOptions.userLocation = this.map.userLocation;
@@ -229,6 +219,7 @@ export default class MapField extends React.Component {
 							onClose={this.onHideMobileEditorMap}
 							map={this.map}
 							formContext={this.props.formContext}
+							geometry={this.getMobileGeometry()}
 						/>
 				}
 			</div>
@@ -253,13 +244,26 @@ export default class MapField extends React.Component {
 
 	getEditWithModalFeatureStyle = () => ({
 		fillOpacity: 0,
-		color: "black",
+		color: "#55AEFA",
 		weight: "2",
 	})
 
 	getGeometry = (props) => {
 		const {formData} = props;
 		return formData && Object.keys(formData).length ? formData : undefined;
+	}
+
+	getMobileGeometry = () => {
+		if (this.props.formData) {
+			return this.props.formData;
+		} else if (this.map?.userLocation) {
+			return {
+				type: "Point",
+				coordinates: [this.map.userLocation.latlng.lng, this.map.userLocation.latlng.lat]
+			};
+		} else {
+			return undefined;
+		}
 	}
 
 	onOptionsChanged = (options) => {
@@ -361,17 +365,12 @@ class MobileEditorMap extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const {center, radius, formData} = this.props;
-
-		const markerData = formData
-			? [{ geoData: formData}]
-			: null;
+		const { geometry } = this.props;
 
 		this.state = {
-			mapOptions: markerData ? this.setViewFromData(markerData) : this.setViewFromCenterAndRadius(center, radius),
+			geometry: [{ geoData: geometry}],
 			width: window.visualViewport?.width || window.innerWidth,
 			height: window.visualViewport?.height || window.innerHeight,
-			geometry: markerData
 		};
 	}
 
@@ -411,23 +410,9 @@ class MobileEditorMap extends React.Component {
 	}
 
 	onChange = () => {
-		const { map } = this.map;
-		const layers = map._layers;
-		let coordinates;
-
-		Object.keys(layers).forEach((key) => {
-			const layer = layers[key];
-			if (layer instanceof L.Marker) {
-				const latlng = layer.getLatLng();
-				coordinates = [latlng.lng, latlng.lat];
-			}
-		});
-
-		if (coordinates) {
-			this.props.onChange({
-				type: "Point",
-				coordinates
-			});
+		const markerGeometry = this.map?.data?.[0]?.featureCollection?.features?.[0]?.geometry;
+		if (markerGeometry) {
+			this.props.onChange(markerGeometry);
 		}
 		this.onClose();
 	}
@@ -438,11 +423,7 @@ class MobileEditorMap extends React.Component {
 			type: "Point",
 			coordinates: [lng, lat]
 		};
-		const markerData = [{ geoData: markerGeometry }];
-		this.setState({
-			geometry: markerData,
-			mapOptions: { data: markerData }
-		});
+		this.setState({ geometry: [{ geoData: markerGeometry }] });
 	};
 
 	computePadding = () => {
@@ -456,28 +437,6 @@ class MobileEditorMap extends React.Component {
 			topToCircleEdgePixels
 		];
 		return padding;
-	}
-
-	setViewFromCenterAndRadius = (center, radius) => {
-		if (center) {
-			if (radius) {
-				const centerLatLng = L.latLng(center);
-				const data = {
-					geoData: {
-						type: "Point",
-						coordinates: [centerLatLng.lng, centerLatLng.lat],
-						radius
-					},
-					getFeatureStyle: this.invisibleStyle
-				};
-				const zoomToData = {
-					padding: this.computePadding()
-				};
-				return {data, zoomToData};
-			}
-			return {center};
-		}
-		return {};
 	}
 
 	setViewFromData = (markerData) => {
@@ -502,30 +461,15 @@ class MobileEditorMap extends React.Component {
 		}
 	}
 
-	onLocate = (latlng, accuracy) => {
-		if (this.props.center || !this.mounted) return;
-
-		const options = this.setViewFromCenterAndRadius(latlng, accuracy);
-		if (options.data && options.zoomToData) {
-			this.setState({mapOptions: {data: options.data}}, () => {
-				this.map.zoomToData(options.zoomToData);
-			});
-		} else if (options.center) {
-			this.map.setCenter(options.center);
-		}
-	}
-
 	render() {
 		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
 
-		
-		options = {...options, ...(this.props.options || {}), ...this.state.mapOptions};
+		options = {...options, ...(this.props.options || {}), ...this.setViewFromData(this.state.geometry)};
 
 		options.locate = {
 			on: true,
 			userLocation,
-			onLocationFound: this.onLocate,
 			panOnFound: false
 		};
 
@@ -541,7 +485,12 @@ class MobileEditorMap extends React.Component {
 			formContext: this.props.formContext
 		};
 		if (this.state?.geometry) {
-			mapComponentProps.data = this.state.geometry;
+			mapComponentProps.data = this.state.geometry.map(item => ({
+				...item,
+				getFeatureStyle: () => ({
+					color: "#55AEFA"
+				})
+			}));
 		}
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
