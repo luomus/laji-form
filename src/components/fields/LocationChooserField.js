@@ -546,6 +546,7 @@ class LocationButton extends React.Component {
 						singleton={true}
 						formContext={that.props.formContext}
 						bodyAsDialogRoot={false}
+						syncZoomToDataOnDataChangeOnSingleton={true}
 						ref={this.setMiniMapRef} />
 				</Popover>
 			) : (

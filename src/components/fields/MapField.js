@@ -153,7 +153,8 @@ export default class MapField extends React.Component {
 			...(this.state.mapOptions || {}),
 			locate: {
 				on: this.state.locateOn || false,
-				onLocationFound: this.onLocate
+				onLocationFound: this.onLocate,
+				onLocationError: this.onLocateError
 			}
 		};
 
@@ -229,24 +230,15 @@ export default class MapField extends React.Component {
 	getDrawOptions = (props) => {
 		const {uiSchema, disabled, readonly} = props;
 		const options = getUiOptions(uiSchema);
-		const {mapOptions = {}, mobileEditor} = options;
+		const {mapOptions = {}} = options;
 		const drawOptions = {
 			...(mapOptions.draw || {}),
 			geoData: this.getGeometry(props),
 			onChange: this.onChange,
-			editable: !disabled && !readonly
+			editable: !disabled && !readonly && !options.mobileEditor
 		};
-		if (mobileEditor) {
-			drawOptions.getFeatureStyle = this.getEditWithModalFeatureStyle;
-		}
 		return drawOptions;
 	}
-
-	getEditWithModalFeatureStyle = () => ({
-		fillOpacity: 0,
-		color: "#55AEFA",
-		weight: "2",
-	})
 
 	getGeometry = (props) => {
 		const {formData} = props;
@@ -315,7 +307,7 @@ export default class MapField extends React.Component {
 		this.setState({mobileEditor: {visible: false, options}});
 	}
 
-	onLocate = (latlng, radius, forceShow) => {
+	onLocate = (latlng, forceShow) => {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
@@ -327,8 +319,6 @@ export default class MapField extends React.Component {
 				this.setState({
 					mobileEditor: {
 						visible: true,
-						center: latlng,
-						radius,
 						options: (this.state.mobileEditor || {}).options || {}
 					},
 					located: true
@@ -341,6 +331,16 @@ export default class MapField extends React.Component {
 			const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
 			this.props.onChange(geometryCollection ? {type: "GeometryCollection", geometries: [geometry]} : geometry);
 		}
+	}
+
+	onLocateError = () => {
+		this.setState({
+			mobileEditor: { 
+				visible: true,
+				options: (this.state.mobileEditor || {}).options || {}
+			},
+		});
+
 	}
 
 	renderBlocker() {
@@ -368,9 +368,7 @@ class MobileEditorMap extends React.Component {
 		const { geometry } = this.props;
 
 		this.state = {
-			geometry: [{ geoData: geometry}],
-			width: window.visualViewport?.width || window.innerWidth,
-			height: window.visualViewport?.height || window.innerHeight,
+			geometry: [{ geoData: geometry}]
 		};
 	}
 
@@ -386,66 +384,53 @@ class MobileEditorMap extends React.Component {
 		this.okButtonElem = findDOMNode(elem);
 	}
 
-	updateDimensions = () => {
-		this.setState({ width: window.visualViewport?.width || window.innerWidth, height: window.visualViewport?.height || window.innerHeight });
-	};
-
 	componentDidMount() {
 		this.mounted = true;
 		this.okButtonElem.focus();
-		window.addEventListener("resize", this.updateDimensions);
+
+		if (this.props.geometry) {
+			const [lng, lat] = this.props.geometry.coordinates;
+			this.setMarkerLatLng({lng, lat});
+		}
 
 		if (this.map && this.map.map) {
-			this.map.map.on("click", this.handleMapClick);
+			this.map?.map?.on("click", this.handleMapClick);
 		}
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		window.removeEventListener("resize", this.updateDimensions);
 
+		if (this.marker) {
+			this.marker.remove();
+		}
 		if (this.map && this.map.map) {
 			this.map.map.off("click", this.handleMapClick);
 		}
 	}
 
 	onChange = () => {
-		const markerGeometry = this.map?.data?.[0]?.featureCollection?.features?.[0]?.geometry;
-		if (markerGeometry) {
+		if (this.marker) {
+			const {lat, lng} = this.marker.getLatLng();
+			const markerGeometry = {
+				type: "Point",
+				coordinates: [lng, lat]
+			}
 			this.props.onChange(markerGeometry);
 		}
 		this.onClose();
 	}
 
 	handleMapClick = (e) => {
-		const { lat, lng } = e.latlng;
-		const markerGeometry = {
-			type: "Point",
-			coordinates: [lng, lat]
-		};
-		this.setState({ geometry: [{ geoData: markerGeometry }] });
+		this.setMarkerLatLng(e.latlng);
 	};
 
-	computePadding = () => {
-		// If the rendered element wasn't full screen, we couldn't use these as height/width.
-		const height = window.visualViewport?.height || window.innerHeight;
-		const width = window.visualViewport?.width || window.innerWidth;
-		const topToCircleEdgePixels = parseInt(height / 2 - this.DEFAULT_RADIUS_PIXELS);
-		const leftToCircleEdgePixels = parseInt(width / 2 - this.DEFAULT_RADIUS_PIXELS);
-		const padding = [
-			leftToCircleEdgePixels,
-			topToCircleEdgePixels
-		];
-		return padding;
-	}
-
-	setViewFromData = (markerData) => {
-		const data = markerData;
-		const zoomToData = {
-			padding: this.computePadding()
-		};
-
-		return {data, zoomToData};
+	setMarkerLatLng = (latlng) => {
+		if (this.marker) {
+			this.marker.setLatLng(latlng);
+		} else {
+			this.marker = L.marker(latlng, { icon: this.map._createIcon(), draggable: true }).addTo(this.map.map);
+		}
 	}
 
 	invisibleStyle = () => {
@@ -462,36 +447,28 @@ class MobileEditorMap extends React.Component {
 	}
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
-
-		options = {...options, ...(this.props.options || {}), ...this.setViewFromData(this.state.geometry)};
-
-		options.locate = {
-			on: true,
-			userLocation,
-			panOnFound: false
-		};
 
 		const {translations} = this.props.formContext;
 
 		const mapComponentProps = {
-			...options,
+			...options, ...(this.props.options || {}),
+			locate: {
+				on: true,
+				userLocation,
+				panOnFound: false,
+			},
 			singleton: true,
 			clickBeforeZoomAndPan: false,
 			viewLocked: false,
 			controls: { draw: false },
 			ref: this.setMobileEditorMapRef,
-			formContext: this.props.formContext
+			formContext: this.props.formContext,
+			panel: {
+				panelTextContent: "Raahaa pylpyrää tai klikkaa karttaa valitaksesi sijainnin. Sivulla olevilla napeilla voit etsiä sijainnin tai zoomata karttaa."
+			}
 		};
-		if (this.state?.geometry) {
-			mapComponentProps.data = this.state.geometry.map(item => ({
-				...item,
-				getFeatureStyle: () => ({
-					color: "#55AEFA"
-				})
-			}));
-		}
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent {...mapComponentProps} />
