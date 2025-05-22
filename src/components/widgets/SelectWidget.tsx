@@ -136,17 +136,6 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		getDefaultActiveIdx(displayedEnums, value)
 	);
 
-	React.useEffect(() => {
-		setInputValue(
-			value
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				? enumOptions.find(item => item.value === value)!.label
-				: ""
-		);
-		setInputTouched(false);
-		setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
-	}, [value, enumOptions, displayedEnums, setActiveIdx]);
-
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
 		setInputTouched(false);
