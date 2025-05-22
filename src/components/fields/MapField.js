@@ -414,6 +414,7 @@ class MobileEditorMap extends React.Component {
 	onChange = () => {
 		if (this.marker) {
 			const {lat, lng} = this.marker.getLatLng();
+			this.map.map.setView({lng, lat}, 12);
 			const markerGeometry = {
 				type: "Point",
 				coordinates: [lng, lat]
