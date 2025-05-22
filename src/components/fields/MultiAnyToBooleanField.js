@@ -76,10 +76,13 @@ export default class MultiAnyToBooleanField extends React.Component {
 
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
+
+		const {"ui:title": _title} = this.props.uiSchema || {};
 		let {groups} = getUiOptions(this.props.uiSchema) || [];
+
 		return (
 			<React.Fragment>
-				<TitleFieldTemplate title={this.props.schema.title} schema={this.props.schema} uiSchema={this.props.uiSchema} registry={this.props.registry} />
+				<TitleFieldTemplate title={_title !== undefined ? _title : this.props.schema.title} schema={this.props.schema} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 				<div className={"checkbox-row"}>
 					{groups.map((group, idx) => {
 						const {"ui:help": help, "ui:helpHoverable": helpHoverable, helpPlacement, ..._group} = group;

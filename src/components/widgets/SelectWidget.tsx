@@ -90,7 +90,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	[options.enumOptions, uiSchema, includeEmpty]);
 
 	const getLabelFromValue = useCallback((value: string | undefined) => 
-		value !== undefined
+		value !== undefined && value !== ""
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			? enumOptions.find(item => item.value === value)!.label
 			: ""
@@ -217,10 +217,6 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		onChange,
 		getEnumOptionsAsync
 	} = props;
-	// const enumOptions = React.useMemo(() =>
-	// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	// 	getEnumOptions(options.enumOptions!, uiSchema, false),
-	// [options.enumOptions, uiSchema]);
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
