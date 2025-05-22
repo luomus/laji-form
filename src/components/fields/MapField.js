@@ -368,7 +368,8 @@ class MobileEditorMap extends React.Component {
 		const { geometry } = this.props;
 
 		this.state = {
-			geometry: [{ geoData: geometry}]
+			geometry: [{ geoData: geometry}],
+			moved: false
 		};
 	}
 
@@ -391,11 +392,13 @@ class MobileEditorMap extends React.Component {
 		if (this.props.geometry) {
 			const [lng, lat] = this.props.geometry.coordinates;
 			this.setMarkerLatLng({lng, lat});
+			this.map.map.setView({lng, lat}, 12);
+			this.marker.on("dragend", () => {
+				if (!this.state.moved) { this.setState({ moved: true }); }
+			});
 		}
 
-		if (this.map && this.map.map) {
-			this.map?.map?.on("click", this.handleMapClick);
-		}
+		this.map.map.on("click", this.handleMapClick);
 	}
 
 	componentWillUnmount() {
@@ -404,9 +407,8 @@ class MobileEditorMap extends React.Component {
 		if (this.marker) {
 			this.marker.remove();
 		}
-		if (this.map && this.map.map) {
-			this.map.map.off("click", this.handleMapClick);
-		}
+
+		this.map.map.off("click", this.handleMapClick);
 	}
 
 	onChange = () => {
@@ -415,13 +417,14 @@ class MobileEditorMap extends React.Component {
 			const markerGeometry = {
 				type: "Point",
 				coordinates: [lng, lat]
-			}
+			};
 			this.props.onChange(markerGeometry);
 		}
 		this.onClose();
 	}
 
 	handleMapClick = (e) => {
+		if (!this.state.moved) { this.setState({moved: true}); }
 		this.setMarkerLatLng(e.latlng);
 	};
 
@@ -466,15 +469,14 @@ class MobileEditorMap extends React.Component {
 			ref: this.setMobileEditorMapRef,
 			formContext: this.props.formContext,
 			panel: {
-				panelTextContent: "Raahaa pylpyrää tai klikkaa karttaa valitaksesi sijainnin. Sivulla olevilla napeilla voit etsiä sijainnin tai zoomata karttaa."
+				panelTextContent: this.props.formContext.translations.MobileMapInstructions
 			}
 		};
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.ChooseThisLocation}</Button>
-					<Button block onClick={this.onClose}>{translations.Cancel}</Button>
+					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.state.moved}>{translations.ChooseThisLocation}</Button>
 				</div>
 			</Fullscreen>
 		);
