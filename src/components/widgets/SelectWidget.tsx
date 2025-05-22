@@ -4,7 +4,7 @@ import ReactContext from "../../ReactContext";
 import { getUiOptions, isDescendant, classNames, useBooleanSetter, usePrevious } from "../../utils";
 import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
 import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } from "../../types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 const Spinner = require("react-spinner");
 
@@ -78,18 +78,25 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		onChange,
 		includeEmpty = true
 	} = props;
-	const { theme } = React.useContext(ReactContext);
+	const { theme } = useContext(ReactContext);
 
-	const containerRef = React.useRef<HTMLDivElement>(null);
-	const inputRef = React.useRef<typeof FormControl>(null);
-	const dropdownRef = React.useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<typeof FormControl>(null);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const enumOptions = React.useMemo(() =>
+	const enumOptions = useMemo(() =>
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		getEnumOptions(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
-	const [inputValue, setInputValue] = useState("");
+	const getLabelFromValue = useCallback((value: string | undefined) => 
+		value !== undefined && value !== ""
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			? enumOptions.find(item => item.value === value)!.label
+			: ""
+	, [enumOptions]);
+
+	const [inputValue, setInputValue] = useState(getLabelFromValue(value));
 	const [inputTouched, setInputTouched] = useState(false);
 	const [filterTerm, setFilterTerm] = useState("");
 
@@ -99,11 +106,19 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		setInputTouched(true);
 	}, []);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		inputTouched && setFilterTerm(inputValue);
 	}, [inputTouched, inputValue]);
 
-	const displayedEnums = React.useMemo(() => {
+	// Sync inputValue if value changes.
+	useEffect(() => {
+		if (inputTouched) {
+			return;
+		}
+		setInputValue(getLabelFromValue(value));
+	}, [inputTouched, value, enumOptions, getLabelFromValue]);
+
+	const displayedEnums = useMemo(() => {
 		return filterTerm !== ""
 			? enumOptions.filter(
 				({ label }) => label.toLowerCase().match(filterTerm.toLowerCase())
@@ -134,7 +149,6 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
-		setInputValue(item.label);
 		setInputTouched(false);
 		setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
 		hide();
@@ -214,10 +228,6 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		onChange,
 		getEnumOptionsAsync
 	} = props;
-	// const enumOptions = React.useMemo(() =>
-	// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	// 	getEnumOptions(options.enumOptions!, uiSchema, false),
-	// [options.enumOptions, uiSchema]);
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -267,14 +277,12 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 
 	const onItemSelected = useCallback((item: EnumOptionsType<string>) => {
 		onChange([...(value || []), item.value]);
-		setInputValue("");
 		inputRef.current?.focus();
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 
 	const onItemSelectedByBlur = useCallback((item: EnumOptionsType<string>) => {
 		onChange([...(value || []), item.value]);
-		setInputValue("");
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 

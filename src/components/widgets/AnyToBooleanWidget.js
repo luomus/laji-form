@@ -7,8 +7,8 @@ export const AnyToBoolean = (props) => <_AnyToBoolean {...props} />;
 const _AnyToBoolean = (props) => {
 	const {widget} = props;
 	const options = getUiOptions(widget ? props : props.uiSchema);
-	const {trueValue, falseValue, allowUndefined = true} = options;
-	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
+	const {trueValue, falseValue} = options;
+	const schema = {...props.schema, type: "boolean"};
 	const id = widget ? props.id : props.idSchema.$id;
 	const value = props.formContext.utils.formDataEquals(props[widget ? "value": "formData"], trueValue, id)
 		? true
