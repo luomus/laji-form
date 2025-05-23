@@ -65,7 +65,10 @@ export default class MapField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {located: false};
+		this.state = {
+			located: false,
+			moved: false
+		};
 		this.props.formContext.services.settings.bind(this, props);
 	}
 
@@ -221,6 +224,8 @@ export default class MapField extends React.Component {
 							map={this.map}
 							formContext={this.props.formContext}
 							geometry={this.getMobileGeometry()}
+							moved={this.state.moved}
+							setMoved={this.setMoved}
 						/>
 				}
 			</div>
@@ -256,6 +261,10 @@ export default class MapField extends React.Component {
 		} else {
 			return undefined;
 		}
+	}
+
+	setMoved = (moved) => {
+		this.setState({ moved });
 	}
 
 	onOptionsChanged = (options) => {
@@ -368,8 +377,7 @@ class MobileEditorMap extends React.Component {
 		const { geometry } = this.props;
 
 		this.state = {
-			geometry: [{ geoData: geometry}],
-			moved: false
+			geometry: [{ geoData: geometry}]
 		};
 	}
 
@@ -394,7 +402,7 @@ class MobileEditorMap extends React.Component {
 			this.setMarkerLatLng({lng, lat});
 			this.map.map.setView({lng, lat}, 12);
 			this.marker.on("dragend", () => {
-				if (!this.state.moved) { this.setState({ moved: true }); }
+				if (!this.props.moved) { this.props.setMoved(true); }
 			});
 		}
 
@@ -425,7 +433,7 @@ class MobileEditorMap extends React.Component {
 	}
 
 	handleMapClick = (e) => {
-		if (!this.state.moved) { this.setState({moved: true}); }
+		if (!this.props.moved) { this.props.setMoved(true); }
 		this.setMarkerLatLng(e.latlng);
 	};
 
@@ -477,7 +485,7 @@ class MobileEditorMap extends React.Component {
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.state.moved}>{translations.ChooseThisLocation}</Button>
+					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
 				</div>
 			</Fullscreen>
 		);
