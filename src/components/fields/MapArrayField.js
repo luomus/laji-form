@@ -2043,7 +2043,11 @@ export class Map extends React.Component {
 			default:
 				if (!equals(mapOptions[key], prevMapOptions[key])) {
 					this.map.setOption(key, mapOptions[key]);
-					if (this.props.singleton && mapOptions.zoomToData && key === "data") {
+					if (
+						this.props.syncZoomToDataOnDataChangeOnSingleton
+						&& this.props.singleton
+						&& mapOptions.zoomToData && key === "data"
+					) {
 						this.map.zoomToData(mapOptions.zoomToData);
 					}
 				}
