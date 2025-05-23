@@ -1,0 +1,4705 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "datatype": {
+        "type": "string",
+        "title": "Datatype"
+      },
+      "owner": {
+        "type": "string",
+        "title": "Owner of record"
+      },
+      "collectionID": {
+        "type": "string",
+        "title": "Collection"
+      },
+      "datasetID": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Tags"
+      },
+      "primaryDataLocation": {
+        "type": "string",
+        "title": "Primary data location"
+      },
+      "namespaceID": {
+        "type": "string",
+        "title": "Namespace ID"
+      },
+      "objectID": {
+        "type": "string",
+        "title": "Object ID"
+      },
+      "status": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "",
+            "title": ""
+          },
+          {
+            "const": "MY.statusOk",
+            "title": "Ok"
+          },
+          {
+            "const": "MY.statusMissing",
+            "title": "Missing (but could still be recovered)"
+          },
+          {
+            "const": "MY.statusUnrecoverable",
+            "title": "Unrecoverable (location known, bet can't get it back)"
+          },
+          {
+            "const": "MY.statusLost",
+            "title": "Lost (all hope lost)"
+          },
+          {
+            "const": "MY.statusDonated",
+            "title": "Donated"
+          },
+          {
+            "const": "MY.statusDeposited",
+            "title": "Deposited elsewhere"
+          },
+          {
+            "const": "MY.statusDeaccessioned",
+            "title": "Deaccessioned (thrown away)"
+          },
+          {
+            "const": "MY.statusDiscarded",
+            "title": "Discarded (not incorporated into collection)"
+          },
+          {
+            "const": "MY.statusSpent",
+            "title": "Spent (used as tissue samples)"
+          },
+          {
+            "const": "MY.statusDestroyed",
+            "title": "Destroyed (e.g. eaten by pests)"
+          },
+          {
+            "const": "MY.statusUndefined",
+            "title": "Undefined"
+          },
+          {
+            "const": "MY.statusAxenic",
+            "title": "Axenic"
+          },
+          {
+            "const": "MY.statusNonAxenic",
+            "title": "Non-axenic"
+          },
+          {
+            "const": "MY.statusNotAvailable",
+            "title": "Not available"
+          },
+          {
+            "const": "MY.statusDead",
+            "title": "Not available (dead)"
+          },
+          {
+            "const": "MY.statusNoVoucherRetained",
+            "title": "No voucher retained"
+          }
+        ],
+        "title": "Status"
+      },
+      "condition": {
+        "type": "string",
+        "title": "Condition (defects)"
+      },
+      "originalSpecimenID": {
+        "type": "string",
+        "title": "Original catalogue number"
+      },
+      "IPEN": {
+        "type": "string",
+        "title": "IPEN"
+      },
+      "voucherSpecimenID": {
+        "type": "string",
+        "title": "Voucher specimen ID"
+      },
+      "plannedLocation": {
+        "type": "string",
+        "title": "Planned location"
+      },
+      "gatherings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "leg": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "title": "Leg"
+            },
+            "legVerbatim": {
+              "type": "string",
+              "title": "Verbatim leg from orginal source"
+            },
+            "dateBegin": {
+              "type": "string",
+              "title": "Start date"
+            },
+            "dateEnd": {
+              "type": "string",
+              "title": "End date"
+            },
+            "dateVerbatim": {
+              "type": "string",
+              "title": "Verbatim date from original source"
+            },
+            "substrate": {
+              "type": "string",
+              "title": "Substrate"
+            },
+            "samplingMethod": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "",
+                  "title": ""
+                },
+                {
+                  "const": "MY.samplingMethodCarnet",
+                  "title": "Car net"
+                },
+                {
+                  "const": "MY.samplingMethodFeromonetrap",
+                  "title": "Pheromone trap"
+                },
+                {
+                  "const": "MY.samplingMethodNet",
+                  "title": "Net (haavi)"
+                },
+                {
+                  "const": "MY.samplingMethodDrag",
+                  "title": "Drag (hara)"
+                },
+                {
+                  "const": "MY.samplingMethodWindowtrap",
+                  "title": "Window trap"
+                },
+                {
+                  "const": "MY.samplingMethodDigging",
+                  "title": "Digging"
+                },
+                {
+                  "const": "MY.samplingMethodFishNet",
+                  "title": "Fish net"
+                },
+                {
+                  "const": "MY.samplingMethodHand",
+                  "title": "Collecting by hand"
+                },
+                {
+                  "const": "MY.samplingMethodReared",
+                  "title": "Reared"
+                },
+                {
+                  "const": "MY.samplingMethodEpupa",
+                  "title": "Reared, e pupa"
+                },
+                {
+                  "const": "MY.samplingMethodExovo",
+                  "title": "Reared, ex ovo"
+                },
+                {
+                  "const": "MY.samplingMethodElarva",
+                  "title": "Reared, e larva"
+                },
+                {
+                  "const": "MY.samplingMethodFishTrap",
+                  "title": "Fish trap"
+                },
+                {
+                  "const": "MY.samplingMethodYellowWindowTrap",
+                  "title": "Yellow-window trap"
+                },
+                {
+                  "const": "MY.samplingMethodYellowpan",
+                  "title": "Yellowpan"
+                },
+                {
+                  "const": "MY.samplingMethodTriangleDrag",
+                  "title": "Triangle drag (kolmiohara)"
+                },
+                {
+                  "const": "MY.samplingMethodPitfall",
+                  "title": "Pitfall"
+                },
+                {
+                  "const": "MY.samplingMethodEclectortrap",
+                  "title": "Eclector (emergence) trap"
+                },
+                {
+                  "const": "MY.samplingMethodDungTrap",
+                  "title": "Dung Trap"
+                },
+                {
+                  "const": "MY.samplingMethodBoard",
+                  "title": "Board Shelter"
+                },
+                {
+                  "const": "MY.samplingMethodYellowtrap",
+                  "title": "Glue trap"
+                },
+                {
+                  "const": "MY.samplingMethodMistnet",
+                  "title": "Mistnet"
+                },
+                {
+                  "const": "MY.samplingMethodSweeping",
+                  "title": "Sweeping"
+                },
+                {
+                  "const": "MY.samplingMethodSoilsample",
+                  "title": "Soil sample"
+                },
+                {
+                  "const": "MY.samplingMethodWashing",
+                  "title": "Washing"
+                },
+                {
+                  "const": "MY.samplingMethodMalaise",
+                  "title": "Malaise"
+                },
+                {
+                  "const": "MY.samplingMethodPantrap",
+                  "title": "Pan trap"
+                },
+                {
+                  "const": "MY.samplingMethodSeine",
+                  "title": "Seine"
+                },
+                {
+                  "const": "MY.samplingMethodAngleFishing",
+                  "title": "Angling (fishing with a hook)"
+                },
+                {
+                  "const": "MY.samplingMethodTrampling",
+                  "title": "Trampling"
+                },
+                {
+                  "const": "MY.samplingMethodBeamTrawl",
+                  "title": "Beam trawl"
+                },
+                {
+                  "const": "MY.samplingMethodTrap",
+                  "title": "Trap (generic)"
+                },
+                {
+                  "const": "MY.samplingMethodDropping",
+                  "title": "Dropping (brushing or shaking)"
+                },
+                {
+                  "const": "MY.samplingMethodTrunkWindowTrap",
+                  "title": "Trunk Window Trap"
+                },
+                {
+                  "const": "MY.samplingMethodElectrofishing",
+                  "title": "Electrofishing"
+                },
+                {
+                  "const": "MY.samplingMethodSifting",
+                  "title": "Sifting (seulos)"
+                },
+                {
+                  "const": "MY.samplingMethodDiverInsectTrap",
+                  "title": "Diver Insect Trap"
+                },
+                {
+                  "const": "MY.samplingMethodDiving",
+                  "title": "Diving"
+                },
+                {
+                  "const": "MY.samplingMethodBait",
+                  "title": "Bait (any kind, without trap)"
+                },
+                {
+                  "const": "MY.samplingMethodBaittrap",
+                  "title": "Bait trap"
+                },
+                {
+                  "const": "MY.samplingMethodTrawling",
+                  "title": "Trawling (troolaus)"
+                },
+                {
+                  "const": "MY.samplingMethodLight",
+                  "title": "Light (lux)"
+                },
+                {
+                  "const": "MY.samplingMethodLightTrap",
+                  "title": "Light trap"
+                },
+                {
+                  "const": "MY.samplingMethodWaterBucket",
+                  "title": "Water bucket"
+                },
+                {
+                  "const": "MY.samplingMethodAquaticNet",
+                  "title": "Aquatic net"
+                },
+                {
+                  "const": "MY.samplingMethodAquaticEmergenceTrap",
+                  "title": "Aquatic Emergence Trap"
+                },
+                {
+                  "const": "MY.samplingMethodWaterSieve",
+                  "title": "Water sieve"
+                },
+                {
+                  "const": "MY.samplingMethodOther",
+                  "title": "Other"
+                }
+              ],
+              "title": "Sampling method"
+            },
+            "coordinatesVerbatim": {
+              "type": "string",
+              "title": "Verbatim coordinates from label or other original source"
+            },
+            "latitude": {
+              "type": "string",
+              "title": "Lat (N)"
+            },
+            "longitude": {
+              "type": "string",
+              "title": "Lon (E)"
+            },
+            "coordinateSystem": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "",
+                  "title": ""
+                },
+                {
+                  "const": "MY.coordinateSystemYkj",
+                  "title": "Uniform grid (YKJ)"
+                },
+                {
+                  "const": "MY.coordinateSystemWgs84",
+                  "title": "WGS84 and ETRS89, decimal degrees"
+                },
+                {
+                  "const": "MY.coordinateSystemWgs84dms",
+                  "title": "WGS84 or ETRS89, degrees minutes (seconds)"
+                },
+                {
+                  "const": "MY.coordinateSystemKkj",
+                  "title": "KKJ astekoord. = Finnish KKJ decimal (NOT PREFERRED)"
+                },
+                {
+                  "const": "MY.coordinateSystemEtrs-tm35fin",
+                  "title": "ETRS-TM35FIN grid"
+                },
+                {
+                  "const": "MY.coordinateSystemDd",
+                  "title": "Decimal degrees with unknown system (NOT PREFERRED)"
+                },
+                {
+                  "const": "MY.coordinateSystemDms",
+                  "title": "Degrees minutes seconds, with unknown system (NOT PREF.)"
+                }
+              ],
+              "title": "Coordinate system"
+            },
+            "coordinateSource": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "",
+                  "title": ""
+                },
+                {
+                  "const": "MY.coordinateSourceGps",
+                  "title": "GPS"
+                },
+                {
+                  "const": "MY.coordinateSourcePeruskartta",
+                  "title": "Peruskartta paper map"
+                },
+                {
+                  "const": "MY.coordinateSourcePapermap",
+                  "title": "Other paper map"
+                },
+                {
+                  "const": "MY.coordinateSourceKotkamap",
+                  "title": "Kotka map tool"
+                },
+                {
+                  "const": "MY.coordinateSourceKarttapaikka",
+                  "title": "Karttapaikka"
+                },
+                {
+                  "const": "MY.coordinateSourceRetkikartta",
+                  "title": "Retkikartta.fi"
+                },
+                {
+                  "const": "MY.coordinateSourceGoogle",
+                  "title": "Google Earth/Maps"
+                },
+                {
+                  "const": "MY.coordinateSourceLajifi",
+                  "title": "Laji.fi map"
+                },
+                {
+                  "const": "MY.coordinateSourceOther",
+                  "title": "Other"
+                },
+                {
+                  "const": "MY.coordinateSourceUnknown",
+                  "title": "Unknown"
+                }
+              ],
+              "title": "Coord source"
+            },
+            "georeferenceSource": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "",
+                  "title": ""
+                },
+                {
+                  "const": "MY.georeferenceSourceKotka",
+                  "title": "Kotka maps"
+                },
+                {
+                  "const": "MY.georeferenceSourceKarttapaikka",
+                  "title": "Karttapaikka (MML)"
+                },
+                {
+                  "const": "MY.georeferenceSourcePaikkatietoikkuna",
+                  "title": "Paikkatietoikkuna (MML)"
+                },
+                {
+                  "const": "MY.georeferenceSourceKarjalankartat",
+                  "title": "Karjalankartat (MML)"
+                },
+                {
+                  "const": "MY.georeferenceSourceRetkikartta",
+                  "title": "Retkikartta.fi (Metsähallitus)"
+                },
+                {
+                  "const": "MY.georeferenceSourceGoogle",
+                  "title": "Google Earth/Maps"
+                },
+                {
+                  "const": "MY.georeferenceSourcePeruskartta",
+                  "title": "Peruskartta paper map (MML)"
+                },
+                {
+                  "const": "MY.georeferenceSourcePapermap",
+                  "title": "Other paper map"
+                },
+                {
+                  "const": "MY.georeferenceSourceOtherpaper",
+                  "title": "Other paper publication"
+                },
+                {
+                  "const": "MY.georeferenceSourceOtherweb",
+                  "title": "Other website"
+                },
+                {
+                  "const": "MY.georeferenceSourceCatalogue",
+                  "title": "Catalogue"
+                },
+                {
+                  "const": "MY.georeferenceSourceBiogeomancer",
+                  "title": "Biogeomancer"
+                },
+                {
+                  "const": "MY.georeferenceSourceGeolocate",
+                  "title": "Geolocate"
+                },
+                {
+                  "const": "MY.georeferenceSourceOther",
+                  "title": "Other"
+                },
+                {
+                  "const": "MY.georeferenceSourceUnknown",
+                  "title": "Unknown (but georeferencing was done)"
+                }
+              ],
+              "title": "Georeferencing source"
+            },
+            "coordinateRadius": {
+              "type": "string",
+              "title": "Error radius in meters"
+            },
+            "alt": {
+              "type": "string",
+              "title": "Alt in meters"
+            },
+            "depth": {
+              "type": "string",
+              "title": "Depth in meters"
+            },
+            "AFEQuadrat": {
+              "type": "string",
+              "title": "AFE grid"
+            },
+            "UTMQuadrat": {
+              "type": "string",
+              "title": "UTM grid"
+            },
+            "coordinateNotes": {
+              "type": "string",
+              "title": "Coordinate notes"
+            },
+            "localityVerbatim": {
+              "type": "string",
+              "title": "Verbatim locality from label or other original source"
+            },
+            "country": {
+              "type": "string",
+              "title": "Country"
+            },
+            "higherGeography": {
+              "type": "string",
+              "title": "Higher geography"
+            },
+            "biologicalProvince": {
+              "type": "string",
+              "title": "Biogeographical province"
+            },
+            "forestVegetationZone": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "",
+                  "title": ""
+                },
+                {
+                  "const": "MY.forestVegetationZone1a",
+                  "title": "1a Hemiboreal, Åland"
+                },
+                {
+                  "const": "MY.forestVegetationZone1b",
+                  "title": "1b Hemiboreal, Oak zone"
+                },
+                {
+                  "const": "MY.forestVegetationZone2a",
+                  "title": "2a Southern boreal, Southwestern Finland and Southern Ostrobothnia"
+                },
+                {
+                  "const": "MY.forestVegetationZone2b",
+                  "title": "2b Southern boreal, Lake district"
+                },
+                {
+                  "const": "MY.forestVegetationZone3a",
+                  "title": "3a Middle boreal, Ostrobothnia"
+                },
+                {
+                  "const": "MY.forestVegetationZone3b",
+                  "title": "3b Middle boreal, Northern Carelia - Kainuu"
+                },
+                {
+                  "const": "MY.forestVegetationZone3c",
+                  "title": "3c Middle boreal, Southwestern Finland"
+                },
+                {
+                  "const": "MY.forestVegetationZone4a",
+                  "title": "4a Nothern boreal, Kuusamo district"
+                },
+                {
+                  "const": "MY.forestVegetationZone4b",
+                  "title": "4b Northern boreal, North Ostrobothnia"
+                },
+                {
+                  "const": "MY.forestVegetationZone4c",
+                  "title": "4c Northern boreal, Forest Lapland"
+                },
+                {
+                  "const": "MY.forestVegetationZone4d",
+                  "title": "4d Northern boreal, Fjeld Lapland"
+                }
+              ],
+              "title": "Forest vegetation zone"
+            },
+            "administrativeProvince": {
+              "type": "string",
+              "title": "Administrative province"
+            },
+            "county": {
+              "type": "string",
+              "title": "County"
+            },
+            "municipality": {
+              "type": "string",
+              "title": "Municipality"
+            },
+            "locality": {
+              "type": "string",
+              "title": "Locality names"
+            },
+            "localityID": {
+              "type": "string",
+              "title": "Locality ID"
+            },
+            "localityDescription": {
+              "type": "string",
+              "title": "Locality description"
+            },
+            "habitatDescription": {
+              "type": "string",
+              "title": "Habitat description"
+            },
+            "habitatClassification": {
+              "type": "string",
+              "title": "Habitat classification"
+            },
+            "associatedObservationTaxa": {
+              "type": "string",
+              "title": "Associated observation taxa"
+            },
+            "associatedSpecimenTaxa": {
+              "type": "string",
+              "title": "Associated specimen taxa"
+            },
+            "collectingEventName": {
+              "type": "string",
+              "title": "Collecting event name"
+            },
+            "notes": {
+              "type": "string",
+              "title": "Notes"
+            },
+            "numberOfSampledIndividuals": {
+              "type": "string",
+              "title": "Number of sampled individuals"
+            },
+            "percentageGivingSeeds": {
+              "type": "integer",
+              "title": "% of plant population giving seeds"
+            },
+            "samplingAreaSizeInSquareMeters": {
+              "type": "number",
+              "title": "Size of sampling area (m2)"
+            },
+            "units": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "primarySpecimen": {
+                    "type": "boolean",
+                    "title": "Primary specimen"
+                  },
+                  "recordBasis": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.recordBasisPreservedSpecimen",
+                        "title": "Preserved specimen"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservation",
+                        "title": "Observation"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationSeen",
+                        "title": "Seen"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationHeard",
+                        "title": "Heard"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationHandled",
+                        "title": "Handled (catched, not preserved)"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationPhoto",
+                        "title": "Photographed"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationAudio",
+                        "title": "Audio recording"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationVideo",
+                        "title": "Video recording"
+                      },
+                      {
+                        "const": "MY.recordBasisHumanObservationIndirect",
+                        "title": "Indirect observation (footprints, feces, etc)"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservation",
+                        "title": "Machine observation"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationPhoto",
+                        "title": "Machine observation photo"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationVideo",
+                        "title": "Machine observation video"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationAudio",
+                        "title": "Machine observation audio"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationGeologger",
+                        "title": "Geologger"
+                      },
+                      {
+                        "const": "MY.recordBasisMachineObservationSatelliteTransmitter",
+                        "title": "Satellite positioning"
+                      },
+                      {
+                        "const": "MY.recordBasisFossilSpecimen",
+                        "title": "Fossil"
+                      },
+                      {
+                        "const": "MY.recordBasisSubfossilSpecimen",
+                        "title": "Subfossil"
+                      },
+                      {
+                        "const": "MY.recordBasisSubfossilSpecimenAmberInclusion",
+                        "title": "Amber inclusion"
+                      },
+                      {
+                        "const": "MY.recordBasisMaterialSample",
+                        "title": "Material sample"
+                      },
+                      {
+                        "const": "MY.recordBasisMaterialSampleAir",
+                        "title": "Material sample, air"
+                      },
+                      {
+                        "const": "MY.recordBasisMaterialSampleSoil",
+                        "title": "Material sample, soil"
+                      },
+                      {
+                        "const": "MY.recordBasisMaterialSampleWater",
+                        "title": "Material sample, water"
+                      },
+                      {
+                        "const": "MY.recordBasisMicrobialSpecimen",
+                        "title": "Microbial specimen"
+                      },
+                      {
+                        "const": "MY.recordBasisLivingSpecimen",
+                        "title": "Living specimen"
+                      },
+                      {
+                        "const": "MY.recordBasisLiterature",
+                        "title": "Literature"
+                      }
+                    ],
+                    "title": "Record type"
+                  },
+                  "recordParts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "oneOf": [
+                        {
+                          "const": "",
+                          "title": ""
+                        },
+                        {
+                          "const": "MY.recordPartsBones",
+                          "title": "bones"
+                        },
+                        {
+                          "const": "MY.recordPartsAntler",
+                          "title": "antler(s)"
+                        },
+                        {
+                          "const": "MY.recordPartsHead",
+                          "title": "head"
+                        },
+                        {
+                          "const": "MY.recordPartsSkull",
+                          "title": "skull"
+                        },
+                        {
+                          "const": "MY.recordPartsSkin",
+                          "title": "skin"
+                        },
+                        {
+                          "const": "MY.recordPartsWing",
+                          "title": "wing"
+                        },
+                        {
+                          "const": "MY.recordPartsTail",
+                          "title": "tail"
+                        },
+                        {
+                          "const": "MY.recordPartsTissue",
+                          "title": "tissue"
+                        },
+                        {
+                          "const": "MY.recordPartsFeather",
+                          "title": "feather"
+                        },
+                        {
+                          "const": "MY.recordPartsEgg",
+                          "title": "egg"
+                        },
+                        {
+                          "const": "MY.recordPartsIntestine",
+                          "title": "intestine(s)"
+                        },
+                        {
+                          "const": "MY.recordPartsGonad",
+                          "title": "gonad"
+                        },
+                        {
+                          "const": "MY.recordPartsSeed",
+                          "title": "seed or spore"
+                        },
+                        {
+                          "const": "MY.recordPartsNest",
+                          "title": "nest"
+                        },
+                        {
+                          "const": "MY.recordPartsFaeces",
+                          "title": "faeces"
+                        },
+                        {
+                          "const": "MY.recordPartsFeedingMarks",
+                          "title": "feeding marks"
+                        },
+                        {
+                          "const": "MY.recordPartsTracks",
+                          "title": "tracks"
+                        },
+                        {
+                          "const": "MY.recordPartsScale",
+                          "title": "scale"
+                        },
+                        {
+                          "const": "MY.recordPartsFin",
+                          "title": "fin"
+                        },
+                        {
+                          "const": "MY.recordPartsFull",
+                          "title": "entire organism"
+                        },
+                        {
+                          "const": "MY.recordPartsPart",
+                          "title": "other part of organism"
+                        },
+                        {
+                          "const": "MY.recordPartsActiveCulture",
+                          "title": "active culture"
+                        },
+                        {
+                          "const": "MY.recordPartsCutting",
+                          "title": "cutting"
+                        },
+                        {
+                          "const": "MY.recordPartsVegetativePart",
+                          "title": "vegetative part"
+                        },
+                        {
+                          "const": "MY.recordPartsFreezeDried",
+                          "title": "freeze-dried"
+                        },
+                        {
+                          "const": "MY.recordPartsDryIce",
+                          "title": "dry ice"
+                        },
+                        {
+                          "const": "MY.recordPartsDNA",
+                          "title": "DNA"
+                        },
+                        {
+                          "const": "MY.recordPartsShell",
+                          "title": "shell"
+                        },
+                        {
+                          "const": "MY.recordPartsWholePlant",
+                          "title": "whole plant"
+                        },
+                        {
+                          "const": "MY.recordPartsTissueCulture",
+                          "title": "tissue culture"
+                        },
+                        {
+                          "const": "MY.recordPartsMount",
+                          "title": "mount"
+                        },
+                        {
+                          "const": "My.recordPartsSkullAndBones",
+                          "title": "skull and bones"
+                        }
+                      ]
+                    },
+                    "uniqueItems": true,
+                    "title": "Record parts"
+                  },
+                  "provenance": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.provenanceUnknown",
+                        "title": "? (Unknown)"
+                      },
+                      {
+                        "const": "MY.provenanceCultivated",
+                        "title": "G (Cultivated)"
+                      },
+                      {
+                        "const": "MY.provenanceCultivatedUnsure",
+                        "title": "G? (Cultivated, unsure)"
+                      },
+                      {
+                        "const": "MY.provenanceCultivatedPropagatedFromWildSource",
+                        "title": "GW (cultivated, from seeds of wild source)"
+                      },
+                      {
+                        "const": "MY.provenanceWildSource",
+                        "title": "W (Wild source)"
+                      },
+                      {
+                        "const": "MY.provenanceWildSourceUnsure",
+                        "title": "W? (Wild source, unsure)"
+                      },
+                      {
+                        "const": "MY.provenanceEscapedCultivated",
+                        "title": "WG (escaped cultivated plant)"
+                      },
+                      {
+                        "const": "MY.provenancePropagule",
+                        "title": "Z (propagule from wild source in cultivation)"
+                      }
+                    ],
+                    "title": "Provenance"
+                  },
+                  "plantStatusCode": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.plantStatusCodeL",
+                        "title": "L - wild"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeA",
+                        "title": "A - spontaneous"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeAV",
+                        "title": "AV - spontaneous, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeAOV",
+                        "title": "AOV - spontaneous, old, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeAN",
+                        "title": "AN - spontaneuous, new"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeANV",
+                        "title": "ANV - spontaneous, new, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeANS",
+                        "title": "ANS - spontaneous, new, ephemeral"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeT",
+                        "title": "T - alien"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTV",
+                        "title": "TV - alien, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTOV",
+                        "title": "TOV - alien, old, resident (archaeotype)"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTNV",
+                        "title": "TNV - alien, new, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTNS",
+                        "title": "TNS - alien, new, ephemeral"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeV",
+                        "title": "V - resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeOV",
+                        "title": "OV - old, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeN",
+                        "title": "N - new"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeNV",
+                        "title": "NV - new, resident"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeNS",
+                        "title": "NS - new, ephemeral"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeE",
+                        "title": "E - spreading in the wild, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTE",
+                        "title": "TE - alien, spreading in the wild, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTVE",
+                        "title": "TVE - alien, resident, spreading in the wild, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTOVE",
+                        "title": "TOVE - alien, old, resident (archaeotype), cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTNVE",
+                        "title": "TNVE - alien, new, resident, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTNSE",
+                        "title": "TNSE - alien, new, ephemeral, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTN",
+                        "title": "TN - alien, new"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeTNE",
+                        "title": "TNE - alien, new, cultivated origin"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeR",
+                        "title": "R - relict of cultivation"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeC",
+                        "title": "C - only as cultivated"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeH",
+                        "title": "H - short distance escape from cultivation (inside a garden or similar)"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeG",
+                        "title": "G - greenhouse plant"
+                      },
+                      {
+                        "const": "MY.plantStatusCodeF",
+                        "title": "F - subfossil, fossil"
+                      }
+                    ],
+                    "title": "Plant status code"
+                  },
+                  "lifeStage": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.lifeStageAdult",
+                        "title": "adult"
+                      },
+                      {
+                        "const": "MY.lifeStageNymph",
+                        "title": "nymph"
+                      },
+                      {
+                        "const": "MY.lifeStageLarva",
+                        "title": "larva"
+                      },
+                      {
+                        "const": "MY.lifeStageEgg",
+                        "title": "egg"
+                      },
+                      {
+                        "const": "MY.lifeStagePupa",
+                        "title": "pupa"
+                      },
+                      {
+                        "const": "MY.lifeStageJuvenile",
+                        "title": "juvenile"
+                      },
+                      {
+                        "const": "MY.lifeStageSubimago",
+                        "title": "subimago"
+                      },
+                      {
+                        "const": "MY.lifeStageImmature",
+                        "title": "immature"
+                      },
+                      {
+                        "const": "MY.lifeStageFertile",
+                        "title": "fertile"
+                      },
+                      {
+                        "const": "MY.lifeStageSterile",
+                        "title": "sterile"
+                      },
+                      {
+                        "const": "MY.lifeStageTadpole",
+                        "title": "tadpole"
+                      },
+                      {
+                        "const": "MY.lifeStageEmbryo",
+                        "title": "embryo or fetus"
+                      },
+                      {
+                        "const": "MY.lifeStageSubadult",
+                        "title": "subadult"
+                      },
+                      {
+                        "const": "MY.lifeStageMature",
+                        "title": "mature"
+                      },
+                      {
+                        "const": "MY.lifeStagePullus",
+                        "title": "pullus"
+                      },
+                      {
+                        "const": "MY.lifeStageHatchedEgg",
+                        "title": "hatched egg"
+                      },
+                      {
+                        "const": "MY.lifeStageHatchedPupa",
+                        "title": "hatched pupa"
+                      },
+                      {
+                        "const": "MY.lifeStageGall",
+                        "title": "gall"
+                      },
+                      {
+                        "const": "MY.lifeStageMarks",
+                        "title": "marks (feeding marks etc.)"
+                      },
+                      {
+                        "const": "MY.lifeStageTriungulin",
+                        "title": "triungulin"
+                      },
+                      {
+                        "const": "MY.lifeStageExuvia",
+                        "title": "exuvia"
+                      }
+                    ],
+                    "title": "Life stage"
+                  },
+                  "lifeStageDescription": {
+                    "type": "string",
+                    "title": "Life stage description"
+                  },
+                  "causeOfDeath": {
+                    "type": "string",
+                    "title": "Cause of Death"
+                  },
+                  "sex": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.sexM",
+                        "title": "M - Male"
+                      },
+                      {
+                        "const": "MY.sexF",
+                        "title": "F - Female"
+                      },
+                      {
+                        "const": "MY.sexW",
+                        "title": "W - Worker"
+                      },
+                      {
+                        "const": "MY.sexU",
+                        "title": "U - Unknown"
+                      },
+                      {
+                        "const": "MY.sexN",
+                        "title": "N - Not applicable"
+                      },
+                      {
+                        "const": "MY.sexX",
+                        "title": "X - Gynandromorph"
+                      },
+                      {
+                        "const": "MY.sexE",
+                        "title": "E - multiple"
+                      },
+                      {
+                        "const": "MY.sexC",
+                        "title": "C - Conflicting"
+                      }
+                    ],
+                    "title": "Sex"
+                  },
+                  "sexNotes": {
+                    "type": "string",
+                    "title": "Sex notes"
+                  },
+                  "age": {
+                    "type": "string",
+                    "title": "Age"
+                  },
+                  "ageNotes": {
+                    "type": "string",
+                    "title": "Age notes"
+                  },
+                  "count": {
+                    "type": "string",
+                    "title": "Count"
+                  },
+                  "populationAbundance": {
+                    "type": "string",
+                    "title": "Abundance in the field"
+                  },
+                  "DBH": {
+                    "type": "string",
+                    "title": "DBH in centimeters"
+                  },
+                  "decayStage": {
+                    "type": "string",
+                    "title": "Decay stage"
+                  },
+                  "chemistry": {
+                    "type": "string",
+                    "title": "Chemical properties"
+                  },
+                  "microscopy": {
+                    "type": "string",
+                    "title": "Microscopic characters"
+                  },
+                  "macroscopy": {
+                    "type": "string",
+                    "title": "Macroscopic characters"
+                  },
+                  "preparations": {
+                    "type": "string",
+                    "title": "Preparations"
+                  },
+                  "ring": {
+                    "type": "string",
+                    "title": "Ring"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "title": "Notes"
+                  },
+                  "measurement": {
+                    "type": "object",
+                    "properties": {
+                      "beakMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Beak (mm)"
+                      },
+                      "bodyCentimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Body (cm)"
+                      },
+                      "bodyMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Body (mm)"
+                      },
+                      "DNAConcentrationNgPerMicroliter": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "DNA concentration (ng/microliter)"
+                      },
+                      "DNARatioOfAbsorbance260And280": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "DNA purity (ratio of absorbance 260/280 nm)"
+                      },
+                      "DNAVolumeMicroliters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "DNA volume (microliters)"
+                      },
+                      "earLengthMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Ear length (mm)"
+                      },
+                      "embryoCount": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Embryo count"
+                      },
+                      "follicleDiameterMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Follicle diameter (mm)"
+                      },
+                      "footLengthMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Foot length (mm)"
+                      },
+                      "forearmMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Forearm (mm)"
+                      },
+                      "gonadMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Gonad (mm)"
+                      },
+                      "tailCentimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Tail (cm)"
+                      },
+                      "tailMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Tail (mm)"
+                      },
+                      "tarsusLengthMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Tarsus length (mm)"
+                      },
+                      "totalLengthCentimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Length (cm)"
+                      },
+                      "totalLengthMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Length (mm)"
+                      },
+                      "uterineScarCount": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Uterine scar count"
+                      },
+                      "weightGrams": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Weight (g)"
+                      },
+                      "weightKilograms": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Weight (kg)"
+                      },
+                      "wingMaxMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Wing max (mm)"
+                      },
+                      "wingMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Wing (mm)"
+                      },
+                      "wingMinMillimeters": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "title": "Wing min (mm)"
+                      }
+                    },
+                    "required": [],
+                    "title": "Measurements"
+                  },
+                  "identifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxonRank": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MX.superdomain",
+                              "title": "superdomain"
+                            },
+                            {
+                              "const": "MX.domain",
+                              "title": "domain"
+                            },
+                            {
+                              "const": "MX.kingdom",
+                              "title": "kingdom"
+                            },
+                            {
+                              "const": "MX.subkingdom",
+                              "title": "subkingdom"
+                            },
+                            {
+                              "const": "MX.infrakingdom",
+                              "title": "infrakingdom"
+                            },
+                            {
+                              "const": "MX.superphylum",
+                              "title": "superphylum"
+                            },
+                            {
+                              "const": "MX.phylum",
+                              "title": "phylum"
+                            },
+                            {
+                              "const": "MX.subphylum",
+                              "title": "subphylum"
+                            },
+                            {
+                              "const": "MX.infraphylum",
+                              "title": "infraphylum"
+                            },
+                            {
+                              "const": "MX.superdivision",
+                              "title": "superdivision"
+                            },
+                            {
+                              "const": "MX.division",
+                              "title": "division"
+                            },
+                            {
+                              "const": "MX.subdivision",
+                              "title": "subdivision"
+                            },
+                            {
+                              "const": "MX.infradivision",
+                              "title": "infradivision"
+                            },
+                            {
+                              "const": "MX.superclass",
+                              "title": "superclass"
+                            },
+                            {
+                              "const": "MX.class",
+                              "title": "class"
+                            },
+                            {
+                              "const": "MX.subclass",
+                              "title": "subclass"
+                            },
+                            {
+                              "const": "MX.infraclass",
+                              "title": "infraclass"
+                            },
+                            {
+                              "const": "MX.parvclass",
+                              "title": "parvclass"
+                            },
+                            {
+                              "const": "MX.superorder",
+                              "title": "superorder"
+                            },
+                            {
+                              "const": "MX.order",
+                              "title": "order"
+                            },
+                            {
+                              "const": "MX.suborder",
+                              "title": "suborder"
+                            },
+                            {
+                              "const": "MX.infraorder",
+                              "title": "infraorder"
+                            },
+                            {
+                              "const": "MX.parvorder",
+                              "title": "parvorder"
+                            },
+                            {
+                              "const": "MX.superfamily",
+                              "title": "superfamily"
+                            },
+                            {
+                              "const": "MX.family",
+                              "title": "family"
+                            },
+                            {
+                              "const": "MX.subfamily",
+                              "title": "subfamily"
+                            },
+                            {
+                              "const": "MX.tribe",
+                              "title": "tribe"
+                            },
+                            {
+                              "const": "MX.subtribe",
+                              "title": "subtribe"
+                            },
+                            {
+                              "const": "MX.supergenus",
+                              "title": "supergenus"
+                            },
+                            {
+                              "const": "MX.genus",
+                              "title": "genus"
+                            },
+                            {
+                              "const": "MX.nothogenus",
+                              "title": "nothogenus"
+                            },
+                            {
+                              "const": "MX.subgenus",
+                              "title": "subgenus"
+                            },
+                            {
+                              "const": "MX.section",
+                              "title": "section"
+                            },
+                            {
+                              "const": "MX.subsection",
+                              "title": "subsection"
+                            },
+                            {
+                              "const": "MX.series",
+                              "title": "series"
+                            },
+                            {
+                              "const": "MX.subseries",
+                              "title": "subseries"
+                            },
+                            {
+                              "const": "MX.infragenericTaxon",
+                              "title": "infrageneric taxon"
+                            },
+                            {
+                              "const": "MX.aggregate",
+                              "title": "aggregate"
+                            },
+                            {
+                              "const": "MX.speciesAggregate",
+                              "title": "taxon aggregate"
+                            },
+                            {
+                              "const": "MX.species",
+                              "title": "species"
+                            },
+                            {
+                              "const": "MX.nothospecies",
+                              "title": "nothospecies"
+                            },
+                            {
+                              "const": "MX.infraspecificTaxon",
+                              "title": "infraspecific taxon"
+                            },
+                            {
+                              "const": "MX.subspecificAggregate",
+                              "title": "subspecific aggregate"
+                            },
+                            {
+                              "const": "MX.subspecies",
+                              "title": "subspecies"
+                            },
+                            {
+                              "const": "MX.nothosubspecies",
+                              "title": "nothosubspecies"
+                            },
+                            {
+                              "const": "MX.variety",
+                              "title": "variety"
+                            },
+                            {
+                              "const": "MX.subvariety",
+                              "title": "subvariety"
+                            },
+                            {
+                              "const": "MX.form",
+                              "title": "form"
+                            },
+                            {
+                              "const": "MX.subform",
+                              "title": "subform"
+                            },
+                            {
+                              "const": "MX.hybrid",
+                              "title": "hybrid"
+                            },
+                            {
+                              "const": "MX.anamorph",
+                              "title": "anamorph"
+                            },
+                            {
+                              "const": "MX.ecotype",
+                              "title": "ecotype"
+                            },
+                            {
+                              "const": "MX.populationGroup",
+                              "title": "population group"
+                            },
+                            {
+                              "const": "MX.intergenericHybrid",
+                              "title": "intergeneric hybrid"
+                            },
+                            {
+                              "const": "MX.infragenericHybrid",
+                              "title": "infrageneric hybrid"
+                            },
+                            {
+                              "const": "MX.cultivar",
+                              "title": "cultivar"
+                            },
+                            {
+                              "const": "MX.group",
+                              "title": "Group"
+                            },
+                            {
+                              "const": "MX.grex",
+                              "title": "grex"
+                            }
+                          ],
+                          "title": "Taxon rank"
+                        },
+                        "taxon": {
+                          "type": "string",
+                          "title": "Species"
+                        },
+                        "author": {
+                          "type": "string",
+                          "title": "Taxon author"
+                        },
+                        "infraRank": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MY.infraRankSsp",
+                              "title": "ssp."
+                            },
+                            {
+                              "const": "MY.infraRankVar",
+                              "title": "var."
+                            },
+                            {
+                              "const": "MY.infraRankBeta",
+                              "title": "β"
+                            },
+                            {
+                              "const": "MY.infraRankB",
+                              "title": "b."
+                            },
+                            {
+                              "const": "MY.infraRankForma",
+                              "title": "forma"
+                            },
+                            {
+                              "const": "MY.infraRankHybrid",
+                              "title": "hybrid"
+                            },
+                            {
+                              "const": "MY.infraRankAnamorph",
+                              "title": "anamorph"
+                            },
+                            {
+                              "const": "MY.infraRankAggregate",
+                              "title": "aggregate"
+                            },
+                            {
+                              "const": "MY.infraRankAberration",
+                              "title": "Aberration"
+                            },
+                            {
+                              "const": "MY.infraRankCultivar",
+                              "title": "Cultivar (lajike)"
+                            },
+                            {
+                              "const": "MY.infraRankMorpha",
+                              "title": "morpha"
+                            },
+                            {
+                              "const": "MY.infraRankUnknown",
+                              "title": "Unknown"
+                            },
+                            {
+                              "const": "MY.infraRankNothosubspecies",
+                              "title": "Nothosubspecies"
+                            },
+                            {
+                              "const": "MY.infraRankCultivarGroup",
+                              "title": "Cultivar group"
+                            },
+                            {
+                              "const": "MY.infraRankFsp",
+                              "title": "f.sp."
+                            }
+                          ],
+                          "title": "Infra rank"
+                        },
+                        "infraEpithet": {
+                          "type": "string",
+                          "title": "Infra name"
+                        },
+                        "infraAuthor": {
+                          "type": "string",
+                          "title": "Infra author"
+                        },
+                        "taxonVerbatim": {
+                          "type": "string",
+                          "title": "Taxon verbatim"
+                        },
+                        "genusQualifier": {
+                          "type": "string",
+                          "title": "Genus qualifier"
+                        },
+                        "speciesQualifier": {
+                          "type": "string",
+                          "title": "Species qualifier"
+                        },
+                        "det": {
+                          "type": "string",
+                          "title": "Det."
+                        },
+                        "detDate": {
+                          "type": "string",
+                          "title": "Det. date"
+                        },
+                        "taxonID": {
+                          "type": "string",
+                          "title": "Taxon alternative ID"
+                        },
+                        "detVerbatim": {
+                          "type": "string",
+                          "title": "Det verbatim from the label or other original source"
+                        },
+                        "sec": {
+                          "type": "string",
+                          "title": "Taxon concept (sec)"
+                        },
+                        "identificationNotes": {
+                          "type": "string",
+                          "title": "Identification notes"
+                        },
+                        "preferredIdentification": {
+                          "type": "string",
+                          "title": "Preferred identification"
+                        }
+                      },
+                      "required": []
+                    },
+                    "title": "Identification"
+                  },
+                  "typeSpecimens": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "typeStatus": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MY.typeStatusType",
+                              "title": "type"
+                            },
+                            {
+                              "const": "MY.typeStatusHolotype",
+                              "title": "holotype"
+                            },
+                            {
+                              "const": "MY.typeStatusSyntype",
+                              "title": "syntype"
+                            },
+                            {
+                              "const": "MY.typeStatusParatype",
+                              "title": "paratype"
+                            },
+                            {
+                              "const": "MY.typeStatusLectotype",
+                              "title": "lectotype"
+                            },
+                            {
+                              "const": "MY.typeStatusParalectotype",
+                              "title": "paralectotype"
+                            },
+                            {
+                              "const": "MY.typeStatusNeotype",
+                              "title": "neotype"
+                            },
+                            {
+                              "const": "MY.typeStatusAllotype",
+                              "title": "allotype"
+                            },
+                            {
+                              "const": "MY.typeStatusNeoallotype",
+                              "title": "neoallotype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsotype",
+                              "title": "isotype"
+                            },
+                            {
+                              "const": "MY.typeStatusEpitype",
+                              "title": "epitype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsolectotype",
+                              "title": "isolectotype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsoepitype",
+                              "title": "isoepitype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsoneotype",
+                              "title": "isoneotype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsoparatype",
+                              "title": "isoparatype"
+                            },
+                            {
+                              "const": "MY.typeStatusIsosyntype",
+                              "title": "isosyntype"
+                            },
+                            {
+                              "const": "MY.typeStatusOriginalMaterial",
+                              "title": "original material"
+                            },
+                            {
+                              "const": "MY.typeStatusCotype",
+                              "title": "cotype"
+                            },
+                            {
+                              "const": "MY.typeStatusTopotype",
+                              "title": "topotype"
+                            },
+                            {
+                              "const": "MY.typeStatusHomotype",
+                              "title": "homotype"
+                            },
+                            {
+                              "const": "MY.typeStatusNo",
+                              "title": "not a type"
+                            },
+                            {
+                              "const": "MY.typeStatusPossible",
+                              "title": "Possible type, unable to verify"
+                            },
+                            {
+                              "const": "MY.typeStatusObscure",
+                              "title": "Obscure/Enigmatic"
+                            },
+                            {
+                              "const": "MY.typeStatusTypeStrain",
+                              "title": "type strain"
+                            },
+                            {
+                              "const": "MY.typeStatusPathovarReferenceStrain",
+                              "title": "pathovar reference strain"
+                            }
+                          ],
+                          "title": "Type of type"
+                        },
+                        "typeSpecies": {
+                          "type": "string",
+                          "title": "Type name"
+                        },
+                        "typeAuthor": {
+                          "type": "string",
+                          "title": "Type author"
+                        },
+                        "typeSubspecies": {
+                          "type": "string",
+                          "title": "Type ssp name"
+                        },
+                        "typeSubspeciesAuthor": {
+                          "type": "string",
+                          "title": "Type ssp author"
+                        },
+                        "typif": {
+                          "type": "string",
+                          "title": "Typefier"
+                        },
+                        "typifDate": {
+                          "type": "string",
+                          "title": "Typifier date"
+                        },
+                        "typeVerification": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MY.typeVerificationVerified",
+                              "title": "verified"
+                            },
+                            {
+                              "const": "MY.typeVerificationUnverified",
+                              "title": "unverified"
+                            },
+                            {
+                              "const": "MY.typeVerificationProbable",
+                              "title": "probable"
+                            },
+                            {
+                              "const": "MY.typeVerificationDoubtful",
+                              "title": "doubtful"
+                            }
+                          ],
+                          "title": "Type verification"
+                        },
+                        "typeBasionymePubl": {
+                          "type": "string",
+                          "title": "Original description publication"
+                        },
+                        "typePubl": {
+                          "type": "string",
+                          "title": "Type publication"
+                        },
+                        "typeNotes": {
+                          "type": "string",
+                          "title": "Type notes"
+                        },
+                        "typeSeriesID": {
+                          "type": "string",
+                          "title": "Type series ID"
+                        }
+                      },
+                      "required": []
+                    },
+                    "title": "Type identification"
+                  },
+                  "samples": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "specimenID": {
+                          "type": "string",
+                          "title": "Specimen ID"
+                        },
+                        "preparationType": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "MF.preparationTypeSkin",
+                              "title": "Skin"
+                            },
+                            {
+                              "const": "MF.preparationTypeSkeletal",
+                              "title": "Skeletal"
+                            },
+                            {
+                              "const": "MF.preparationTypeMount",
+                              "title": "Mount"
+                            },
+                            {
+                              "const": "MF.preparationTypeTissue",
+                              "title": "Tissue"
+                            },
+                            {
+                              "const": "MF.preparationTypeTissueEcotoxicology",
+                              "title": "Tissue (ecotoxicology)"
+                            },
+                            {
+                              "const": "MF.preparationTypeLiquid",
+                              "title": "Liquid"
+                            },
+                            {
+                              "const": "MF.preparationTypeMicroscopeSlide",
+                              "title": "Microscope slide"
+                            },
+                            {
+                              "const": "MF.preparationTypeDNAExtract",
+                              "title": "DNA extract"
+                            },
+                            {
+                              "const": "MF.preparationTypeEgg",
+                              "title": "Egg"
+                            },
+                            {
+                              "const": "MF.preparationTypeNest",
+                              "title": "Nest"
+                            },
+                            {
+                              "const": "MF.preparationTypeOther",
+                              "title": "Other"
+                            }
+                          ],
+                          "title": "Preparation/sample type"
+                        },
+                        "material": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MF.materialBirdStudySkin",
+                              "title": "Bird study skin"
+                            },
+                            {
+                              "const": "MF.materialWing",
+                              "title": "Wing(s)"
+                            },
+                            {
+                              "const": "MF.materialTail",
+                              "title": "Tail"
+                            },
+                            {
+                              "const": "MF.materialWingAndTail",
+                              "title": "Wing(s) and tail"
+                            },
+                            {
+                              "const": "MF.materialSkull",
+                              "title": "Skull"
+                            },
+                            {
+                              "const": "MF.materialEntireSkeleton",
+                              "title": "Entire skeleton"
+                            },
+                            {
+                              "const": "MF.materialBones",
+                              "title": "Bones"
+                            },
+                            {
+                              "const": "MF.materialSkullAndBones",
+                              "title": "Skull and bones"
+                            },
+                            {
+                              "const": "MF.materialAntlers",
+                              "title": "Antlers"
+                            },
+                            {
+                              "const": "MF.materialHead",
+                              "title": "Head"
+                            },
+                            {
+                              "const": "MF.materialMuscle",
+                              "title": "Muscle"
+                            },
+                            {
+                              "const": "MF.materialLiver",
+                              "title": "Liver"
+                            },
+                            {
+                              "const": "MF.materialLeaf",
+                              "title": "Leaf"
+                            },
+                            {
+                              "const": "MF.materialBlood",
+                              "title": "Blood"
+                            },
+                            {
+                              "const": "MF.materialLeg",
+                              "title": "Leg"
+                            },
+                            {
+                              "const": "MF.materialSkin",
+                              "title": "Skin"
+                            },
+                            {
+                              "const": "MF.materialFeather",
+                              "title": "Feather(s)"
+                            },
+                            {
+                              "const": "MF.materialEgg",
+                              "title": "Egg(s)"
+                            },
+                            {
+                              "const": "MF.materialEggContent",
+                              "title": "Egg contents"
+                            },
+                            {
+                              "const": "MF.materialGenomicDNA",
+                              "title": "Genomic DNA"
+                            },
+                            {
+                              "const": "MF.materialMitochondrialDNA",
+                              "title": "Mitochondrial DNA"
+                            },
+                            {
+                              "const": "MF.materialChloroplastDNA",
+                              "title": "Chloroplast DNA"
+                            },
+                            {
+                              "const": "MF.materialEnvironmentalDNA",
+                              "title": "Environmental DNA"
+                            },
+                            {
+                              "const": "MF.materialTeeth",
+                              "title": "Teeth"
+                            },
+                            {
+                              "const": "MF.materialBodyParts",
+                              "title": "Body parts"
+                            },
+                            {
+                              "const": "MF.materialEntireOrganism",
+                              "title": "Entire organism(s)"
+                            },
+                            {
+                              "const": "MF.materialAppendages",
+                              "title": "Appendages"
+                            },
+                            {
+                              "const": "MF.materialGenitalPreparation",
+                              "title": "Genitalia"
+                            },
+                            {
+                              "const": "MF.materialSection",
+                              "title": "Section"
+                            },
+                            {
+                              "const": "MF.materialChromosomes",
+                              "title": "Chromosomes"
+                            },
+                            {
+                              "const": "MF.materialShell",
+                              "title": "Shell"
+                            },
+                            {
+                              "const": "MF.materialHair",
+                              "title": "Hair"
+                            },
+                            {
+                              "const": "MF.materialClutch",
+                              "title": "Clutch"
+                            },
+                            {
+                              "const": "MF.materialEggshell",
+                              "title": "Eggshell"
+                            },
+                            {
+                              "const": "MF.materialEggshellFragments",
+                              "title": "Eggshell fragments"
+                            },
+                            {
+                              "const": "MF.materialNest",
+                              "title": "Nest"
+                            },
+                            {
+                              "const": "MF.materialNestMaterial",
+                              "title": "Nest material"
+                            },
+                            {
+                              "const": "MF.materialOther",
+                              "title": "Other"
+                            }
+                          ],
+                          "title": "Material"
+                        },
+                        "individualsInPreparation": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MF.individualsInPreparationMultiple",
+                              "title": "Multiple"
+                            },
+                            {
+                              "const": "MF.individualsInPreparationSingle",
+                              "title": "Single"
+                            }
+                          ],
+                          "title": "Single/multiple individual(s)?"
+                        },
+                        "preservation": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "oneOf": [
+                              {
+                                "const": "",
+                                "title": ""
+                              },
+                              {
+                                "const": "MY.preservationPressed",
+                                "title": "Dry and pressed"
+                              },
+                              {
+                                "const": "MY.preservationDry",
+                                "title": "Dry"
+                              },
+                              {
+                                "const": "MY.preservationCriticalPointDrying",
+                                "title": "Critical-point drying"
+                              },
+                              {
+                                "const": "MY.preservationPinned",
+                                "title": "Pinned"
+                              },
+                              {
+                                "const": "MY.preservationGlued",
+                                "title": "Glued"
+                              },
+                              {
+                                "const": "MY.preservationLiquid",
+                                "title": "Liquid (unspecified)"
+                              },
+                              {
+                                "const": "MY.preservationEthanol",
+                                "title": "Ethanol (unknown %)"
+                              },
+                              {
+                                "const": "MY.preservationEthanolPure",
+                                "title": "Ethanol (unknown %) pure"
+                              },
+                              {
+                                "const": "MY.preservationEthanol70",
+                                "title": "Ethanol 70 %"
+                              },
+                              {
+                                "const": "MY.preservationEthanol80",
+                                "title": "Ethanol 80 %"
+                              },
+                              {
+                                "const": "MY.preservationEthanol80Pure",
+                                "title": "Ethanol 80 % pure"
+                              },
+                              {
+                                "const": "MY.preservationEthanol96",
+                                "title": "Ethanol 96 %"
+                              },
+                              {
+                                "const": "MY.preservationEthanolMinus20C",
+                                "title": "Ethanol -20 °C"
+                              },
+                              {
+                                "const": "MY.preservationEthanolDenatured",
+                                "title": "Ethanol denatured"
+                              },
+                              {
+                                "const": "MY.preservationEthanolFormalin",
+                                "title": "Ethanol and formalin"
+                              },
+                              {
+                                "const": "MY.preservationEthanolExFormalin",
+                                "title": "Ethanol ex formalin"
+                              },
+                              {
+                                "const": "MY.preservationFormalin",
+                                "title": "Formalin"
+                              },
+                              {
+                                "const": "MY.preservationBouinSolution",
+                                "title": "Bouin's solution"
+                              },
+                              {
+                                "const": "MY.preservationPampelsFluid",
+                                "title": "Pampel's fluid"
+                              },
+                              {
+                                "const": "MY.preservationGlycerol",
+                                "title": "Glycerol"
+                              },
+                              {
+                                "const": "MY.preservationParaffin",
+                                "title": "Paraffin"
+                              },
+                              {
+                                "const": "MY.preservationMercuricChloride",
+                                "title": "Mercuric chloride"
+                              },
+                              {
+                                "const": "MY.preservationCryopreserved",
+                                "title": "Cryopreserved"
+                              },
+                              {
+                                "const": "MY.preservationFrozen",
+                                "title": "Frozen"
+                              },
+                              {
+                                "const": "MY.preservationFrozenMinus80C",
+                                "title": "Frozen -80 °C"
+                              },
+                              {
+                                "const": "MY.preservationFreezeDried",
+                                "title": "Freeze-dried"
+                              },
+                              {
+                                "const": "MY.preservationGoldPlated",
+                                "title": "Gold-plated"
+                              },
+                              {
+                                "const": "MY.preservationActiveCulture",
+                                "title": "Active culture"
+                              },
+                              {
+                                "const": "MY.preservationLiving",
+                                "title": "Living"
+                              },
+                              {
+                                "const": "MY.preservationSlide",
+                                "title": "Slide"
+                              },
+                              {
+                                "const": "MY.preservationSlideCanadaBalsam",
+                                "title": "Slide Canada balsam"
+                              },
+                              {
+                                "const": "MY.preservationSlideEuparal",
+                                "title": "Slide Euparal"
+                              },
+                              {
+                                "const": "MY.preservationSlidePolyviol",
+                                "title": "Slide Polyviol"
+                              },
+                              {
+                                "const": "MY.preservationStuffed",
+                                "title": "Stuffed"
+                              },
+                              {
+                                "const": "MY.preservationCast",
+                                "title": "Cast"
+                              },
+                              {
+                                "const": "MY.preservationPlastinated",
+                                "title": "Plastinated"
+                              },
+                              {
+                                "const": "MY.preservationFrozenMinus80CAndEthanolMinus20C",
+                                "title": "Frozen -80 °C and ethanol -20 °C (duplicate)"
+                              }
+                            ]
+                          },
+                          "uniqueItems": true,
+                          "title": "Preparation/sample preservation"
+                        },
+                        "preparations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "preparedBy": {
+                                "type": "string",
+                                "title": "Prepared by"
+                              },
+                              "preparationDate": {
+                                "type": "string",
+                                "title": "Preparation date"
+                              },
+                              "preparationProcess": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "",
+                                      "title": ""
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessTanning",
+                                      "title": "Tanning"
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessEnzymaticMaceration",
+                                      "title": "Enzymatic maceration"
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessDegreasing",
+                                      "title": "Degreasing"
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessBeetleCleaning",
+                                      "title": "Beetle cleaning"
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessPEG",
+                                      "title": "PEG"
+                                    },
+                                    {
+                                      "const": "MF.preparationProcessFreezeDrying",
+                                      "title": "Freeze-drying"
+                                    }
+                                  ]
+                                },
+                                "uniqueItems": true,
+                                "title": "Preparation process"
+                              },
+                              "preparationMaterials": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "",
+                                      "title": ""
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsAcetone",
+                                      "title": "Acetone"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsAmmonia",
+                                      "title": "Ammonia"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsBasyntan",
+                                      "title": "Basyntan"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsBorax",
+                                      "title": "Borax"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsEulan",
+                                      "title": "Eulan"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsHydrogenPeroxide",
+                                      "title": "Hydrogen peroxide"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsMethyleneChloride",
+                                      "title": "Methylene chloride"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsNovaltan",
+                                      "title": "Novaltan"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsPapaine",
+                                      "title": "Papaine"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsPlaster",
+                                      "title": "Plaster"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsPolyurethane",
+                                      "title": "Polyurethane"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsPretanix",
+                                      "title": "Pretanix"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsPurifiedGasoline",
+                                      "title": "Purified gasoline"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsWoodWool",
+                                      "title": "Wood wool"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsCTAB",
+                                      "title": "CTAB"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsEZNAForensicKit",
+                                      "title": "EZNA forensic kit"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsDNEasyBloodAndTissueKit",
+                                      "title": "DNeasy Blood & Tissue Kit"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsDNEasyPlantKit",
+                                      "title": "DNeasy Plant Kit"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsNucleospinTissueKit",
+                                      "title": "Nucleospin tissue kit"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsNucleospinPlantTwo",
+                                      "title": "Nucleospin plant II"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsSaltExtraction",
+                                      "title": "Salt extraction"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsDNeasyPlantMiniKit",
+                                      "title": "DNeasy Plant Mini Kit"
+                                    },
+                                    {
+                                      "const": "MF.preparationMaterialsMagAttractHMWDNAKit",
+                                      "title": "MagAttract HMW DNA kit"
+                                    }
+                                  ]
+                                },
+                                "uniqueItems": true,
+                                "title": "Preparation process materials"
+                              },
+                              "preparationProcessNotes": {
+                                "type": "string",
+                                "title": "Preparation process notes"
+                              }
+                            },
+                            "required": []
+                          },
+                          "title": "Preparations"
+                        },
+                        "measurement": {
+                          "type": "object",
+                          "properties": {
+                            "beakMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Beak (mm)"
+                            },
+                            "bodyCentimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Body (cm)"
+                            },
+                            "bodyMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Body (mm)"
+                            },
+                            "DNAConcentrationNgPerMicroliter": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "DNA concentration (ng/microliter)"
+                            },
+                            "DNARatioOfAbsorbance260And280": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "DNA purity (ratio of absorbance 260/280 nm)"
+                            },
+                            "DNAVolumeMicroliters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "DNA volume (microliters)"
+                            },
+                            "earLengthMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Ear length (mm)"
+                            },
+                            "embryoCount": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Embryo count"
+                            },
+                            "follicleDiameterMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Follicle diameter (mm)"
+                            },
+                            "footLengthMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Foot length (mm)"
+                            },
+                            "forearmMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Forearm (mm)"
+                            },
+                            "gonadMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Gonad (mm)"
+                            },
+                            "tailCentimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Tail (cm)"
+                            },
+                            "tailMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Tail (mm)"
+                            },
+                            "tarsusLengthMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Tarsus length (mm)"
+                            },
+                            "totalLengthCentimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Length (cm)"
+                            },
+                            "totalLengthMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Length (mm)"
+                            },
+                            "uterineScarCount": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Uterine scar count"
+                            },
+                            "weightGrams": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Weight (g)"
+                            },
+                            "weightKilograms": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Weight (kg)"
+                            },
+                            "wingMaxMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Wing max (mm)"
+                            },
+                            "wingMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Wing (mm)"
+                            },
+                            "wingMinMillimeters": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "title": "Wing min (mm)"
+                            }
+                          },
+                          "required": [],
+                          "title": "Measurements"
+                        },
+                        "qualityCheckMethod": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "oneOf": [
+                              {
+                                "const": "",
+                                "title": ""
+                              },
+                              {
+                                "const": "MF.qualityCheckMethodNanoDrop",
+                                "title": "Nano Drop"
+                              },
+                              {
+                                "const": "MF.qualityCheckMethodCubit",
+                                "title": "Cubit"
+                              }
+                            ]
+                          },
+                          "uniqueItems": true,
+                          "title": "DNA quality check method"
+                        },
+                        "qualityCheckDate": {
+                          "type": "string",
+                          "title": "DNA quality check date"
+                        },
+                        "quality": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MF.qualityLow",
+                              "title": "Low"
+                            },
+                            {
+                              "const": "MF.qualityMedium",
+                              "title": "Medium"
+                            },
+                            {
+                              "const": "MF.qualityHigh",
+                              "title": "High"
+                            }
+                          ],
+                          "title": "DNA sample quality"
+                        },
+                        "qualityNotes": {
+                          "type": "string",
+                          "title": "DNA quality notes"
+                        },
+                        "elutionMedium": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MF.elutionMediumUltrapureWater",
+                              "title": "Ultrapure water"
+                            },
+                            {
+                              "const": "MF.elutionMediumElutionBuffer",
+                              "title": "Elution buffer"
+                            }
+                          ],
+                          "title": "DNA elution medium"
+                        },
+                        "DNAExtractionInstrument": {
+                          "type": "string",
+                          "title": "DNA extraction instrument"
+                        },
+                        "event": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "title": "Events (maintenance etc.)"
+                        },
+                        "sampleLocation": {
+                          "type": "string",
+                          "title": "Preparation/sample location"
+                        },
+                        "genbank": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "title": "Sample Genbank ID"
+                        },
+                        "bold": {
+                          "type": "string",
+                          "title": "Sample BOLD ID"
+                        },
+                        "status": {
+                          "type": "string",
+                          "oneOf": [
+                            {
+                              "const": "",
+                              "title": ""
+                            },
+                            {
+                              "const": "MY.statusOk",
+                              "title": "Ok"
+                            },
+                            {
+                              "const": "MY.statusMissing",
+                              "title": "Missing (but could still be recovered)"
+                            },
+                            {
+                              "const": "MY.statusUnrecoverable",
+                              "title": "Unrecoverable (location known, bet can't get it back)"
+                            },
+                            {
+                              "const": "MY.statusLost",
+                              "title": "Lost (all hope lost)"
+                            },
+                            {
+                              "const": "MY.statusDonated",
+                              "title": "Donated"
+                            },
+                            {
+                              "const": "MY.statusDeposited",
+                              "title": "Deposited elsewhere"
+                            },
+                            {
+                              "const": "MY.statusDeaccessioned",
+                              "title": "Deaccessioned (thrown away)"
+                            },
+                            {
+                              "const": "MY.statusDiscarded",
+                              "title": "Discarded (not incorporated into collection)"
+                            },
+                            {
+                              "const": "MY.statusSpent",
+                              "title": "Spent (used as tissue samples)"
+                            },
+                            {
+                              "const": "MY.statusDestroyed",
+                              "title": "Destroyed (e.g. eaten by pests)"
+                            },
+                            {
+                              "const": "MY.statusUndefined",
+                              "title": "Undefined"
+                            },
+                            {
+                              "const": "MY.statusAxenic",
+                              "title": "Axenic"
+                            },
+                            {
+                              "const": "MY.statusNonAxenic",
+                              "title": "Non-axenic"
+                            },
+                            {
+                              "const": "MY.statusNotAvailable",
+                              "title": "Not available"
+                            },
+                            {
+                              "const": "MY.statusDead",
+                              "title": "Not available (dead)"
+                            },
+                            {
+                              "const": "MY.statusNoVoucherRetained",
+                              "title": "No voucher retained"
+                            }
+                          ],
+                          "title": "Preparation/sample status"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "title": "Preparation/sample condition (defects)"
+                        },
+                        "datasetID": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "title": "Preparation/sample tag(s)"
+                        },
+                        "publication": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "title": "Preparation/sample publication(s)"
+                        },
+                        "additionalIDs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "title": "Preparation/sample additional sample IDs"
+                        },
+                        "collectionID": {
+                          "type": "string",
+                          "title": "Preparation/sample collection"
+                        },
+                        "notes": {
+                          "type": "string",
+                          "title": "Notes"
+                        }
+                      },
+                      "required": [
+                        "specimenID",
+                        "preparationType"
+                      ]
+                    },
+                    "title": "Samples"
+                  }
+                },
+                "required": []
+              },
+              "title": "Specimen"
+            }
+          },
+          "required": []
+        },
+        "minItems": 1,
+        "title": "Gathering events"
+      },
+      "labelsVerbatim": {
+        "type": "string",
+        "title": "Verbatim labels"
+      },
+      "rawOCRData": {
+        "type": "string",
+        "title": "Raw OCR data"
+      },
+      "cladBookID": {
+        "type": "string",
+        "title": "Clad book id"
+      },
+      "cladSpecimenID": {
+        "type": "string",
+        "title": "Clad specimen id"
+      },
+      "cladVerbatim": {
+        "type": "string",
+        "title": "Clad data verbatim"
+      },
+      "verificationStatus": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "",
+              "title": ""
+            },
+            {
+              "const": "MY.verificationStatusOk",
+              "title": "ok"
+            },
+            {
+              "const": "MY.verificationStatusVerify",
+              "title": "needs verification"
+            },
+            {
+              "const": "MY.verificationStatusNeedsCompletion",
+              "title": "needs completion"
+            },
+            {
+              "const": "MY.verificationStatusGeoreference",
+              "title": "needs georeferencing"
+            },
+            {
+              "const": "MY.verificationStatusDet",
+              "title": "needs det"
+            },
+            {
+              "const": "MY.verificationStatusCheckID",
+              "title": "Check identifier"
+            },
+            {
+              "const": "MY.verificationStatusVerifyCoordinates",
+              "title": "Unverified coordinates"
+            }
+          ]
+        },
+        "uniqueItems": true,
+        "title": "Verification status"
+      },
+      "notes": {
+        "type": "string",
+        "title": "Notes"
+      },
+      "documentLocation": {
+        "type": "string",
+        "title": "Specimen location"
+      },
+      "DNASampleLocation": {
+        "type": "string",
+        "title": "DNA sample location"
+      },
+      "publicityRestrictions": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "",
+            "title": ""
+          },
+          {
+            "const": "MZ.publicityRestrictionsPublic",
+            "title": "public"
+          },
+          {
+            "const": "MZ.publicityRestrictionsProtected",
+            "title": "protected"
+          },
+          {
+            "const": "MZ.publicityRestrictionsPrivate",
+            "title": "private"
+          }
+        ],
+        "title": "Publicity restrictions"
+      },
+      "legID": {
+        "type": "string",
+        "title": "Collecting number"
+      },
+      "genbank": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Genbank"
+      },
+      "bold": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "BOLD"
+      },
+      "relationship": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Relationship"
+      },
+      "additionalIDs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Additional ID's"
+      },
+      "observationID": {
+        "type": "string",
+        "title": "Observation ID"
+      },
+      "dataSource": {
+        "type": "string",
+        "title": "Data source"
+      },
+      "publication": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Publications"
+      },
+      "separatedFrom": {
+        "type": "string",
+        "title": "Separated from specimen"
+      },
+      "separatedTo": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Separated to specimen(s)"
+      },
+      "duplicatesIn": {
+        "type": "string",
+        "title": "Duplicates"
+      },
+      "acquiredFrom": {
+        "type": "string",
+        "title": "Acquired from"
+      },
+      "acquiredFromOrganization": {
+        "type": "string",
+        "title": "Acquired from organization"
+      },
+      "acquisitionDate": {
+        "type": "string",
+        "title": "Acquisition date"
+      },
+      "event": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Event"
+      },
+      "exsiccatum": {
+        "type": "string",
+        "title": "Exsiccatum"
+      },
+      "preservation": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "",
+              "title": ""
+            },
+            {
+              "const": "MY.preservationPressed",
+              "title": "Dry and pressed"
+            },
+            {
+              "const": "MY.preservationDry",
+              "title": "Dry"
+            },
+            {
+              "const": "MY.preservationCriticalPointDrying",
+              "title": "Critical-point drying"
+            },
+            {
+              "const": "MY.preservationPinned",
+              "title": "Pinned"
+            },
+            {
+              "const": "MY.preservationGlued",
+              "title": "Glued"
+            },
+            {
+              "const": "MY.preservationLiquid",
+              "title": "Liquid (unspecified)"
+            },
+            {
+              "const": "MY.preservationEthanol",
+              "title": "Ethanol (unknown %)"
+            },
+            {
+              "const": "MY.preservationEthanolPure",
+              "title": "Ethanol (unknown %) pure"
+            },
+            {
+              "const": "MY.preservationEthanol70",
+              "title": "Ethanol 70 %"
+            },
+            {
+              "const": "MY.preservationEthanol80",
+              "title": "Ethanol 80 %"
+            },
+            {
+              "const": "MY.preservationEthanol80Pure",
+              "title": "Ethanol 80 % pure"
+            },
+            {
+              "const": "MY.preservationEthanol96",
+              "title": "Ethanol 96 %"
+            },
+            {
+              "const": "MY.preservationEthanolMinus20C",
+              "title": "Ethanol -20 °C"
+            },
+            {
+              "const": "MY.preservationEthanolDenatured",
+              "title": "Ethanol denatured"
+            },
+            {
+              "const": "MY.preservationEthanolFormalin",
+              "title": "Ethanol and formalin"
+            },
+            {
+              "const": "MY.preservationEthanolExFormalin",
+              "title": "Ethanol ex formalin"
+            },
+            {
+              "const": "MY.preservationFormalin",
+              "title": "Formalin"
+            },
+            {
+              "const": "MY.preservationBouinSolution",
+              "title": "Bouin's solution"
+            },
+            {
+              "const": "MY.preservationPampelsFluid",
+              "title": "Pampel's fluid"
+            },
+            {
+              "const": "MY.preservationGlycerol",
+              "title": "Glycerol"
+            },
+            {
+              "const": "MY.preservationParaffin",
+              "title": "Paraffin"
+            },
+            {
+              "const": "MY.preservationMercuricChloride",
+              "title": "Mercuric chloride"
+            },
+            {
+              "const": "MY.preservationCryopreserved",
+              "title": "Cryopreserved"
+            },
+            {
+              "const": "MY.preservationFrozen",
+              "title": "Frozen"
+            },
+            {
+              "const": "MY.preservationFrozenMinus80C",
+              "title": "Frozen -80 °C"
+            },
+            {
+              "const": "MY.preservationFreezeDried",
+              "title": "Freeze-dried"
+            },
+            {
+              "const": "MY.preservationGoldPlated",
+              "title": "Gold-plated"
+            },
+            {
+              "const": "MY.preservationActiveCulture",
+              "title": "Active culture"
+            },
+            {
+              "const": "MY.preservationLiving",
+              "title": "Living"
+            },
+            {
+              "const": "MY.preservationSlide",
+              "title": "Slide"
+            },
+            {
+              "const": "MY.preservationSlideCanadaBalsam",
+              "title": "Slide Canada balsam"
+            },
+            {
+              "const": "MY.preservationSlideEuparal",
+              "title": "Slide Euparal"
+            },
+            {
+              "const": "MY.preservationSlidePolyviol",
+              "title": "Slide Polyviol"
+            },
+            {
+              "const": "MY.preservationStuffed",
+              "title": "Stuffed"
+            },
+            {
+              "const": "MY.preservationCast",
+              "title": "Cast"
+            },
+            {
+              "const": "MY.preservationPlastinated",
+              "title": "Plastinated"
+            },
+            {
+              "const": "MY.preservationFrozenMinus80CAndEthanolMinus20C",
+              "title": "Frozen -80 °C and ethanol -20 °C (duplicate)"
+            }
+          ]
+        },
+        "uniqueItems": true,
+        "title": "Preservation"
+      },
+      "URL": {
+        "type": "string",
+        "title": "URL"
+      },
+      "language": {
+        "type": "string",
+        "title": "Language",
+        "oneOf": [
+          {
+            "const": "",
+            "title": ""
+          },
+          {
+            "const": "finnish",
+            "title": "Finnish"
+          },
+          {
+            "const": "english",
+            "title": "English"
+          },
+          {
+            "const": "swedish",
+            "title": "Swedish"
+          },
+          {
+            "const": "sami",
+            "title": "Sami"
+          },
+          {
+            "const": "russian",
+            "title": "Russian"
+          },
+          {
+            "const": "estonian",
+            "title": "Estonian"
+          },
+          {
+            "const": "german",
+            "title": "German"
+          },
+          {
+            "const": "french",
+            "title": "French"
+          },
+          {
+            "const": "spanish",
+            "title": "Spanish"
+          },
+          {
+            "const": "chinese",
+            "title": "Chinese"
+          },
+          {
+            "const": "latin",
+            "title": "Latin"
+          },
+          {
+            "const": "mixed",
+            "title": "mixed"
+          },
+          {
+            "const": "other",
+            "title": "other"
+          }
+        ],
+        "default": ""
+      },
+      "editNotes": {
+        "type": "string",
+        "title": "Notes about this edit"
+      },
+      "transcriberNotes": {
+        "type": "string",
+        "title": "Transcriber's notes"
+      },
+      "privateNotes": {
+        "type": "string",
+        "title": "Nonpublic notes"
+      },
+      "unreliableFields": {
+        "type": "string",
+        "title": "Unreliable fields"
+      }
+    },
+    "required": [
+      "owner",
+      "collectionID",
+      "gatherings"
+    ]
+  },
+  "excludeFromCopy": [],
+  "name": "Kotka - Specimen",
+  "language": "en",
+  "title": "Kotka - Specimen",
+  "options": {
+    "useSchemaCommentsAsHelpTexts": true,
+    "strict": false
+  },
+  "uiSchema": {
+    "owner": {
+      "ui:help": "Team or organisation that owns the record and can edit it."
+    },
+    "collectionID": {
+      "ui:help": "The collection which this specimen belongs to"
+    },
+    "datasetID": {
+      "ui:help": "The tags this specimen has"
+    },
+    "primaryDataLocation": {
+      "ui:help": "Location of the primary data if not Kotka."
+    },
+    "status": {
+      "ui:help": "Empty value means same as \"ok\" - that there is not anything special about the status of the specimen."
+    },
+    "condition": {
+      "ui:help": "Notes on the defects of the specimen (missing parts or such). Empty value means same as \"good\" or \"hyvä\" - that there is nothing special to mention about the condition."
+    },
+    "originalSpecimenID": {
+      "ui:help": "Original catalogue number or other  original identifier of the specimen. E.g. H9000000"
+    },
+    "IPEN": {
+      "ui:help": "IPEN Number for the accession"
+    },
+    "voucherSpecimenID": {
+      "ui:help": "Identifier of the herbarium voucher specimen or information about it if the identifier is unknown."
+    },
+    "plannedLocation": {
+      "ui:help": "Garden area where this accession is planned to be located."
+    },
+    "gatherings": {
+      "items": {
+        "leg": {
+          "ui:help": "Name of the collector(s), in format 'Lastname, Firstname; Lastname Firstname'"
+        },
+        "legVerbatim": {
+          "ui:help": "Leg just as it appears in the label or other original source, no interpretation, errors and all."
+        },
+        "dateVerbatim": {
+          "ui:help": "Date just as it appears on the label or other original source, no interpretation, errors and all"
+        },
+        "substrate": {
+          "ui:help": "Type of substrate or name of substrate species."
+        },
+        "samplingMethod": {
+          "ui:help": "Main method for (usually intentional) sampling"
+        },
+        "coordinatesVerbatim": {
+          "ui:help": "Coordinates, possible coordinate system and error radius word-to-word as they appear on the label or other original source, errors and all."
+        },
+        "latitude": {
+          "ui:help": "Latitude. For southern latitudes, use negative value."
+        },
+        "longitude": {
+          "ui:help": "Longitude. For western longitudes, use negative value."
+        },
+        "coordinateSystem": {
+          "ui:help": "More information about the coordinate systems: https://wiki.helsinki.fi/display/digit/Entering+specimen+data"
+        },
+        "coordinateSource": {
+          "ui:help": "Use for NEW SPECIMENS: Where the coordinates have been acquired"
+        },
+        "georeferenceSource": {
+          "ui:help": "Use for OLD SPECIMENS: What source was used to get coordinates based on locality names"
+        },
+        "coordinateRadius": {
+          "ui:help": "Maximum error of coordinates in meters"
+        },
+        "alt": {
+          "ui:help": "Altitude form sea level in meters, single value or range (E.g. 90, or 80-100). No GPS altitude here."
+        },
+        "depth": {
+          "ui:help": "Depth in meters, single value or range (E.g. 0.9, or 0.8-1.0)"
+        },
+        "AFEQuadrat": {
+          "ui:help": "AFE grid name"
+        },
+        "UTMQuadrat": {
+          "ui:help": "UTM grid name"
+        },
+        "coordinateNotes": {
+          "ui:help": "Free-text notes about the coordinates."
+        },
+        "localityVerbatim": {
+          "ui:help": "Locality word-to-word as it appears on the label or other original source, errors and all"
+        },
+        "country": {
+          "ui:help": "Country name in English, or 2-letter country code, or name from label"
+        },
+        "higherGeography": {
+          "ui:help": "If country is not known or not applicable, for example continent, ocean or large island"
+        },
+        "biologicalProvince": {
+          "ui:help": "Formal abbreviation. For Finnish eliömaakunnat, use Finnish abbreviation."
+        },
+        "forestVegetationZone": {
+          "ui:help": "Finnish forest vegetation zone"
+        },
+        "administrativeProvince": {
+          "ui:help": "Regions, rayons, provinces and other administrative areas. Separate multiple names with commas, from generic to specific. (E.g. Etelä-Suomen lääni, Uusimaa)"
+        },
+        "county": {
+          "ui:help": "County (piirikunta, kreivikunta etc.)"
+        },
+        "municipality": {
+          "ui:help": "Municipality, commune, town, city or civil parish"
+        },
+        "locality": {
+          "ui:help": "Official name of the locality in basic form. Separate multiple names with commas, from generic to specific. No informal description here."
+        },
+        "localityID": {
+          "ui:help": "An unique identifier or code for the locality, if the locality has one (e.g. from SAPO-ontology)."
+        },
+        "localityDescription": {
+          "ui:help": "Informal description of the exact locality, e.g. '5 km NE of city X, under stone bridge'"
+        },
+        "habitatDescription": {
+          "ui:help": "Informal description of the habitat."
+        },
+        "habitatClassification": {
+          "ui:help": "Formal habitat name or abbreviation. If several, separate with semicolons (E.g. 'OMT; OMaT')."
+        },
+        "associatedObservationTaxa": {
+          "ui:help": "Write associated observation taxa names here, separated by a semicolon (;). E.g.: \"Betula pendula; Betula pubescens; Poaceae\". These will form their own units of the type observation."
+        },
+        "associatedSpecimenTaxa": {
+          "ui:help": "Write associated specimen taxa names here, separated by a semicolon (;). E.g.: \"Betula pendula; Betula pubescens; Poaceae\". These will form their own units of the type Preserved specimen."
+        },
+        "collectingEventName": {
+          "ui:help": "Name of an expedition or such."
+        },
+        "notes": {
+          "ui:help": "Additional information to the data in each section."
+        },
+        "numberOfSampledIndividuals": {
+          "ui:help": "For garden accessions/seed bank, number of individuals from which seeds were collected"
+        },
+        "percentageGivingSeeds": {
+          "ui:help": "For garden accessions/seed bank, what proportion of the population sampled was giving seeds"
+        },
+        "samplingAreaSizeInSquareMeters": {
+          "ui:help": "For garden accessions/seed bank, estimated size of the area sampled, in square meters"
+        },
+        "units": {
+          "items": {
+            "primarySpecimen": {
+              "ui:help": "Can be used to highlight one unit as primary specimen/observation if there are many in one document. Only one unit per document can be marked as primary."
+            },
+            "recordBasis": {
+              "ui:help": "Type of record, most commonly preserved specimen for museum specimens and observation for associated observations (\"seuralaislajihavainto\")."
+            },
+            "recordParts": {
+              "ui:help": "What parts of the record are / have been in storage."
+            },
+            "provenance": {
+              "ui:help": "Origin or source of the garden accession"
+            },
+            "plantStatusCode": {
+              "ui:help": "Status code for the plant (wild, alien etc.)"
+            },
+            "lifeStage": {
+              "ui:help": "Life stage of the specimen. If multiple present, select the one which was present at the time of collecting. Use Life stage description field for extra information."
+            },
+            "lifeStageDescription": {
+              "ui:help": "Free-text notes or addtional information about the life stage. If multiple values present, describe them here."
+            },
+            "causeOfDeath": {
+              "ui:help": "Cause of death, if not intentionally trapped on sampled"
+            },
+            "sex": {
+              "ui:help": "Sex of the individual(s)"
+            },
+            "sexNotes": {
+              "ui:help": "E.g. how sex was determined, by whom and when."
+            },
+            "age": {
+              "ui:help": "Estimated or known age in calendar years, years, days or other relevant unit."
+            },
+            "ageNotes": {
+              "ui:help": "E.g. how age was determined, by whom and when."
+            },
+            "count": {
+              "ui:help": "Numeric or other description on the amount of individuals (or sprouts, fruiting bodies or such) in the specimen. Sexes and juveniles can be specified like so: 1m2f3j (=1 male, 2 females, 3 juveniles)"
+            },
+            "populationAbundance": {
+              "ui:help": "Abundance of the taxon in the field"
+            },
+            "DBH": {
+              "ui:help": "Diameter at breast height, in centimeters"
+            },
+            "decayStage": {
+              "ui:help": "Estimation of decay stage (lahoaste in Finnish) on the scale of 1 to 5 and/or description"
+            },
+            "chemistry": {
+              "ui:help": "Results of chemical reaction tests etc."
+            },
+            "microscopy": {
+              "ui:help": "Microscopic features and measurements, if not recorded separately into measurement fields."
+            },
+            "macroscopy": {
+              "ui:help": "Macroscopic features and measurements, if not recorded separately into measurement fields."
+            },
+            "preparations": {
+              "ui:help": "Preparations/preparates made from the specimen, if not recorded as separate Preparations/samples in the designated section"
+            },
+            "ring": {
+              "ui:help": "Bird or bat ring number, code, colour code or such"
+            },
+            "notes": {
+              "ui:help": "Additional information to the data in each section.",
+              "ui:widget": "textarea"
+            },
+            "measurement": {
+              "ui:help": "For measurements taken from the preparation/sample, use the measurement field in the preparation/sample section. For measurements taken from the specimen, use the measurements field on unit level.",
+              "ui:field": "CondensedObjectField",
+              "ui:options": {
+                "addFieldPlaceholder": "Add measurement"
+              }
+            },
+            "identifications": {
+              "items": {
+                "taxonRank": {
+                  "ui:help": "Taxonomic level for the identification"
+                },
+                "taxon": {
+                  "ui:help": "Taxon name"
+                },
+                "author": {
+                  "ui:help": "Author for the taxon"
+                },
+                "infraRank": {
+                  "ui:help": "Taxonomic level of the epithet below species level"
+                },
+                "infraEpithet": {
+                  "ui:help": "Taxon name for the epithet below species level"
+                },
+                "infraAuthor": {
+                  "ui:help": "Author for the taxon below species level/infra epithet"
+                },
+                "taxonVerbatim": {
+                  "ui:help": "Taxon name in original format (e.g. from the label), errors and all",
+                  "ui:classNames": "verbatim-field"
+                },
+                "genusQualifier": {
+                  "ui:help": "Additional qualifier or specifier at genus level (e.g. aff., cf.)"
+                },
+                "speciesQualifier": {
+                  "ui:help": "Additional qualifier at species level (e.g. aff., cf., sp. n., coll.)"
+                },
+                "det": {
+                  "ui:help": "Name of the identifier (person) preferably in format \"lastname, firstname\""
+                },
+                "detDate": {
+                  "ui:help": "Date or year when the identification was done, preferably in format \"d.m.Y\" or \"Y\""
+                },
+                "taxonID": {
+                  "ui:help": "ID for the taxon if has some other than an MX code"
+                },
+                "detVerbatim": {
+                  "ui:help": "Name of the identifier and date of identification in original format (e.g. from the label), errors and all",
+                  "ui:classNames": "verbatim-field"
+                },
+                "sec": {
+                  "ui:help": "Publication reference for the taxon concept, that was used in identification"
+                },
+                "identificationNotes": {
+                  "ui:help": "Additional information on the identification, basis or such",
+                  "ui:widget": "textarea"
+                },
+                "preferredIdentification": {
+                  "ui:help": "This can be used to select one of the identifications as 'recommended', which is the used as default when displaying information about the specimen."
+                },
+                "ui:classNames": "card card-body bg-light",
+                "ui:title": "Identification:",
+                "ui:order": [
+                  "taxonFields",
+                  "infraFields",
+                  "taxonVerbatim",
+                  "genusQualifier",
+                  "speciesQualifier",
+                  "detFields",
+                  "*"
+                ],
+                "ui:functions": [
+                  {
+                    "ui:field": "NestField",
+                    "ui:options": {
+                      "nests": {
+                        "taxonFields": {
+                          "title": "",
+                          "fields": [
+                            "taxonRank",
+                            "taxon",
+                            "author"
+                          ]
+                        },
+                        "infraFields": {
+                          "title": "",
+                          "fields": [
+                            "infraRank",
+                            "infraEpithet",
+                            "infraAuthor"
+                          ]
+                        },
+                        "detFields": {
+                          "title": "",
+                          "fields": [
+                            "det",
+                            "detDate"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ],
+                "taxonFields": {
+                  "ui:grid": {
+                    "lg": 4,
+                    "md": 4,
+                    "sm": 4,
+                    "xs": 12
+                  }
+                },
+                "infraFields": {
+                  "ui:grid": {
+                    "lg": 4,
+                    "md": 4,
+                    "sm": 4,
+                    "xs": 12
+                  }
+                },
+                "detFields": {
+                  "ui:grid": {
+                    "lg": {
+                      "det": 8,
+                      "detDate": 4
+                    },
+                    "md": {
+                      "det": 8,
+                      "detDate": 4
+                    },
+                    "sm": {
+                      "det": 8,
+                      "detDate": 4
+                    },
+                    "xs": 12
+                  },
+                  "det": {
+                    "ui:widget": "InputWithDefaultValueButtonWidget",
+                    "ui:options": {
+                      "buttonLabel": "me",
+                      "contextFieldForDefaultValue": "userName"
+                    }
+                  },
+                  "detDate": {
+                    "ui:widget": "DateWidget",
+                    "ui:options": {
+                      "dateFormat": "DD.MM.YYYY"
+                    }
+                  }
+                }
+              },
+              "ui:title": "",
+              "ui:options": {
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add identification"
+                  }
+                ]
+              }
+            },
+            "typeSpecimens": {
+              "items": {
+                "typeStatus": {
+                  "ui:help": "Is this holotype, paratype, syntype etc..."
+                },
+                "typeSpecies": {
+                  "ui:help": "Name of the type species"
+                },
+                "typeAuthor": {
+                  "ui:help": "Author of the type species"
+                },
+                "typeSubspecies": {
+                  "ui:help": "Name of the type subspecies"
+                },
+                "typeSubspeciesAuthor": {
+                  "ui:help": "Author of the type subspecies"
+                },
+                "typif": {
+                  "ui:help": "Name of the person who chose the type, preferably in the format \"Lastname, firstname\""
+                },
+                "typifDate": {
+                  "ui:help": "Date when the specimen was chosen as a type"
+                },
+                "typeVerification": {
+                  "ui:help": "Verification whether this really is a type?"
+                },
+                "typeBasionymePubl": {
+                  "ui:help": "Publication reference for original description or basionyme"
+                },
+                "typePubl": {
+                  "ui:help": "Publication reference for type publication"
+                },
+                "typeNotes": {
+                  "ui:help": "Additional information on the type",
+                  "ui:widget": "textarea"
+                },
+                "typeSeriesID": {
+                  "ui:help": "ID for the type series, if part of one"
+                },
+                "ui:classNames": "card card-body bg-light",
+                "ui:title": "Type:",
+                "ui:order": [
+                  "typeFields",
+                  "typeSspFields",
+                  "typifFields",
+                  "*"
+                ],
+                "ui:functions": [
+                  {
+                    "ui:field": "NestField",
+                    "ui:options": {
+                      "nests": {
+                        "typeFields": {
+                          "title": "",
+                          "fields": [
+                            "typeStatus",
+                            "typeSpecies",
+                            "typeAuthor"
+                          ]
+                        },
+                        "typeSspFields": {
+                          "title": "",
+                          "fields": [
+                            "typeSubspecies",
+                            "typeSubspeciesAuthor"
+                          ]
+                        },
+                        "typifFields": {
+                          "title": "",
+                          "fields": [
+                            "typif",
+                            "typifDate"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ],
+                "typeFields": {
+                  "ui:grid": {
+                    "lg": 4,
+                    "md": 4,
+                    "sm": 4,
+                    "xs": 12
+                  }
+                },
+                "typeSspFields": {
+                  "ui:grid": {
+                    "lg": {
+                      "typeSubspecies": 8,
+                      "typeSubspeciesAuthor": 4
+                    },
+                    "md": {
+                      "typeSubspecies": 8,
+                      "typeSubspeciesAuthor": 4
+                    },
+                    "sm": {
+                      "typeSubspecies": 8,
+                      "typeSubspeciesAuthor": 4
+                    },
+                    "xs": 12
+                  }
+                },
+                "typifFields": {
+                  "ui:grid": {
+                    "lg": {
+                      "typif": 8,
+                      "typifDate": 4
+                    },
+                    "md": {
+                      "typif": 8,
+                      "typifDate": 4
+                    },
+                    "sm": {
+                      "typif": 8,
+                      "typifDate": 4
+                    },
+                    "xs": 12
+                  },
+                  "typifDate": {
+                    "ui:widget": "DateWidget",
+                    "ui:options": {
+                      "dateFormat": "DD.MM.YYYY"
+                    }
+                  }
+                }
+              },
+              "ui:title": "",
+              "ui:options": {
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add type"
+                  }
+                ]
+              }
+            },
+            "samples": {
+              "items": {
+                "preparationType": {
+                  "ui:help": "Type of preparation/sample"
+                },
+                "material": {
+                  "ui:help": "Preparation/sample material. Choose preparation/sample type first."
+                },
+                "individualsInPreparation": {
+                  "ui:help": "For example a jar that contains multiple fish individuals can be recorded as one specimen and one preparation. Can also be used for DNA samples (was DNA extracted from single or multiple individuals?)."
+                },
+                "preservation": {
+                  "ui:help": "Preservation methods and materials of the preparation/sample. It is possible to choose several"
+                },
+                "preparations": {
+                  "items": {
+                    "preparedBy": {
+                      "ui:help": "Name of the person who prepared the preparation/sample, preferably in the format 'lastname, firstname'"
+                    },
+                    "preparationDate": {
+                      "ui:help": "Date when the preparation/sample was prepared."
+                    },
+                    "preparationProcess": {
+                      "ui:help": "Processes used in the preparation. It is possible to choose several."
+                    },
+                    "preparationMaterials": {
+                      "ui:help": "Materials (chemicals, kits etc.) used in the preparation process. It is possible to choose several."
+                    },
+                    "preparationProcessNotes": {
+                      "ui:help": "Additional information about the preparation process."
+                    }
+                  }
+                },
+                "measurement": {
+                  "ui:help": "For measurements taken from the preparation/sample, use the measurement field in the preparation/sample section. For measurements taken from the specimen, use the measurements field on unit level."
+                },
+                "qualityCheckMethod": {
+                  "ui:help": "Method or instrument used for quality measurements"
+                },
+                "qualityCheckDate": {
+                  "ui:help": "Date of the latest quality check measurements"
+                },
+                "quality": {
+                  "ui:help": "DNA sample quality on a three step scale. The quality is defined by quality check measurements"
+                },
+                "qualityNotes": {
+                  "ui:help": "Additional information about the DNA sample quality"
+                },
+                "elutionMedium": {
+                  "ui:help": "DNA sample elution medium"
+                },
+                "DNAExtractionInstrument": {
+                  "ui:help": "Name of the instrument or device used for DNA extraction"
+                },
+                "event": {
+                  "ui:help": "Diary-style information about what has been done to the preparation/sample"
+                },
+                "sampleLocation": {
+                  "ui:help": "Location of the preparation/sample so that museum personnel can find it. E.g. room, freezer, shelf number etc."
+                },
+                "genbank": {
+                  "ui:help": "Genbank ID for the preparation/sample. If no other preparation/sample information is entered, use the Genbank field on the document level"
+                },
+                "bold": {
+                  "ui:help": "BOLD ID (usually BOLD \"Sample ID\") for the preparation/sample. If no other preparation/sample information is entered, use the BOLD field on the document level"
+                },
+                "status": {
+                  "ui:help": "Status of the preparation/sample. For specimen level status use the status field in the basic information section. Empty value means same as \"ok\" - that there is nothing special about the status of the sample."
+                },
+                "condition": {
+                  "ui:help": "Notes on the defects of the preparation/sample (missing parts or such). For specimen level status use the condition field in the basic information section (document level). Empty value means same as \"good\" or \"hyvä\" - that the sample is in fine condition."
+                },
+                "datasetID": {
+                  "ui:help": "Tag for the preparation/sample. For specimen level tags, use the tag field in the basic information section (document level)."
+                },
+                "publication": {
+                  "ui:help": "Publication references or doi's that refer to this preparations/sample. For publications referring to the specimen, use publications field in the Other section (document level)."
+                },
+                "additionalIDs": {
+                  "ui:help": "Other identifiers this preparation/sample has, in format 'type:identifier'. For example: 'MZHtissue:123'. You can enter the type and colon and then click 'generate' to fetch the next free number for that prefix type."
+                },
+                "collectionID": {
+                  "ui:help": "The collection which this preparation/sample belongs to, if different from the collection of the specimen."
+                },
+                "notes": {
+                  "ui:help": "Additional information about the preparation/sample"
+                },
+                "ui:classNames": "card card-body bg-light",
+                "ui:title": "Sample:"
+              },
+              "ui:title": "",
+              "ui:options": {
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add preparation/sample"
+                  }
+                ]
+              }
+            },
+            "ui:classNames": "card card-body bg-light",
+            "ui:title": "Specimen/observation (unit):"
+          },
+          "ui:title": "Specimens/observations",
+          "ui:options": {
+            "buttons": [
+              {
+                "fn": "add",
+                "label": "Add specimen/observation"
+              }
+            ]
+          }
+        },
+        "ui:order": [
+          "gatheringEventFields",
+          "localityFields",
+          "units",
+          "*"
+        ],
+        "ui:functions": [
+          {
+            "ui:field": "NestField",
+            "ui:options": {
+              "nests": {
+                "eventTime": {
+                  "title": "",
+                  "fields": [
+                    "dateBegin",
+                    "dateEnd"
+                  ]
+                },
+                "gatheringEventFields": {
+                  "title": "Collecting event (gathering)",
+                  "fields": [
+                    "leg",
+                    "legVerbatim",
+                    "eventTime",
+                    "dateVerbatim",
+                    "substrate",
+                    "samplingMethod"
+                  ]
+                },
+                "quadrats": {
+                  "title": "",
+                  "fields": [
+                    "AFEQuadrat",
+                    "UTMQuadrat"
+                  ]
+                },
+                "countryOrHigherGeography": {
+                  "title": "",
+                  "fields": [
+                    "country",
+                    "higherGeography"
+                  ]
+                },
+                "localityFields": {
+                  "title": "Locality",
+                  "fields": [
+                    "coordinatesVerbatim",
+                    "latitude",
+                    "longitude",
+                    "coordinateSystem",
+                    "coordinateSource",
+                    "georeferenceSource",
+                    "coordinateRadius",
+                    "alt",
+                    "depth",
+                    "quadrats",
+                    "coordinateNotes",
+                    "localityVerbatim",
+                    "countryOrHigherGeography",
+                    "biologicalProvince",
+                    "forestVegetationZone",
+                    "administrativeProvince",
+                    "county",
+                    "municipality",
+                    "locality",
+                    "localityID",
+                    "localityDescription",
+                    "habitatDescription",
+                    "habitatClassification",
+                    "associatedObservationTaxa",
+                    "associatedSpecimenTaxa",
+                    "collectingEventName",
+                    "notes",
+                    "numberOfSampledIndividuals",
+                    "percentageGivingSeeds",
+                    "samplingAreaSizeInSquareMeters"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "gatheringEventFields": {
+          "leg": {
+            "ui:options": {
+              "renderTitleAsLabel": true
+            }
+          },
+          "legVerbatim": {
+            "ui:classNames": "verbatim-field"
+          },
+          "eventTime": {
+            "ui:grid": {
+              "lg": 3,
+              "md": 4,
+              "sm": 5,
+              "xs": 12
+            },
+            "dateBegin": {
+              "ui:widget": "DateWidget",
+              "ui:options": {
+                "dateFormat": "DD.MM.YYYY"
+              }
+            },
+            "dateEnd": {
+              "ui:widget": "DateWidget",
+              "ui:options": {
+                "dateFormat": "DD.MM.YYYY"
+              }
+            }
+          },
+          "dateVerbatim": {
+            "ui:classNames": "verbatim-field"
+          }
+        },
+        "localityFields": {
+          "coordinatesVerbatim": {
+            "ui:classNames": "verbatim-field"
+          },
+          "quadrats": {
+            "ui:grid": {
+              "lg": 3,
+              "md": 4,
+              "sm": 5,
+              "xs": 12
+            }
+          },
+          "coordinateNotes": {
+            "ui:widget": "textarea"
+          },
+          "localityVerbatim": {
+            "ui:classNames": "verbatim-field",
+            "ui:widget": "textarea"
+          },
+          "countryOrHigherGeography": {
+            "ui:grid": {
+              "lg": 3,
+              "md": 4,
+              "sm": 5,
+              "xs": 12
+            },
+            "higherGeography": {
+              "ui:title": "OR Higher geography"
+            }
+          }
+        }
+      },
+      "ui:title": "",
+      "ui:field": "SingleItemArrayField"
+    },
+    "labelsVerbatim": {
+      "ui:help": "All text from labels word-for-word, including spelling errors. Separate each label on its own row, starting from topmost label."
+    },
+    "cladBookID": {
+      "ui:help": "Clad book id number or such"
+    },
+    "cladSpecimenID": {
+      "ui:help": "Clad specimen id: usually color description and a number"
+    },
+    "cladVerbatim": {
+      "ui:help": "Verbatim specimen data from clad book"
+    },
+    "verificationStatus": {
+      "ui:help": "Information about the quality of the specimen data. Possible to select several."
+    },
+    "notes": {
+      "ui:help": "Additional information to the data in each section."
+    },
+    "documentLocation": {
+      "ui:help": "Location of the specimen so that museum personnel can find it. E.g. taxon under which it is stored (if not clear from the identification), or shelf number"
+    },
+    "DNASampleLocation": {
+      "ui:help": "Leave empty if no sample taken, or if the sample is recorded separately"
+    },
+    "publicityRestrictions": {
+      "ui:help": "PUBLIC: all data can be published; PROTECTED: exact locality is hidden (100*100km square); PRIVATE: most of the data is hidden. Empty value means same as public."
+    },
+    "legID": {
+      "ui:help": "Collecting number (field identifier, keruunumero) for the specimen"
+    },
+    "genbank": {
+      "ui:help": "Genbank identifier. You can include additonal comment by separating them with colon, e.g. \"AY123456:comments here\""
+    },
+    "bold": {
+      "ui:help": "BOLD identifier, usually BOLD Sample ID. You can include additonal comment by separating them with colon, e.g. \"AY123456:comments here\""
+    },
+    "relationship": {
+      "ui:help": "Relationship to another taxon OR specimen. Choose relationship type as prefix and give taxon name or specimen identifier thereafter, e.g. \"parasite: Parasiticus specius\" OR \"host:http://tun.fi/JAA.123\""
+    },
+    "additionalIDs": {
+      "ui:help": "Other identifiers this specimen has, in format 'type:identifier'. For example: 'mzhtypes:123' (old MAZ-type number)"
+    },
+    "dataSource": {
+      "ui:help": "Where the data about this specimen or observation is from, in addition to labels. Eg. reference to a publication, field notes or an expedition."
+    },
+    "publication": {
+      "ui:help": "Publication references or doi's that refer to this specimen"
+    },
+    "separatedFrom": {
+      "ui:help": "ID of the specimen from which this has been separated"
+    },
+    "separatedTo": {
+      "ui:help": "ID's of those new specimens that have been separated from this specimen"
+    },
+    "duplicatesIn": {
+      "ui:help": "Description where duplicates (specimens of the same individual) are located or have been sent to and by which ID's."
+    },
+    "acquiredFrom": {
+      "ui:help": "From who/where the specimen was acquired (if not recorded as a transaction)"
+    },
+    "acquiredFromOrganization": {
+      "ui:help": "Organization where the accession was acquired from. If the organization is not on the list, add it first."
+    },
+    "acquisitionDate": {
+      "ui:help": "Date (d.m.yyyy) or year (yyyy) on which the specimen was acquired to the collection. Empty means an old specimen acquired on an unknown date."
+    },
+    "event": {
+      "ui:help": "Free-text diary-style information about what has been done to the specimen and when."
+    },
+    "exsiccatum": {
+      "ui:help": "Name of the exsiccatum this specimen belongs to and possible exsiccatum number."
+    },
+    "preservation": {
+      "ui:help": "Main method of preservation. If parts of the specimen are preserved in different ways, you can choose several methods."
+    },
+    "URL": {
+      "ui:help": "URL where more information is available about the specimen"
+    },
+    "language": {
+      "ui:help": "Language the data is (mainly) written in, if applicable."
+    },
+    "editNotes": {
+      "ui:help": "Reason for this edit or notes about it."
+    },
+    "transcriberNotes": {
+      "ui:help": "Additional information regarding the data entry or transcription process, e.g. unclarities, explanations for interpretations,"
+    },
+    "privateNotes": {
+      "ui:help": "Notes shown within the system for users signed in but not shown publicly anywhere. Use only for notes that absolutely need to be hidden from public view."
+    },
+    "unreliableFields": {
+      "ui:help": "List of those fields that contain unreliable data. The list is created automatically."
+    },
+    "ui:order": [
+      "generalFields",
+      "basicFields",
+      "gatherings",
+      "otherFields",
+      "*"
+    ],
+    "ui:functions": [
+      {
+        "ui:field": "ConditionalUiSchemaField",
+        "ui:options": {
+          "cases": [
+            {
+              "rules": {
+                "rule": "isEdit"
+              },
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "basicFields": {
+                    "idFields": {
+                      "ui:field": "HiddenField"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "rules": [
+                {
+                  "field": "datatype",
+                  "valueIn": [
+                    "accession"
+                  ]
+                }
+              ],
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "primaryDataLocation": {
+                    "ui:widget": "HiddenWidget"
+                  },
+                  "condition": {
+                    "ui:widget": "HiddenWidget"
+                  },
+                  "gatherings": {
+                    "items": {
+                      "associatedObservationTaxa": {
+                        "ui:widget": "HiddenWidget"
+                      },
+                      "associatedSpecimenTaxa": {
+                        "ui:widget": "HiddenWidget"
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "type": "merge",
+                "uiSchema": {
+                  "IPEN": {
+                    "ui:widget": "HiddenWidget"
+                  },
+                  "voucherSpecimenID": {
+                    "ui:widget": "HiddenWidget"
+                  },
+                  "plannedLocation": {
+                    "ui:widget": "HiddenWidget"
+                  },
+                  "gatherings": {
+                    "items": {
+                      "numberOfSampledIndividuals": {
+                        "ui:widget": "HiddenWidget"
+                      },
+                      "percentageGivingSeeds": {
+                        "ui:widget": "HiddenWidget"
+                      },
+                      "samplingAreaSizeInSquareMeters": {
+                        "ui:widget": "HiddenWidget"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "rules": [
+                {
+                  "field": "datatype",
+                  "valueIn": [
+                    "botanyspecimen",
+                    "palaeontology"
+                  ]
+                }
+              ],
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "gatherings": {
+                    "items": {
+                      "samplingMethod": {
+                        "ui:widget": "HiddenWidget"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "ui:field": "NestField",
+        "ui:options": {
+          "nests": {
+            "generalFields": {
+              "title": "",
+              "fields": [
+                "owner"
+              ]
+            },
+            "idFields": {
+              "title": "Identifier",
+              "fields": [
+                "namespaceID",
+                "objectID"
+              ]
+            },
+            "basicFields": {
+              "title": "Basic information",
+              "fields": [
+                "collectionID",
+                "datasetID",
+                "primaryDataLocation",
+                "idFields",
+                "status",
+                "condition",
+                "originalSpecimenID",
+                "IPEN",
+                "voucherSpecimenID",
+                "plannedLocation"
+              ]
+            },
+            "otherFields": {
+              "title": "Other",
+              "fields": [
+                "labelsVerbatim",
+                "rawOCRData",
+                "cladBookID",
+                "cladSpecimenID",
+                "cladVerbatim",
+                "verificationStatus",
+                "notes",
+                "documentLocation",
+                "DNASampleLocation",
+                "publicityRestrictions",
+                "legID",
+                "genbank",
+                "bold",
+                "relationship",
+                "additionalIDs",
+                "observationID",
+                "dataSource",
+                "publication",
+                "separatedFrom",
+                "separatedTo",
+                "duplicatesIn",
+                "acquiredFrom",
+                "acquiredFromOrganization",
+                "acquisitionDate",
+                "event",
+                "exsiccatum",
+                "preservation",
+                "URL",
+                "language",
+                "editNotes",
+                "transcriberNotes",
+                "privateNotes"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "datatype": {
+      "ui:widget": "HiddenWidget"
+    },
+    "generalFields": {
+      "owner": {
+        "ui:functions": {
+          "ui:field": "ConditionalUiSchemaField",
+          "ui:options": {
+            "cases": {
+              "rules": "isAdmin",
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "ui:options": {
+                    "minFetchLength": 1,
+                    "query": {
+                      "onlyOwnOrganizations": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ui:widget": "AutosuggestWidget",
+        "ui:options": {
+          "autosuggestField": "organization",
+          "allowNonsuggestedValue": false,
+          "minFetchLength": 0,
+          "query": {
+            "onlyOwnOrganizations": true
+          },
+          "placeholder": "Search..."
+        }
+      }
+    },
+    "basicFields": {
+      "collectionID": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:options": {
+          "autosuggestField": "collection",
+          "allowNonsuggestedValue": false,
+          "minFetchLength": 1,
+          "placeholder": "Search..."
+        }
+      },
+      "datasetID": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        },
+        "items": {
+          "ui:widget": "AutosuggestWidget",
+          "ui:options": {
+            "autosuggestField": "dataset",
+            "allowNonsuggestedValue": false,
+            "minFetchLength": 1,
+            "placeholder": "Search..."
+          }
+        }
+      },
+      "idFields": {
+        "ui:grid": {
+          "lg": 3,
+          "md": 4,
+          "sm": 5,
+          "xs": 12
+        },
+        "namespaceID": {
+          "ui:help": "Namespace of the existing ID, if the specimen has one already. E.g. for \"GZ.101\" it is \"GZ\"."
+        },
+        "objectID": {
+          "ui:help": "ID of the specimen, if it has one already. E.g. for \"GZ.101\" it is \"101\"."
+        }
+      }
+    },
+    "otherFields": {
+      "labelsVerbatim": {
+        "ui:classNames": "verbatim-field",
+        "ui:widget": "textarea"
+      },
+      "rawOCRData": {
+        "ui:widget": "textarea"
+      },
+      "notes": {
+        "ui:widget": "textarea"
+      },
+      "legID": {
+        "ui:title": "Collector's ID"
+      },
+      "genbank": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "bold": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "relationship": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "additionalIDs": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "dataSource": {
+        "ui:title": "Specimen data source"
+      },
+      "publication": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "separatedTo": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "event": {
+        "ui:options": {
+          "renderTitleAsLabel": true
+        }
+      },
+      "acquiredFromOrganization": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:options": {
+          "autosuggestField": "organization",
+          "allowNonsuggestedValue": false,
+          "minFetchLength": 1,
+          "placeholder": "Search..."
+        }
+      },
+      "acquisitionDate": {
+        "ui:widget": "DateWidget",
+        "ui:options": {
+          "dateFormat": "DD.MM.YYYY"
+        }
+      },
+      "editNotes": {
+        "ui:widget": "textarea"
+      },
+      "transcriberNotes": {
+        "ui:widget": "textarea"
+      },
+      "privateNotes": {
+        "ui:widget": "textarea"
+      }
+    }
+  },
+  "context": "document",
+  "id": "MHL.1158",
+  "validators": {
+    "namespaceID": {
+      "crossCheck": {
+        "check": [
+          "objectID"
+        ],
+        "message": "If you set Object ID, you have to set namespace ID also."
+      }
+    },
+    "objectID": {
+      "length": {
+        "maximum": 15
+      },
+      "format_0": {
+        "pattern": "^[a-zA-Z0-9-]*$",
+        "message": "The input can contain only letters, numbers and dashes."
+      },
+      "format_1": {
+        "pattern": ".*(?<!S_[0-9]+)$",
+        "message": "Object ID cannot end with \"_S<numbers>\"!"
+      },
+      "crossCheck": {
+        "check": [
+          "objectID"
+        ],
+        "message": "If you set Namespace ID, you have to set Object ID also."
+      }
+    },
+    "gatherings": {
+      "items": {
+        "properties": {
+          "dateBegin": {
+            "datetime": {
+              "earliest": "1000-01-01",
+              "tooEarly": "Date is too early. Earliest possible is %{date}"
+            }
+          },
+          "dateEnd": {
+            "datetime": {
+              "earliest": "1000-01-01",
+              "tooEarly": "Date is too early. Earliest possible is %{date}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.1158"
+  },
+  "$id": "e12899c089dac67a99a2049ed11228b5"
+}

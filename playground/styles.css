@@ -160,6 +160,9 @@ body .laji-form {
 .laji-form .form-group {
 	margin-bottom: 5px;
 }
+.laji-form .condensed-object-field-item .form-group {
+	margin-bottom: 0;
+}
 .laji-form .form-group-padding-bottom {
 	margin-bottom: 6px;
 }
@@ -1812,6 +1815,9 @@ body .laji-form {
 }
 .laji-form .input-group.multi-lang-input-group .input-group-text {
 	width: 40px;
+}
+.laji-form .input-group.condensed-object-field-input-group .input-group-text {
+	min-width: 150px;
 }
 
 .laji-form-multi-tag-array-field-buttons .btn-group-vertical {

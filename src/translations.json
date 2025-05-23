@@ -868,5 +868,10 @@
 		"fi": "Klikkaa järjestääksesi",
 		"en": "Click to sort",
 		"sv": "Klicka för att sortera"
+	},
+	"addField": {
+		"fi": "Lisää kenttä",
+		"en": "Add field",
+		"sv": "Lägg till fält"
 	}
 }

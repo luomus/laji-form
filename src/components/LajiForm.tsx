@@ -95,6 +95,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"MultiTagArrayField",
 	"PdfArrayField",
 	"AsArrayField",
+	"CondensedObjectField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -220,7 +221,7 @@ export interface FormContext {
 	googleApiKey: string;
 	notifier: Notifier;
 	apiClient: ApiClient;
-	Label: React.ComponentType<{ label?: string, id: string }>;
+	Label: React.ComponentType<{ label?: string, id: string, uiSchema?: any, required?: boolean }>;
 	formDataTransformers?: any[];
 	_parentLajiFormId?: number;
 	mediaMetadata?: MediaMetadata;
