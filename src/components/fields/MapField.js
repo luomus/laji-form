@@ -153,7 +153,8 @@ export default class MapField extends React.Component {
 			...(this.state.mapOptions || {}),
 			locate: {
 				on: this.state.locateOn || false,
-				onLocationFound: this.onLocate
+				onLocationFound: this.onLocate,
+				onLocationError: this.onLocateError
 			}
 		};
 
@@ -187,14 +188,6 @@ export default class MapField extends React.Component {
 		const {mobileEditor} = this.state;
 
 		let mobileEditorOptions = isObject(mobileEditor) ? mobileEditor : {};
-		const geometry = this.getGeometry(this.props);
-		if (geometry) {
-			const {center, radius} = getCenterAndRadiusFromGeometry(geometry);
-			mobileEditorOptions = {
-				center,
-				radius
-			};
-		}
 
 		if (this.map && this.map.userLocation) {
 			mobileEditorOptions.userLocation = this.map.userLocation;
@@ -227,6 +220,7 @@ export default class MapField extends React.Component {
 							onClose={this.onHideMobileEditorMap}
 							map={this.map}
 							formContext={this.props.formContext}
+							geometry={this.getMobileGeometry()}
 						/>
 				}
 			</div>
@@ -236,28 +230,32 @@ export default class MapField extends React.Component {
 	getDrawOptions = (props) => {
 		const {uiSchema, disabled, readonly} = props;
 		const options = getUiOptions(uiSchema);
-		const {mapOptions = {}, mobileEditor} = options;
+		const {mapOptions = {}} = options;
 		const drawOptions = {
 			...(mapOptions.draw || {}),
 			geoData: this.getGeometry(props),
 			onChange: this.onChange,
-			editable: !disabled && !readonly
+			editable: !disabled && !readonly && !options.mobileEditor
 		};
-		if (mobileEditor) {
-			drawOptions.getFeatureStyle = this.getEditWithModalFeatureStyle;
-		}
 		return drawOptions;
 	}
-
-	getEditWithModalFeatureStyle = () => ({
-		fillOpacity: 0,
-		color: "black",
-		weight: "2",
-	})
 
 	getGeometry = (props) => {
 		const {formData} = props;
 		return formData && Object.keys(formData).length ? formData : undefined;
+	}
+
+	getMobileGeometry = () => {
+		if (this.props.formData) {
+			return this.props.formData;
+		} else if (this.map?.userLocation) {
+			return {
+				type: "Point",
+				coordinates: [this.map.userLocation.latlng.lng, this.map.userLocation.latlng.lat]
+			};
+		} else {
+			return undefined;
+		}
 	}
 
 	onOptionsChanged = (options) => {
@@ -309,7 +307,7 @@ export default class MapField extends React.Component {
 		this.setState({mobileEditor: {visible: false, options}});
 	}
 
-	onLocate = (latlng, radius, forceShow) => {
+	onLocate = (latlng, forceShow) => {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
@@ -321,8 +319,6 @@ export default class MapField extends React.Component {
 				this.setState({
 					mobileEditor: {
 						visible: true,
-						center: latlng,
-						radius,
 						options: (this.state.mobileEditor || {}).options || {}
 					},
 					located: true
@@ -335,6 +331,16 @@ export default class MapField extends React.Component {
 			const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
 			this.props.onChange(geometryCollection ? {type: "GeometryCollection", geometries: [geometry]} : geometry);
 		}
+	}
+
+	onLocateError = () => {
+		this.setState({
+			mobileEditor: { 
+				visible: true,
+				options: (this.state.mobileEditor || {}).options || {}
+			},
+		});
+
 	}
 
 	renderBlocker() {
@@ -359,12 +365,11 @@ class MobileEditorMap extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const {center, radius} = this.props;
+		const { geometry } = this.props;
 
 		this.state = {
-			mapOptions: this.setViewFromCenterAndRadius(center, radius),
-			width: window.visualViewport?.width || window.innerWidth,
-			height: window.visualViewport?.height || window.innerHeight,
+			geometry: [{ geoData: geometry}],
+			moved: false
 		};
 	}
 
@@ -380,99 +385,56 @@ class MobileEditorMap extends React.Component {
 		this.okButtonElem = findDOMNode(elem);
 	}
 
-	updateDimensions = () => {
-		this.setState({ width: window.visualViewport?.width || window.innerWidth, height: window.visualViewport?.height || window.innerHeight });
-	};
-
 	componentDidMount() {
 		this.mounted = true;
 		this.okButtonElem.focus();
-		window.addEventListener("resize", this.updateDimensions);
+
+		if (this.props.geometry) {
+			const [lng, lat] = this.props.geometry.coordinates;
+			this.setMarkerLatLng({lng, lat});
+			this.map.map.setView({lng, lat}, 12);
+			this.marker.on("dragend", () => {
+				if (!this.state.moved) { this.setState({ moved: true }); }
+			});
+		}
+
+		this.map.map.on("click", this.handleMapClick);
 	}
 
-	componenWillUnmount() {
+	componentWillUnmount() {
 		this.mounted = false;
-		window.removeEventListener("resize", this.updateDimensions);
-	}
 
-	getCircle(radiusPixels) {
-		return (
-			<svg width={this.state.width} height={this.state.height} style={{position: "absolute", zIndex: 1000, top: 0, left: 0, pointerEvents: "none"}}>
-				<defs>
-					<mask id="mask" x="0" y="0" width={this.state.width} height={this.state.height}>
-						<rect x="0" y="0" width={this.state.width} height={this.state.height} fill="#fff"></rect>
-						<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels}></circle>
-					</mask>
-				</defs>
-				<rect x="0" y="0" width={this.state.width} height={this.state.height} mask="url(#mask)" fillOpacity="0.2"></rect>
-				<circle cx={this.state.width / 2} cy={this.state.height / 2} r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
-				<line
-					x1={this.state.width / 2}
-					y1={this.state.height / 2 - radiusPixels}
-					x2={this.state.width / 2}
-					y2={this.state.height / 2 + radiusPixels}
-					stroke="black"
-					strokeWidth="2"
-				/>
-				<line
-					x1={this.state.width / 2 - radiusPixels}
-					y1={this.state.height / 2}
-					x2={this.state.width / 2 + radiusPixels}
-					y2={this.state.height / 2}
-					stroke="black"
-					strokeWidth="2"
-				/>
-			</svg>
-		);
+		if (this.marker) {
+			this.marker.remove();
+		}
+
+		this.map.map.off("click", this.handleMapClick);
 	}
 
 	onChange = () => {
-		const {map} = this.map;
-		const centerLatLng = map.getCenter();
-		const centerPoint = map.latLngToContainerPoint(centerLatLng);
-		const leftEdgeAsLatLng = map.containerPointToLatLng({x: centerPoint.x - this.DEFAULT_RADIUS_PIXELS, y: centerPoint.y});
-		const radius = map.getCenter().distanceTo(leftEdgeAsLatLng);
-		this.props.onChange({
-			type: "Point",
-			coordinates: [centerLatLng.lng, centerLatLng.lat],
-			radius
-		});
+		if (this.marker) {
+			const {lat, lng} = this.marker.getLatLng();
+			this.map.map.setView({lng, lat}, 12);
+			const markerGeometry = {
+				type: "Point",
+				coordinates: [lng, lat]
+			};
+			this.props.onChange(markerGeometry);
+		}
 		this.onClose();
 	}
 
-	computePadding = () => {
-		// If the rendered element wasn't full screen, we couldn't use these as height/width.
-		const height = window.visualViewport?.height || window.innerHeight;
-		const width = window.visualViewport?.width || window.innerWidth;
-		const topToCircleEdgePixels = parseInt(height / 2 - this.DEFAULT_RADIUS_PIXELS);
-		const leftToCircleEdgePixels = parseInt(width / 2 - this.DEFAULT_RADIUS_PIXELS);
-		const padding = [
-			leftToCircleEdgePixels,
-			topToCircleEdgePixels
-		];
-		return padding;
-	}
+	handleMapClick = (e) => {
+		if (!this.state.moved) { this.setState({moved: true}); }
+		this.setMarkerLatLng(e.latlng);
+	};
 
-	setViewFromCenterAndRadius = (center, radius) => {
-		if (center) {
-			if (radius) {
-				const centerLatLng = L.latLng(center);
-				const data = {
-					geoData: {
-						type: "Point",
-						coordinates: [centerLatLng.lng, centerLatLng.lat],
-						radius
-					},
-					getFeatureStyle: this.invisibleStyle
-				};
-				const zoomToData = {
-					padding: this.computePadding()
-				};
-				return {data, zoomToData};
-			}
-			return {center};
+	setMarkerLatLng = (latlng) => {
+		if (this.marker) {
+			this.marker.setLatLng(latlng);
+		} else {
+			this.marker = L.marker(latlng, { icon: this.map._createIcon(), draggable: true }).addTo(this.map.map);
 		}
-		return {};
 	}
 
 	invisibleStyle = () => {
@@ -488,50 +450,34 @@ class MobileEditorMap extends React.Component {
 		}
 	}
 
-	onLocate = (latlng, accuracy) => {
-		if (this.props.center || !this.mounted) return;
-
-		const options = this.setViewFromCenterAndRadius(latlng, accuracy);
-		if (options.data && options.zoomToData) {
-			this.setState({mapOptions: {data: options.data}}, () => {
-				this.map.zoomToData(options.zoomToData);
-			});
-		} else if (options.center) {
-			this.map.setCenter(options.center);
-		}
-	}
-
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
-
-		
-		options = {...options, ...(this.props.options || {}), ...this.state.mapOptions};
-
-		options.locate = {
-			on: true,
-			userLocation,
-			onLocationFound: this.onLocate,
-			panOnFound: false
-		};
 
 		const {translations} = this.props.formContext;
 
+		const mapComponentProps = {
+			...options, ...(this.props.options || {}),
+			locate: {
+				on: true,
+				userLocation,
+				panOnFound: false,
+			},
+			singleton: true,
+			clickBeforeZoomAndPan: false,
+			viewLocked: false,
+			controls: { draw: false },
+			ref: this.setMobileEditorMapRef,
+			formContext: this.props.formContext,
+			panel: {
+				panelTextContent: this.props.formContext.translations.MobileMapInstructions
+			}
+		};
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
-				<MapComponent
-					{...options}
-					singleton={true}
-					clickBeforeZoomAndPan={false}
-					viewLocked={false}
-					controls={{draw: false}}
-					ref={this.setMobileEditorMapRef}
-					formContext={this.props.formContext} />
-				{/* Circle is rendered inside the map container so the controls z-index can be above the circle mask.*/}
-				{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
+				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.ChooseThisLocation}</Button>
-					<Button block onClick={this.onClose}>{translations.Cancel}</Button>
+					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.state.moved}>{translations.ChooseThisLocation}</Button>
 				</div>
 			</Fullscreen>
 		);

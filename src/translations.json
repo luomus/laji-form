@@ -524,6 +524,11 @@
 		"en": "Exit fullscreen mode",
 		"sv": "Avsluta helskärmsläge"
 	},
+	"mobileMapInstructions": {
+		"fi": "Valitse sijainti napauttamalla karttaa tai raahaamalla olemassa olevaa pistettä.",
+		"en": "Select a location by tapping the map or dragging an existing point.",
+		"sv": "Välj en plats genom att trycka på kartan eller dra en befintlig punkt."
+	},
 	"openShorthand": {
 		"fi": "Avaa pikasyöttötila",
 		"en": "Open shorthand mode",

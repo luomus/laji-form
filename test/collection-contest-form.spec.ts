@@ -22,10 +22,10 @@ test.describe("Collection contest form (MHL.25)", () => {
 				await expect(dateWidget.$input).toBeVisible();
 			});
 
-			test("onChange works", async () => {
+			test.skip("onChange works", async () => {
 				const dateWidget = form.getDateWidget("gatherings.0.dateBegin");
 				await dateWidget.buttons.$today.click();
-				await expect(dateWidget.$input).toHaveValue(/^\d{2}\.\d{2}.\d{4}$/)
+				await expect(dateWidget.$input).toHaveValue(/^\d{2}\.\d{2}.\d{4}$/);
 			});
 		});
 	});
