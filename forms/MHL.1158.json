@@ -373,6 +373,14 @@
               "type": "string",
               "title": "Lon (E)"
             },
+            "wgs84Latitude": {
+              "type": "string",
+              "title": "WGS84 Latitude"
+            },
+            "wgs84Longitude": {
+              "type": "string",
+              "title": "WGS84 Longitude"
+            },
             "coordinateSystem": {
               "type": "string",
               "oneOf": [
@@ -4111,10 +4119,18 @@
                     "higherGeography"
                   ]
                 },
+                "mapFields": {
+                  "title": "",
+                  "fields": [
+                    "wgs84Latitude",
+                    "wgs84Longitude"
+                  ]
+                },
                 "localityFields": {
                   "title": "Locality",
                   "fields": [
                     "coordinatesVerbatim",
+                    "mapFields",
                     "latitude",
                     "longitude",
                     "coordinateSystem",
@@ -4186,6 +4202,15 @@
         "localityFields": {
           "coordinatesVerbatim": {
             "ui:classNames": "verbatim-field"
+          },
+          "mapFields": {
+            "ui:field": "MapField",
+            "ui:options": {
+              "coordinateFields": {
+                "latitude": "wgs84Latitude",
+                "longitude": "wgs84Longitude"
+              }
+            }
           },
           "quadrats": {
             "ui:grid": {

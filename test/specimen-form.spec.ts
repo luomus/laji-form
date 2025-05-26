@@ -1,5 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 import { DemoPageForm, createForm, EnumWidgetPOI, getFocusedElement } from "./test-utils";
+import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 test.describe.configure({mode: "serial"});
 
@@ -19,6 +20,16 @@ test.describe("specimen form (MHL.1158)", () => {
 		await form.setState({uiSchemaContext});
 
 		addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
+	});
+
+	test("point can be added to map", async () => {
+		const map = new MapPageObject(page, page.locator(".laji-map"));
+
+		await map.drawMarker();
+
+		const formData = await form.getChangedData();
+		expect(formData.gatherings[0].wgs84Latitude).toBeDefined();
+		expect(formData.gatherings[0].wgs84Longitude).toBeDefined();
 	});
 
 	test.describe("measurements", () => {
