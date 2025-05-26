@@ -77,10 +77,43 @@ test.describe("SelectWidget", () => {
 		expect(await form.getChangedData()).toBe("b");
 	});
 
-	test("value can be changed from the parent", async () => {
-		await form.setState({formData: "c"});
+	test("value can be changed with arrow down key also when the dropdown is not open", async () => {
+		await enumWidget.openEnums();
+		await enumWidget.$input.press("Enter");
+		await enumWidget.$input.press("ArrowDown");
+
 		await expect(enumWidget.$input).toHaveValue(enums.c);
-		expect(await form.getPropsData()).toBe("c");
+		expect(await form.getChangedData()).toBe("b");
+
+		await enumWidget.$input.press("Enter");
+
+		await expect(enumWidget.$input).toHaveValue(enums.c);
+		expect(await form.getChangedData()).toBe("c");
+	});
+
+	test("value can be cleared with keyboard", async () => {
+		await enumWidget.$input.press("Control+a");
+		await enumWidget.$input.press("Backspace");
+		await enumWidget.$input.press("Enter");
+
+		await expect(enumWidget.$input).toHaveValue("");
+		expect(await form.getChangedData()).toBe(undefined);
+	});
+
+	test("options can be filtered", async () => {
+		await enumWidget.$input.fill("cL");
+
+		await expect(enumWidget.$$enums).toHaveCount(1);
+		await expect(enumWidget.$$enums.first()).toContainText(enums.c);
+		await expect(enumWidget.$input).toHaveValue("cL");
+
+		await enumWidget.$input.press("Tab");
+	});
+
+	test("value can be changed from the parent", async () => {
+		await form.setState({formData: "a"});
+		await expect(enumWidget.$input).toHaveValue(enums.a);
+		expect(await form.getPropsData()).toBe("a");
 	});
 
 	test("value can be changed to undefined from the parent", async () => {

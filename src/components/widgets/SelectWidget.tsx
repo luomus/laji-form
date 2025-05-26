@@ -101,16 +101,6 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const [inputTouched, setInputTouched] = useState(false);
 	const [filterTerm, setFilterTerm] = useState("");
 
-	const onInputChange = useCallback((e) => {
-		const {value} = e.target;
-		setInputValue(value);
-		setInputTouched(true);
-	}, []);
-
-	useEffect(() => {
-		inputTouched && setFilterTerm(inputValue);
-	}, [inputTouched, inputValue]);
-
 	const displayedEnums = useMemo(() => {
 		return filterTerm !== ""
 			? enumOptions.filter(
@@ -129,6 +119,22 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		getDefaultActiveIdx(displayedEnums, value)
 	);
 
+	const onInputChange = useCallback((e) => {
+		const {value} = e.target;
+		setInputValue(value);
+		if (value) {
+			show();
+			setInputTouched(true);
+		} else {
+			setActiveIdx(getDefaultActiveIdx(displayedEnums, ""));
+			setInputTouched(false);
+		}
+	}, [displayedEnums, setActiveIdx, show]);
+
+	useEffect(() => {
+		setFilterTerm(inputTouched ? inputValue : "");
+	}, [inputTouched, inputValue]);
+
 	useEffect(() => {
 		if (inputTouched) {
 			return;
@@ -137,10 +143,15 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	}, [inputTouched, value, enumOptions, getLabelFromValue, setActiveIdx]);
 
 	useEffect(() => {
+		if (inputTouched) {
+			return;
+		}
 		if (activeIdx !== undefined && activeIdx !== -1 && displayedEnums) {
 			setInputValue(displayedEnums[activeIdx].label);
+		} else {
+			setInputValue("");
 		}
-	}, [activeIdx, displayedEnums]);
+	}, [activeIdx, displayedEnums, inputTouched]);
 
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
@@ -151,7 +162,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
 		}
 		hide();
-	}, [resetActiveItemOnSelect, displayedEnums, value, hide, onChange, setActiveIdx]);
+	}, [displayedEnums, hide, onChange, resetActiveItemOnSelect, setActiveIdx, value]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -162,8 +173,6 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		}
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelected(displayedEnums[activeIdx]);
-		} else {
-			setInputValue("");
 		}
 		hide();
 	}, [activeIdx, displayedEnums, hide, onItemSelected]);
