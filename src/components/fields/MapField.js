@@ -264,6 +264,8 @@ export default class MapField extends React.Component {
 					type: "Point",
 					coordinates: [formData[coordinateFields.longitude], formData[coordinateFields.latitude]]
 				};
+			} else {
+				return undefined;
 			}
 		}
 
@@ -289,10 +291,10 @@ export default class MapField extends React.Component {
 		let formData;
 
 		if (coordinateFields) {
-			formData = {
-				[coordinateFields.longitude]: geometry?.coordinates[0],
-				[coordinateFields.latitude]: geometry?.coordinates[1]
-			};
+			formData = geometry ? {
+				[coordinateFields.longitude]: geometry.coordinates[0],
+				[coordinateFields.latitude]: geometry.coordinates[1]
+			} : undefined;
 		} else {
 			formData = geometryCollection ? {
 				type: "GeometryCollection",
