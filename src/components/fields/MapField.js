@@ -226,6 +226,7 @@ export default class MapField extends React.Component {
 							geometry={this.getMobileGeometry()}
 							moved={this.state.moved}
 							setMoved={this.setMoved}
+							defaultLocation={!this.props.formData && !this.map?.userLocation}
 						/>
 				}
 			</div>
@@ -259,7 +260,10 @@ export default class MapField extends React.Component {
 				coordinates: [this.map.userLocation.latlng.lng, this.map.userLocation.latlng.lat]
 			};
 		} else {
-			return undefined;
+			return {
+				type: "Point",
+				coordinates: [24.94782264266911, 60.17522413438655]
+			};
 		}
 	}
 
@@ -400,7 +404,11 @@ class MobileEditorMap extends React.Component {
 		if (this.props.geometry) {
 			const [lng, lat] = this.props.geometry.coordinates;
 			this.setMarkerLatLng({lng, lat});
-			this.map.map.setView({lng, lat}, 12);
+			if (this.props.defaultLocation) {
+				this.map.map.setView({lng, lat}, 4);
+			} else {
+				this.map.map.setView({lng, lat}, 12);
+			}
 			this.marker.on("dragend", () => {
 				if (!this.props.moved) { this.props.setMoved(true); }
 			});
@@ -485,7 +493,7 @@ class MobileEditorMap extends React.Component {
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
+					<Button block onClick={this.onChange} variant={"primary"} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
 				</div>
 			</Fullscreen>
 		);
