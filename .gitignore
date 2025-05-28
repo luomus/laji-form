@@ -5,6 +5,7 @@ lib*
 dist
 build
 test-export
+test-results
 properties.json
 diff
 .vim*
