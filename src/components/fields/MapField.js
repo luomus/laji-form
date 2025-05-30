@@ -408,6 +408,7 @@ class MobileEditorMap extends React.Component {
 				this.map.map.setView({lng, lat}, 4);
 			} else {
 				this.map.map.setView({lng, lat}, 12);
+				this.props.setMoved(true);
 			}
 			this.marker.on("dragend", () => {
 				if (!this.props.moved) { this.props.setMoved(true); }
