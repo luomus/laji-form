@@ -9,7 +9,7 @@ import { findDOMNode } from "react-dom";
 const Spinner = require("react-spinner");
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
-	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
+	: [number | undefined, () => number, () => number, (idx?: number) => void]  => {
 	const [idx, _setIdx] = useState<number | undefined>(defaultIdx);
 	const setIdx = useCallback((idx?: number) => {
 		let nextIdx: number | undefined = idx;
@@ -20,8 +20,18 @@ const useRangeIncrementor = (length: number, defaultIdx?: number)
 		}
 		_setIdx(nextIdx);
 	}, [ _setIdx, length]);
-	const increment = useCallback(() => setIdx((idx || 0) - 1), [idx, setIdx]);
-	const decrement = useCallback(() => setIdx(idx === undefined ? 0 : idx + 1), [idx, setIdx]);
+
+	const increment = useCallback(() => {
+		const newIdx = Math.max((idx || 0) - 1, -1);
+		setIdx(newIdx);
+		return newIdx;
+	}, [idx, setIdx]);
+	const decrement = useCallback(() => {
+		const newIdx = idx === undefined ? 0 : Math.min(idx + 1, length - 1);
+		setIdx(newIdx);
+		return newIdx;
+	}, [idx, length, setIdx]);
+
 	return [idx === undefined ? idx : Math.min(idx, length - 1), increment, decrement, _setIdx];
 };
 
@@ -119,50 +129,54 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		getDefaultActiveIdx(displayedEnums, value)
 	);
 
-	const onInputChange = useCallback((e) => {
-		const {value} = e.target;
-		setInputValue(value);
-		if (value) {
-			show();
-			setInputTouched(true);
-		} else {
-			setActiveIdx(getDefaultActiveIdx(displayedEnums, ""));
-			setInputTouched(false);
-		}
-	}, [displayedEnums, setActiveIdx, show]);
+	const updateActiveIdx = useCallback((activeIdx?: number) => {
+		setActiveIdx(activeIdx);
 
-	useEffect(() => {
-		setFilterTerm(inputTouched ? inputValue : "");
-	}, [inputTouched, inputValue]);
-
-	useEffect(() => {
 		if (inputTouched) {
 			return;
 		}
-		setActiveIdx(enumOptions.findIndex(item => item.value === value || ""));
-	}, [inputTouched, value, enumOptions, getLabelFromValue, setActiveIdx]);
 
-	useEffect(() => {
-		if (inputTouched) {
-			return;
-		}
-		if (activeIdx !== undefined && activeIdx !== -1 && displayedEnums) {
+		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			setInputValue(displayedEnums[activeIdx].label);
 		} else {
 			setInputValue("");
 		}
-	}, [activeIdx, displayedEnums, inputTouched]);
+	}, [displayedEnums, inputTouched, setActiveIdx]);
 
-	const onItemSelected = useCallback((item: EnumOptionsType) => {
-		onChange(item.value);
-		setInputTouched(false);
-		if (!resetActiveItemOnSelect) {
-			setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
-		} else {
-			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
+	const onInputChange = useCallback((e) => {
+		const {value} = e.target;
+		setInputValue(value);
+		setInputTouched(true);
+		show();
+	}, [show]);
+
+	// filter options by the input value if the user has touched the input
+	useEffect(() => {
+		setFilterTerm(inputTouched ? inputValue : "");
+	}, [inputTouched, inputValue]);
+
+	// if value changes, change activeIdx to match the value (unless the user has touched the input)
+	useEffect(() => {
+		if (inputTouched) {
+			return;
 		}
+		updateActiveIdx(enumOptions.findIndex(item => item.value === value || ""));
+	}, [enumOptions, inputTouched, updateActiveIdx, value]);
+
+	const onItemSelected = useCallback((item?: EnumOptionsType) => {
+		onChange(item?.value);
+		setInputTouched(false);
+		let activeIdx: number|undefined = undefined;
+		if (item) {
+			if (!resetActiveItemOnSelect) {
+				activeIdx = displayedEnums.findIndex(enu => enu.value === item.value);
+			} else {
+				activeIdx = getDefaultActiveIdx(displayedEnums, value);
+			}
+		}
+		updateActiveIdx(activeIdx);
 		hide();
-	}, [displayedEnums, hide, onChange, resetActiveItemOnSelect, setActiveIdx, value]);
+	}, [displayedEnums, hide, onChange, resetActiveItemOnSelect, updateActiveIdx, value]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -173,6 +187,8 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		}
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelected(displayedEnums[activeIdx]);
+		} else {
+			onItemSelected(undefined);
 		}
 		hide();
 	}, [activeIdx, displayedEnums, hide, onItemSelected]);
@@ -180,24 +196,23 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
 		case "ArrowDown":
-			activeIdxDown();
+			updateActiveIdx(activeIdxDown());
 			e.preventDefault();
 			break;
 		case "ArrowUp":
-			activeIdxUp();
+			updateActiveIdx(activeIdxUp());
 			e.preventDefault();
 			break;
 		case "Enter":
-			activeIdx !== undefined && activeIdx !== -1 && displayedEnums && onItemSelected(displayedEnums[activeIdx]);
+			activeIdx !== undefined && displayedEnums[activeIdx] && onItemSelected(displayedEnums[activeIdx]);
 			e.preventDefault();
 			break;
 		case "Escape":
-			setInputValue("");
-			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
+			updateActiveIdx(undefined);
 			e.preventDefault();
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected, setActiveIdx, value]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected, updateActiveIdx]);
 
 	const onFocus = useCallback(() => {
 		show();

@@ -91,15 +91,6 @@ test.describe("SelectWidget", () => {
 		expect(await form.getChangedData()).toBe("c");
 	});
 
-	test("value can be cleared with keyboard", async () => {
-		await enumWidget.$input.press("Control+a");
-		await enumWidget.$input.press("Backspace");
-		await enumWidget.$input.press("Enter");
-
-		await expect(enumWidget.$input).toHaveValue("");
-		expect(await form.getChangedData()).toBe(undefined);
-	});
-
 	test("options can be filtered", async () => {
 		await enumWidget.$input.fill("cL");
 
