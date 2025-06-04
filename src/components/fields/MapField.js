@@ -92,6 +92,9 @@ export default class MapField extends React.Component {
 		this.geocode(this.props);
 
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+
+		const { mobileEditor } = getUiOptions(uiSchema);
+		if (mobileEditor) { this.showMobileEditorMap(); }
 	}
 
 	componentWillUnmount() {
@@ -172,7 +175,7 @@ export default class MapField extends React.Component {
 			}
 		}
 
-		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered || singletonHasLocate)) {
+		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered || singletonHasLocate) && !_mobileEditor) {
 			_mapOptions.locate.on = true;
 		}
 
@@ -254,11 +257,6 @@ export default class MapField extends React.Component {
 	getMobileGeometry = () => {
 		if (this.props.formData) {
 			return this.props.formData;
-		} else if (this.map?.userLocation) {
-			return {
-				type: "Point",
-				coordinates: [this.map.userLocation.latlng.lng, this.map.userLocation.latlng.lat]
-			};
 		} else {
 			return {
 				type: "Point",
@@ -320,7 +318,7 @@ export default class MapField extends React.Component {
 		this.setState({mobileEditor: {visible: false, options}});
 	}
 
-	onLocate = (latlng, forceShow) => {
+	onLocate = (latlng, radius, forceShow) => {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
@@ -381,7 +379,8 @@ class MobileEditorMap extends React.Component {
 		const { geometry } = this.props;
 
 		this.state = {
-			geometry: [{ geoData: geometry}]
+			geometry: [{ geoData: geometry}],
+			located: false
 		};
 	}
 
@@ -467,6 +466,16 @@ class MobileEditorMap extends React.Component {
 		}
 	}
 
+	onLocate = (latlng) => {
+		if (!latlng || this.state.located) { return; }
+
+		this.map.map.setView({lng: latlng.lng, lat: latlng.lat}, 12);
+		this.setMarkerLatLng(latlng);
+
+		if (!this.state.located) { this.setState({located: true}); }
+		if (!this.props.moved) { this.props.setMoved(true); }
+	}
+
 	render() {
 		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
@@ -476,9 +485,10 @@ class MobileEditorMap extends React.Component {
 		const mapComponentProps = {
 			...options, ...(this.props.options || {}),
 			locate: {
-				on: true,
+				on: false,
 				userLocation,
-				panOnFound: false,
+				onLocationFound: this.onLocate,
+				panOnFound: false
 			},
 			singleton: true,
 			clickBeforeZoomAndPan: false,
