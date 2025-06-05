@@ -9,7 +9,7 @@ import { findDOMNode } from "react-dom";
 const Spinner = require("react-spinner");
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
-	: [number | undefined, () => number, () => number, (idx?: number) => void]  => {
+	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
 	const [idx, _setIdx] = useState<number | undefined>(defaultIdx);
 	const setIdx = useCallback((idx?: number) => {
 		let nextIdx: number | undefined = idx;
@@ -20,18 +20,8 @@ const useRangeIncrementor = (length: number, defaultIdx?: number)
 		}
 		_setIdx(nextIdx);
 	}, [ _setIdx, length]);
-
-	const increment = useCallback(() => {
-		const newIdx = Math.max((idx || 0) - 1, -1);
-		setIdx(newIdx);
-		return newIdx;
-	}, [idx, setIdx]);
-	const decrement = useCallback(() => {
-		const newIdx = idx === undefined ? 0 : Math.min(idx + 1, length - 1);
-		setIdx(newIdx);
-		return newIdx;
-	}, [idx, length, setIdx]);
-
+	const increment = useCallback(() => setIdx((idx || 0) - 1), [idx, setIdx]);
+	const decrement = useCallback(() => setIdx(idx === undefined ? 0 : idx + 1), [idx, setIdx]);
 	return [idx === undefined ? idx : Math.min(idx, length - 1), increment, decrement, _setIdx];
 };
 
@@ -86,10 +76,10 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		uiSchema,
 		options,
 		onChange,
-		includeEmpty = true,
-		resetActiveItemOnSelect = false
+		includeEmpty = true
 	} = props;
 	const { theme } = useContext(ReactContext);
+	const { FormControl } = theme;
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<typeof FormControl>(null);
@@ -107,76 +97,42 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			: ""
 	, [enumOptions]);
 
-	const [inputValue, setInputValue] = useState(getLabelFromValue(value));
-	const [inputTouched, setInputTouched] = useState(false);
-	const [filterTerm, setFilterTerm] = useState("");
+	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
+	const [isOpen, show, hide] = useBooleanSetter(false);
 
 	const displayedEnums = useMemo(() => {
-		return filterTerm !== ""
+		return filterTerm !== undefined && filterTerm !== ""
 			? enumOptions.filter(
-				({ label }) => label.toLowerCase().includes(filterTerm.toLowerCase())
+				({ label }) => label.toLowerCase().match(filterTerm.toLowerCase())
 			)
 			: enumOptions;
 			
 	}, [filterTerm, enumOptions]);
-
-	const [isOpen, show, hide] = useBooleanSetter(false);
-
-	const { FormControl } = theme;
 
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
 		(displayedEnums || []).length,
 		getDefaultActiveIdx(displayedEnums, value)
 	);
 
-	const updateActiveIdx = useCallback((activeIdx?: number) => {
-		setActiveIdx(activeIdx);
+	const inputValue = filterTerm ?? getLabelFromValue(value);
 
-		if (inputTouched) {
-			return;
-		}
-
-		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
-			setInputValue(displayedEnums[activeIdx].label);
-		} else {
-			setInputValue("");
-		}
-	}, [displayedEnums, inputTouched, setActiveIdx]);
+	const showAndSelectText = useCallback(() => {
+		show();
+		(findDOMNode(inputRef.current as any) as any)?.setSelectionRange(0, inputValue.length);
+	}, [show, inputValue.length]);
 
 	const onInputChange = useCallback((e) => {
 		const {value} = e.target;
-		setInputValue(value);
-		setInputTouched(true);
-		show();
-	}, [show]);
+		setFilterTerm(value);
+		setActiveIdx(0);
+	}, [setActiveIdx]);
 
-	// filter options by the input value if the user has touched the input
-	useEffect(() => {
-		setFilterTerm(inputTouched ? inputValue : "");
-	}, [inputTouched, inputValue]);
-
-	// if value changes, change activeIdx to match the value (unless the user has touched the input)
-	useEffect(() => {
-		if (inputTouched) {
-			return;
-		}
-		updateActiveIdx(enumOptions.findIndex(item => item.value === value || ""));
-	}, [enumOptions, inputTouched, updateActiveIdx, value]);
-
-	const onItemSelected = useCallback((item?: EnumOptionsType) => {
-		onChange(item?.value);
-		setInputTouched(false);
-		let activeIdx: number|undefined = undefined;
-		if (item) {
-			if (!resetActiveItemOnSelect) {
-				activeIdx = displayedEnums.findIndex(enu => enu.value === item.value);
-			} else {
-				activeIdx = getDefaultActiveIdx(displayedEnums, value);
-			}
-		}
-		updateActiveIdx(activeIdx);
+	const onItemSelected = useCallback((item: EnumOptionsType) => {
+		onChange(item.value);
+		setFilterTerm(undefined);
+		setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [displayedEnums, hide, onChange, resetActiveItemOnSelect, updateActiveIdx, value]);
+	}, [displayedEnums, hide, onChange, setActiveIdx]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -188,7 +144,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelected(displayedEnums[activeIdx]);
 		} else {
-			onItemSelected(undefined);
+			setFilterTerm(undefined);
 		}
 		hide();
 	}, [activeIdx, displayedEnums, hide, onItemSelected]);
@@ -196,33 +152,39 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
 		case "ArrowDown":
-			updateActiveIdx(activeIdxDown());
+			if (!isOpen) {
+				showAndSelectText();
+			} else {
+				activeIdxDown();
+			}
 			e.preventDefault();
 			break;
 		case "ArrowUp":
-			updateActiveIdx(activeIdxUp());
+			if (!isOpen) {
+				showAndSelectText();
+			} else {
+				activeIdxUp();
+			}
 			e.preventDefault();
 			break;
 		case "Enter":
-			activeIdx !== undefined && displayedEnums[activeIdx] && onItemSelected(displayedEnums[activeIdx]);
+			if (activeIdx !== undefined && displayedEnums) {
+				onItemSelected(displayedEnums[activeIdx]);
+			}
 			e.preventDefault();
 			break;
 		case "Escape":
-			updateActiveIdx(undefined);
+			setFilterTerm(undefined);
+			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
 			e.preventDefault();
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected, updateActiveIdx]);
-
-	const onFocus = useCallback(() => {
-		show();
-		(findDOMNode(inputRef.current as any) as any)?.setSelectionRange(0, inputValue.length);
-	}, [inputValue.length, show]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, isOpen, onItemSelected, setActiveIdx, showAndSelectText, value]);
 
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} style={{ position: "relative" }} className="laji-form-dropdown-container">
-			<FormControl disabled={disabled || readonly} id={id} onFocus={onFocus} value={inputValue} onChange={onInputChange} autoComplete="off" placeholder={options.placeholder} ref={inputRef} />
-			<Caret onFocus={onFocus} />
+			<FormControl disabled={disabled || readonly} id={id} onClick={showAndSelectText} onFocus={showAndSelectText} value={inputValue} onChange={onInputChange} autoComplete="off" ref={inputRef} />
+			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute" }}
@@ -257,7 +219,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		: getEnumOptions(options.enumOptions!, uiSchema, false)
 	);
 
-	const [inputValue, setInputValue] = useState("");
+	const [inputValue, setUserTypedInputValue] = useState("");
 	const [filterTerm, setFilterTerm] = useState("");
 	const [loading, setLoading] = useState<boolean | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
@@ -267,7 +229,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 
 	const onInputChange = useCallback((e) => {
 		const {value} = e.target;
-		setInputValue(value);
+		setUserTypedInputValue(value);
 	}, []);
 
 	React.useEffect(() => {
@@ -367,7 +329,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelectedByBlur(displayedEnums[activeIdx]);
 		} else {
-			setInputValue("");
+			setUserTypedInputValue("");
 		}
 	}, [activeIdx, displayedEnums, hide, onItemSelectedByBlur, setBlurred]);
 
@@ -386,7 +348,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			e.preventDefault();
 			break;
 		case "Escape":
-			setInputValue("");
+			setUserTypedInputValue("");
 			setActiveIdx(undefined);
 			e.preventDefault();
 			break;
@@ -442,7 +404,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 				       ref={inputRef} />
 				{ loading && <Spinner /> }
 			</div>
-			<Caret onFocus={onFocus} />
+			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute", zIndex: 99999 }}
@@ -470,10 +432,11 @@ const SelectedMultiValue = ({ children: enu, onDelete, readonly }:
 	);
 };
 
-const Caret = ({onFocus}: {onFocus: () => void}) =>
+const Caret = () => (
 	<div className="laji-form-dropdown-caret-container" style={{ position: "absolute", pointerEvents: "none" }}>
-		<span onFocus={onFocus} className="laji-form-dropdown-caret" ><img src="https://cdn.laji.fi/images/icons/caret-down.svg" /></span>
-	</div>;
+		<span className="laji-form-dropdown-caret" ><img src="https://cdn.laji.fi/images/icons/caret-down.svg" /></span>
+	</div>
+);
 
 function ListItem(
 	{ onSelected, active, children }
