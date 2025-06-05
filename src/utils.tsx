@@ -821,7 +821,7 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		let passes;
 
 		// BW compatibility for old string  rule
-		if (["isAdmin", "isLoggedIn", "isEdit", "isReadonly"].includes(rule)) {
+		if (["isAdmin", "isEdit", "isReadonly"].includes(rule)) {
 			rule = {rule};
 		}
 
