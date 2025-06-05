@@ -50,6 +50,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"AutoArrayField",
 	"AutosuggestField",
 	"HiddenField",
+	"HiddenWithTextField",
 	"InitiallyHiddenField",
 	"ContextInjectionField",
 	"ImageArrayField",
