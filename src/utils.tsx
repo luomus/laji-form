@@ -821,7 +821,7 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		let passes;
 
 		// BW compatibility for old string  rule
-		if (["isAdmin", "isEdit", "isReadonly"].includes(rule)) {
+		if (["isAdmin", "isLoggedIn", "isEdit", "isReadonly"].includes(rule)) {
 			rule = {rule};
 		}
 
@@ -829,6 +829,8 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		if (_rule) {
 			if (_rule === "isAdmin") {
 				passes = props.formContext.uiSchemaContext.isAdmin;
+			} else if (_rule === "isLoggedIn") {
+				passes = props.formContext.uiSchemaContext.creator;
 			} else if (_rule === "isEdit") {
 				passes = props.formContext.uiSchemaContext.isEdit;
 			} else if (_rule === "isReadonly") {
