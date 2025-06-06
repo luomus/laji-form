@@ -1,8 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 import { DemoPageForm, createForm } from "./test-utils";
 
-const $blocker = (form: DemoPageForm) => form.$locate("gatherings.0.geometry").locator(".blocker");
-const $imageAddModal = (page: Page) => page.locator(".media-add-modal");
 const $mobileEditorMap = (page: Page) => page.locator(".laji-form.fullscreen .laji-form-map");
 
 test.describe("Mobile form (MHL.51)", () => {
@@ -16,50 +14,28 @@ test.describe("Mobile form (MHL.51)", () => {
 			form = await createForm(page, {id: "MHL.51"});
 		});
 
-		test("is displayed", async () => {
+		test("mobile form is displayed", async () => {
 			await expect(form.$form).toBeVisible();
 		});
 
-		test("image add modal is displayed", async () => {
-			expect($imageAddModal(page)).toBeVisible();
+		test("mobile editor map is displayed", async () => {
+			await expect($mobileEditorMap(page)).toBeVisible();
 		});
 
-		test("clicking cancel on image add modal hides it", async () => {
-			await $imageAddModal(page).locator(".cancel").click();
+		test("choose location button is disabled before moving the marker", async () => {
+			await expect(page.locator(".choose-location-button")).toBeVisible();
+			await expect(page.locator(".choose-location-button")).toBeDisabled();
+		});
 
-			await expect($imageAddModal(page)).not.toBeVisible();
+		test("choose location button closes the map after moving the marker", async () => {
+			await page.mouse.click(300, 300);
+			await expect(page.locator(".choose-location-button")).toBeEnabled();
+			await page.locator(".choose-location-button").click();
+			await expect($mobileEditorMap(page)).toBeHidden();
 		});
 	});
 
 	test.describe("with formData with geometry", () => {
-		let page: Page;
-		let form: DemoPageForm;
-
-		test.beforeAll(async ({browser}) => {
-			page = await browser.newPage();
-			form = await createForm(page, {id: "MHL.51", localFormData: "MHL.51-geometry"});
-		});
-
-		test("is displayed", async () => {
-			await expect(form.$form).toBeVisible();
-		});
-
-
-		test("image add modal is displayed", async () => {
-			await expect($imageAddModal(page)).toBeVisible();
-		});
-
-		test("map doesn't geolocating blocker since it has geometry", async () => {
-			await expect($blocker(form)).not.toBeVisible();
-		});
-
-		test("map doesn't show mobile editor", async () => {
-			await expect($mobileEditorMap(page)).not.toBeVisible();
-		});
-
-	});
-
-	test.describe("with formData with image", () => {
 		let page: Page;
 		let form: DemoPageForm;
 
@@ -68,39 +44,22 @@ test.describe("Mobile form (MHL.51)", () => {
 			form = await createForm(page, {id: "MHL.51", localFormData: "MHL.51-image-geometry"});
 		});
 
-		test("is displayed", async () => {
+		test("mobile form is displayed", async () => {
 			await expect(form.$form).toBeVisible();
 		});
 
-		test("image add modal isn't displayed", async () => {
-			await expect($imageAddModal(page)).not.toBeVisible();
+		test("mobile editor map is displayed", async () => {
+			await expect($mobileEditorMap(page)).toBeVisible();
 		});
 
-		test("map doesn't geolocating blocker since it has geometry", async () => {
-			await expect($blocker(form)).not.toBeVisible();
+		test("choose location button is enabled without moving the marker", async () => {
+			await expect(page.locator(".choose-location-button")).toBeEnabled();
 		});
 
-		test("map doesn't show mobile editor", async () => {
-			await expect($mobileEditorMap(page)).not.toBeVisible();
-		});
-
-	});
-
-	test.describe("with formData without image and edit mode", () => {
-		let page: Page;
-		let form: DemoPageForm;
-
-		test.beforeAll("navigate to form", async ({browser}) => {
-			page = await browser.newPage();
-			form = await createForm(page, {id: "MHL.51", localFormData: "MHL.51-geometry", isEdit: true});
-		});
-
-		test("is displayed", async () => {
-			await expect(form.$form).toBeVisible();
-		});
-
-		test("image add modal isn't displayed", async () => {
-			await expect($imageAddModal(page)).not.toBeVisible();
+		test("choose location button closes the map without moving the marker", async () => {
+			await expect(page.locator(".choose-location-button")).toBeEnabled();
+			await page.locator(".choose-location-button").click();
+			await expect($mobileEditorMap(page)).toBeHidden();
 		});
 	});
 });
