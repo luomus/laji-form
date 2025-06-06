@@ -829,6 +829,8 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		if (_rule) {
 			if (_rule === "isAdmin") {
 				passes = props.formContext.uiSchemaContext.isAdmin;
+			} else if (_rule === "isLoggedIn") {
+				passes = props.formContext.uiSchemaContext.creator;
 			} else if (_rule === "isEdit") {
 				passes = props.formContext.uiSchemaContext.isEdit;
 			} else if (_rule === "isReadonly") {

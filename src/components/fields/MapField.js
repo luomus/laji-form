@@ -96,6 +96,9 @@ export default class MapField extends React.Component {
 		this.geocode(this.props);
 
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+
+		const { mobileEditor } = getUiOptions(uiSchema);
+		if (mobileEditor) { this.showMobileEditorMap(); }
 	}
 
 	componentWillUnmount() {
@@ -176,7 +179,7 @@ export default class MapField extends React.Component {
 			}
 		}
 
-		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered || singletonHasLocate)) {
+		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered || singletonHasLocate) && !_mobileEditor) {
 			_mapOptions.locate.on = true;
 		}
 
@@ -230,6 +233,7 @@ export default class MapField extends React.Component {
 							geometry={this.getMobileGeometry()}
 							moved={this.state.moved}
 							setMoved={this.setMoved}
+							defaultLocation={!this.props.formData && !this.map?.userLocation}
 						/>
 				}
 			</div>
@@ -275,13 +279,11 @@ export default class MapField extends React.Component {
 	getMobileGeometry = () => {
 		if (this.props.formData) {
 			return this.props.formData;
-		} else if (this.map?.userLocation) {
+		} else {
 			return {
 				type: "Point",
-				coordinates: [this.map.userLocation.latlng.lng, this.map.userLocation.latlng.lat]
+				coordinates: [24.94782264266911, 60.17522413438655]
 			};
-		} else {
-			return undefined;
 		}
 	}
 
@@ -348,7 +350,7 @@ export default class MapField extends React.Component {
 		this.setState({mobileEditor: {visible: false, options}});
 	}
 
-	onLocate = (latlng, forceShow) => {
+	onLocate = (latlng, radius, forceShow) => {
 		const {mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
@@ -409,7 +411,8 @@ class MobileEditorMap extends React.Component {
 		const { geometry } = this.props;
 
 		this.state = {
-			geometry: [{ geoData: geometry}]
+			geometry: [{ geoData: geometry}],
+			located: false
 		};
 	}
 
@@ -432,7 +435,12 @@ class MobileEditorMap extends React.Component {
 		if (this.props.geometry) {
 			const [lng, lat] = this.props.geometry.coordinates;
 			this.setMarkerLatLng({lng, lat});
-			this.map.map.setView({lng, lat}, 12);
+			if (this.props.defaultLocation) {
+				this.map.map.setView({lng, lat}, 4);
+			} else {
+				this.map.map.setView({lng, lat}, 12);
+				this.props.setMoved(true);
+			}
 			this.marker.on("dragend", () => {
 				if (!this.props.moved) { this.props.setMoved(true); }
 			});
@@ -490,6 +498,16 @@ class MobileEditorMap extends React.Component {
 		}
 	}
 
+	onLocate = (latlng) => {
+		if (!latlng || this.state.located) { return; }
+
+		this.map.map.setView({lng: latlng.lng, lat: latlng.lat}, 12);
+		this.setMarkerLatLng(latlng);
+
+		if (!this.state.located) { this.setState({located: true}); }
+		if (!this.props.moved) { this.props.setMoved(true); }
+	}
+
 	render() {
 		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
@@ -499,9 +517,10 @@ class MobileEditorMap extends React.Component {
 		const mapComponentProps = {
 			...options, ...(this.props.options || {}),
 			locate: {
-				on: true,
+				on: false,
 				userLocation,
-				panOnFound: false,
+				onLocationFound: this.onLocate,
+				panOnFound: false
 			},
 			singleton: true,
 			clickBeforeZoomAndPan: false,
@@ -517,7 +536,7 @@ class MobileEditorMap extends React.Component {
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent {...mapComponentProps} />
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
+					<Button block onClick={this.onChange} variant={"primary"} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
 				</div>
 			</Fullscreen>
 		);

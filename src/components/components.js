@@ -495,8 +495,8 @@ export function Label({label, children, id, required, registry = {}, uiSchema = 
 
 	const labelElem = (
 		<LabelComponent htmlFor={id} aria-describedby={`${id}--help`}>
-			<div>
-				<strong dangerouslySetInnerHTML={{__html: label + requiredHtml}} />
+			<div style={{ whiteSpace: "normal" }}>
+				<span dangerouslySetInnerHTML={{__html: label + requiredHtml}} />
 				{showHelp ? <Help focusable={true} onFocus={onHelpFocus} onBlur={onHelpBlur} onClick={onHelpClick} id={id} /> : null}
 			</div>
 			{children}

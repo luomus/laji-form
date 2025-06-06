@@ -1306,7 +1306,7 @@ class ReactAutosuggest extends React.Component {
 		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 		suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
 		this.setState({focused: false, focusedIdx: undefined, touched: false});
-		this.props.inputProps && this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
+		this.props.inputProps?.onBlur?.(e);
 	}
 
 	onListBlur = (e) => {
@@ -1314,7 +1314,7 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	onInputKeyDown = (e) => {
-		let state, suggestion;
+		let state;
 		switch (e.key) {
 		case "ArrowDown":
 			e.preventDefault();
@@ -1344,10 +1344,7 @@ class ReactAutosuggest extends React.Component {
 			break;
 		case "Enter":
 			e.preventDefault();
-			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
-			if (suggestion) {
-				this.onSuggestionSelected(suggestion);
-			}
+			this.inputElem.blur();
 			break;
 		case "Control":
 		case "Meta":
@@ -1358,7 +1355,7 @@ class ReactAutosuggest extends React.Component {
 		default:
 			this.setState({touched: true});
 		}
-		this.props.inputProps && this.props.inputProps.onKeyDown && this.props.inputProps.onKeyDown(e);
+		this.props.inputProps?.onKeyDown?.(e);
 	}
 
 	onInputChange = (e) => {

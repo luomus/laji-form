@@ -14,10 +14,10 @@ export const rulePropType = PropTypes.oneOfType([
 		complement: PropTypes.bool
 	}),
 	PropTypes.shape({
-		rule: PropTypes.oneOf(["isAdmin", "isEdit", "isReadonly"]),
+		rule: PropTypes.oneOf(["isAdmin", "isLoggedIn", "isEdit", "isReadonly"]),
 		complement: PropTypes.bool
 	}),
-	PropTypes.oneOf(["isAdmin", "isEdit", "isReadonly"]),
+	PropTypes.oneOf(["isAdmin", "isLoggedIn", "isEdit", "isReadonly"]),
 ]);
 
 export const operationPropType = PropTypes.shape({
