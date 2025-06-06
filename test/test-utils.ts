@@ -336,9 +336,20 @@ export class DemoPageForm extends Form {
 	}
 
 	setState(state: any) {
-		const onSubmit = "function(data) {window.submittedData = data.formData;}";
-		const onChange = "function(formData) {window.changedData = formData;}";
-		return this.e(`setState({onSubmit: ${onSubmit}, onChange: ${onChange}, ...${JSON.stringify(state)}})`);
+		return this.page.evaluate((state) => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const onSubmit = function(data) {window.submittedData = data.formData;};
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const onChange = function(formData) {window.changedData = formData;};
+
+			return (window as any).lajiForm.setState({
+				onSubmit,
+				onChange,
+				...(state || {})
+			});
+		}, state);
 	}
 
 	getState() {

@@ -55,6 +55,10 @@ export default class MapField extends React.Component {
 				height: PropTypes.number,
 				emptyHelp: PropTypes.string,
 				geometryCollection: PropTypes.bool,
+				coordinateFields: PropTypes.shape({
+					latitude: PropTypes.string.isRequired,
+					longitude: PropTypes.string.isRequired
+				})
 			})
 		}),
 		schema: PropTypes.shape({
@@ -239,18 +243,36 @@ export default class MapField extends React.Component {
 	getDrawOptions = (props) => {
 		const {uiSchema, disabled, readonly} = props;
 		const options = getUiOptions(uiSchema);
-		const {mapOptions = {}} = options;
+		const {mapOptions = {}, coordinateFields} = options;
 		const drawOptions = {
 			...(mapOptions.draw || {}),
 			geoData: this.getGeometry(props),
 			onChange: this.onChange,
 			editable: !disabled && !readonly && !options.mobileEditor
 		};
+		if (coordinateFields) {
+			["rectangle", "polygon", "polyline", "circle"].forEach(drawType => {
+				drawOptions[drawType] = false;
+			});
+		}
 		return drawOptions;
 	}
 
 	getGeometry = (props) => {
 		const {formData} = props;
+		const {coordinateFields} = getUiOptions(this.props.uiSchema);
+
+		if (coordinateFields) {
+			if (formData?.[coordinateFields.longitude] !== undefined && formData?.[coordinateFields.latitude] !== undefined) {
+				return {
+					type: "Point",
+					coordinates: [formData[coordinateFields.longitude], formData[coordinateFields.latitude]]
+				};
+			} else {
+				return undefined;
+			}
+		}
+
 		return formData && Object.keys(formData).length ? formData : undefined;
 	}
 
@@ -265,6 +287,26 @@ export default class MapField extends React.Component {
 		}
 	}
 
+	getFormDataFromGeometry = (geometry) => {
+		const {geometryCollection = true, coordinateFields} = getUiOptions(this.props.uiSchema);
+
+		let formData;
+
+		if (coordinateFields) {
+			formData = geometry ? {
+				[coordinateFields.longitude]: geometry.coordinates[0],
+				[coordinateFields.latitude]: geometry.coordinates[1]
+			} : undefined;
+		} else {
+			formData = geometryCollection ? {
+				type: "GeometryCollection",
+				geometries: geometry ? [geometry] : []
+			} : geometry || {};
+		}
+
+		return formData;
+	}
+
 	setMoved = (moved) => {
 		this.setState({ moved });
 	}
@@ -274,27 +316,17 @@ export default class MapField extends React.Component {
 	}
 
 	onChange = (events) => {
-		const {geometryCollection = true} = getUiOptions(this.props.uiSchema);
 		let formData;
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":
-				formData = geometryCollection ? {
-					type: "GeometryCollection",
-					geometries: [e.feature.geometry]
-				} : e.feature.geometry;
+				formData = this.getFormDataFromGeometry(e.feature.geometry);
 				break;
 			case "edit":
-				formData = geometryCollection ? {
-					type: "GeometryCollection",
-					geometries: [e.features[0].geometry]
-				} : e.features[0].geometry;
+				formData = this.getFormDataFromGeometry(e.features[0].geometry);
 				break;
 			case "delete":
-				formData = geometryCollection ? {
-					type: "GeometryCollection",
-					geometries: []
-				} : {};
+				formData = this.getFormDataFromGeometry(undefined);
 			}
 		});
 		this._zoomToDataOnNextTick = true;
@@ -319,7 +351,7 @@ export default class MapField extends React.Component {
 	}
 
 	onLocate = (latlng, radius, forceShow) => {
-		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
+		const {mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
 			this.setState({located: true});
@@ -340,7 +372,7 @@ export default class MapField extends React.Component {
 		this.setState({located: true});
 		if (createOnLocate) {
 			const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
-			this.props.onChange(geometryCollection ? {type: "GeometryCollection", geometries: [geometry]} : geometry);
+			this.props.onChange(this.getFormDataFromGeometry(geometry));
 		}
 	}
 
