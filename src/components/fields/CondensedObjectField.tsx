@@ -213,11 +213,10 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 						</div>
 					</div>
 				)}
-				<SelectWidget
+				<SelectWidget key={childProps.length}
 					options={{enumOptions: selectableFieldEnums, placeholder: addFieldPlaceholder}}
 					onChange={this.onSelectFieldChange}
 					includeEmpty={true}
-					resetActiveItemOnSelect={true}
 					schema={{}}
 					id={`${idSchema.$id}_field_select`}
 					formContext={this.props.formContext} />

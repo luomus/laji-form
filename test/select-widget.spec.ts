@@ -77,18 +77,12 @@ test.describe("SelectWidget", () => {
 		expect(await form.getChangedData()).toBe("b");
 	});
 
-	test("value can be changed with arrow down key also when the dropdown is not open", async () => {
+	test("can be opened with arrow down key", async () => {
 		await enumWidget.openEnums();
 		await enumWidget.$input.press("Enter");
 		await enumWidget.$input.press("ArrowDown");
 
-		await expect(enumWidget.$input).toHaveValue(enums.c);
-		expect(await form.getChangedData()).toBe("b");
-
-		await enumWidget.$input.press("Enter");
-
-		await expect(enumWidget.$input).toHaveValue(enums.c);
-		expect(await form.getChangedData()).toBe("c");
+		await expect(enumWidget.$$enums.first()).toBeVisible();
 	});
 
 	test("options can be filtered", async () => {
