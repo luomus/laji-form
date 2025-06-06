@@ -76,4 +76,34 @@ test.describe("SelectWidget", () => {
 		await expect(enumWidget.$input).toHaveValue(enums.b);
 		expect(await form.getChangedData()).toBe("b");
 	});
+
+	test("can be opened with arrow down key", async () => {
+		await enumWidget.openEnums();
+		await enumWidget.$input.press("Enter");
+		await enumWidget.$input.press("ArrowDown");
+
+		await expect(enumWidget.$$enums.first()).toBeVisible();
+	});
+
+	test("options can be filtered", async () => {
+		await enumWidget.$input.fill("cL");
+
+		await expect(enumWidget.$$enums).toHaveCount(1);
+		await expect(enumWidget.$$enums.first()).toContainText(enums.c);
+		await expect(enumWidget.$input).toHaveValue("cL");
+
+		await enumWidget.$input.press("Tab");
+	});
+
+	test("value can be changed from the parent", async () => {
+		await form.setState({formData: "a"});
+		await expect(enumWidget.$input).toHaveValue(enums.a);
+		expect(await form.getPropsData()).toBe("a");
+	});
+
+	test("value can be changed to undefined from the parent", async () => {
+		await form.setState({formData: undefined});
+		await expect(enumWidget.$input).toHaveValue("");
+		expect(await form.getPropsData()).toBe(undefined);
+	});
 });

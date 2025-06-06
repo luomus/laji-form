@@ -79,6 +79,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		includeEmpty = true
 	} = props;
 	const { theme } = useContext(ReactContext);
+	const { FormControl } = theme;
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<typeof FormControl>(null);
@@ -96,30 +97,11 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			: ""
 	, [enumOptions]);
 
-	const [inputValue, setInputValue] = useState(getLabelFromValue(value));
-	const [inputTouched, setInputTouched] = useState(false);
-	const [filterTerm, setFilterTerm] = useState("");
-
-	const onInputChange = useCallback((e) => {
-		const {value} = e.target;
-		setInputValue(value);
-		setInputTouched(true);
-	}, []);
-
-	useEffect(() => {
-		inputTouched && setFilterTerm(inputValue);
-	}, [inputTouched, inputValue]);
-
-	// Sync inputValue if value changes.
-	useEffect(() => {
-		if (inputTouched) {
-			return;
-		}
-		setInputValue(getLabelFromValue(value));
-	}, [inputTouched, value, enumOptions, getLabelFromValue]);
+	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
+	const [isOpen, show, hide] = useBooleanSetter(false);
 
 	const displayedEnums = useMemo(() => {
-		return filterTerm !== ""
+		return filterTerm !== undefined && filterTerm !== ""
 			? enumOptions.filter(
 				({ label }) => label.toLowerCase().match(filterTerm.toLowerCase())
 			)
@@ -127,18 +109,27 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			
 	}, [filterTerm, enumOptions]);
 
-	const [isOpen, show, hide] = useBooleanSetter(false);
-
-	const { FormControl } = theme;
-
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
 		(displayedEnums || []).length,
 		getDefaultActiveIdx(displayedEnums, value)
 	);
 
+	const inputValue = filterTerm ?? getLabelFromValue(value);
+
+	const showAndSelectText = useCallback(() => {
+		show();
+		(findDOMNode(inputRef.current as any) as any)?.setSelectionRange(0, inputValue.length);
+	}, [show, inputValue.length]);
+
+	const onInputChange = useCallback((e) => {
+		const {value} = e.target;
+		setFilterTerm(value);
+		setActiveIdx(0);
+	}, [setActiveIdx]);
+
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
-		setInputTouched(false);
+		setFilterTerm(undefined);
 		setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
 		hide();
 	}, [displayedEnums, hide, onChange, setActiveIdx]);
@@ -153,7 +144,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelected(displayedEnums[activeIdx]);
 		} else {
-			setInputValue("");
+			setFilterTerm(undefined);
 		}
 		hide();
 	}, [activeIdx, displayedEnums, hide, onItemSelected]);
@@ -161,34 +152,39 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
 		case "ArrowDown":
-			activeIdxDown();
+			if (!isOpen) {
+				showAndSelectText();
+			} else {
+				activeIdxDown();
+			}
 			e.preventDefault();
 			break;
 		case "ArrowUp":
-			activeIdxUp();
+			if (!isOpen) {
+				showAndSelectText();
+			} else {
+				activeIdxUp();
+			}
 			e.preventDefault();
 			break;
 		case "Enter":
-			activeIdx !== undefined && displayedEnums && onItemSelected(displayedEnums[activeIdx]);
+			if (activeIdx !== undefined && displayedEnums) {
+				onItemSelected(displayedEnums[activeIdx]);
+			}
 			e.preventDefault();
 			break;
 		case "Escape":
-			setInputValue("");
+			setFilterTerm(undefined);
 			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
 			e.preventDefault();
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, onItemSelected, setActiveIdx, value]);
-
-	const onFocus = useCallback(() => {
-		show();
-		(findDOMNode(inputRef.current as any) as any)?.setSelectionRange(0, inputValue.length);
-	}, [inputValue.length, show]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, isOpen, onItemSelected, setActiveIdx, showAndSelectText, value]);
 
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} style={{ position: "relative" }} className="laji-form-dropdown-container">
-			<FormControl disabled={disabled || readonly} id={id} onFocus={onFocus} value={inputValue} onChange={onInputChange} autoComplete="off" ref={inputRef} />
-			<Caret onFocus={onFocus} />
+			<FormControl disabled={disabled || readonly} id={id} onClick={showAndSelectText} onFocus={showAndSelectText} value={inputValue} onChange={onInputChange} autoComplete="off" ref={inputRef} />
+			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute" }}
@@ -223,7 +219,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		: getEnumOptions(options.enumOptions!, uiSchema, false)
 	);
 
-	const [inputValue, setInputValue] = useState("");
+	const [inputValue, setUserTypedInputValue] = useState("");
 	const [filterTerm, setFilterTerm] = useState("");
 	const [loading, setLoading] = useState<boolean | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
@@ -233,7 +229,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 
 	const onInputChange = useCallback((e) => {
 		const {value} = e.target;
-		setInputValue(value);
+		setUserTypedInputValue(value);
 	}, []);
 
 	React.useEffect(() => {
@@ -333,7 +329,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
 			onItemSelectedByBlur(displayedEnums[activeIdx]);
 		} else {
-			setInputValue("");
+			setUserTypedInputValue("");
 		}
 	}, [activeIdx, displayedEnums, hide, onItemSelectedByBlur, setBlurred]);
 
@@ -352,7 +348,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			e.preventDefault();
 			break;
 		case "Escape":
-			setInputValue("");
+			setUserTypedInputValue("");
 			setActiveIdx(undefined);
 			e.preventDefault();
 			break;
@@ -408,7 +404,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 				       ref={inputRef} />
 				{ loading && <Spinner /> }
 			</div>
-			<Caret onFocus={onFocus} />
+			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute", zIndex: 99999 }}
@@ -436,10 +432,11 @@ const SelectedMultiValue = ({ children: enu, onDelete, readonly }:
 	);
 };
 
-const Caret = ({onFocus}: {onFocus: () => void}) =>
+const Caret = () => (
 	<div className="laji-form-dropdown-caret-container" style={{ position: "absolute", pointerEvents: "none" }}>
-		<span onFocus={onFocus} className="laji-form-dropdown-caret" ><img src="https://cdn.laji.fi/images/icons/caret-down.svg" /></span>
-	</div>;
+		<span className="laji-form-dropdown-caret" ><img src="https://cdn.laji.fi/images/icons/caret-down.svg" /></span>
+	</div>
+);
 
 function ListItem(
 	{ onSelected, active, children }
