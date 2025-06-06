@@ -838,6 +838,9 @@ body .laji-form {
 	left: initial !important;
 	right: 5px;
 }
+.laji-form .laji-form-failed-jobs-list .list-group .btn {
+	padding: 0;
+}
 .laji-form .laji-form-error-list {
 	top: 5px;
 	left: 5px;
@@ -883,13 +886,13 @@ body .laji-form {
 .laji-form .laji-form-error-list .panel-title {
 	color: white;
 }
-.laji-form .laji-form-error-list .btn-link {
+.laji-form .laji-form-error-list .panel-title .btn-link {
 	color: white;
 }
-.laji-form .laji-form-error-list .btn-link:hover {
+.laji-form .laji-form-error-list .panel-title .btn-link:hover {
 	color: #dddddd;
 }
-.laji-form .laji-form-error-list .btn-link:focus {
+.laji-form .laji-form-error-list .panel-title .btn-link:focus {
 	outline: none;
 }
 .laji-form .btn-group.laji-form-checkbox-widget-tab-target:focus {

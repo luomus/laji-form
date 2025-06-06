@@ -59,8 +59,8 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, true)
 				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, true);
-			const retryButton = <button key="retry" className="pull-right" disabled={running} onClick={this.retryFailedJob(error)}><Glyphicon className={running ? "rotating" : ""} glyph="refresh" /> {translations.Retry}</button>;
-			const dismissButton = <button key="dismiss" className="pull-right" onClick={this.dismissFailedJob(error)}><Glyphicon glyph="ok" /> {translations.Dismiss}</button>;
+			const retryButton = <Button key="retry" className="pull-right" variant="link" small={true} disabled={running} onClick={this.retryFailedJob(error)}><Glyphicon className={running ? "rotating" : ""} glyph="refresh" /> {translations.Retry}</Button>;
+			const dismissButton = <Button key="dismiss" className="pull-right" variant="link" small={true} onClick={this.dismissFailedJob(error)}><Glyphicon glyph="ok" /> {translations.Dismiss}</Button>;
 
 			const getId = () => {
 				const jsonPointer = getJsonPointer();
