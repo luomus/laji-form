@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 
 @BaseComponent
 export default class TagArrayField extends React.Component {

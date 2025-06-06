@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import * as deepmerge from "deepmerge";
+import deepmerge from "deepmerge";
 import { checkRules, updateSafelyWithJSONPointer } from "../../utils";
 
 export const rulePropType = PropTypes.oneOfType([

@@ -1,5 +1,9 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"src/*": ["./src/*"]
+		},
 		"outDir": "./build",
 		"module": "commonjs",
 		"target": "es6",
@@ -17,7 +21,8 @@
 		"strictNullChecks": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"esModuleInterop": true
 	},
 	"include": [
 		"./src/**/*"

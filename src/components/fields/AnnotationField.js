@@ -6,7 +6,7 @@ import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import { isObject } from "@luomus/laji-map/lib/utils";
 
 @BaseComponent

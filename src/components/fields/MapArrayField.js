@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
 const equals = require("deep-equal");
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import LajiMap from "@luomus/laji-map";
 import { combineColors } from "@luomus/laji-map/lib/utils";
 import { NORMAL_COLOR }  from "@luomus/laji-map/lib/globals";
@@ -1144,6 +1144,8 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		this.getDraftStyle = this.getDraftStyle.bind(this);
 	}
 
+	stretchContainerRef = React.createRef();
+
 	componentDidMount() {
 		if (super.componentDidMount) super.componentDidMount();
 		this.setState({mounted: true});
@@ -1277,7 +1279,6 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		};
 	}
 
-	getContainer = () => findDOMNode(this.refs._stretch)
 	onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true})
 	onPopupClose = () => {
 		// Move popup content back to the React container so React won't crash.
@@ -1294,7 +1295,6 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			this._tileLayerNameOnNextTickCallback = undefined;
 		}
 	})
-	getAlignmentAnchor = () => this.refs._stretch
 	onEnterViewPort = () => {
 		this.afterActiveChange(this.state.activeIdx, !!"initial call");
 	}
@@ -1551,7 +1551,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		);
 
 		const wrapperProps = {
-			getContainer: this.getContainer,
+			containerRef: this.stretchContainerRef,
 			topOffset: topOffset === undefined ? this.props.formContext.topOffset : topOffset,
 			bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
 			onResize: this.onResize,
@@ -1582,7 +1582,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 					</Col>
 					<Col
 						{...schemaSizes}
-						ref="_stretch"
+						ref={this.stretchContainerRef}
 					>
 						{mapOptions.emptyMode ?
 							(!emptyHelp && (!buttons || !buttons.length) ? null :

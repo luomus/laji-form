@@ -154,12 +154,15 @@ const SectionContent = ({
 class SectionArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
 
+
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
 		this.sectionInputRef = React.createRef();
-		this.ref = React.createRef();
 	}
+
+	containerRef = React.createRef();
+
 	onFocuses = []
 	getOnFocus = (i) => () => {
 		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
@@ -198,7 +201,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 	render() {
 		return (
-			<div style={{display: "flex", width: "100%"}} ref={this.ref} onFocus={this.onContainerFocus} onBlur={this.onContainerBlur} tabIndex={0}>
+			<div style={{display: "flex", width: "100%"}} ref={this.containerRef} onFocus={this.onContainerFocus} onBlur={this.onContainerBlur} tabIndex={0}>
 				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
 				<Section key="sums" className="bg-info" style={{maxWidth: 75}}>{this.renderRowDefinerSumColumn()}</Section>
@@ -229,7 +232,7 @@ class SectionArrayFieldTemplate extends React.Component {
 		const idSchema = this.props.registry.schemaUtils.toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`);
 
 		const sectionLabel = (
-			<Affix className="background" getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+			<Affix className="background" containerRef={this.containerRef} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 				<legend>{this.props.formContext.translations.Section}</legend>
 			</Affix>
 		);
@@ -249,8 +252,6 @@ class SectionArrayFieldTemplate extends React.Component {
 		return <SectionContent content={content}  sectionLabel={sectionLabel} sectionSum={sectionSum} />;
 	}
 
-	getContainerElem = () => this.ref.current
-
 	renderSections() {
 		const {sectionField, rowValueField} = getOptions(getUiOptions(this.props.uiSchema));
 		return (this.props.formData || []).map((item, idx) => {
@@ -267,7 +268,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					className="horizontally-centered" />
 			);
 			const sectionLabel = (
-				<Affix className={index % 2 ? "background" : " darker"} getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+				<Affix className={index % 2 ? "background" : " darker"} containerRef={this.containerRef} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 					<legend className="horizontally-centered">{parseJSONPointer(this.props.formData[index], sectionField)}</legend>
 				</Affix>
 			);
@@ -304,7 +305,7 @@ class SectionArrayFieldTemplate extends React.Component {
 		const {Overlay, Popover, Glyphicon} = this.context.theme;
 		const add = (
 			<React.Fragment>
-				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+				<Affix containerRef={this.containerRef} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 					<Button id={`${this.props.idSchema.$id}-add`}
 					        onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}}
 					        ref={this.addButtonRef}>
@@ -479,7 +480,7 @@ class SectionArrayFieldTemplate extends React.Component {
 		};
 
 		const sumLabel = (
-			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+			<Affix containerRef={this.containerRef} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 				<legend className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</legend>
 			</Affix>
 		);

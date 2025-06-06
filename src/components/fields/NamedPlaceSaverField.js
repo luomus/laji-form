@@ -6,9 +6,9 @@ import { Button } from "../components";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 
 const SAVE = "SAVE", FETCH = "FETCH";
 

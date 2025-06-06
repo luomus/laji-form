@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
 import ReactContext from "../../ReactContext";

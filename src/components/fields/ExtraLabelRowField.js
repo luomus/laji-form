@@ -34,13 +34,7 @@ export default class ExtraLabelRowField extends React.Component {
 		};
 	}
 
-	setContainerRef = (elem) => {
-		this.containerElem = elem;
-	}
-
-	getContainerRef = () => {
-		return this.containerElem;
-	}
+	containerRef = React.createRef();
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;
@@ -59,7 +53,7 @@ export default class ExtraLabelRowField extends React.Component {
 
 		if (affixed) {
 			labelRow = (
-				<Affix getContainer={this.getContainerRef} 
+				<Affix containerRef={this.containerRef} 
 				       style={affixed ? {position: "relative", zIndex: 1} : undefined} 
 				       topOffset={this.props.formContext.topOffset}
 				       bottomOffset={this.props.formContext.bottomOffset}>
@@ -69,7 +63,7 @@ export default class ExtraLabelRowField extends React.Component {
 		}
 
 		return (
-			<div ref={this.setContainerRef}>
+			<div ref={this.containerRef}>
 				{title
 					? (
 						<TitleFieldTemplate title={title} schema={this.props.schema} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} registry={this.props.registry} />

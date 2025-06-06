@@ -1,7 +1,7 @@
 import * as React from "react";
 const { useState, useEffect } = React;
 import { MediaArrayField } from "./ImageArrayField";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import ReactContext from "../../ReactContext";
 

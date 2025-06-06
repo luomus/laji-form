@@ -7,7 +7,7 @@ import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./co
 import { capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, highlightElem, constructTranslations, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { Theme } from "../themes/theme";
 import Context, { ContextProps } from "../ReactContext";
 import StubTheme from "../themes/stub";
@@ -15,7 +15,7 @@ import Form from "@rjsf/core";
 import { Field, Widget, TemplatesType } from "@rjsf/utils";
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import instanceContext from "../Context";
-import * as translations from "../translations.json";
+import translations from "../translations.json";
 import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
 import SettingsService, { Settings } from "../services/settings-service";
 import FocusService from "../services/focus-service";
@@ -517,12 +517,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 							<Button variant={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 						</TooltipComponent>
 					)}
-					<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
-											   schema={this.props.schema}
-											   uiSchema={uiSchema}
-											   formContext={this.state.formContext}
-											   errorClickHandler={this.memoizedFormContext.services.focus.focus}
-											   ref={this.bgJobRef}
+					<FailedBackgroundJobsPanel
+						jobs={this.state.submitHooks}
+						schema={this.props.schema}
+						uiSchema={uiSchema}
+						formContext={this.state.formContext}
+						errorClickHandler={this.memoizedFormContext.services.focus.focus}
+						ref={this.bgJobRef}
 					/>
 					<Form
 						{...this.props as any}

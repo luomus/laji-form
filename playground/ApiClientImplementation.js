@@ -1,6 +1,6 @@
-import * as fetch from "isomorphic-fetch";
-import * as queryString from "querystring";
-import * as merge from "deepmerge";
+import fetch from "isomorphic-fetch";
+import queryString from "querystring";
+import merge from "deepmerge";
 
 export default class ApiClient {
 	constructor(baseUrl, accessToken, userToken, lang = "en") {

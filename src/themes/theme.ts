@@ -37,7 +37,7 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 	now?: number;
 }
 
-export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName, HasMaybeRef {
+export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName, HasMaybeRef, HasMaybeStyle {
 	variant?: ButtonVariant;
 	active?: boolean;
 	disabled?: boolean;
@@ -45,6 +45,7 @@ export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, 
 	block?: boolean;
 	id?: string;
 	small?: boolean;
+	onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 }
 
 export type ButtonGroupProps = JSX.IntrinsicAttributes & HasMaybeChildren;
@@ -65,6 +66,7 @@ export interface OverlayProps extends JSX.IntrinsicAttributes {
 export interface OverlayTriggerProps extends OverlayProps {
 	overlay: any;
 	key?: string | number | undefined;
+	trigger?: string[] | string;
 }
 
 export interface PopoverProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
@@ -72,7 +74,7 @@ export interface PopoverProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 	title?: React.ReactNode;
 }
 
-export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
 	id?: string;
 }
 
@@ -134,7 +136,7 @@ export type InputGroupButton = JSX.IntrinsicAttributes & HasMaybeChildren & HasM
 
 export interface FormControlProps extends React.HTMLProps<any>, HasMaybeRef {
 	type?: HTMLInputElement["type"];
-	readOnly?: boolean;
+	readonly?: boolean;
 	validationState?: ValidationState;
 }
 

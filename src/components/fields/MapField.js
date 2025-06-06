@@ -2,11 +2,10 @@ import * as React from "react";
 import { createPortal, findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
-import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 const equals = require("deep-equal");
-import * as Spinner from "react-spinner";
-import { Button, Fullscreen } from "../components";
+import Spinner from "react-spinner";
+import { Affix, Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "@luomus/laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
 

@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { TooltipComponent } from "../components";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
 

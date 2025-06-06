@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import * as moment from "moment";
+import moment from "moment";
 import DateTimeWidget, { YEAR_MATCH } from "./DateTimeWidget";
 import { isEmptyString, getUiOptions } from "../../utils";
 

@@ -6,7 +6,7 @@ import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
 import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } from "../../types";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
-const Spinner = require("react-spinner");
+import Spinner  from "react-spinner";
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
 	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
