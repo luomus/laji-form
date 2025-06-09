@@ -1343,6 +1343,9 @@ class ReactAutosuggest extends React.Component {
 			this.setState(state);
 			break;
 		case "Enter":
+			if (e.altKey || e.ctrlKey || e.shiftKey) {
+				return;
+			}
 			e.preventDefault();
 			this.inputElem.blur();
 			break;
