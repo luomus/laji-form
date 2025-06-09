@@ -1348,6 +1348,7 @@ class ReactAutosuggest extends React.Component {
 			}
 			e.preventDefault();
 			this.inputElem.blur();
+			this.inputElem.focus();
 			break;
 		case "Control":
 		case "Meta":
