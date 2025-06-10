@@ -100,7 +100,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
 
-	const displayedEnums = useMemo(() => {
+	const filteredEnums = useMemo(() => {
 		return filterTerm !== undefined && filterTerm !== ""
 			? enumOptions.filter(
 				({ label }) => label.toLowerCase().match(filterTerm.toLowerCase())
@@ -110,8 +110,8 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	}, [filterTerm, enumOptions]);
 
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
-		(displayedEnums || []).length,
-		getDefaultActiveIdx(displayedEnums, value)
+		(filteredEnums || []).length,
+		getDefaultActiveIdx(filteredEnums, value)
 	);
 
 	const inputValue = filterTerm ?? getLabelFromValue(value);
@@ -130,9 +130,9 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
 		setFilterTerm(undefined);
-		setActiveIdx(displayedEnums.findIndex(enu => enu.value === item.value));
+		setActiveIdx(filteredEnums.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [displayedEnums, hide, onChange, setActiveIdx]);
+	}, [filteredEnums, hide, onChange, setActiveIdx]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -141,13 +141,13 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		if (e.relatedTarget && isDescendant(containerRef.current, e.relatedTarget)) {
 			return;
 		}
-		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
-			onItemSelected(displayedEnums[activeIdx]);
+		if (activeIdx !== undefined && filteredEnums[activeIdx]) {
+			onItemSelected(filteredEnums[activeIdx]);
 		} else {
 			setFilterTerm(undefined);
 		}
 		hide();
-	}, [activeIdx, displayedEnums, hide, onItemSelected]);
+	}, [activeIdx, filteredEnums, hide, onItemSelected]);
 
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
@@ -168,18 +168,18 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			e.preventDefault();
 			break;
 		case "Enter":
-			if (activeIdx !== undefined && displayedEnums) {
-				onItemSelected(displayedEnums[activeIdx]);
+			if (activeIdx !== undefined && filteredEnums) {
+				onItemSelected(filteredEnums[activeIdx]);
 			}
 			e.preventDefault();
 			break;
 		case "Escape":
 			setFilterTerm(undefined);
-			setActiveIdx(getDefaultActiveIdx(displayedEnums, value));
+			setActiveIdx(getDefaultActiveIdx(filteredEnums, value));
 			e.preventDefault();
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, isOpen, onItemSelected, setActiveIdx, showAndSelectText, value]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, filteredEnums, isOpen, onItemSelected, setActiveIdx, showAndSelectText, value]);
 
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} style={{ position: "relative" }} className="laji-form-dropdown-container">
@@ -190,7 +190,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 				style={{ position: "absolute" }}
 				tabIndex={-1}
 			  ref={dropdownRef}>
-				{displayedEnums.map((oneOf, idx) => (
+				{filteredEnums.map((oneOf, idx) => (
 					<ListItem
 						key={oneOf.value ?? ""}
 						onSelected={onItemSelected}
@@ -236,7 +236,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		setFilterTerm(inputValue);
 	}, [inputValue]);
 
-	const displayedEnums = React.useMemo(() => {
+	const filteredEnums = React.useMemo(() => {
 		if (!enumOptions) {
 			return [];
 		}
@@ -256,7 +256,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 	}, [filterTerm, enumOptions, value]);
 
 	const [activeIdx, activeIdxUp, activeIdxDown, setActiveIdx] = useRangeIncrementor(
-		(displayedEnums || []).length,
+		(filteredEnums || []).length,
 		undefined
 	);
 
@@ -326,12 +326,12 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		}
 		setBlurred();
 		hide();
-		if (activeIdx !== undefined && displayedEnums[activeIdx]) {
-			onItemSelectedByBlur(displayedEnums[activeIdx]);
+		if (activeIdx !== undefined && filteredEnums[activeIdx]) {
+			onItemSelectedByBlur(filteredEnums[activeIdx]);
 		} else {
 			setUserTypedInputValue("");
 		}
-	}, [activeIdx, displayedEnums, hide, onItemSelectedByBlur, setBlurred]);
+	}, [activeIdx, filteredEnums, hide, onItemSelectedByBlur, setBlurred]);
 
 	const onKeyDown = useCallback((e) => {
 		switch (e.key) {
@@ -344,7 +344,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			e.preventDefault();
 			break;
 		case "Enter":
-			activeIdx !== undefined && displayedEnums && onItemSelected(displayedEnums[activeIdx]);
+			activeIdx !== undefined && filteredEnums && onItemSelected(filteredEnums[activeIdx]);
 			e.preventDefault();
 			break;
 		case "Escape":
@@ -360,7 +360,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			}
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, displayedEnums, inputValue, onChange, onItemSelected, setActiveIdx, value]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, filteredEnums, inputValue, onChange, onItemSelected, setActiveIdx, value]);
 
 	/* eslint-disable @typescript-eslint/no-non-null-assertion */
 	const onDelete = useCallback((enu: EnumOptionsType) => {
@@ -409,7 +409,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute", zIndex: 99999 }}
 				tabIndex={-1}>
-				{displayedEnums.map((oneOf, idx) => (
+				{filteredEnums.map((oneOf, idx) => (
 					<ListItem
 						key={oneOf.value ?? ""}
 						onSelected={onItemSelected}
@@ -456,7 +456,7 @@ function ListItem(
 	);
 }
 
-const getDefaultActiveIdx = (displayedEnums: EnumOptionsType<unknown>[], value: string | undefined) => 
+const getDefaultActiveIdx = (filteredEnums: EnumOptionsType<unknown>[], value: string | undefined) => 
 	value !== undefined && value !== ""
-		? displayedEnums.findIndex(item => item.value === value)
+		? filteredEnums.findIndex(item => item.value === value)
 		: 0;
