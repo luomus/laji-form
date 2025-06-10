@@ -130,9 +130,9 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	const onItemSelected = useCallback((item: EnumOptionsType) => {
 		onChange(item.value);
 		setFilterTerm(undefined);
-		setActiveIdx(filteredEnums.findIndex(enu => enu.value === item.value));
+		setActiveIdx(enumOptions.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [filteredEnums, hide, onChange, setActiveIdx]);
+	}, [enumOptions, hide, onChange, setActiveIdx]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
