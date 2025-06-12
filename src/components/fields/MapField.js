@@ -411,7 +411,8 @@ class MobileEditorMap extends React.Component {
 
 		this.state = {
 			geometry: [{ geoData: geometry}],
-			located: false
+			locateActive: false,
+			hasLocated: false
 		};
 	}
 
@@ -430,6 +431,7 @@ class MobileEditorMap extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.okButtonElem.focus();
+		this.map.setLocateOff();
 
 		if (this.props.geometry) {
 			const [lng, lat] = this.props.geometry.coordinates;
@@ -497,13 +499,22 @@ class MobileEditorMap extends React.Component {
 		}
 	}
 
+	activateLocate = () => {
+		this.handleLocateToggle(true);
+	};
+
+	handleLocateToggle = (bool) => {
+		this.setState({ locateActive: bool, hasLocated: false });
+		this.map.setOption("locate", { on: bool });
+	};
+
 	onLocate = (latlng) => {
-		if (!latlng || this.state.located) { return; }
+		if (!latlng || this.state.hasLocated) { return; }
 
 		this.map.map.setView({lng: latlng.lng, lat: latlng.lat}, 12);
 		this.setMarkerLatLng(latlng);
 
-		if (!this.state.located) { this.setState({located: true}); }
+		if (!this.state.hasLocated) { this.setState({hasLocated: true}); }
 		if (!this.props.moved) { this.props.setMoved(true); }
 	}
 
@@ -516,7 +527,7 @@ class MobileEditorMap extends React.Component {
 		const mapComponentProps = {
 			...options, ...(this.props.options || {}),
 			locate: {
-				on: false,
+				on: this.state.locateActive,
 				userLocation,
 				onLocationFound: this.onLocate,
 				panOnFound: false
@@ -533,9 +544,13 @@ class MobileEditorMap extends React.Component {
 		};
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
-				<MapComponent {...mapComponentProps} />
+				<MapComponent
+				  {...mapComponentProps}
+				  onLocateToggle={this.handleLocateToggle}
+				/>
 				<div className="floating-buttons-container">
 					<Button block onClick={this.onChange} className={"choose-location-button"} variant={"primary"} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>
+					<Button block onClick={this.activateLocate} className={"locate-me-button"} variant={"default"} disabled={this.state.locateActive}>{translations.LocateMe}</Button>
 				</div>
 			</Fullscreen>
 		);
