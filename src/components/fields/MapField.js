@@ -431,10 +431,7 @@ class MobileEditorMap extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.okButtonElem.focus();
-
-		if (this.map && this.map.setOption) {
-			this.map.setLocateOff();
-		}
+		this.map.setLocateOff();
 
 		if (this.props.geometry) {
 			const [lng, lat] = this.props.geometry.coordinates;
@@ -508,9 +505,7 @@ class MobileEditorMap extends React.Component {
 
 	handleLocateToggle = (bool) => {
 		this.setState({ locateActive: bool, hasLocated: false });
-		if (this.map && this.map.setOption) {
-			this.map.setOption("locate", { on: bool });
-		}
+		this.map.setOption("locate", { on: bool });
 	};
 
 	onLocate = (latlng) => {
