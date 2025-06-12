@@ -4,11 +4,11 @@ import update from "immutability-helper";
 const equals = require("deep-equal");
 import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState, getFieldUUID } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import * as fetch from "isomorphic-fetch";
+import fetch from "isomorphic-fetch";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "@luomus/laji-map/lib/globals";
 
 const cache = {};

@@ -4,11 +4,9 @@ import BaseComponent from "../BaseComponent";
 import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
 import { Affix, Button } from "../components";
-import { ReactInstance } from "react";
 import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
-import * as memoize from "memoizee";
-import { findDOMNode } from "react-dom";
+import memoize from "memoizee";
 import { FieldProps, JSONSchemaObject } from "../../types";
 const equals = require("deep-equal");
 
@@ -76,15 +74,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 
 	state: State = {activeButtonIdx: undefined};
 
-	private affixContainerElem: Element|null = null;
-
-	setAffixContainer = (ref: ReactInstance) => {
-		this.affixContainerElem = findDOMNode(ref) as Element|null;
-	}
-
-	getAffixContainer = (): Element|null => {
-		return this.affixContainerElem;
-	}
+	private affixContainerRef = React.createRef<HTMLElement>();
 
 	componentDidUpdate(prevProps: FieldProps) {
 		if (this.state.activeButtonIdx !== undefined) {
@@ -115,9 +105,9 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 		);
 
 		return (
-			<Row className={containerClassNames} ref={this.setAffixContainer}>
+			<Row className={containerClassNames} ref={this.affixContainerRef}>
 				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"}>
-					<Affix getContainer={this.getAffixContainer}
+					<Affix containerRef={this.affixContainerRef}
 					       topOffset={this.props.formContext.topOffset + 15}
 					       bottomOffset={this.props.formContext.bottomOffset}>
 						<div className={"btn-group-vertical"}>

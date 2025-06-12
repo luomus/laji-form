@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, addLajiFormIds, getDefaultFormState } from "../../utils";
 import { Button, DeleteButton } from "../components";
-import * as Spinner from "react-spinner";
+import Spinner from "react-spinner";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";

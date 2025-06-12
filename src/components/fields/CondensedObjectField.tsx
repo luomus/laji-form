@@ -6,7 +6,7 @@ import { getUiOptions } from "../../utils";
 import { DeleteButton } from "../components";
 import update from "immutability-helper";
 import { IdSchema } from "@rjsf/utils";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 const equals = require("deep-equal");
 
 interface ArrayPropField {

@@ -8,7 +8,7 @@ import {
 	uiSchemaJSONPointer,
 	updateSafelyWithJSONPointer
 } from "../../utils";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 
 @VirtualSchemaField
 export default class InputWithDefaultValueButtonField extends React.Component {

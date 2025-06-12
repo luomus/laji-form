@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, getDefaultFormState } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import * as deepmerge from "deepmerge";
+import deepmerge from "deepmerge";
 
 /**
  * Makes it possible to extract fields from object schema and

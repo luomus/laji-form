@@ -80,7 +80,7 @@ export default class IdService {
 	getRelativePointer(idSchemaId: string, lajiFormId: string | number) {
 		const containerPointer = this.findPointerForLajiFormId(this.tmpIdTree, this.formData, lajiFormId);
 		if (!containerPointer) {
-			return;
+			return "";
 		}
 		const indicesCount = containerPointer.match(/\/[0-9]+/g)?.length || 0;
 		const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");

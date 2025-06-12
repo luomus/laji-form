@@ -3,7 +3,7 @@ import * as lajiFormUtils from "../src/utils.tsx";
 import * as schemas from "./schemas.json";
 import * as properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation.js";
-import * as _notus from "notus";
+import _notus from "notus";
 import * as queryString from "querystring";
 import { isObject } from "../src/utils.tsx";
 

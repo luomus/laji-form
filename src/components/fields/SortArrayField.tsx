@@ -1,11 +1,11 @@
 import * as React from "react";
 import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID, isDefaultData } from "../../utils";
 import { FormContext } from "../LajiForm";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 import ReactContext from "../../ReactContext";
 import {TooltipComponent} from "../components";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
-const Spinner = require("react-spinner");
+import Spinner from "react-spinner";
 
 interface Options {
 	columns?: Record<string, ColumnOptions> | undefined;

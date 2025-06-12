@@ -1,7 +1,6 @@
 import * as React from "react";
-import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
@@ -12,7 +11,7 @@ import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getTemplate } from "@rjsf/utils";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";
 
 const popupMappers = {
@@ -439,11 +438,7 @@ const AccordionButtonsWrapper = ({props, position}) => {
 class AccordionArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
 
-	setContainerRef = (elem) => {
-		this.containerRef = elem;
-	}
-
-	getContainerRef = () => findDOMNode(this.containerRef)
+	containerRef = React.createRef();
 
 	setHeaderRef = (elem) => {
 		this.headerRef = elem;
@@ -485,7 +480,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 			if (affixed && activeIdx === idx) {
 				const offset = this.props.formContext.topOffset - (that.state.scrollHeightFixed);
 				header = (
-					<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
+					<Affix containerRef={this.containerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 						{header}
 					</Affix>
 				);
@@ -502,7 +497,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 				<Accordion onSelect={this.onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
-									 ref={idx === activeIdx ? this.setContainerRef : undefined}
+									 ref={idx === activeIdx ? this.containerRef : undefined}
 						       id={`${this.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
@@ -532,11 +527,7 @@ class PagerArrayFieldTemplate extends React.Component {
 
 	static contextType = ReactContext;
 
-	setContainerRef = (elem) => {
-		this.containerRef = elem;
-	}
-
-	getContainerRef = () => this.containerRef
+	containerRef = React.createRef();
 
 	setHeaderRef = (elem) => {
 		this.headerRef = elem;
@@ -581,7 +572,7 @@ class PagerArrayFieldTemplate extends React.Component {
 		if (affixed) {
 			const offset = this.props.formContext.topOffset - (that.state.scrollHeightFixed);
 			header = (
-				<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
+				<Affix containerRef={this.containerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 					{header}
 				</Affix>
 			);
@@ -590,7 +581,7 @@ class PagerArrayFieldTemplate extends React.Component {
 		const {Panel} = this.context.theme;
 
 		return (
-			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
+			<div className="laji-form-single-active-array" ref={this.containerRef}>
 				<div className="laji-form-field-template-item">
 					<div className="laji-form-field-template-schema">
 						<Panel className="laji-form-panel">

@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState, getFormDataIndex } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";

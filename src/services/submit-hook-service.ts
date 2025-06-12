@@ -5,10 +5,11 @@ export interface SubmitHook {
 	hook: () => void;
 	promise: Promise<any>;
 	lajiFormId: string;
-	relativePointer: string | undefined;
+	relativePointer: string;
 	running: boolean;
 	description?: string;
 	failed?: boolean;
+	e?: string;
 }
 
 export default class SubmitHookService {
@@ -23,7 +24,7 @@ export default class SubmitHookService {
 		this.onSubmitHooksChange(submitHooks, callback);
 	}
 
-	private internalAdd(_lajiFormId: string | number, relativePointer: string | undefined, hook: () => void, description?: string) {
+	private internalAdd(_lajiFormId: string | number, relativePointer: string, hook: () => void, description?: string) {
 		const lajiFormId = `${_lajiFormId}`;
 		let promise: Promise<any>;
 		const _hook = (): Promise<any> => {
@@ -69,7 +70,8 @@ export default class SubmitHookService {
 		return this.internalAdd(id, relativePointer, hook);
 	}
 
-	remove(lajiFormId: string, hook: SubmitHook["hook"]) {
+	/** Remove a hook either by id or hook instance */
+	remove(lajiFormId?: string, hook?: SubmitHook["hook"]) {
 		return new Promise<void>(resolve => {
 			lajiFormId = `${lajiFormId}`;
 			const newHooks = this.submitHooks.filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId));

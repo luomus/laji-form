@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, capitalizeFirstLetter, getDefaultFormState, getFieldUUID } from "../../utils";
 import getContext from "../../Context";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {

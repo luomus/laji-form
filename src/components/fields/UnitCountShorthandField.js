@@ -7,8 +7,8 @@ import {
 } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
-import {FetcherInput} from "../components";
-import * as merge from "deepmerge";
+import { FetcherInput } from "../components";
+import merge from "deepmerge";
 import ReactContext from "../../ReactContext";
 
 @VirtualSchemaField

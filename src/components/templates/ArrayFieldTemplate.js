@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getReversedFormDataIndex } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";

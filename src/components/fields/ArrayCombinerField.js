@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { immutableDelete, getDefaultFormState } from "../../utils";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
