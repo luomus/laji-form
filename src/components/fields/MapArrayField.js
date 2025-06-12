@@ -1796,7 +1796,11 @@ export class MapComponent extends React.Component {
 		this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
 	}
 	locateToggle = ({locate}) => {
-		this.setState({mapOptions: {...this.state.mapOptions, locate}});
+		if (this.props.onLocateToggle) {
+			this.props.onLocateToggle(locate.on); // propagate to parent
+		} else {
+			this.setState({mapOptions: {...this.state.mapOptions, locate}});
+		}
 	}
 
 	componentDidMount() {

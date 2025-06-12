@@ -699,6 +699,11 @@
 		"en": "Choose this location",
 		"sv": "Välj den här platsen"
 	},
+	"locateMe": {
+		"fi": "Paikanna sijaintini",
+		"en": "Locate me",
+		"sv": "Hitta min plats"
+	},
 	"failedBackgroundJobs": {
 		"fi": "Jokin meni pieleen, tarkista alla olevat tiedot",
 		"en": "Something went wrong, please check the details below",
