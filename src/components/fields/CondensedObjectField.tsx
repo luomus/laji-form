@@ -219,7 +219,10 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 					includeEmpty={true}
 					schema={{}}
 					id={`${idSchema.$id}_field_select`}
-					formContext={this.props.formContext} />
+					formContext={this.props.formContext}
+					disabled={this.props.disabled}
+					readonly={this.props.readonly}
+				/>
 			</>
 		);
 	}
