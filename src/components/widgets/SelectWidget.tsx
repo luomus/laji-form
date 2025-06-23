@@ -1,5 +1,4 @@
 import * as React from "react";
-// import * as PropTypes from "prop-types";
 import ReactContext from "../../ReactContext";
 import { getUiOptions, isDescendant, classNames, useBooleanSetter, usePrevious } from "../../utils";
 import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
@@ -219,22 +218,14 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		: getEnumOptions(options.enumOptions!, uiSchema, false)
 	);
 
-	const [inputValue, setUserTypedInputValue] = useState("");
-	const [filterTerm, setFilterTerm] = useState("");
+	const [filterTerm, setFilterTerm] = useState<string | undefined>();
 	const [loading, setLoading] = useState<boolean | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
 
+	const inputValue = filterTerm ?? "";
+
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
-
-	const onInputChange = useCallback((e) => {
-		const {value} = e.target;
-		setUserTypedInputValue(value);
-	}, []);
-
-	React.useEffect(() => {
-		setFilterTerm(inputValue);
-	}, [inputValue]);
 
 	const filteredEnums = React.useMemo(() => {
 		if (!enumOptions) {
@@ -245,7 +236,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 				!value.includes(enumValue)
 			)
 			: enumOptions;
-		return filterTerm !== ""
+		return filterTerm !== undefined && filterTerm !== ""
 			? notAlreadySelected.filter(
 				({ label, value: enumValue }) =>
 					(value || []).includes(enumValue)
@@ -260,14 +251,22 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		undefined
 	);
 
+	const onInputChange = useCallback((e) => {
+		const {value} = e.target;
+		setFilterTerm(value);
+		setActiveIdx(undefined);
+	}, [setActiveIdx]);
+
 	const onItemSelected = useCallback((item: EnumOptionsType<string>) => {
 		onChange([...(value || []), item.value]);
+		setFilterTerm(undefined);
 		inputRef.current?.focus();
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 
 	const onItemSelectedByBlur = useCallback((item: EnumOptionsType<string>) => {
 		onChange([...(value || []), item.value]);
+		setFilterTerm(undefined);
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 
@@ -329,7 +328,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		if (activeIdx !== undefined && filteredEnums[activeIdx]) {
 			onItemSelectedByBlur(filteredEnums[activeIdx]);
 		} else {
-			setUserTypedInputValue("");
+			setFilterTerm(undefined);
 		}
 	}, [activeIdx, filteredEnums, hide, onItemSelectedByBlur, setBlurred]);
 
@@ -348,8 +347,9 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			e.preventDefault();
 			break;
 		case "Escape":
-			setUserTypedInputValue("");
-			setActiveIdx(undefined);
+			if (activeIdx !== undefined && filteredEnums) {
+				onItemSelected(filteredEnums[activeIdx]);
+			}
 			e.preventDefault();
 			break;
 		case "Backspace":
@@ -360,13 +360,16 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 			}
 			break;
 		}
-	}, [activeIdx, activeIdxDown, activeIdxUp, filteredEnums, inputValue, onChange, onItemSelected, setActiveIdx, value]);
+	}, [activeIdx, activeIdxDown, activeIdxUp, filteredEnums, inputValue, onChange, onItemSelected, value]);
 
 	/* eslint-disable @typescript-eslint/no-non-null-assertion */
 	const onDelete = useCallback((enu: EnumOptionsType) => {
 		const filtered = value!.filter(v => v !== enu.value);
 		onChange(value!.length === 0 ? undefined : filtered);
-	}, [onChange, value]);
+		if (isOpen) {
+			inputRef.current?.focus();
+		}
+	}, [isOpen, onChange, value]);
 	/* eslint-enable @typescript-eslint/no-non-null-assertion */
 
 	const redirectFocusToInput = useCallback((e) => {
