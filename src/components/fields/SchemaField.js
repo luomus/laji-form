@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, idSchemaIdToJSONPointer, classNames } from "../../utils";
 import { isObject } from "@luomus/laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "@rjsf/utils";
@@ -145,6 +145,12 @@ export default class _SchemaField extends React.Component {
 			if (filtered.length !== _formContext.formDataTransformers.length) {
 				registry = {...registry, formContext: {..._formContext, formDataTransformers: filtered}};
 			}
+		}
+
+		const idPointer= idSchemaIdToJSONPointer(props.idSchema.$id);
+		if (_formContext.uiSchemaContext.additionalClassNames?.[idPointer]) {
+			const additionalClassNames = _formContext.uiSchemaContext.additionalClassNames[idPointer];
+			uiSchema = {...uiSchema, "ui:classNames": classNames(uiSchema["ui:classNames"], additionalClassNames)};
 		}
 
 		const {SchemaField} = getDefaultRegistry().fields;
