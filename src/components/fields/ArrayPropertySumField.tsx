@@ -9,7 +9,7 @@ interface State {
 }
 
 @BaseComponent
-export default class ArrayPropertySumField extends React.Component<FieldProps<JSONSchemaObject>, State>{
+export default class ArrayPropertySumField extends React.Component<FieldProps<JSONSchemaObject[], JSONSchemaObject>, State>{
 
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -35,7 +35,7 @@ export default class ArrayPropertySumField extends React.Component<FieldProps<JS
 	}
 
 	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
+		const SchemaField = this.props.registry.fields.SchemaField as any;
 		const { sum } = this.state;
 
 		return (

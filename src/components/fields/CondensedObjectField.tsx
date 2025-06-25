@@ -29,7 +29,7 @@ interface State {
 	formData: any;
 }
 
-export default class CondensedObjectField extends React.Component<FieldProps<JSONSchemaObject>, State> {
+export default class CondensedObjectField extends React.Component<FieldProps<JSONSchemaObject, JSONSchemaObject>, State> {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
@@ -39,7 +39,7 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 
 	static getName() {return "CondensedObjectField";}
 
-	constructor(props: FieldProps<JSONSchemaObject>) {
+	constructor(props: FieldProps<JSONSchemaObject, JSONSchemaObject>) {
 		super(props);
 		this.state = { selectedFields: this.getSelectedFieldsFromProps(props), formData: props.formData };
 	}
@@ -50,7 +50,7 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 		}
 	}
 
-	getSelectedFieldsFromProps(props: FieldProps<JSONSchemaObject>): SelectedField[] {
+	getSelectedFieldsFromProps(props: FieldProps<JSONSchemaObject, JSONSchemaObject>): SelectedField[] {
 		const { formData, schema } = props;
 
 		const selectedFields: SelectedField[] = [];
@@ -145,16 +145,16 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 	}
 
 	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
+		const SchemaField = this.props.registry.fields.SchemaField as any;
 
 		const {schema, uiSchema, idSchema, errorSchema, formData = {}, required, formContext: {Label, translations}} = this.props;
 		const uiOptions = getUiOptions(uiSchema);
 
-		const childProps: Pick<FieldProps<any>, "schema"|"uiSchema"|"idSchema"|"errorSchema"|"formData">[] = this.state.selectedFields.map(field => {
+		const childProps: Pick<FieldProps<any, any>, "schema"|"uiSchema"|"idSchema"|"errorSchema"|"formData">[] = this.state.selectedFields.map(field => {
 			let childSchema = schema.properties[field.name];
 			let childUiSchema = uiSchema[field.name] || {};
 			let childIdSchema: IdSchema<unknown> = idSchema[field.name] || {$id: `${idSchema.$id}_${field.name}`};
-			let childErrorSchema = errorSchema[field.name] || {};
+			let childErrorSchema = (errorSchema as any)[field.name] || {};
 			let childFormData = formData[field.name];
 
 			if (field.type === "array" && childSchema.type === "array") {

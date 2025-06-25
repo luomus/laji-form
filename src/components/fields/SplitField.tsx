@@ -65,13 +65,17 @@ export default class SplitField extends React.Component<FieldProps> {
 	renderSplitField = ({fields}: any) => {
 		const {SchemaField} = this.props.registry.fields;
 		// TODO TS fix typing after NestField ts conversion.
-		const _props = getPropsForFields(this.props as any, fields) as FieldProps;
+		const _props = getPropsForFields(this.props as any, fields) as any;
 		return (
 			<SchemaField
 				{...this.props}
 				{..._props}
 			  onChange={this.onChange(fields)}
 				name=""
+				onBlur={this.props.onBlur}
+				onFocus={this.props.onFocus}
+				disabled={this.props.disabled}
+				readonly={this.props.readonly}
 			/>
 		);
 	}

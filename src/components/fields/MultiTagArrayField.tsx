@@ -139,11 +139,16 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 									...uiSchema[key]?.["ui:options"]
 								}
 							}}
-							errorSchema={errorSchema[key] || {}}
+							errorSchema={(errorSchema as any)[key] || {}}
 							idSchema={idSchema[key] as IdSchema}
 							formData={formData[key] || []}
 							required={uiSchema[key]?.["ui:required"] || false}
 							onChange={this.onChange(key)}
+							onBlur={this.props.onBlur}
+							onFocus={this.props.onFocus}
+							disabled={this.props.disabled}
+							readonly={this.props.readonly}
+							name={this.props.name}
 						/>
 					)) }
 				</Col>

@@ -61,7 +61,7 @@ export default class SubmitHookService {
 	 * Add a submit hook for a Field component.
 	 */
 	add(
-		props: Pick<FieldProps, "formData" | "idSchema" | "formContext"> | Pick<WidgetProps, "formData" | "id" | "formContext">,
+		props: Pick<FieldProps<any, any>, "formData" | "idSchema" | "formContext"> | Pick<WidgetProps<any, any>, "formData" | "id" | "formContext">,
 		hook: SubmitHook["hook"])
 	{
 		const id = getFieldUUID(props);

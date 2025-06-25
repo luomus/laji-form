@@ -50,7 +50,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 		render = () => {
 			if (super.render) return super.render();
 
-			const SchemaField = this.props.registry.fields.SchemaField;
+			const SchemaField = this.props.registry.fields.SchemaField as any;
 
 			const filterProps = (props: FieldProps) => [
 				"schema",
@@ -62,7 +62,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 				"onChange",
 				"disabled",
 				"readonly",
-				"required"
+				"required",
 			].reduce<FieldProps>((_props, prop) => {
 				if (prop in props) _props[prop] = props[prop];
 				return _props;

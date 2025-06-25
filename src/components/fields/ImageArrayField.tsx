@@ -42,7 +42,7 @@ interface MediaMetadataSchema {
 }
 
 @MediaArrayField
-export default class ImageArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, ImageArrayFieldState> {
+export default class ImageArrayField extends React.Component<FieldProps<any, JSONSchemaArray<JSONSchemaObject>>, ImageArrayFieldState> {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -83,7 +83,7 @@ export interface MediaArrayState {
 }
 
 type Constructor<LFC> = new(...args: any[]) => LFC;
-export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, MediaArrayState>>>(ComposedComponent: LFC) {
+export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps<any, JSONSchemaArray<JSONSchemaObject>>, MediaArrayState>>>(ComposedComponent: LFC) {
 
 	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
@@ -630,7 +630,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 			});
 
-			this.props.formContext.services.submitHooks.add(this.props, saveAndOnChange);
+			this.props.formContext.services.submitHooks.add(this.props as any, saveAndOnChange);
 		}
 
 		getContainerId = () => {

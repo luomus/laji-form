@@ -26,7 +26,7 @@ import DOMIdService from "../services/dom-id-service";
 import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
 import SingletonMapService from "../services/singleton-map-service";
-import { HasMaybeChildren, Lang } from "../types";
+import { FieldProps, HasMaybeChildren, Lang } from "../types";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -223,7 +223,8 @@ export interface FormContext {
 	notifier: Notifier;
 	apiClient: ApiClient;
 	Label: React.ComponentType<{ label?: string, id: string, uiSchema?: any, required?: boolean }>;
-	formDataTransformers?: any[];
+	// formDataTransformers?: any[];
+	formDataTransformers?: { props: FieldProps, "ui:field": string, targets: string[] }[];
 	_parentLajiFormId?: number;
 	mediaMetadata?: MediaMetadata;
 	contextId: number;
