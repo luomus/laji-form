@@ -1,8 +1,31 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import merge from "deepmerge";
-import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
+import {
+	getUiOptions,
+	hasData,
+	getReactComponentName,
+	parseJSONPointer,
+	getBootstrapCols,
+	getNestedTailUiSchema,
+	isHidden,
+	isEmptyString,
+	bsSizeToPixels,
+	pixelsToBsSize,
+	formatValue,
+	dictionarify,
+	getUUID,
+	filteredErrors,
+	parseSchemaFromFormDataPointer,
+	parseUiSchemaFromFormDataPointer,
+	isObject,
+	getTitle,
+	ReactUtils,
+	isDefaultData,
+	classNames,
+	getFormDataIndex,
+	asArray
+} from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix, OverlayTrigger } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
@@ -402,7 +425,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const that = props.formContext.this;
 			const handlers = [];
 			if (that.state.activeIdx !== undefined) {
-				const activeIdxs = Array.isArray(that.state.activeIdx) ? that.state.activeIdx : [that.state.activeIdx];
+				const activeIdxs = asArray(that.state.activeIdx);
 				activeIdxs.forEach((idx) => {
 					const id = `${props.idSchema.$id}_${idx}`;
 					handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
@@ -466,7 +489,7 @@ export class AccordionArrayFieldTemplate extends React.Component {
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
 		const containerRefs = {};
-		(Array.isArray(activeIdx) ? activeIdx : [activeIdx]).forEach(idx => {
+		asArray(activeIdx).forEach(idx => {
 			containerRefs[idx] = React.createRef();
 		});
 
