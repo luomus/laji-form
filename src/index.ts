@@ -45,6 +45,14 @@ export default class LajiFormWrapper {
 		this.lajiForm.popBlockingLoader();
 	}
 
+	openAllMultiActiveArrays = () => {
+		this.lajiForm.openAllMultiActiveArrays();
+	}
+
+	closeAllMultiActiveArrays = () => {
+		this.lajiForm.closeAllMultiActiveArrays();
+	}
+
 	getSettings = () => {
 		return this.lajiForm.getSettings();
 	}

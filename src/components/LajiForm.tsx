@@ -27,6 +27,7 @@ import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
 import SingletonMapService from "../services/singleton-map-service";
 import { FieldProps, HasMaybeChildren, Lang } from "../types";
+import MultiActiveArrayService from "../services/multi-active-array-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -245,6 +246,7 @@ export interface FormContext {
 		ids: IdService,
 		rootInstance: RootInstanceService,
 		singletonMap: SingletonMapService,
+		multiActiveArray: MultiActiveArrayService
 	}
 }
 
@@ -390,6 +392,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					props.schema, props.formData, (formData) => this.onChange({formData}), this.validate, () => this.validateAndSubmit(false)
 				);
 				this.memoizedFormContext.services.singletonMap = new SingletonMapService();
+				this.memoizedFormContext.services.multiActiveArray = new MultiActiveArrayService();
 			}
 			return this.memoizedFormContext;
 		}
@@ -800,6 +803,14 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	popBlockingLoader = () => {
 		this.memoizedFormContext.services.blocker.pop();
+	}
+
+	openAllMultiActiveArrays = () => {
+		this.memoizedFormContext.services.multiActiveArray.openAll();
+	}
+
+	closeAllMultiActiveArrays = () => {
+		this.memoizedFormContext.services.multiActiveArray.closeAll();
 	}
 
 	getSettings(global = false) {

@@ -36,6 +36,8 @@ import BaseComponent from "../BaseComponent";
 import { getTemplate } from "@rjsf/utils";
 import memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";
+import {FieldProps, JSONSchema, JSONSchemaObject} from "src/types";
+import {SetAccordionOpenHandler} from "src/services/multi-active-array-service";
 
 const popupMappers = {
 	units: (schema, units, options) => {
@@ -382,17 +384,21 @@ function handlesButtonsAndFocus(ComposedComponent) {
 
 		componentDidMount() {
 			this.addFocusHandlers();
+			this.addSetOpenHandlers();
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate(...params) {
 			this.removeFocusHandlers();
 			this.addFocusHandlers();
+			this.removeSetOpenHandlers();
+			this.addSetOpenHandlers();
 			if (super.componentDidUpdate) super.componentDidUpdate(...params);
 		}
 
 		componentWillUnmount() {
 			this.removeFocusHandlers();
+			this.removeSetOpenHandlers();
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
@@ -417,6 +423,35 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					if (!isActive(i, that.state.activeIdx)) return new Promise(resolve => {
 						that.onActiveChange(i, undefined, () => resolve());
 					});
+				}];
+			});
+		}
+
+		addSetOpenHandlers() {
+			this.setAllOpenHandlers = this.getSetOpenHandlers(this.props);
+			this.setAllOpenHandlers.forEach(handler => {
+				this.props.formContext.services.multiActiveArray.addSetOpenHandler(...handler);
+			});
+		}
+
+		removeSetOpenHandlers() {
+			this.setAllOpenHandlers.forEach(handler => {
+				this.props.formContext.services.multiActiveArray.removeSetOpenHandler(...handler);
+			});
+		}
+
+		getSetOpenHandlers = (props) => {
+			const that = props.formContext.this;
+			return props.items.map((_, i) => {
+				const idx = getFormDataIndex(i, that.props.uiSchema);
+				return [`${that.props.idSchema.$id}_${idx}`, (open) => {
+					if (!Array.isArray(that.state.activeIdx)) {
+						return;
+					}
+					const isActive = that.state.activeIdx.includes(i);
+					if ((open && !isActive) || (!open && isActive)) {
+						that.onActiveChange(i);
+					}
 				}];
 			});
 		}
