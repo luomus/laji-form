@@ -3598,6 +3598,16 @@
           "ui:help": "For garden accessions/seed bank, estimated size of the area sampled, in square meters"
         },
         "units": {
+          "ui:field": "MultiActiveArrayField",
+          "ui:options": {
+            "renderer":  "accordion",
+            "buttons": [
+              {
+                "fn": "add",
+                "label": "Add specimen/observation"
+              }
+            ]
+          },
           "items": {
             "primarySpecimen": {
               "ui:help": "Can be used to highlight one unit as primary specimen/observation if there are many in one document. Only one unit per document can be marked as primary."
@@ -4066,15 +4076,7 @@
             "ui:classNames": "card card-body bg-light",
             "ui:title": "Specimen/observation (unit):"
           },
-          "ui:title": "Specimens/observations",
-          "ui:options": {
-            "buttons": [
-              {
-                "fn": "add",
-                "label": "Add specimen/observation"
-              }
-            ]
-          }
+          "ui:title": "Specimens/observations"
         },
         "ui:order": [
           "gatheringEventFields",
