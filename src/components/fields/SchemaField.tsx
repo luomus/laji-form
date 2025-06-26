@@ -122,8 +122,8 @@ export default class _SchemaField extends React.Component<FieldProps> {
 			}
 		}
 
-		const idPointer= idSchemaIdToJSONPointer(props.idSchema.$id);
-		if (_formContext.uiSchemaContext.additionalClassNames?.[idPointer]) {
+		const idPointer= props.idSchema.$id ? idSchemaIdToJSONPointer(props.idSchema.$id) : undefined;
+		if (idPointer && _formContext.uiSchemaContext.additionalClassNames?.[idPointer]) {
 			const additionalClassNames = _formContext.uiSchemaContext.additionalClassNames[idPointer];
 			uiSchema = {...uiSchema, "ui:classNames": classNames(uiSchema["ui:classNames"], additionalClassNames)};
 		}
