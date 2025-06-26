@@ -1,30 +1,13 @@
 import * as React from "react";
-import { getUiOptions, idSchemaIdToJSONPointer, classNames } from "../../utils";
+import { asArray, getUiOptions, idSchemaIdToJSONPointer, classNames } from "../../utils";
 import { isObject } from "@luomus/laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
-import { deepEquals } from  "@rjsf/utils";
 import { getDefaultRegistry } from "@rjsf/core";
+import { FieldProps, isJSONSchemaArray } from "../../types";
 
-export default class _SchemaField extends React.Component {
-	constructor(props) {
-		super(props);
-		this.updateVirtualInstance(props, !!"initial");
-		this.state = {showAnnotations: false};
-	}
+export default class _SchemaField extends React.Component<FieldProps> {
 
-	UNSAFE_componentWillReceiveProps(props) {
-		this.updateVirtualInstance(props);
-	}
-
-	updateVirtualInstance = (props, initial) => {
-		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations", "ui:multiLanguage"];
-		if ([props, this.props].some(_props => _props.uiSchema && virtualizedProps.some(prop => _props.uiSchema[prop])) &&
-		    (initial || !deepEquals(this.props, props))) {
-			this.functionOutputProps = this.applyFunction(props);
-		}
-	}
-
-	applyFunction(props) {
+	applyFunction(props: FieldProps) {
 		let {
 			"ui:functions": functions,
 			"ui:childFunctions": childFunctions,
@@ -33,15 +16,7 @@ export default class _SchemaField extends React.Component {
 			..._uiSchema
 		} = (props.uiSchema || {});
 
-		const objectOrArrayAsArray = item => (
-			item
-				? (Array.isArray(item)
-					? item
-					: [item])
-				: []
-		);
-
-		functions = objectOrArrayAsArray(functions);
+		functions = functions ? asArray(functions) : [];
 
 		if (childFunctions) {
 			functions = [
@@ -66,7 +41,7 @@ export default class _SchemaField extends React.Component {
 
 		if (!functions.length) return props;
 
-		let _props = {...props, uiSchema: _uiSchema};
+		let _props: FieldProps = {...props, uiSchema: _uiSchema};
 		let [uiFn, ...restUiFns] = functions;
 
 		const {"ui:injections": injections} = uiFn;
@@ -110,14 +85,14 @@ export default class _SchemaField extends React.Component {
 	}
 
 	render() {
-		const props = this.functionOutputProps || this.props;
+		const props = this.applyFunction(this.props);
 		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {formContext: _formContext} = registry;
 
 		// rjsf displays a duplicate label if 'uniqueItems' is true in some cases. We prevent that here.
 		// Example of when it shows duplicate is http://localhost:8083/?id=JX.652&local=true, "Elinympäristö" on gathering
 		// level.
-		if (props.schema.type === "array" && props.uiSchema && props.uiSchema.items && props.uiSchema.items["ui:field"]) {
+		if (isJSONSchemaArray(schema) && uiSchema && uiSchema.items && uiSchema.items["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
 		}
 
@@ -155,7 +130,7 @@ export default class _SchemaField extends React.Component {
 
 		const {SchemaField} = getDefaultRegistry().fields;
 		return <SchemaField
-			{..._props}
+			{..._props as any}
 			registry={registry}
 			schema={schema}
 			uiSchema={uiSchema}

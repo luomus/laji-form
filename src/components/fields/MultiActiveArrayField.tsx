@@ -172,7 +172,16 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 					...this.props.registry,
 					formContext
 				}}
+				schema={this.props.schema}
 				uiSchema={uiSchema}
+				idSchema={this.props.idSchema}
+				errorSchema={this.props.errorSchema as any}
+				onChange={this.props.onChange}
+				onBlur={this.props.onBlur}
+				onFocus={this.props.onFocus}
+				disabled={this.props.disabled}
+				readonly={this.props.readonly}
+				name={this.props.name}
 			/>
 		);
 	}

@@ -3,7 +3,7 @@ import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
 import { MediaArrayField, MediaArrayState, Thumbnail } from "./ImageArrayField";
 
 @MediaArrayField
-export default class PdfArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, MediaArrayState> {
+export default class PdfArrayField extends React.Component<FieldProps<any, JSONSchemaArray<JSONSchemaObject>>, MediaArrayState> {
 	ALLOWED_FILE_TYPES = ["application/pdf"];
 	ACCEPT_FILE_TYPES = ["application/pdf"];
 	MAX_FILE_SIZE = 20 * 1024 * 1024;

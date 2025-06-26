@@ -34,6 +34,10 @@ export type JSONSchemaArray<T = JSONSchema, D = never> = JSONShemaTypeCommon<"ar
 	maxItems?: number;
 }
 
+export function isJSONSchemaArray(schema: JSONSchema): schema is JSONSchemaArray {
+	return schema.type === "object";
+}
+
 export type JSONSchemaNumber = JSONShemaTypeCommon<"number", number>;
 
 export type JSONSchemaInteger = JSONShemaTypeCommon<"integer", number>;
@@ -54,20 +58,34 @@ export function isJSONSchemaEnum(jsonSchema: JSONSchema): jsonSchema is JSONSche
 
 export type Lang = "fi" | "en" | "sv";
 
-export type FieldProps<S extends JSONSchema = JSONSchema> = RJSFFieldProps<any, S, FormContext> & {
-	uiSchema: UiSchema;
-	errorSchema: NonNullable<RJSFFieldProps<any, S, FormContext>["errorSchema"]>; // It's always defined
-	formContext: FormContext; // It's always defined
-	registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
-};
-export type WidgetProps<S extends JSONSchema = JSONSchema> = RJSFWidgetProps<any, S, FormContext> & {
-	uiSchema: UiSchema;
-	errorSchema: NonNullable<RJSFFieldProps<any, JSONSchema, FormContext>["errorSchema"]>; // It's always defined
-	formContext: FormContext; // It's always defined
-	registry: RJSFWidgetProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+export type WithNonNullableKeys<T, K extends keyof T> = Omit<T, K> & {
+		[P in K]-?: NonNullable<T[P]>;
 };
 
-export type UiSchema = RJSFUiSchema<any, JSONSchemaObject, FormContext>;
+export type FieldProps<T = any, S extends JSONSchemaObject | JSONSchemaArray = JSONSchemaObject> =
+	WithNonNullableKeys<RJSFFieldProps<T, S, FormContext>, "errorSchema" | "formContext"> & {
+		registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+	}
+
+export type WidgetProps<T = any, S extends JSONSchema = JSONSchema> =
+	WithNonNullableKeys<RJSFWidgetProps<T, S, FormContext>, "errorSchema" | "formContext"> & {
+		registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+	}
+
+// export type FieldProps<S extends JSONSchema = JSONSchema> = Omit<RJSFFieldProps<any, S, FormContext>, "uiSchema" | "errorSchema" | "formContext" | "registry"> & {
+// 	uiSchema: UiSchema<S>;
+// 	errorSchema: NonNullable<RJSFFieldProps<any, S, FormContext>["errorSchema"]>; // It's always defined
+// 	formContext: FormContext; // It's always defined
+// 	registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+// };
+// export type WidgetProps<S extends JSONSchema = JSONSchema> = Omit<RJSFWidgetProps<any, S, FormContext>, "uiSchema" | "errorSchema" | "formContext" | "registry"> & {
+// 	uiSchema: UiSchema;
+// 	errorSchema: NonNullable<RJSFFieldProps<any, JSONSchema, FormContext>["errorSchema"]>; // It's always defined
+// 	formContext: FormContext; // It's always defined
+// 	registry: RJSFWidgetProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+// };
+
+export type UiSchema<S extends JSONSchema = JSONSchemaObject> = RJSFUiSchema<any, S, FormContext>;
 
 export interface HasMaybeChildren {
 	children?: React.ReactNode;

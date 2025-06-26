@@ -48,7 +48,7 @@ const getChildProps = (props: FieldProps<JSONSchemaEnum>): Pick<FieldProps<JSONS
 	let idSchema = { $id: props.idSchema.$id } as FieldProps["idSchema"];
 
 	let dictionarifiedEnums: Record<string, string> = {};
-	props.schema.oneOf.forEach(e => {
+	props.schema.oneOf.forEach((e: any)=> {
 		dictionarifiedEnums[e.const] = e.title;
 	});
 

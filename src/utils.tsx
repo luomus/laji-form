@@ -113,7 +113,7 @@ export function immutableDelete(_obj: any, _delProp: string) {
 
 }
 
-export function getUiOptions(container?: UiSchema) {
+export function getUiOptions(container?: UiSchema<any>) {
 	if (container) {
 		const options = container["ui:options"] || container.options;
 		return options ? options : {};
@@ -129,7 +129,7 @@ interface SchemaFieldWrappersContext {
 	[name: string]: boolean;
 }
 
-export function getInnerUiSchema(parentUiSchema: UiSchema = {}): UiSchema {
+export function getInnerUiSchema(parentUiSchema: UiSchema<any> = {}): UiSchema<any> {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema;
 	if (uiSchema
 		&& (
@@ -603,18 +603,12 @@ export function pixelsToBsSize(pixels: number) {
 export function applyFunction(props: FieldProps): any {
 	let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
 
-	const objectOrArrayAsArray = (item: any) => (
-		item ? 
-			(Array.isArray(item) ?
-				item : 
-				[item]) :
-			[]
-	);
+	const asArrayIfDefined = (item: any) => item ? asArray(item) : [];
 
 	if (childFunctions) {
 		functions = [
-			{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
-			...objectOrArrayAsArray(functions)
+			{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: asArrayIfDefined(childFunctions)}},
+			...asArrayIfDefined(functions)
 		];
 	}
 
@@ -893,7 +887,7 @@ export function checkArrayRules(rules: any[], props: FieldProps, idx: number, ca
 export function bringRemoteFormData(formData: any, formContext: FormContext) {
 	if (formContext.formDataTransformers) {
 		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
-			const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData});
+			const {state = {}} = new (fieldProps.registry.fields[uiField] as any)({...fieldProps, formData});
 			return state.formData;
 		}, formData);
 	} else {
@@ -1236,4 +1230,8 @@ export function usePrevious<T>(value: T): T | undefined {
 		ref.current = value;
 	});
 	return ref.current;
+}
+
+export function asArray<T>(maybeArr: T | T[]): T[] {
+	return Array.isArray(maybeArr) ? maybeArr : [maybeArr];
 }
