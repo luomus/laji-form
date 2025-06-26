@@ -24,17 +24,17 @@ const useRangeIncrementor = (length: number, defaultIdx?: number)
 	return [idx === undefined ? idx : Math.min(idx, length - 1), increment, decrement, _setIdx];
 };
 
-type EnumOptionsType<T = string | undefined> = Omit<_EnumOptionsType, "value"> & { value: T };
+type EnumOptionsType<T = string | number | undefined> = Omit<_EnumOptionsType, "value"> & { value: T };
 
 function removeByIndex<T>(array: T[], index: number): T[] {
 	return [...array.slice(0, index), ...array.slice(index + 1)];
 }
 
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty: true): EnumOptionsType<string | undefined>[];
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty: undefined | false): EnumOptionsType<string>[];
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty?: boolean): EnumOptionsType<string | undefined>[];
-function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEmpty = true): EnumOptionsType<string | undefined>[] {
-	const enums: EnumOptionsType[] = (getUiOptions(uiSchema).enumOptions || enumOptions);
+function getEnumOptions<T extends string | number>(enumOptions: EnumOptionsType<T>[], uiSchema: any, includeEmpty: true): EnumOptionsType<T | undefined>[];
+function getEnumOptions<T extends string | number>(enumOptions: EnumOptionsType<T>[], uiSchema: any, includeEmpty: undefined | false): EnumOptionsType<T>[];
+function getEnumOptions<T extends string | number>(enumOptions: EnumOptionsType<T>[], uiSchema: any, includeEmpty?: boolean): EnumOptionsType<T | undefined>[];
+function getEnumOptions<T extends string | number>(enumOptions: EnumOptionsType<T>[], uiSchema: any, includeEmpty = true): EnumOptionsType<T | undefined>[] {
+	const enums: EnumOptionsType<T>[] = (getUiOptions(uiSchema).enumOptions || enumOptions);
 	const emptyIdx = enums.findIndex(e => e.value === "");
 	if (!includeEmpty) {
 		return emptyIdx !== -1
@@ -47,26 +47,28 @@ function getEnumOptions(enumOptions: EnumOptionsType[], uiSchema: any, includeEm
 	}
 }
 
-type SelectWidgetCustomProps = {
+type SelectWidgetCustomProps<T> = {
 	includeEmpty?: boolean;
-	getEnumOptionsAsync?: () => Promise<EnumOptionsType<string>[]>
+	getEnumOptionsAsync?: () => Promise<EnumOptionsType<T>[]>
 }
 
-type SingleSelectWidgetProps = Omit<WidgetProps<JSONSchemaEnum>, "value" | "onChange"> & {
-	value?: string
-	onChange: (value?: string) => void;
-} & SelectWidgetCustomProps;
-type MultiSelectWidgetProps = Omit<WidgetProps<JSONSchemaArray<JSONSchemaEnumOneOf>>, "value" | "onChange"> & {
-	value?: string[]
-	onChange: (value?: string[]) => void;
-} & SelectWidgetCustomProps;
+type SingleSelectWidgetProps<T extends string | number> = Omit<WidgetProps<JSONSchemaEnum>, "value" | "onChange"> & {
+	value?: T;
+	onChange: (value?: T) => void;
+} & SelectWidgetCustomProps<T>;
+type MultiSelectWidgetProps<T extends string | number> = Omit<WidgetProps<JSONSchemaArray<JSONSchemaEnumOneOf>>, "value" | "onChange"> & {
+	value?: T[]
+	onChange: (value?: T[]) => void;
+} & SelectWidgetCustomProps<T>;
 
-type SelectWidgetProps = SingleSelectWidgetProps | MultiSelectWidgetProps;
-export default function SelectWidget(props: SelectWidgetProps): JSX.Element | null {
-	return props.schema.type === "array" ? <SearchableMultiDrowndown {...props as MultiSelectWidgetProps} /> : <SearchableDrowndown {...props as SingleSelectWidgetProps} />;
-}
+type SelectWidgetProps<T extends string | number> = SingleSelectWidgetProps<T> | MultiSelectWidgetProps<T>;
+const SelectWidget = <T extends string | number>(props: SelectWidgetProps<T>) =>
+	props.schema.type === "array"
+		? <SearchableMultiDrowndown {...props as MultiSelectWidgetProps<T>} />
+		: <SearchableDrowndown {...props as SingleSelectWidgetProps<T>} />;
+export default SelectWidget;
 
-function SearchableDrowndown(props: SingleSelectWidgetProps) {
+export function SearchableDrowndown<T extends string | number>(props: SingleSelectWidgetProps<T>) {
 	const {
 		id,
 		disabled,
@@ -86,10 +88,10 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 
 	const enumOptions = useMemo(() =>
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		getEnumOptions(options.enumOptions!, uiSchema, includeEmpty),
+		getEnumOptions<T>(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
-	const getLabelFromValue = useCallback((value: string | undefined) => 
+	const getLabelFromValue = useCallback((value: T | undefined) => 
 		value !== undefined && value !== ""
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			? enumOptions.find(item => item.value === value)!.label
@@ -126,12 +128,15 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 		setActiveIdx(0);
 	}, [setActiveIdx]);
 
-	const onItemSelected = useCallback((item: EnumOptionsType) => {
+	const onItemSelected = useCallback((item: EnumOptionsType<T | undefined>) => {
+		if (item.value === value) {
+			return;
+		}
 		onChange(item.value);
 		setFilterTerm(undefined);
 		setActiveIdx(enumOptions.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [enumOptions, hide, onChange, setActiveIdx]);
+	}, [enumOptions, hide, onChange, setActiveIdx, value]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -141,6 +146,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			return;
 		}
 		if (activeIdx !== undefined && filteredEnums[activeIdx]) {
+			console.log(111);
 			onItemSelected(filteredEnums[activeIdx]);
 		} else {
 			setFilterTerm(undefined);
@@ -168,6 +174,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 			break;
 		case "Enter":
 			if (activeIdx !== undefined && filteredEnums) {
+				console.log(112);
 				onItemSelected(filteredEnums[activeIdx]);
 			}
 			e.preventDefault();
@@ -201,7 +208,7 @@ function SearchableDrowndown(props: SingleSelectWidgetProps) {
 	);
 }
 
-function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
+function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectWidgetProps<T>): JSX.Element {
 	const {
 		id,
 		disabled,
@@ -215,7 +222,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		: getEnumOptions(options.enumOptions!, uiSchema, false)
+		: getEnumOptions<T>(options.enumOptions!, uiSchema, false)
 	);
 
 	const [filterTerm, setFilterTerm] = useState<string | undefined>();
@@ -257,14 +264,14 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		setActiveIdx(undefined);
 	}, [setActiveIdx]);
 
-	const onItemSelected = useCallback((item: EnumOptionsType<string>) => {
+	const onItemSelected = useCallback((item: EnumOptionsType<T>) => {
 		onChange([...(value || []), item.value]);
 		setFilterTerm(undefined);
 		inputRef.current?.focus();
 		setActiveIdx(undefined);
 	}, [onChange, setActiveIdx, value]);
 
-	const onItemSelectedByBlur = useCallback((item: EnumOptionsType<string>) => {
+	const onItemSelectedByBlur = useCallback((item: EnumOptionsType<T>) => {
 		onChange([...(value || []), item.value]);
 		setFilterTerm(undefined);
 		setActiveIdx(undefined);
@@ -391,7 +398,7 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} className="laji-form-multiselect" style={{ position: "relative" }}>
 			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput} style={{cursor: "text"}}>
 				<ul style={{listStyle: "none", display: "inline-block"}}>{
-					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: v}))
+					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: "" +v}))
 						.map(enu =>
 							<SelectedMultiValue key={enu.value}
 							                    onDelete={onDelete}
@@ -424,8 +431,8 @@ function SearchableMultiDrowndown(props: MultiSelectWidgetProps): JSX.Element {
 	);
 }
 
-const SelectedMultiValue = ({ children: enu, onDelete, readonly }:
-{ children: EnumOptionsType, onDelete: (enu: EnumOptionsType) => void, readonly: boolean }) => {
+function SelectedMultiValue<T extends string | number | undefined>({ children: enu, onDelete, readonly }:
+	{ children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
 	const onDeleteClick = useCallback(() => !readonly && onDelete(enu), [enu, onDelete, readonly]);
 	return (
 		<li key={enu.value} style={{display: "inline-table"}} className="laji-form-multiselect-tag">
@@ -433,7 +440,7 @@ const SelectedMultiValue = ({ children: enu, onDelete, readonly }:
 			<span tabIndex={readonly ? undefined : 0} role={readonly ? undefined : "button"} onClick={onDeleteClick}>×</span>
 		</li>
 	);
-};
+}
 
 const Caret = () => (
 	<div className="laji-form-dropdown-caret-container" style={{ position: "absolute", pointerEvents: "none" }}>
@@ -459,7 +466,8 @@ function ListItem(
 	);
 }
 
-const getDefaultActiveIdx = (filteredEnums: EnumOptionsType<unknown>[], value: string | undefined) => 
-	value !== undefined && value !== ""
+function getDefaultActiveIdx<T extends string | number>(filteredEnums: EnumOptionsType<unknown>[], value: T | undefined) {
+	return value !== undefined && value !== ""
 		? filteredEnums.findIndex(item => item.value === value)
 		: 0;
+}
