@@ -146,7 +146,6 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 			return;
 		}
 		if (activeIdx !== undefined && filteredEnums[activeIdx]) {
-			console.log(111);
 			onItemSelected(filteredEnums[activeIdx]);
 		} else {
 			setFilterTerm(undefined);
@@ -174,7 +173,6 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 			break;
 		case "Enter":
 			if (activeIdx !== undefined && filteredEnums) {
-				console.log(112);
 				onItemSelected(filteredEnums[activeIdx]);
 			}
 			e.preventDefault();
