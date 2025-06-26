@@ -3984,6 +3984,20 @@
               }
             },
             "samples": {
+              "ui:field": "MultiActiveArrayField",
+              "ui:options": {
+                "renderer":  "accordion",
+                "headerFormatters": [
+                  "preparationType",
+                  "uri"
+                ],
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add preparation/sample"
+                  }
+                ]
+              },
               "items": {
                 "preparationType": {
                   "ui:help": "Type of preparation/sample"
@@ -4073,15 +4087,7 @@
                 "ui:classNames": "card card-body bg-light",
                 "ui:title": "Sample:"
               },
-              "ui:title": "",
-              "ui:options": {
-                "buttons": [
-                  {
-                    "fn": "add",
-                    "label": "Add preparation/sample"
-                  }
-                ]
-              }
+              "ui:title": ""
             },
             "ui:classNames": "card card-body bg-light",
             "ui:title": ""

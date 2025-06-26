@@ -24,7 +24,7 @@ import {
 	isDefaultData,
 	classNames,
 	getFormDataIndex,
-	asArray
+	asArray, getLajiUri
 } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix, OverlayTrigger } from "../components";
@@ -1163,9 +1163,9 @@ const headerFormatters = {
 	unitTaxons: {
 		component: (props) => {
 			const _props = props.that.props;
-			const unit = _props.formData[props.idx];
+			const unit = _props.formData?.[props.idx];
 
-			const results =  (unit.identifications || []).reduce((result, identification, idx) => {
+			const results =  (unit?.identifications || []).reduce((result, identification, idx) => {
 				const taxonFields = [
 					`identifications/${idx}/taxonRank`,
 					`identifications/${idx}/taxon`,
@@ -1190,6 +1190,15 @@ const headerFormatters = {
 			return results.length > 0 ? <span className="text-muted">{results.join(", ")}</span> : null;
 		}
 	},
+	uri: {
+		component: (props) => {
+			const id = props.that.props.formData?.[props.idx]?.id;
+			if (!id) {
+				return null;
+			}
+			return <span className="text-muted"><small>{getLajiUri(id)}</small></span>;
+		}
+	}
 };
 
 class AccordionHeader extends React.Component {
