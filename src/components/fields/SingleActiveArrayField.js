@@ -1136,7 +1136,37 @@ const headerFormatters = {
 		onMouseLeave: (that, idx) => {
 			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
 		}
-	}
+	},
+	unitTaxons: {
+		component: (props) => {
+			const _props = props.that.props;
+			const unit = _props.formData[props.idx];
+
+			const results =  (unit.identifications || []).reduce((result, identification, idx) => {
+				const taxonFields = [
+					`identifications/${idx}/taxonRank`,
+					`identifications/${idx}/taxon`,
+					`identifications/${idx}/author`
+				];
+
+				const taxonString = taxonFields.reduce((res, field) => {
+					const formattedValue = formatValue({..._props, schema: parseSchemaFromFormDataPointer(_props.schema.items, field), uiSchema: parseUiSchemaFromFormDataPointer(_props.uiSchema.items, field), formData: parseJSONPointer(unit, field, !!"safely")});
+					if (!isEmptyString(formattedValue)) {
+						res.push(formattedValue);
+					}
+					return res;
+				}, []).join(" ");
+
+				if (!isEmptyString(taxonString)) {
+					result.push(taxonString);
+				}
+
+				return result;
+			}, []);
+
+			return results.length > 0 ? <span className="text-muted">{results.join(", ")}</span> : null;
+		}
+	},
 };
 
 class AccordionHeader extends React.Component {

@@ -3601,10 +3601,13 @@
           "ui:field": "MultiActiveArrayField",
           "ui:options": {
             "renderer":  "accordion",
+            "headerFormatters": [
+              "unitTaxons"
+            ],
             "buttons": [
               {
                 "fn": "add",
-                "label": "Add specimen/observation"
+                "label": "Add specimen/observation (unit):"
               }
             ]
           },
@@ -3684,7 +3687,23 @@
               }
             },
             "identifications": {
+              "ui:field": "MultiActiveArrayField",
+              "ui:options": {
+                "renderer":  "accordion",
+                "headerFormatters": [
+                  "taxonRank",
+                  "taxon",
+                  "author"
+                ],
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add identification"
+                  }
+                ]
+              },
               "items": {
+                "ui:title": "",
                 "taxonRank": {
                   "ui:help": "Taxonomic level for the identification"
                 },
@@ -3737,7 +3756,6 @@
                   "ui:help": "This can be used to select one of the identifications as 'recommended', which is the used as default when displaying information about the specimen."
                 },
                 "ui:classNames": "card card-body bg-light",
-                "ui:title": "Identification:",
                 "ui:order": [
                   "taxonFields",
                   "infraFields",
@@ -3826,15 +3844,7 @@
                   }
                 }
               },
-              "ui:title": "",
-              "ui:options": {
-                "buttons": [
-                  {
-                    "fn": "add",
-                    "label": "Add identification"
-                  }
-                ]
-              }
+              "ui:title": "Identification:"
             },
             "typeSpecimens": {
               "items": {
@@ -4074,9 +4084,9 @@
               }
             },
             "ui:classNames": "card card-body bg-light",
-            "ui:title": "Specimen/observation (unit):"
+            "ui:title": ""
           },
-          "ui:title": "Specimens/observations"
+          "ui:title": "Specimen/observation (unit):"
         },
         "ui:order": [
           "gatheringEventFields",
