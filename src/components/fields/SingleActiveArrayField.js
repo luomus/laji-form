@@ -36,8 +36,6 @@ import BaseComponent from "../BaseComponent";
 import { getTemplate } from "@rjsf/utils";
 import memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";
-import {FieldProps, JSONSchema, JSONSchemaObject} from "src/types";
-import {SetAccordionOpenHandler} from "src/services/multi-active-array-service";
 
 const popupMappers = {
 	units: (schema, units, options) => {
