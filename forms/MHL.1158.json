@@ -4575,6 +4575,9 @@
       }
     },
     "basicFields": {
+      "ui:options": {
+        "titleId": "basicFieldsTitle"
+      },
       "collectionID": {
         "ui:widget": "AutosuggestWidget",
         "ui:options": {
