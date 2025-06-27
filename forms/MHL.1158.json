@@ -3601,6 +3601,7 @@
           "ui:field": "MultiActiveArrayField",
           "ui:options": {
             "renderer":  "accordion",
+            "confirmDelete": true,
             "headerFormatters": [
               "unitTaxons"
             ],
