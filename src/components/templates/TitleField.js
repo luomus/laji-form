@@ -11,7 +11,7 @@ const TitleField = (props) => {
 		"ui:helpHoverable": helpHoverable,
 		"_ui:renderedButtons": buttons
 	} = uiSchema;
-	const {titleClassName: className, titleFormatters = []} = getUiOptions(uiSchema);
+	const {titleClassName: className, titleFormatters = [], titleId} = getUiOptions(uiSchema);
 
 	const renderedFormatters = titleFormatters.map((titleFormatter) => {
 		const {renderer} = titleFormatter;
@@ -63,7 +63,7 @@ const TitleField = (props) => {
 	}
 
 	return (
-		<legend className={classNames(className, help && "has-help")} style={style}>
+		<legend className={classNames(className, help && "has-help")} style={style} id={titleId}>
 			<span><span>{renderedFormatters}</span> {titleTextContent} {buttons}</span>
 		</legend>
 	);

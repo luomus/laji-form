@@ -3598,6 +3598,20 @@
           "ui:help": "For garden accessions/seed bank, estimated size of the area sampled, in square meters"
         },
         "units": {
+          "ui:field": "MultiActiveArrayField",
+          "ui:options": {
+            "renderer":  "accordion",
+            "confirmDelete": true,
+            "headerFormatters": [
+              "unitTaxons"
+            ],
+            "buttons": [
+              {
+                "fn": "add",
+                "label": "Add specimen/observation (unit):"
+              }
+            ]
+          },
           "items": {
             "primarySpecimen": {
               "ui:help": "Can be used to highlight one unit as primary specimen/observation if there are many in one document. Only one unit per document can be marked as primary."
@@ -3674,7 +3688,23 @@
               }
             },
             "identifications": {
+              "ui:field": "MultiActiveArrayField",
+              "ui:options": {
+                "renderer":  "accordion",
+                "headerFormatters": [
+                  "taxonRank",
+                  "taxon",
+                  "author"
+                ],
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add identification"
+                  }
+                ]
+              },
               "items": {
+                "ui:title": "",
                 "taxonRank": {
                   "ui:help": "Taxonomic level for the identification"
                 },
@@ -3727,7 +3757,6 @@
                   "ui:help": "This can be used to select one of the identifications as 'recommended', which is the used as default when displaying information about the specimen."
                 },
                 "ui:classNames": "card card-body bg-light",
-                "ui:title": "Identification:",
                 "ui:order": [
                   "taxonFields",
                   "infraFields",
@@ -3816,15 +3845,7 @@
                   }
                 }
               },
-              "ui:title": "",
-              "ui:options": {
-                "buttons": [
-                  {
-                    "fn": "add",
-                    "label": "Add identification"
-                  }
-                ]
-              }
+              "ui:title": "Identification:"
             },
             "typeSpecimens": {
               "items": {
@@ -3964,6 +3985,20 @@
               }
             },
             "samples": {
+              "ui:field": "MultiActiveArrayField",
+              "ui:options": {
+                "renderer":  "accordion",
+                "headerFormatters": [
+                  "preparationType",
+                  "uri"
+                ],
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Add preparation/sample"
+                  }
+                ]
+              },
               "items": {
                 "preparationType": {
                   "ui:help": "Type of preparation/sample"
@@ -4053,28 +4088,12 @@
                 "ui:classNames": "card card-body bg-light",
                 "ui:title": "Sample:"
               },
-              "ui:title": "",
-              "ui:options": {
-                "buttons": [
-                  {
-                    "fn": "add",
-                    "label": "Add preparation/sample"
-                  }
-                ]
-              }
+              "ui:title": ""
             },
             "ui:classNames": "card card-body bg-light",
-            "ui:title": "Specimen/observation (unit):"
+            "ui:title": ""
           },
-          "ui:title": "Specimens/observations",
-          "ui:options": {
-            "buttons": [
-              {
-                "fn": "add",
-                "label": "Add specimen/observation"
-              }
-            ]
-          }
+          "ui:title": "Specimen/observation (unit):"
         },
         "ui:order": [
           "gatheringEventFields",
@@ -4557,6 +4576,9 @@
       }
     },
     "basicFields": {
+      "ui:options": {
+        "titleId": "basicFieldsTitle"
+      },
       "collectionID": {
         "ui:widget": "AutosuggestWidget",
         "ui:options": {

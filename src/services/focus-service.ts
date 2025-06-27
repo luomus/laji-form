@@ -1,6 +1,7 @@
 import { FormContext } from "../components/LajiForm";
 import { highlightElem, scrollIntoViewIfNeeded } from "../utils";
 
+
 type FocusHandler = () => Promise<void> | void;
 
 export default class FocusService {
@@ -46,9 +47,12 @@ export default class FocusService {
 				}, Promise.resolve());
 			});
 		}, Promise.resolve()).then(() => {
+			const panelContainer: HTMLElement | null = document.querySelector(`#${id}-panel`);
 			const container = this.formContext.utils.getSchemaElementById(id);
-			const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
-			const input = document.querySelector(`#${id}`) as HTMLInputElement;
+			const errorContainer: HTMLElement | null = document.querySelector(`#laji-form-error-container-${id}`);
+
+			const elem = panelContainer || container || errorContainer;
+			const input: HTMLInputElement | null = document.querySelector(`#${id}`);
 
 			if (elem) scrollIntoViewIfNeeded(elem, this.formContext.topOffset, this.formContext.bottomOffset);
 			if (input && input.focus) {
