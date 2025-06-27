@@ -45,6 +45,10 @@ export default class LajiFormWrapper {
 		this.lajiForm.popBlockingLoader();
 	}
 
+	focusField = (id: string) => {
+		this.lajiForm.focusField(id);
+	}
+
 	openAllMultiActiveArrays = () => {
 		this.lajiForm.openAllMultiActiveArrays();
 	}

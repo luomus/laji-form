@@ -4,7 +4,19 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, highlightElem, constructTranslations, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
+import {
+	capitalizeFirstLetter,
+	stringifyKeyCombo,
+	getScrollPositionForScrollIntoViewIfNeeded,
+	getWindowScrolled,
+	highlightElem,
+	constructTranslations,
+	translate,
+	getDefaultFormState,
+	ReactUtils,
+	ReactUtilsType,
+	JSONPointerToId
+} from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import merge from "deepmerge";
@@ -803,6 +815,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	popBlockingLoader = () => {
 		this.memoizedFormContext.services.blocker.pop();
+	}
+
+	focusField = (fieldName: string) => {
+		const id = JSONPointerToId(fieldName);
+		this.memoizedFormContext.services.focus.focus("root_" + id);
 	}
 
 	openAllMultiActiveArrays = () => {
