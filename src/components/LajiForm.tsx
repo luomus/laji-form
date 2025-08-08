@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import validate from "../validation";
+import validate, { toErrorSchema } from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import {
@@ -661,7 +661,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			liveValidations = {} as {errors: any, warnings: any};
 		}
 		const schemaErrors = nonlive || onlySchema
-			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.formContext.translations, e))).errorSchema
+			? this.getSchemaValidationErrors(formData)
 			: {};
 		block && this.memoizedFormContext.services.blocker.push();
 		return new Promise(resolve =>
@@ -857,5 +857,15 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			clearTimeout(timeout);
 		});
 		this.eventListeners = [];
+	}
+
+	getSchemaValidationErrors = (formData: any) => {
+		const errors = rjsfValidator.validateFormData(
+			formData,
+			this.props.schema,
+			undefined,
+			((e: any) => transformErrors(this.state.formContext.translations, e))
+		).errors;
+		return toErrorSchema(errors);
 	}
 }

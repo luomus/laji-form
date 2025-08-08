@@ -60,7 +60,7 @@ function getMessages(result, type) {
 
 // these are taken from @rjsf/core to convert error messages to wanted form
 // see https://github.com/mozilla-services/@rjsf/core/blob/master/src/validate.js
-function toErrorSchema(errors) {
+export function toErrorSchema(errors) {
 	// Transforms a jsonschema validation errors list:
 	// [
 	//   {property: "instance.level1.level2[2].level3", message: "err a"},
