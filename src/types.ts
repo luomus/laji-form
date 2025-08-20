@@ -35,7 +35,7 @@ export type JSONSchemaArray<T = JSONSchema, D = never> = JSONShemaTypeCommon<"ar
 }
 
 export function isJSONSchemaArray(schema: JSONSchema): schema is JSONSchemaArray {
-	return schema.type === "object";
+	return schema.type === "array";
 }
 
 export type JSONSchemaNumber = JSONShemaTypeCommon<"number", number>;
