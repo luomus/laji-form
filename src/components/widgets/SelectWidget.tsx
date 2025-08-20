@@ -92,7 +92,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 	[options.enumOptions, uiSchema, includeEmpty]);
 
 	const getLabelFromValue = useCallback((value: T | undefined) => 
-		value !== undefined && value !== ""
+		value !== undefined && value !== "" && value !== null
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			? enumOptions.find(item => item.value === value)!.label
 			: ""
