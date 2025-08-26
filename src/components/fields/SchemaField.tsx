@@ -92,7 +92,7 @@ export default class _SchemaField extends React.Component<FieldProps> {
 		// rjsf displays a duplicate label if 'uniqueItems' is true in some cases. We prevent that here.
 		// Example of when it shows duplicate is http://localhost:8083/?id=JX.652&local=true, "Elinympäristö" on gathering
 		// level.
-		if (isJSONSchemaArray(schema) && uiSchema && uiSchema.items && uiSchema.items["ui:field"]) {
+		if (isJSONSchemaArray(schema) && uiSchema?.items?.["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
 		}
 

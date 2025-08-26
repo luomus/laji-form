@@ -15,7 +15,8 @@ import {
 	getDefaultFormState,
 	ReactUtils,
 	ReactUtilsType,
-	JSONPointerToId
+	JSONPointerToId,
+	isObject
 } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
@@ -623,12 +624,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			if (formData !== this.state.formData) {
 				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
-				onSubmit && onSubmit({formData: this.memoizedFormContext.services.ids.removeLajiFormIds(formData)});
+				onSubmit?.({formData: removeUndefinedFromArrays(
+					this.memoizedFormContext.services.ids.removeLajiFormIds(formData)
+				)});
 			} else {
 				onValidationError && onValidationError(this.state.extraErrors);
 			}
 		});
-
 	}
 
 	validate = (warnings = true, nonlive = true, onlySchema = false) => {
@@ -643,9 +645,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 		const block = nonlive || onlySchema;
 		
-		const {formData} = this.state;
-		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
-		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
+		const { formData } = this.state;
+		const {live: liveErrorValidators, rest: errorValidators} =
+			splitLive(this.props.validators, this.props.schema.properties);
+		const {live: liveWarningValidators, rest: warningValidators} =
+			splitLive(this.props.warnings, this.props.schema.properties);
 		let liveValidations = {errors: liveErrorValidators} as {errors: any, warnings: any};
 		const validations = {} as {errors: any, warnings: any};
 		if (!onlySchema && nonlive) {
@@ -861,7 +865,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	getSchemaValidationErrors = (formData: any) => {
 		const errors = rjsfValidator.validateFormData(
-			formData,
+			removeUndefinedFromArrays(formData),
 			this.props.schema,
 			undefined,
 			((e: any) => transformErrors(this.state.formContext.translations, e))
@@ -869,3 +873,21 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		return toErrorSchema(errors);
 	}
 }
+
+const removeUndefinedFromArrays = (formData: any) => {
+	if (isObject(formData)) {
+		return Object.keys(formData).reduce((obj, k) => {
+			obj[k] = removeUndefinedFromArrays(formData[k]);
+			return obj;
+		}, {} as Record<string, unknown>);
+	} else if (Array.isArray(formData)) {
+		return formData.reduce((filtered, i) => {
+			if (i === undefined || i === null || i === "") {
+				return filtered;
+			}
+			filtered.push(removeUndefinedFromArrays(i));
+			return filtered;
+		}, []);
+	}
+	return formData;
+};

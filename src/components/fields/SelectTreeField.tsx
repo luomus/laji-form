@@ -107,7 +107,7 @@ const getChildProps = (props: FieldProps<JSONSchemaEnum>): Pick<FieldProps<JSONS
 	while (d >= 0) {
 		formData[d] = n;
 		if (isEmptyString(n)) {
-			n = undefined; //object keys can't be "", so root key is in childrenMap 'undefined'.
+			n = undefined; // object keys can't be "", so root key is in childrenMap 'undefined'.
 		}
 		addSelect(d, n, Object.keys(childrenMap[parentsMap[n as any] as any]));
 		d--;
