@@ -1304,7 +1304,7 @@ class AccordionHeader extends React.Component {
 	render() {
 		const {that, idx} = this.props;
 		const title = getTitle(that.props, idx);
-		const popupData = that.state.popups[idx];
+		const popupData = that.state.popups?.[idx];
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];
 

@@ -3,17 +3,14 @@ import * as React from "react";
 import { FieldProps, JSONSchemaObject } from "src/types";
 import ReactContext from "../../ReactContext";
 import * as PropTypes from "prop-types";
-import { getUiOptions, ReactUtils } from "../../utils";
+import { getUiOptions } from "../../utils";
 import merge from "deepmerge";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
-import { AccordionArrayFieldTemplate, getPopupDataPromise } from "./SingleActiveArrayField";
-import { FormContext } from "../LajiForm";
+import { AccordionArrayFieldTemplate } from "./SingleActiveArrayField";
 
 interface State {
 	activeIdx: number[];
-	scrollHeightFixed: number;
-	popups: any;
 }
 
 @BaseComponent
@@ -32,11 +29,9 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		formData: PropTypes.array
 	}
 
+	// these are required by the AccordionArrayFieldTemplate
 	deleteButtonRefs = {};
 	deleteButtonRefSetters = {};
-	localContext?: FormContext;
-	localContextKey?: number;
-	mounted = false;
 
 	constructor(props: FieldProps<JSONSchemaObject>) {
 		super(props);
@@ -44,12 +39,8 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		this.deleteButtonRefSetters = {};
 		this.state = {
 			activeIdx: this.getInitialActiveIdx(props),
-			scrollHeightFixed: 0,
-			...this.getStateFromProps(props),
-			popups: {}
+			...this.getStateFromProps(props)
 		};
-		const id = `${this.props.idSchema.$id}`;
-		this.props.formContext.globals[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
 	getInitialActiveIdx = (props: FieldProps<JSONSchemaObject>): number[] => {
@@ -58,49 +49,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		return [...Array(formDataLength).keys()];
 	}
 
-	componentDidMount() {
-		this.mounted = true;
-		this.updatePopups(this.props);
-	}
-
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
-	UNSAFE_componentWillReceiveProps(props: FieldProps<JSONSchemaObject>) {
-		this.setState(this.getStateFromProps(props));
-		this.updatePopups(props);
-	}
-
-	componentDidUpdate() {
-		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-	}
-
-	shouldComponentUpdate(prevProps: FieldProps<JSONSchemaObject>, prevState: State) {
-		if ((this.state.scrollHeightFixed && !prevState.scrollHeightFixed)
-			|| this.state.scrollHeightFixed && this.state.scrollHeightFixed !== prevState.scrollHeightFixed
-		) {
-			return false;
-		}
-		return true;
-	}
-
-	updatePopups = (props: FieldProps<JSONSchemaObject>) => {
-		const {popupFields} = getUiOptions(this.props.uiSchema);
-		let {popups} = this.state;
-		let count = 0;
-		if (popupFields) props.formData.forEach((item: any, idx: number) => {
-			getPopupDataPromise(props, item).then(popupData => {
-				count++;
-				popups  = {...popups, [idx]: popupData};
-				if (this.mounted && count === props.formData.length) this.setState({popups});
-			}).catch(() => {
-				count++;
-			});
-		});
-	}
-
-	getStateFromProps(props: FieldProps<JSONSchemaObject>): Pick<State, "activeIdx"> | null {
+	getStateFromProps(props: FieldProps<JSONSchemaObject>): State | null {
 		let activeIdx: number[]|undefined;
 
 		const options = getUiOptions(props.uiSchema);
@@ -118,20 +67,6 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		return activeIdx ? { activeIdx } : null;
 	}
 
-	onHeaderAffixChange = (elem: HTMLElement, value: boolean) => {
-		this.setState({scrollHeightFixed: value ? elem.scrollHeight : 0});
-	}
-
-	getLocalFormContext = (): FormContext => {
-		if (this.localContext && this.localContextKey === this.state.scrollHeightFixed) {
-			return this.localContext;
-		}
-		this.localContextKey = this.state.scrollHeightFixed;
-		this.localContext = {...this.props.formContext, topOffset: this.props.formContext.topOffset + this.state.scrollHeightFixed};
-		this.localContext.utils = ReactUtils(this.localContext);
-		return this.localContext;
-	}
-
 	render() {
 		const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
 		let ArrayFieldTemplate = undefined;
@@ -143,7 +78,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 			throw new Error(`Unknown renderer '${renderer}' for MultiActiveArrayField`);
 		}
 
-		const formContext = {...this.getLocalFormContext(), this: this, activeIdx: this.state.activeIdx};
+		const formContext = {...this.props.formContext, this: this, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
