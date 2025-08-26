@@ -1200,9 +1200,9 @@ const headerFormatters = {
 
 			const results =  (unit?.identifications || []).reduce((result, identification, idx) => {
 				const taxonFields = [
-					`identifications/${idx}/taxonRank`,
-					`identifications/${idx}/taxon`,
-					`identifications/${idx}/author`
+					`/identifications/${idx}/taxonRank`,
+					`/identifications/${idx}/taxon`,
+					`/identifications/${idx}/author`
 				];
 
 				const taxonString = taxonFields.reduce((res, field) => {
