@@ -1235,3 +1235,24 @@ export function usePrevious<T>(value: T): T | undefined {
 export function asArray<T>(maybeArr: T | T[]): T[] {
 	return Array.isArray(maybeArr) ? maybeArr : [maybeArr];
 }
+
+export function getLajiUri(lajiId: string): string {
+	const defaultDomain = "http://tun.fi/";
+	const domainMap: Record<string, string> = {
+		"luomus:": "http://id.luomus.fi/",
+		"zmuo:": "http://id.zmuo.oulu.fi/",
+		"herbo:": "http://id.herb.oulu.fi/",
+		"utu:": "http://mus.utu.fi/",
+		"gbif-dataset:": "https://www.gbif.org/dataset/",
+	};
+
+	if (lajiId.includes(":")) {
+		Object.keys(domainMap).forEach(key => {
+			lajiId = lajiId.replace(key, domainMap[key]);
+		});
+	}
+
+	if (lajiId.indexOf("http") === 0) return lajiId;
+
+	return defaultDomain + lajiId;
+}

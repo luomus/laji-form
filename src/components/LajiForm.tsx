@@ -1,10 +1,23 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import validate from "../validation";
+import validate, { toErrorSchema } from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, highlightElem, constructTranslations, translate, getDefaultFormState, ReactUtils, ReactUtilsType, isObject } from "../utils";
+import {
+	capitalizeFirstLetter,
+	stringifyKeyCombo,
+	getScrollPositionForScrollIntoViewIfNeeded,
+	getWindowScrolled,
+	highlightElem,
+	constructTranslations,
+	translate,
+	getDefaultFormState,
+	ReactUtils,
+	ReactUtilsType,
+	JSONPointerToId,
+	isObject
+} from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import merge from "deepmerge";
@@ -27,6 +40,7 @@ import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
 import SingletonMapService from "../services/singleton-map-service";
 import { FieldProps, HasMaybeChildren, Lang } from "../types";
+import MultiActiveArrayService from "../services/multi-active-array-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -97,6 +111,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"PdfArrayField",
 	"AsArrayField",
 	"CondensedObjectField",
+	"MultiActiveArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -244,6 +259,7 @@ export interface FormContext {
 		ids: IdService,
 		rootInstance: RootInstanceService,
 		singletonMap: SingletonMapService,
+		multiActiveArray: MultiActiveArrayService
 	}
 }
 
@@ -389,6 +405,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					props.schema, props.formData, (formData) => this.onChange({formData}), this.validate, () => this.validateAndSubmit(false)
 				);
 				this.memoizedFormContext.services.singletonMap = new SingletonMapService();
+				this.memoizedFormContext.services.multiActiveArray = new MultiActiveArrayService();
 			}
 			return this.memoizedFormContext;
 		}
@@ -648,7 +665,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			liveValidations = {} as {errors: any, warnings: any};
 		}
 		const schemaErrors = nonlive || onlySchema
-			? rjsfValidator.validateFormData(removeUndefinedFromArrays(formData), this.props.schema, undefined, ((e: any) => transformErrors(this.state.formContext.translations, e))).errorSchema
+			? this.getSchemaValidationErrors(formData)
 			: {};
 		block && this.memoizedFormContext.services.blocker.push();
 		return new Promise(resolve =>
@@ -804,6 +821,19 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.memoizedFormContext.services.blocker.pop();
 	}
 
+	focusField = (fieldName: string) => {
+		const id = JSONPointerToId(fieldName);
+		this.memoizedFormContext.services.focus.focus("root_" + id);
+	}
+
+	openAllMultiActiveArrays = () => {
+		this.memoizedFormContext.services.multiActiveArray.openAll();
+	}
+
+	closeAllMultiActiveArrays = () => {
+		this.memoizedFormContext.services.multiActiveArray.closeAll();
+	}
+
 	getSettings(global = false) {
 		return this.memoizedFormContext.services.settings.getSettings(global);
 	}
@@ -831,6 +861,16 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			clearTimeout(timeout);
 		});
 		this.eventListeners = [];
+	}
+
+	getSchemaValidationErrors = (formData: any) => {
+		const errors = rjsfValidator.validateFormData(
+			removeUndefinedFromArrays(formData),
+			this.props.schema,
+			undefined,
+			((e: any) => transformErrors(this.state.formContext.translations, e))
+		).errors;
+		return toErrorSchema(errors);
 	}
 }
 

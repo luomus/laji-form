@@ -1,5 +1,5 @@
-import { test, expect, Page } from "@playwright/test";
-import { DemoPageForm, createForm, EnumWidgetPOI, getFocusedElement } from "./test-utils";
+import { test, expect, Page, Locator } from "@playwright/test";
+import { DemoPageForm, createForm, EnumWidgetPOI, getFocusedElement, getRemoveUnit } from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 test.describe.configure({mode: "serial"});
@@ -8,6 +8,7 @@ test.describe("specimen form (MHL.1158)", () => {
 	let page: Page;
 	let form: DemoPageForm;
 	let addMeasurementEnum$: EnumWidgetPOI;
+	let removeUnit: (g: number, u: number) => Promise<void>;
 
 	const uiSchemaContext = {
 		userName: "Test, User",
@@ -20,6 +21,7 @@ test.describe("specimen form (MHL.1158)", () => {
 		await form.setState({uiSchemaContext});
 
 		addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
+		removeUnit = getRemoveUnit(page);
 	});
 
 	test("point can be added to map", async () => {
@@ -30,6 +32,58 @@ test.describe("specimen form (MHL.1158)", () => {
 		const formData = await form.getChangedData();
 		expect(formData.gatherings[0].wgs84Latitude).toBeDefined();
 		expect(formData.gatherings[0].wgs84Longitude).toBeDefined();
+	});
+
+	test.describe("units", () => {
+		let $unitAdd: Locator;
+
+		test.beforeAll(async () => {
+			$unitAdd = form.$locateButton("gatherings.0.units", "add");
+		});
+
+		test("has one by default", async () => {
+			await expect(form.$locate("gatherings.0.units.0")).toBeVisible();
+		});
+
+		test("can be added", async () => {
+			await $unitAdd.click();
+			await expect(form.$locate("gatherings.0.units.1")).toBeVisible();
+		});
+
+		test("panels are open on default", async () => {
+			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).toBeVisible();
+			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
+		});
+
+		test("panels can be closed automatically", async () => {
+			await form.e("closeAllMultiActiveArrays()");
+			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).not.toBeVisible();
+			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).not.toBeVisible();
+		});
+
+		test("panels can be opened automatically", async () => {
+			await form.e("openAllMultiActiveArrays()");
+			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).toBeVisible();
+			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
+		});
+
+		test("panel can be closed by clicking", async () => {
+			await form.$locateAddition("gatherings.0.units.0", "panel").locator(".laji-form-clickable-panel-header").click();
+			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).not.toBeVisible();
+			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
+		});
+
+		test("focusing opens the panel", async () => {
+			await form.e("focusField('/gatherings/0/units/0')");
+			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).toBeVisible();
+			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
+		});
+
+		test("can be deleted", async () => {
+			await removeUnit(0, 1);
+
+			await expect(form.$locate("gatherings.0.units.1")).not.toBeVisible();
+		});
 	});
 
 	test.describe("measurements", () => {

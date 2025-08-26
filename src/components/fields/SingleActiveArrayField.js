@@ -1,8 +1,32 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import merge from "deepmerge";
-import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, isObject, getTitle, ReactUtils, isDefaultData, classNames, getFormDataIndex } from "../../utils";
+import {
+	getUiOptions,
+	hasData,
+	getReactComponentName,
+	parseJSONPointer,
+	getBootstrapCols,
+	getNestedTailUiSchema,
+	isHidden,
+	isEmptyString,
+	bsSizeToPixels,
+	pixelsToBsSize,
+	formatValue,
+	dictionarify,
+	getUUID,
+	filteredErrors,
+	parseSchemaFromFormDataPointer,
+	parseUiSchemaFromFormDataPointer,
+	isObject,
+	getTitle,
+	ReactUtils,
+	isDefaultData,
+	classNames,
+	getFormDataIndex,
+	asArray,
+	getLajiUri
+} from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix, OverlayTrigger } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../templates/ArrayFieldTemplate";
@@ -30,6 +54,36 @@ const popupMappers = {
 			return Promise.resolve({[(schema.units ? schema.units.title : undefined) || options.label || options.field]: result});
 		});
 	}
+};
+
+const getPopupDataPromise = (props, itemFormData) => {
+	const {popupFields} = getUiOptions(props.uiSchema);
+
+	if (!props.formData) return Promise.resolve({});
+
+	return Promise.all(popupFields.map(field => {
+		const fieldName = field.field;
+		let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
+		let fieldSchema = props.schema.items.properties;
+
+		if (field.mapper && fieldData) {
+			return popupMappers[field.mapper](fieldSchema, fieldData, field);
+		} else if (fieldData) {
+			return new Promise(resolve => resolve({[fieldSchema  && fieldSchema[fieldName] ? fieldSchema[fieldName].title : fieldName]: fieldData}));
+		}
+	})).then(fields => {
+		const popupData = fields.reduce((popup, item) => {
+			if (item) Object.keys(item).forEach(label => {
+				popup[label] = item[label];
+			});
+			return popup;
+		}, {});
+		return Promise.resolve(popupData);
+	});
+};
+
+const isActive = (idx, activeIdx) => {
+	return idx === activeIdx || (Array.isArray(activeIdx) && activeIdx.includes(idx));
 };
 
 @BaseComponent
@@ -124,7 +178,7 @@ export default class SingleActiveArrayField extends React.Component {
 		let {popups} = this.state;
 		let count = 0;
 		if (popupFields) props.formData.forEach((item, idx) => {
-			this.getPopupDataPromise(idx, props, item).then(popupData => {
+			getPopupDataPromise(props, item).then(popupData => {
 				count++;
 				popups  = {...popups, [idx]: popupData};
 				if (this.mounted && count === props.formData.length) this.setState({popups});
@@ -236,32 +290,6 @@ export default class SingleActiveArrayField extends React.Component {
 		this.setState({normalRendering}, () => callback && callback(normalRendering));
 	}
 
-	getPopupDataPromise = (idx, props, itemFormData) => {
-		const {popupFields} = getUiOptions(props.uiSchema);
-
-		if (!this.props.formData) return Promise.resolve({});
-
-		return Promise.all(popupFields.map(field => {
-			const fieldName = field.field;
-			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
-			let fieldSchema = props.schema.items.properties;
-
-			if (field.mapper && fieldData) {
-				return popupMappers[field.mapper](fieldSchema, fieldData, field);
-			} else if (fieldData) {
-				return new Promise(resolve => resolve({[fieldSchema  && fieldSchema[fieldName] ? fieldSchema[fieldName].title : fieldName]: fieldData}));
-			}
-		})).then(fields => {
-			const popupData = fields.reduce((popup, item) => {
-				if (item) Object.keys(item).forEach(label => {
-					popup[label] = item[label];
-				});
-				return popup;
-			}, {});
-			return Promise.resolve(popupData);
-		});
-	}
-
 	onActiveChange = (idx, prop, callback) => {
 		if (idx !== undefined) {
 			idx = parseInt(idx);
@@ -334,7 +362,7 @@ class Popup extends React.Component {
 
 function handlesButtonsAndFocus(ComposedComponent) {
 	@handlesArrayKeys
-	class SingleActiveArrayTemplateField extends ComposedComponent {
+	class SingleAndMultiActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		getKeyHandlers(props) {
@@ -343,11 +371,11 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			return [arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange((that.props.formData || []).length, undefined, callback),
-				getCurrentIdx: () => that.state.activeIdx,
-				focusByIdx: (idx, prop, callback) => idx === that.state.activeIdx
+				getCurrentIdx: () => Array.isArray(that.state.activeIdx) ? undefined : that.state.activeIdx,
+				focusByIdx: (idx, prop, callback) => isActive(idx, that.state.activeIdx)
 					? callback()
 					: that.onActiveChange(idx, prop, callback),
-				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager"
+				getIdToScrollAfterNavigate: (renderer === "accordion" || renderer === "pager") && !Array.isArray(that.state.activeIdx)
 					? () => `${props.idSchema.$id}_${that.state.activeIdx}-header`
 					: undefined
 			}];
@@ -355,17 +383,21 @@ function handlesButtonsAndFocus(ComposedComponent) {
 
 		componentDidMount() {
 			this.addFocusHandlers();
+			this.addSetOpenHandlers();
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate(...params) {
 			this.removeFocusHandlers();
 			this.addFocusHandlers();
+			this.removeSetOpenHandlers();
+			this.addSetOpenHandlers();
 			if (super.componentDidUpdate) super.componentDidUpdate(...params);
 		}
 
 		componentWillUnmount() {
 			this.removeFocusHandlers();
+			this.removeSetOpenHandlers();
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
@@ -387,9 +419,38 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			return props.items.map((_, i) => {
 				const idx = getFormDataIndex(i, that.props.uiSchema);
 				return [`${that.props.idSchema.$id}_${idx}`, () => {
-					if (that.state.activeIdx !== i) return new Promise(resolve => {
+					if (!isActive(i, that.state.activeIdx)) return new Promise(resolve => {
 						that.onActiveChange(i, undefined, () => resolve());
 					});
+				}];
+			});
+		}
+
+		addSetOpenHandlers() {
+			this.setAllOpenHandlers = this.getSetOpenHandlers(this.props);
+			this.setAllOpenHandlers.forEach(handler => {
+				this.props.formContext.services.multiActiveArray.addSetOpenHandler(...handler);
+			});
+		}
+
+		removeSetOpenHandlers() {
+			this.setAllOpenHandlers.forEach(handler => {
+				this.props.formContext.services.multiActiveArray.removeSetOpenHandler(...handler);
+			});
+		}
+
+		getSetOpenHandlers = (props) => {
+			const that = props.formContext.this;
+			return props.items.map((_, i) => {
+				const idx = getFormDataIndex(i, that.props.uiSchema);
+				return [`${that.props.idSchema.$id}_${idx}`, (open) => {
+					if (!Array.isArray(that.state.activeIdx)) {
+						return;
+					}
+					const isActive = that.state.activeIdx.includes(i);
+					if ((open && !isActive) || (!open && isActive)) {
+						that.onActiveChange(i);
+					}
 				}];
 			});
 		}
@@ -398,15 +459,18 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const that = props.formContext.this;
 			const handlers = [];
 			if (that.state.activeIdx !== undefined) {
-				const id = `${props.idSchema.$id}_${that.state.activeIdx}`;
-				handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
-					return that.deleteButtonRefs[that.state.activeIdx];
-				}}]);
+				const activeIdxs = asArray(that.state.activeIdx);
+				activeIdxs.forEach((idx) => {
+					const id = `${props.idSchema.$id}_${idx}`;
+					handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
+						return that.deleteButtonRefs[idx];
+					}}]);
+				});
 			}
 			return handlers;
 		}
 	}
-	return SingleActiveArrayTemplateField;
+	return SingleAndMultiActiveArrayTemplateField;
 }
 
 // Swallow unknown prop warnings.
@@ -434,11 +498,10 @@ const AccordionButtonsWrapper = ({props, position}) => {
 	);
 };
 
+// supports MultiActiveArrayField
 @handlesButtonsAndFocus
-class AccordionArrayFieldTemplate extends React.Component {
+export class AccordionArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
-
-	containerRef = React.createRef();
 
 	setHeaderRef = (elem) => {
 		this.headerRef = elem;
@@ -459,6 +522,11 @@ class AccordionArrayFieldTemplate extends React.Component {
 		const {translations} = this.props.formContext;
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
+		const containerRefs = {};
+		asArray(activeIdx).forEach(idx => {
+			containerRefs[idx] = React.createRef();
+		});
+
 		const getHeader = (item, idx) => {
 			let header = 
 				<AccordionHeader 
@@ -477,10 +545,10 @@ class AccordionArrayFieldTemplate extends React.Component {
 						onClick={that.onDelete(item)} />}
 				</AccordionHeader>;
 
-			if (affixed && activeIdx === idx) {
+			if (affixed && isActive(idx, activeIdx)) {
 				const offset = this.props.formContext.topOffset - (that.state.scrollHeightFixed);
 				header = (
-					<Affix containerRef={this.containerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
+					<Affix containerRef={containerRefs[idx]} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 						{header}
 					</Affix>
 				);
@@ -497,7 +565,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 				<Accordion onSelect={this.onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
-									 ref={idx === activeIdx ? this.containerRef : undefined}
+									 ref={containerRefs[idx]}
 						       id={`${this.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
@@ -505,7 +573,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 							<Panel.Heading>
 								{getHeader(item, idx)}
 							</Panel.Heading>
-							{idx === activeIdx ? (
+							{isActive(idx, activeIdx) ? (
 								<Panel.Body>
 									{item.children}
 									{closeButton ? <Button onClick={this.onSelect} small className="pull-right"><Glyphicon glyph="chevron-up" /> {translations.Close}</Button> : null}
@@ -522,6 +590,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 	setDeleteButtonRef = idx => elem => {this.props.formContext.this.deleteButtonRefs[idx] = elem;};
 }
 
+// does not support MultiActiveArrayField
 @handlesButtonsAndFocus
 class PagerArrayFieldTemplate extends React.Component {
 
@@ -627,6 +696,7 @@ class PagerArrayFieldTemplate extends React.Component {
 	setDeleteButtonRef = idx => elem => {this.props.formContext.this.deleteButtonRefs[idx] = elem;};
 }
 
+// does not support MultiActiveArrayField
 @handlesButtonsAndFocus
 class UncontrolledArrayFieldTemplate extends React.Component {
 	render() {
@@ -657,6 +727,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 	}
 }
 
+// does not support MultiActiveArrayField
 @handlesButtonsAndFocus
 class TableArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
@@ -1027,7 +1098,7 @@ const headerFormatters = {
 			);
 		},
 		onClick: (that, idx) => {
-			if (that.state.activeIdx === idx) {
+			if (isActive(idx, that.state.activeIdx)) {
 				headerFormatters.units.onMouseEnter(that, idx, !!"use the force");
 			} else {
 				headerFormatters.units.onMouseLeave(that);
@@ -1038,7 +1109,7 @@ const headerFormatters = {
 			const item = formData[idx];
 
 			that.hoveredIdx = idx;
-			if (!force && idx === that.state.activeIdx) return;
+			if (!force && isActive(idx, that.state.activeIdx)) return;
 			const map = getContext(`${that.props.formContext.contextId}_MAP`).map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
@@ -1122,6 +1193,45 @@ const headerFormatters = {
 		onMouseLeave: (that, idx) => {
 			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
 		}
+	},
+	unitTaxons: {
+		component: (props) => {
+			const _props = props.that.props;
+			const unit = _props.formData?.[props.idx];
+
+			const results =  (unit?.identifications || []).reduce((result, identification, idx) => {
+				const taxonFields = [
+					`/identifications/${idx}/taxonRank`,
+					`/identifications/${idx}/taxon`,
+					`/identifications/${idx}/author`
+				];
+
+				const taxonString = taxonFields.reduce((res, field) => {
+					const formattedValue = formatValue({..._props, schema: parseSchemaFromFormDataPointer(_props.schema.items, field), uiSchema: parseUiSchemaFromFormDataPointer(_props.uiSchema.items, field), formData: parseJSONPointer(unit, field, !!"safely")});
+					if (!isEmptyString(formattedValue)) {
+						res.push(formattedValue);
+					}
+					return res;
+				}, []).join(" ");
+
+				if (!isEmptyString(taxonString)) {
+					result.push(taxonString);
+				}
+
+				return result;
+			}, []);
+
+			return results.length > 0 ? <span className="text-muted">{results.join(", ")}</span> : null;
+		}
+	},
+	uri: {
+		component: (props) => {
+			const id = props.that.props.formData?.[props.idx]?.id;
+			if (!id) {
+				return null;
+			}
+			return <span className="text-muted"><small>{getLajiUri(id)}</small></span>;
+		}
 	}
 };
 
@@ -1195,7 +1305,7 @@ class AccordionHeader extends React.Component {
 	render() {
 		const {that, idx} = this.props;
 		const title = getTitle(that.props, idx);
-		const popupData = that.state.popups[idx];
+		const popupData = that.state.popups?.[idx];
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];
 
