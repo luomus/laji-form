@@ -24,7 +24,8 @@ import {
 	isDefaultData,
 	classNames,
 	getFormDataIndex,
-	asArray, getLajiUri
+	asArray,
+	getLajiUri
 } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix, OverlayTrigger } from "../components";
@@ -55,7 +56,7 @@ const popupMappers = {
 	}
 };
 
-export const getPopupDataPromise = (props, itemFormData) => {
+const getPopupDataPromise = (props, itemFormData) => {
 	const {popupFields} = getUiOptions(props.uiSchema);
 
 	if (!props.formData) return Promise.resolve({});
