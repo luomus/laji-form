@@ -4642,8 +4642,16 @@
         }
       },
       "relationship": {
+        "ui:field": "PrefixArrayField",
         "ui:options": {
-          "renderTitleAsLabel": true
+          "prefixValues": [
+            "host",
+            "parasite",
+            "summerHost",
+            "fallHost",
+            "saprotroph",
+            "observedOn"
+          ]
         }
       },
       "additionalIDs": {

@@ -8,6 +8,7 @@ test.describe("specimen form (MHL.1158)", () => {
 	let page: Page;
 	let form: DemoPageForm;
 	let addMeasurementEnum$: EnumWidgetPOI;
+	let addRelationshipEnum$: EnumWidgetPOI;
 	let removeUnit: (g: number, u: number) => Promise<void>;
 
 	const uiSchemaContext = {
@@ -21,6 +22,7 @@ test.describe("specimen form (MHL.1158)", () => {
 		await form.setState({uiSchemaContext});
 
 		addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
+		addRelationshipEnum$ = form.$getEnumWidget("relationship");
 		removeUnit = getRemoveUnit(page);
 	});
 
@@ -138,6 +140,50 @@ test.describe("specimen form (MHL.1158)", () => {
 
 			const formData = await form.getChangedData();
 			expect(formData.gatherings[0].units[0].measurement).toEqual(undefined);
+		});
+	});
+
+	test.describe("relationship", () => {
+		test("can add a relationship prefix", async () => {
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(1).click();
+
+			expect(form.$locate("relationship.0")).toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:"]);
+		});
+
+		test("can add multiple relationships", async () => {
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(2).click();
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(1).click();
+
+			expect(form.$locate("relationship.1")).toBeVisible();
+			expect(form.$locate("relationship.2")).toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:", "parasite:", "host:"]);
+		});
+
+		test("can edit relationship fields", async () => {
+			await form.$locate("relationship.0").locator("input").fill("1");
+			await form.$locate("relationship.1").locator("input").fill("2");
+			await form.$locate("relationship.0").locator("input").fill("3");
+			await getFocusedElement(page).press("Tab");
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:3", "parasite:2", "host:"]);
+		});
+
+		test("can remove relationship field", async () => {
+			await form.$locateButton("relationship.0", "delete").click();
+
+			expect(form.$locate("relationship.2")).not.toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["parasite:2", "host:"]);
 		});
 	});
 });
