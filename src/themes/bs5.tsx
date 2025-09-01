@@ -76,8 +76,8 @@ const mapValidationStateToClass = (validationState?: ValidationState|null): stri
 	return "text-" + (validationState === "error" ? "danger" : validationState);
 };
 
-const _Card = React.forwardRef<HTMLDivElement, PanelProps>(({variant, ...props}, ref) => (
-	<Card {...props} bg={mapVariant(variant, "")} ref={ref} />
+const _Card = React.forwardRef<HTMLDivElement, PanelProps>((props, ref) => (
+	<Card {...props} ref={ref} />
 ));
 let Panel = _Card as unknown as PanelI;
 Panel.Body = Card.Body;
