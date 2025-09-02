@@ -6,6 +6,7 @@ import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } fro
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import Spinner  from "react-spinner";
+import { all } from 'deepmerge';
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
 	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
@@ -86,17 +87,24 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 	const inputRef = useRef<typeof FormControl>(null);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const enumOptions = useMemo(() =>
+	const allEnumOptions = useMemo(() =>
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		getEnumOptions<T>(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
+	const enumOptions = useMemo(() => {
+		if (options.whitelist) {
+			return allEnumOptions.filter(e => e.value === undefined || options.whitelist.includes(e.value));
+		}
+		return allEnumOptions;
+	}, [allEnumOptions, options.whitelist]);
+
 	const getLabelFromValue = useCallback((value: T | undefined) => 
 		value !== undefined && value !== "" && value !== null
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			? enumOptions.find(item => item.value === value)!.label
+			? allEnumOptions.find(item => item.value === value)!.label
 			: ""
-	, [enumOptions]);
+	, [allEnumOptions]);
 
 	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
@@ -114,6 +122,11 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 		(filteredEnums || []).length,
 		getDefaultActiveIdx(filteredEnums, value)
 	);
+
+	useEffect(() => {
+		setFilterTerm(undefined);
+		setActiveIdx(Math.max(enumOptions.findIndex(enu => enu.value === value), 0));
+	}, [enumOptions, setActiveIdx, value]);
 
 	const inputValue = filterTerm ?? getLabelFromValue(value);
 
@@ -133,10 +146,8 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 			return;
 		}
 		onChange(item.value);
-		setFilterTerm(undefined);
-		setActiveIdx(enumOptions.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [enumOptions, hide, onChange, setActiveIdx, value]);
+	}, [hide, onChange, value]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`

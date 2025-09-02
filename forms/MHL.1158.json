@@ -4000,6 +4000,277 @@
                 ]
               },
               "items": {
+                "ui:functions": [
+                  {
+                    "ui:field": "ConditionalUiSchemaField",
+                    "ui:options": {
+                      "cases": [
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeSkin"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialBodyParts",
+                                    "MF.materialLeg",
+                                    "MF.materialEntireOrganism",
+                                    "MF.materialBirdStudySkin",
+                                    "MF.materialWing",
+                                    "MF.materialTail",
+                                    "MF.materialWingAndTail",
+                                    "MF.materialFeather",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeSkeletal"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialSkull",
+                                    "MF.materialShell",
+                                    "MF.materialEntireSkeleton",
+                                    "MF.materialBones",
+                                    "MF.materialSkullAndBones",
+                                    "MF.materialAntlers",
+                                    "MF.materialTeeth",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeMount"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialHead",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeTissue"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialMuscle",
+                                    "MF.materialLiver",
+                                    "MF.materialLeaf",
+                                    "MF.materialBlood",
+                                    "MF.materialLeg",
+                                    "MF.materialSkin",
+                                    "MF.materialFeather",
+                                    "MF.materialHair",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeTissueEcotoxicology"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialFeather",
+                                    "MF.materialEggContent",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeLiquid"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialEntireOrganism",
+                                    "MF.materialTail",
+                                    "MF.materialHead",
+                                    "MF.materialBodyParts",
+                                    "MF.materialEgg",
+                                    "MF.materialOther",
+                                    "MF.materialGenitalPreparation"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeMicroscopeSlide"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialEntireOrganism",
+                                    "MF.materialAppendages",
+                                    "MF.materialGenitalPreparation",
+                                    "MF.materialSection",
+                                    "MF.materialChromosomes",
+                                    "MF.materialHair",
+                                    "MF.materialFeather",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeDNAExtract"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialGenomicDNA",
+                                    "MF.materialMitochondrialDNA",
+                                    "MF.materialChloroplastDNA",
+                                    "MF.materialEnvironmentalDNA",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeEgg"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialClutch",
+                                    "MF.materialEggshell",
+                                    "MF.materialEggshellFragments",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "rules": {
+                            "field": "preparationType",
+                            "valueIn": [
+                              "MF.preparationTypeNest"
+                            ]
+                          },
+                          "operations": {
+                            "type": "merge",
+                            "uiSchema": {
+                              "material": {
+                                "ui:options": {
+                                  "whitelist": [
+                                    "MF.materialNest",
+                                    "MF.materialNestMaterial",
+                                    "MF.materialOther"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ui:field": "NestField",
+                    "ui:options": {
+                      "nests": {
+                        "qualityCheckFields": {
+                          "title": "",
+                          "fields": [
+                            "qualityCheckMethod",
+                            "qualityCheckDate"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ],
                 "preparationType": {
                   "ui:help": "Type of preparation/sample"
                 },

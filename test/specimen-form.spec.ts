@@ -7,9 +7,6 @@ test.describe.configure({mode: "serial"});
 test.describe("specimen form (MHL.1158)", () => {
 	let page: Page;
 	let form: DemoPageForm;
-	let addMeasurementEnum$: EnumWidgetPOI;
-	let addRelationshipEnum$: EnumWidgetPOI;
-	let removeUnit: (g: number, u: number) => Promise<void>;
 
 	const uiSchemaContext = {
 		userName: "Test, User",
@@ -20,10 +17,6 @@ test.describe("specimen form (MHL.1158)", () => {
 		page = await browser.newPage();
 		form = await createForm(page, {id: "MHL.1158"});
 		await form.setState({uiSchemaContext});
-
-		addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
-		addRelationshipEnum$ = form.$getEnumWidget("relationship");
-		removeUnit = getRemoveUnit(page);
 	});
 
 	test("point can be added to map", async () => {
@@ -38,9 +31,11 @@ test.describe("specimen form (MHL.1158)", () => {
 
 	test.describe("units", () => {
 		let $unitAdd: Locator;
+		let removeUnit: (g: number, u: number) => Promise<void>;
 
 		test.beforeAll(async () => {
 			$unitAdd = form.$locateButton("gatherings.0.units", "add");
+			removeUnit = getRemoveUnit(page);
 		});
 
 		test("has one by default", async () => {
@@ -81,6 +76,34 @@ test.describe("specimen form (MHL.1158)", () => {
 			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
 		});
 
+		test.describe("samples", () => {
+			let $sampleAdd: Locator;
+			let preparationTypeEnum$: EnumWidgetPOI;
+			let preparationMaterialEnum$: EnumWidgetPOI;
+
+			test.beforeAll(async () => {
+				$sampleAdd = form.$locateButton("gatherings.0.units.0.samples", "add");
+				preparationTypeEnum$ = form.$getEnumWidget("gatherings.0.units.0.samples.0.preparationType");
+				preparationMaterialEnum$ = form.$getEnumWidget("gatherings.0.units.0.samples.0.material");
+			});
+
+			test("can be added", async () => {
+				await $sampleAdd.click();
+				await expect(form.$locate("gatherings.0.units.0.samples.0")).toBeVisible();
+			});
+
+			test("preparation material options depends on the preparation type", async () => {
+				await preparationTypeEnum$.openEnums();
+				await preparationTypeEnum$.$$enums.nth(2).click();
+
+				await preparationMaterialEnum$.openEnums();
+				await preparationMaterialEnum$.$$enums.nth(1).click();
+
+				const formData = await form.getChangedData();
+				expect(formData.gatherings[0].units[0].samples[0].material).toEqual("MF.materialSkull");
+			});
+		});
+
 		test("can be deleted", async () => {
 			await removeUnit(0, 1);
 
@@ -89,6 +112,12 @@ test.describe("specimen form (MHL.1158)", () => {
 	});
 
 	test.describe("measurements", () => {
+		let addMeasurementEnum$: EnumWidgetPOI;
+
+		test.beforeAll(async () => {
+			addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
+		});
+
 		test("can add a measurement field", async () => {
 			await addMeasurementEnum$.openEnums();
 			await addMeasurementEnum$.$$enums.nth(1).click();
@@ -144,6 +173,12 @@ test.describe("specimen form (MHL.1158)", () => {
 	});
 
 	test.describe("relationship", () => {
+		let addRelationshipEnum$: EnumWidgetPOI;
+
+		test.beforeAll(async () => {
+			addRelationshipEnum$ = form.$getEnumWidget("relationship");
+		});
+
 		test("can add a relationship prefix", async () => {
 			await addRelationshipEnum$.openEnums();
 			await addRelationshipEnum$.$$enums.nth(1).click();
