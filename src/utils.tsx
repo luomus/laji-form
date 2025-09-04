@@ -780,7 +780,7 @@ export function formatValue(props: FieldProps, _formatter?: any, parentProps?: a
 	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
-		formatted = formData.map((_val: any) => (schema as any).items.oneOf.find((one: any) => one.const === _val).title).join(", ");
+		formatted = formData.filter((s: any) => s !== undefined).map((_val: any) => (schema as any).items.oneOf.find((one: any) => one.const === _val).title).join(", ");
 	} else if (schema.type === "object") {
 		const keys = Object.keys(formData);
 		return keys.map((_col, i) => {
