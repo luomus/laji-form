@@ -140,6 +140,23 @@ test.describe("Date & time widgets", () => {
 			});
 		});
 
+		test.describe("typing only year and month when option allowOnlyYearAndMonth", () => {
+			test("is off should not accept only year and month", async () => {
+				await updateValue(widget.$input, "2.2021");
+
+				await expect(widget.$input).toHaveValue("");
+				expect(await form.getChangedData()).toBe(undefined);
+			});
+
+			test("is on works", async () => {
+				await form.setState({uiSchema: {...uiSchema, "ui:options": {allowOnlyYearAndMonth: true}}});
+				await updateValue(widget.$input, "2.2021");
+
+				await expect(widget.$input).toHaveValue("02.2021");
+				expect(await form.getChangedData()).toBe("2021-02");
+			});
+		});
+
 		test.describe("plus six months & plus year buttons", () => {
 			test.beforeAll(async () => {
 				await updateValue(widget.$input, "");

@@ -1,28 +1,30 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import moment from "moment";
-import DateTimeWidget, { YEAR_MATCH } from "./DateTimeWidget";
+import DateTimeWidget, {YEAR_MATCH, YEAR_MONTH_MATCH} from "./DateTimeWidget";
 import { isEmptyString, getUiOptions } from "../../utils";
 
-const format = (allowOnlyYear, value) => moment(value).format(
+const format = (allowOnlyYear, allowOnlyYearAndMonth, value) => moment(value).format(
 	allowOnlyYear && value.match(YEAR_MATCH)
 		? "YYYY"
-		: "YYYY-MM-DD"
+		: allowOnlyYearAndMonth && value.match(YEAR_MONTH_MATCH)
+			? "YYYY-MM"
+			: "YYYY-MM-DD"
 );
 
 const DateWidget = (props) => {
 	const {onChange} = props;
-	const {allowOnlyYear} = getUiOptions(props);
+	const {allowOnlyYear, allowOnlyYearAndMonth} = getUiOptions(props);
 	const _onChange = React.useCallback(
-		(value) => onChange(isEmptyString(value) ? undefined : format(allowOnlyYear, value)),
-		[allowOnlyYear, onChange]
+		(value) => onChange(isEmptyString(value) ? undefined : format(allowOnlyYear, allowOnlyYearAndMonth, value)),
+		[allowOnlyYear, allowOnlyYearAndMonth, onChange]
 	);
 	return (
 		<DateTimeWidget
 			{...props}
 			onChange={_onChange}
 			time={false}
-			value={props.value ? format(allowOnlyYear, props.value) : null}
+			value={props.value ? format(allowOnlyYear, allowOnlyYearAndMonth, props.value) : null}
 		/>
 	);
 };
