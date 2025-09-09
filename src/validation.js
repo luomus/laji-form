@@ -38,6 +38,8 @@ export function transformErrors(translations, errors) {
 			error.message = translations.TypeError + translations[error.params.type] + ".";
 		} else if (error.name === "required") {
 			error.message = translations.FieldIsRequired + ".";
+		} else if (error.name === "uniqueItems") {
+			error.message = translations.UniqueItems + ".";
 		}
 		return error;
 	});
