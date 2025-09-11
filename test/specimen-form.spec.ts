@@ -1,5 +1,13 @@
 import { test, expect, Page, Locator } from "@playwright/test";
-import { DemoPageForm, createForm, EnumWidgetPOI, getFocusedElement, getRemoveUnit } from "./test-utils";
+import {
+	DemoPageForm,
+	createForm,
+	EnumWidgetPOI,
+	getFocusedElement,
+	getRemoveUnit,
+	updateValue,
+	DateWidgetPO
+} from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 test.describe.configure({mode: "serial"});
@@ -7,6 +15,8 @@ test.describe.configure({mode: "serial"});
 test.describe("specimen form (MHL.1158)", () => {
 	let page: Page;
 	let form: DemoPageForm;
+	let dateBeginWidget: DateWidgetPO;
+	let dateEndWidget: DateWidgetPO;
 
 	const uiSchemaContext = {
 		userName: "Test, User",
@@ -17,6 +27,31 @@ test.describe("specimen form (MHL.1158)", () => {
 		page = await browser.newPage();
 		form = await createForm(page, {id: "MHL.1158"});
 		await form.setState({uiSchemaContext});
+
+		dateBeginWidget = form.getDateWidget("gatherings.0.dateBegin");
+		dateEndWidget = form.getDateWidget("gatherings.0.dateEnd");
+	});
+
+	test("dates are automatically filled if only year is given", async () => {
+		await updateValue(dateBeginWidget.$input, "2015");
+
+		expect(dateBeginWidget.$input).toHaveValue("01.01.2015");
+		expect(dateEndWidget.$input).toHaveValue("31.12.2015");
+
+		const formData = await form.getChangedData();
+		expect(formData.gatherings[0].dateBegin).toEqual("2015-01-01");
+		expect(formData.gatherings[0].dateEnd).toEqual("2015-12-31");
+	});
+
+	test("dates are automatically filled if only year and month is given", async () => {
+		await updateValue(dateBeginWidget.$input, "6.2016");
+
+		expect(dateBeginWidget.$input).toHaveValue("01.06.2016");
+		expect(dateEndWidget.$input).toHaveValue("30.06.2016");
+
+		const formData = await form.getChangedData();
+		expect(formData.gatherings[0].dateBegin).toEqual("2016-06-01");
+		expect(formData.gatherings[0].dateEnd).toEqual("2016-06-30");
 	});
 
 	test("point can be added to map", async () => {

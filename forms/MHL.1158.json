@@ -4466,6 +4466,13 @@
             "ui:classNames": "verbatim-field"
           },
           "eventTime": {
+            "ui:functions": [{
+              "ui:field": "FillDateRangeField",
+              "ui:options": {
+                "dateBeginField": "dateBegin",
+                "dateEndField": "dateEnd"
+              }
+            }],
             "ui:grid": {
               "lg": 3,
               "md": 4,
@@ -4475,7 +4482,9 @@
             "dateBegin": {
               "ui:widget": "DateWidget",
               "ui:options": {
-                "dateFormat": "DD.MM.YYYY"
+                "dateFormat": "DD.MM.YYYY",
+                "allowOnlyYear": true,
+                "allowOnlyYearAndMonth": true
               }
             },
             "dateEnd": {
