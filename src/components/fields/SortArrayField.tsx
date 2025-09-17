@@ -223,10 +223,10 @@ const sort = (schema: any, {sortCols}: State, sortTimeIdToSortedIdx: Record<stri
 	// Don't sort items that weren't there when the sorting was done.
 	// For example when adding a new item to the array, it should be exactly where it is added.
 	// const idToOrigIdx = getIdToOrigIdx(formData);
-	const aSortedIdx = sortTimeIdToOrigIdx[getUUID(a)];
-	const bSortedIdx = sortTimeIdToOrigIdx[getUUID(b)];
+	const aSortedIdx = sortTimeIdToOrigIdx[getUUID(a)!];
+	const bSortedIdx = sortTimeIdToOrigIdx[getUUID(b)!];
 	if (aSortedIdx === undefined || bSortedIdx === undefined) {
-		return sortTimeIdToSortedIdx[getUUID(a)] - sortTimeIdToSortedIdx[getUUID(b)];
+		return sortTimeIdToSortedIdx[getUUID(a)!] - sortTimeIdToSortedIdx[getUUID(b)!];
 	}
 
 	const defaultSort = DefaultComparer.prototype.compare;
@@ -253,7 +253,7 @@ const getSortedData = memoize((formData: any[], schema: any, state: State, sortT
 }, {max: 1});
 
 const getIdToIdx = (formData: any) => formData.reduce((idToIdx: Record<string, number>, item: any, idx: number) => {
-	idToIdx[getUUID(item)] = idx;
+	idToIdx[getUUID(item)!] = idx;
 	return idToIdx;
 }, {} as Record<string, number>);
 
@@ -441,30 +441,30 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 			const existingItems: any[] = [];
 			const newItems: any[] = [];
 
-			let prevUUID = -1; // Start with UUID that won't match any item.
-			const UUIDToPrev: Record<string, number> = {};
+			let prevUUID: string | number = -1; // Start with UUID that won't match any item.
+			const UUIDToPrev: Record<string, number | string> = {};
 			formData.forEach(i => {
 				const uuid = getUUID(i);
-				if (idToOrigIdx[uuid] !== undefined) {
+				if (idToOrigIdx[uuid!] !== undefined) {
 					existingItems.push(i);
 				} else {
 					newItems.push(i);
-					UUIDToPrev[uuid] = prevUUID;
+					UUIDToPrev[uuid!] = prevUUID;
 				}
-				prevUUID = uuid;
+				prevUUID = uuid as number | string;
 			});
 
 			const sortedToOriginal = existingItems.sort((a: any, b: any) => {
-				const aIdx = idToOrigIdx[getUUID(a)];
-				const bIdx = idToOrigIdx[getUUID(b)];
+				const aIdx = idToOrigIdx[getUUID(a)!];
+				const bIdx = idToOrigIdx[getUUID(b)!];
 				return aIdx - bIdx;
 			});
 
 			newItems.forEach(item => {
 				const uuid = getUUID(item);
-				const precedingUUID = UUIDToPrev[uuid];
+				const precedingUUID = UUIDToPrev[uuid!];
 				const precedingOriginalIdx = sortedToOriginal.findIndex((i) => getUUID(i) === precedingUUID);
-				const precedingSortedIdx = this.sortTimeIdToSortedIdx[getUUID(item)];
+				const precedingSortedIdx = this.sortTimeIdToSortedIdx[getUUID(item)!];
 				// Detect whether i's a new empty item. If it is, put it to the end of the original array.
 				// Otherwise (it's e.g. a copied item), put it in the original array after the preceding item of the sorted order.
 				if (precedingSortedIdx === sortedToOriginal.length && isDefaultData(item, this.props.schema.items)) {

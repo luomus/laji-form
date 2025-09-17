@@ -43,7 +43,18 @@ const apiClient = new ApiClientImplementation(
 
 const {mockApi, test, id, local, localFormData, settings, theme = "bs3", ...lajiFormOptions} = query;
 
-const themePromise = import("../src/themes/" + theme);
+let themePromise;
+switch (theme) {
+case "bs3":
+	themePromise = import("../src/themes/bs3");
+	break;
+case "bs5":
+	themePromise = import("../src/themes/bs5");
+	break;
+case "stub":
+	themePromise = import("../src/themes/stub");
+	break;
+}
 if (theme === "bs3" || theme === "bs5") {
 	const styleUrl = theme === "bs3" ? "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css";
 	const link = document.createElement("link");

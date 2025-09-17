@@ -482,7 +482,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			}
 			this.memoizedFormContext.services.ids.setFormData(formData);
 			this.memoizedFormContext.services.rootInstance.setFormData(formData);
-			!this.validating && this.validate(!!"warnings", !"nonlive");
+			!this.validating && this.validate(true, false);
 		});
 	}
 
