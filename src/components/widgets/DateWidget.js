@@ -4,13 +4,20 @@ import moment from "moment";
 import DateTimeWidget, {YEAR_MATCH, YEAR_MONTH_MATCH} from "./DateTimeWidget";
 import { isEmptyString, getUiOptions } from "../../utils";
 
-const format = (allowOnlyYear, allowOnlyYearAndMonth, value) => moment(value).format(
-	allowOnlyYear && value.match(YEAR_MATCH)
-		? "YYYY"
-		: allowOnlyYearAndMonth && value.match(YEAR_MONTH_MATCH)
-			? "YYYY-MM"
-			: "YYYY-MM-DD"
-);
+const format = (allowOnlyYear, allowOnlyYearAndMonth, value) => {
+	const momentValue = moment(value);
+	if (!momentValue.isValid()) {
+		return value;
+	}
+
+	return momentValue.format(
+		allowOnlyYear && value.match(YEAR_MATCH)
+			? "YYYY"
+			: allowOnlyYearAndMonth && value.match(YEAR_MONTH_MATCH)
+				? "YYYY-MM"
+				: "YYYY-MM-DD"
+	);
+};
 
 const DateWidget = (props) => {
 	const {onChange} = props;
