@@ -1,12 +1,18 @@
 import * as React from "react";
 import ReactContext from "../../ReactContext";
-import { getUiOptions, isDescendant, classNames, useBooleanSetter, usePrevious } from "../../utils";
+import {
+	getUiOptions,
+	isDescendant,
+	classNames,
+	useBooleanSetter,
+	usePrevious,
+	idSchemaIdToJSONPointer
+} from "../../utils";
 import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
 import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } from "../../types";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import Spinner  from "react-spinner";
-import { all } from 'deepmerge';
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
 	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
@@ -226,7 +232,8 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		uiSchema,
 		options,
 		onChange,
-		getEnumOptionsAsync
+		getEnumOptionsAsync,
+		formContext
 	} = props;
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
@@ -403,17 +410,24 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		(readonly || disabled) && "laji-form-multiselect-input-wrapper-readonly"
 	);
 
+	const selectedListChildren = value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: "" +v}))
+		.map((enu, idx) => {
+			const childId = id ? `${id}_${idx}` : undefined;
+			const childIdPointer = childId ? idSchemaIdToJSONPointer(childId) : undefined;
+			const classNames = childIdPointer ? formContext.uiSchemaContext.additionalClassNames?.[childIdPointer] : undefined;
+
+			return <SelectedMultiValue
+				id={childId}
+				className={classNames}
+				key={enu.value}
+				onDelete={onDelete}
+				readonly={readonly || disabled}>{enu}</SelectedMultiValue>;
+		});
+
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} className="laji-form-multiselect" style={{ position: "relative" }}>
 			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput} style={{cursor: "text"}}>
-				<ul style={{listStyle: "none", display: "inline-block"}}>{
-					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: "" +v}))
-						.map(enu =>
-							<SelectedMultiValue key={enu.value}
-							                    onDelete={onDelete}
-							                    readonly={readonly || disabled}>{enu}</SelectedMultiValue>
-						)
-				}</ul>
+				<ul style={{listStyle: "none", display: "inline-block"}}>{selectedListChildren}</ul>
 				<input disabled={disabled || readonly}
 				       id={id}
 				       onFocus={onFocus}
@@ -440,11 +454,11 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 	);
 }
 
-function SelectedMultiValue<T extends string | number | undefined>({ children: enu, onDelete, readonly }:
-	{ children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
+function SelectedMultiValue<T extends string | number | undefined>({ id, className, children: enu, onDelete, readonly }:
+	{ id: string | undefined, className: string | undefined, children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
 	const onDeleteClick = useCallback(() => !readonly && onDelete(enu), [enu, onDelete, readonly]);
 	return (
-		<li key={enu.value} style={{display: "inline-table"}} className="laji-form-multiselect-tag">
+		<li id={id ? `_laji-form_${id}` : undefined} key={enu.value} style={{display: "inline-table"}} className={classNames("laji-form-multiselect-tag", className)}>
 			{enu.label}
 			<span tabIndex={readonly ? undefined : 0} role={readonly ? undefined : "button"} onClick={onDeleteClick}>×</span>
 		</li>
