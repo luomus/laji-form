@@ -102,7 +102,7 @@ export function immutableDelete(_obj: any, _delProp: string) {
 	if (_delProp[0] === "/") {
 		const splits = _delProp.split("/");
 		const last = splits.pop() as string;
-		const container = parseJSONPointer(_obj, "/" + splits.join("/"), !!"safely");
+		const container = parseJSONPointer(_obj, "/" + splits.join("/"), true);
 		if (!container || !(last in container)) {
 			return _obj;
 		}
@@ -772,7 +772,7 @@ export function formatValue(props: FieldProps, _formatter?: any, parentProps?: a
 	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
-		formatted = formData.map((_val: any) => (schema as any).items.oneOf.find((one: any) => one.const === _val).title).join(", ");
+		formatted = formData.filter((s: any) => s !== undefined).map((_val: any) => (schema as any).items.oneOf.find((one: any) => one.const === _val).title).join(", ");
 	} else if (schema.type === "object") {
 		const keys = Object.keys(formData);
 		return keys.map((_col, i) => {
@@ -984,7 +984,7 @@ export function updateFormDataWithJSONPointer(schemaProps: Pick<FieldProps, "for
 	if (path === "/") {
 		return value;
 	}
-	return updateSafelyWithJSONPointer(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
+	return updateSafelyWithJSONPointer(schemaProps.formData, value, path, true, (__formData, _path) => {
 		const schemaPointer = schemaJSONPointer(schemaProps.schema, _path);
 		if (schemaPointer === undefined) {
 			throw new Error(`Bad JSON Schema pointer '${schemaPointer}!`);
@@ -1012,7 +1012,7 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
-export const getUUID = (item?: any): number => item ? (item.id || item._lajiFormId) : undefined;
+export const getUUID = (item?: any): number | string | undefined => item ? (item.id || item._lajiFormId) : undefined;
 
 /**
  * Return item UUID or the parent UUID
@@ -1040,8 +1040,9 @@ function walkFormDataWithIdTree(_formData: any, tree: any, itemOperator?: (item:
 			return _formData.map(item => {
 				item = walk(item, tree);
 				item = itemOperator ? itemOperator(item) : item;
-				if (getUUID(item)) {
-					ids[getUUID(item)] = true;
+				const uuid = getUUID(item);
+				if (uuid) {
+					ids[uuid] = true;
 				}
 				return item;
 			});

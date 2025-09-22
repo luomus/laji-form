@@ -89,7 +89,7 @@ export default class SettingsService {
 			componentDidUpdate?.call(that, prevProps, prevState);
 			if (that.props.uiSchema && (that.props.uiSchema["ui:settings"] || []).some((key: string) => {
 				if (key.match(/^%/)) key = (key.match(/^%([^/]*)/) as string[])[1];
-				return (!equals(...[prevState, that.state].map(state => parseJSONPointer(state, key, !!"safely"))));
+				return (!equals(...[prevState, that.state].map(state => parseJSONPointer(state, key, true))));
 			})) {
 				this.onSettingsChange();
 			}

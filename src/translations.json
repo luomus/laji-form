@@ -883,5 +883,10 @@
 		"fi": "Lisää kenttä",
 		"en": "Add field",
 		"sv": "Lägg till fält"
+	},
+	"uniqueItems": {
+		"fi": "Samaa arvoa ei saa käyttää useammin kuin kerran",
+		"en": "The same value may not be used more than once",
+		"sv": "Samma värde får inte användas mer än en gång"
 	}
 }

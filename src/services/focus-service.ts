@@ -43,7 +43,7 @@ export default class FocusService {
 				_id = _id ? `${_id}_${idPart}` : idPart;
 				return (this.focusHandlers[_id] || []).reduce((_promise, fn) => {
 					const status = fn(); // Either undefined or a Promise.
-					return status && status.then ? status : Promise.resolve();
+					return status !== undefined ? status : Promise.resolve();
 				}, Promise.resolve());
 			});
 		}, Promise.resolve()).then(() => {
