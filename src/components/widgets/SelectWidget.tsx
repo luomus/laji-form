@@ -1,6 +1,13 @@
 import * as React from "react";
 import ReactContext from "../../ReactContext";
-import { getUiOptions, isDescendant, classNames, useBooleanSetter, usePrevious } from "../../utils";
+import {
+	getUiOptions,
+	isDescendant,
+	classNames,
+	useBooleanSetter,
+	usePrevious,
+	idSchemaIdToJSONPointer
+} from "../../utils";
 import { EnumOptionsType as _EnumOptionsType} from "@rjsf/utils";
 import { JSONSchemaArray, JSONSchemaEnum, JSONSchemaEnumOneOf, WidgetProps } from "../../types";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
@@ -86,17 +93,24 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 	const inputRef = useRef<typeof FormControl>(null);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const enumOptions = useMemo(() =>
+	const allEnumOptions = useMemo(() =>
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		getEnumOptions<T>(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
+	const enumOptions = useMemo(() => {
+		if (options.whitelist) {
+			return allEnumOptions.filter(e => e.value === undefined || options.whitelist.includes(e.value));
+		}
+		return allEnumOptions;
+	}, [allEnumOptions, options.whitelist]);
+
 	const getLabelFromValue = useCallback((value: T | undefined) => 
 		value !== undefined && value !== "" && value !== null
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			? enumOptions.find(item => item.value === value)!.label
+			? allEnumOptions.find(item => item.value === value)!.label
 			: ""
-	, [enumOptions]);
+	, [allEnumOptions]);
 
 	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
@@ -114,6 +128,11 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 		(filteredEnums || []).length,
 		getDefaultActiveIdx(filteredEnums, value)
 	);
+
+	useEffect(() => {
+		setFilterTerm(undefined);
+		setActiveIdx(Math.max(enumOptions.findIndex(enu => enu.value === value), 0));
+	}, [enumOptions, setActiveIdx, value]);
 
 	const inputValue = filterTerm ?? getLabelFromValue(value);
 
@@ -133,10 +152,8 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 			return;
 		}
 		onChange(item.value);
-		setFilterTerm(undefined);
-		setActiveIdx(enumOptions.findIndex(enu => enu.value === item.value));
 		hide();
-	}, [enumOptions, hide, onChange, setActiveIdx, value]);
+	}, [hide, onChange, value]);
 
 	const onBlur = useCallback((e: any) => {
 		// Fixes the issue that when user tries to click an enum item, `setOpen(false)`
@@ -187,7 +204,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} style={{ position: "relative" }} className="laji-form-dropdown-container">
-			<FormControl disabled={disabled || readonly} id={id} onClick={showAndSelectText} onFocus={showAndSelectText} value={inputValue} onChange={onInputChange} autoComplete="off" ref={inputRef} />
+			<FormControl disabled={disabled || readonly} id={id} onClick={showAndSelectText} onFocus={showAndSelectText} value={inputValue} placeholder={options.placeholder} onChange={onInputChange} autoComplete="off" ref={inputRef} />
 			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
@@ -215,7 +232,8 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		uiSchema,
 		options,
 		onChange,
-		getEnumOptionsAsync
+		getEnumOptionsAsync,
+		formContext
 	} = props;
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
@@ -392,17 +410,24 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		(readonly || disabled) && "laji-form-multiselect-input-wrapper-readonly"
 	);
 
+	const selectedListChildren = value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: "" +v}))
+		.map((enu, idx) => {
+			const childId = id ? `${id}_${idx}` : undefined;
+			const childIdPointer = childId ? idSchemaIdToJSONPointer(childId) : undefined;
+			const classNames = childIdPointer ? formContext.uiSchemaContext.additionalClassNames?.[childIdPointer] : undefined;
+
+			return <SelectedMultiValue
+				id={childId}
+				className={classNames}
+				key={enu.value}
+				onDelete={onDelete}
+				readonly={readonly || disabled}>{enu}</SelectedMultiValue>;
+		});
+
 	return (
 		<div onBlur={onBlur} onKeyDown={onKeyDown} ref={containerRef} className="laji-form-multiselect" style={{ position: "relative" }}>
 			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput} style={{cursor: "text"}}>
-				<ul style={{listStyle: "none", display: "inline-block"}}>{
-					value && enumOptions && value.map(v => enumOptions.find(({value: _value}) => v === _value) || ({value: v, label: "" +v}))
-						.map(enu =>
-							<SelectedMultiValue key={enu.value}
-							                    onDelete={onDelete}
-							                    readonly={readonly || disabled}>{enu}</SelectedMultiValue>
-						)
-				}</ul>
+				<ul style={{listStyle: "none", display: "inline-block"}}>{selectedListChildren}</ul>
 				<input disabled={disabled || readonly}
 				       id={id}
 				       onFocus={onFocus}
@@ -429,11 +454,11 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 	);
 }
 
-function SelectedMultiValue<T extends string | number | undefined>({ children: enu, onDelete, readonly }:
-	{ children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
+function SelectedMultiValue<T extends string | number | undefined>({ id, className, children: enu, onDelete, readonly }:
+	{ id: string | undefined, className: string | undefined, children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
 	const onDeleteClick = useCallback(() => !readonly && onDelete(enu), [enu, onDelete, readonly]);
 	return (
-		<li key={enu.value} style={{display: "inline-table"}} className="laji-form-multiselect-tag">
+		<li id={id ? `_laji-form_${id}` : undefined} key={enu.value} style={{display: "inline-table"}} className={classNames("laji-form-multiselect-tag", className)}>
 			{enu.label}
 			<span tabIndex={readonly ? undefined : 0} role={readonly ? undefined : "button"} onClick={onDeleteClick}>×</span>
 		</li>
