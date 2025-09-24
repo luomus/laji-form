@@ -22,7 +22,7 @@
     "version": "bin/update-changelog.sh",
     "postversion": "npm publish",
     "prepublishOnly": "npm run build && git push && git push --tags",
-    "lint": "eslint -c .eslintrc.prod.json src playground",
+    "lint": "eslint src playground",
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
     "test:docker": "npm run test:docker:build && npm run test:docker:run --",
@@ -69,16 +69,17 @@
   "devDependencies": {
     "@luomus/laji-schema": "^2.0.174",
     "@playwright/test": "^1.40.1",
+    "@stylistic/eslint-plugin": "^5.4.0",
     "@types/jasmine": "^3.7.7",
     "@types/node": "^20.10.1",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^5.2.6",
-    "eslint": "^7.30.0",
-    "eslint-plugin-jasmine": "^4.1.2",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint": "^9.36.0",
+    "eslint-plugin-jasmine": "^4.2.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "mini-css-extract-plugin": "^2.1.0",
     "notus": "^0.3.2",
     "querystring": "^0.2.1",
@@ -100,7 +101,7 @@
     "react-bootstrap-5": "npm:react-bootstrap@^2.5.0"
   },
   "volta": {
-    "node": "20.10.0"
+    "node": "20.17.0"
   },
   "publishConfig": {
     "access": "public"
