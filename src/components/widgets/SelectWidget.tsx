@@ -453,7 +453,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 }
 
 function SelectedMultiValue<T extends string | number | undefined>({ id, className, children: enu, onDelete, readonly }
-	: { id: string | undefined, className: string | undefined, children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
+: { id: string | undefined, className: string | undefined, children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
 	const onDeleteClick = useCallback(() => !readonly && onDelete(enu), [enu, onDelete, readonly]);
 	return (
 		<li id={id ? `_laji-form_${id}` : undefined} key={enu.value} style={{display: "inline-table"}} className={classNames("laji-form-multiselect-tag", className)}>

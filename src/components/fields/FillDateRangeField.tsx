@@ -19,7 +19,7 @@ export default class FillDateRangeField extends React.Component<FieldProps> {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.object])
-	}
+	};
 
 	static getName() {return "FillDateRangeField";}
 
@@ -54,5 +54,5 @@ export default class FillDateRangeField extends React.Component<FieldProps> {
 		}
 
 		this.props.onChange(formData);
-	}
+	};
 }
