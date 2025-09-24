@@ -15,7 +15,7 @@ export default class AutoArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	static getName() {return "AutoArrayField";}
 
@@ -53,5 +53,5 @@ export default class AutoArrayField extends React.Component {
 			formData = formData.slice(0, formData.length - 1);
 		}
 		this.props.onChange(formData);
-	}
+	};
 }

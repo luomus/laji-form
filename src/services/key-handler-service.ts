@@ -133,7 +133,7 @@ export default class KeyhandlerService {
 				);
 			}
 		});
-	}
+	};
 
 	onKeyDown(e: KeyboardEvent) {
 		const currentId = this.formContext.utils.findNearestParentSchemaElemId(e.target as HTMLElement) || "";

@@ -27,7 +27,7 @@ export default class LocationChooserField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	getStateFromProps(props) {
 		let uiSchema = getInnerUiSchema(props.uiSchema);
@@ -61,7 +61,7 @@ class LocationButton extends React.Component {
 		const {$id} = that.props.idSchema;
 		const splitted = $id.split("_");
 		return parseInt(splitted[splitted.length - 1]);
-	}
+	};
 
 	componentWillUnmount() {
 		this._hovered && this.onMouseLeave();
@@ -71,16 +71,16 @@ class LocationButton extends React.Component {
 		const {that} = this.props;
 		const {geometryField = "geometry"} = getUiOptions(that.props.uiSchema);
 		return geometryField;
-	}
+	};
 
 	hasCoordinates = () => {
 		return parseGeometries(this.getGeometry()).length;
-	}
+	};
 
 	getGeometry = () => {
 		const geometryField = this.getGeometryField();
 		return parseJSONPointer(this.props.that.props.formData, geometryField);
-	}
+	};
 
 	onMouseEnter = () => {
 		const {that} = this.props;
@@ -89,7 +89,7 @@ class LocationButton extends React.Component {
 		if (typeof idx === "number") {
 			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData), idx});
 		}
-	}
+	};
 
 	onMouseLeave = () => {
 		const {that} = this.props;
@@ -98,11 +98,11 @@ class LocationButton extends React.Component {
 		if (typeof idx === "number") {
 			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData), idx});
 		}
-	}
+	};
 
-	getUnitDrawFeatureStyle = () => ({color: "#55AEFA"})
+	getUnitDrawFeatureStyle = () => ({color: "#55AEFA"});
 
-	getDataFeatureStyle = () => ({color: "#aaaaaa", opacity: 0.7})
+	getDataFeatureStyle = () => ({color: "#aaaaaa", opacity: 0.7});
 
 	getData = () => {
 		const {that} = this.props;
@@ -115,7 +115,7 @@ class LocationButton extends React.Component {
 		case "lolife":
 			return this.getLolifeData();
 		}
-	}
+	};
 
 	getUnitData = () => {
 		const {that} = this.props;
@@ -164,7 +164,7 @@ class LocationButton extends React.Component {
 				}))
 			]
 		];
-	}
+	};
 
 	getLolifeData = () => {
 		const {that} = this.props;
@@ -199,7 +199,7 @@ class LocationButton extends React.Component {
 			draw,
 			data
 		];
-	}
+	};
 
 	onClick = () => {
 		const {that} = this.props;
@@ -212,7 +212,7 @@ class LocationButton extends React.Component {
 		let [draw, data] = this.getData();
 		data = data.map(d => ({...d, editable: false}));
 
-		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}};  
 
 		const {
 			mapOptions: {
@@ -261,10 +261,10 @@ class LocationButton extends React.Component {
 		this.setState({
 			modalMap
 		});
-	}
+	};
 
-	getGrey = () => ({opacity: 0.6, color: "#888888"})
-	getFeatureStyle = () => ({color: "#75CEFA"})
+	getGrey = () => ({opacity: 0.6, color: "#888888"});
+	getFeatureStyle = () => ({color: "#75CEFA"});
 
 	onChange = (events) => {
 		const {that} = this.props;
@@ -335,7 +335,7 @@ class LocationButton extends React.Component {
 				this.setState({shapeAlert: undefined});
 			}
 		}
-	}
+	};
 
 	onMapMounted = (map) => {
 		const {that} = this.props;
@@ -345,7 +345,7 @@ class LocationButton extends React.Component {
 		if (!disabled && !readonly && preselectMarker) {
 			this.triggerLayer = map.triggerDrawing("marker");
 		}
-	}
+	};
 
 	getMiniMapData = () => {
 		const {that} = this.props;
@@ -359,7 +359,7 @@ class LocationButton extends React.Component {
 		case "lolife": 
 			return this.getLolifeMiniMapData();
 		}
-	}
+	};
 
 
 	getUnitMiniMapData = () => {
@@ -386,7 +386,7 @@ class LocationButton extends React.Component {
 			data,
 			{dataIdxs: [data.length - 1]}
 		];
-	}
+	};
 
 	getLolifeMiniMapData = () => {
 		const {that} = this.props;
@@ -408,7 +408,7 @@ class LocationButton extends React.Component {
 			],
 			{dataIdxs: [draw.idx || 0]}
 		];
-	}
+	};
 
 	getLolifeUnitMiniMapData = () => {
 		const {that} = this.props;
@@ -434,17 +434,17 @@ class LocationButton extends React.Component {
 			],
 			{dataIdxs: [map.data.findIndex(d => d.featureCollection.features[0].properties.id === id)]}
 		];
-	}
+	};
 
 	getFeatureStyleWithLowerOpacity = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
 		return getFeatureStyleWithLowerOpacity(style);
-	}
+	};
 
 	getFeatureStyleWithHighlight = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
 		return getFeatureStyleWithHighlight(style);
-	}
+	};
 
 	onEntered = () => {
 		const {that} = this.props;
@@ -456,7 +456,7 @@ class LocationButton extends React.Component {
 		const {map} = mapContext;
 		let mapOptions = {};
 		if (map) {
-			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line @typescript-eslint/no-unused-vars
+			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions();  
 			mapOptions = _mapOptions;
 		}
 
@@ -473,30 +473,30 @@ class LocationButton extends React.Component {
 				clickBeforeZoomAndPan: false
 			}
 		});
-	}
+	};
 
 	onHide = () => {
 		this.setState({modalMap: undefined});
-	}
+	};
 
 	onModalMapKeyDown = (e) => {
 		if (e.key === "Escape" && !this.modalMapRef.map.keyHandlerForType("keydown", e.nativeEvent)) {
 			this.onHide();
 		}
-	}
+	};
 
 	setMapRef = (elem) => {
 		this.modalMapRef = elem;
-	}
+	};
 
 	setMiniMapRef = (elem) => {
 		this.miniMapRef = elem;
-	}
+	};
 
 	setButtonRef = (elem) => {
 		this.buttonRef = elem;
-	}
-	getButtonElem = () => findDOMNode(this.buttonRef)
+	};
+	getButtonElem = () => findDOMNode(this.buttonRef);
 
 	renderButton = () => {
 		const {that, glyph = "map-marker", label} = this.props;
@@ -564,7 +564,7 @@ class LocationButton extends React.Component {
 				</OverlayTrigger>
 			);
 		}
-	}
+	};
 
 	render () {
 		const {that} = this.props;

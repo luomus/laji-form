@@ -51,7 +51,7 @@ export default class ConditionalOnChangeField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "ConditionalOnChangeField";}
 
@@ -103,5 +103,5 @@ export default class ConditionalOnChangeField extends React.Component {
 			}
 		});
 		this.props.onChange(formData);
-	}
+	};
 }

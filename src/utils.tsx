@@ -440,7 +440,7 @@ export const syncScroll = (context: FormContext, force: boolean) => _syncScroll(
 
 export const filterLajiFormId = (item: any) => {
 	if (item && item._lajiFormId) {
-		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {_lajiFormId, ..._item} = item;  
 		item = _item;
 	}
 	return item;
@@ -448,7 +448,7 @@ export const filterLajiFormId = (item: any) => {
 
 export const filterItemId = (item: any) => {
 	if (item && (item._lajiFormId || item.id)) {
-		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {_lajiFormId, id, ..._item} = item;  
 		item = _item;
 	}
 	return item;
@@ -545,7 +545,7 @@ export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "", context: any, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
+export function getKeyHandlerTargetId(target = "", context: any, formData?: any) {  
 	while (target.match(/%\{([^{}]*)\}/)) {
 		const path = /%\{([^{}]*)\}/.exec(target)?.[1] || "";
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");

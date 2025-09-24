@@ -29,7 +29,7 @@ export default class AnnotationField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -45,21 +45,21 @@ export default class AnnotationField extends React.Component {
 			fn: this.onClick,
 			variant: annotations && annotations.length ? "primary": "default"
 		};
-	}
+	};
 
 	onClick = () => () => {
 		this.setState({show: !this.state.show});
-	}
+	};
 
 	onHide = () => {
 		this.setState({show: false});
-	}
+	};
 
 	getAnnotations = () => {
 		const {annotations = {}} = this.props.formContext.uiSchemaContext;
 		const {id} = this.props.formData;
 		return getContext(`${this.props.formContext.contextId}_ANNOTATIONS`)[id] || annotations[id];
-	}
+	};
 
 	render() {
 		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/", formId} = getUiOptions(this.props.uiSchema);
@@ -124,7 +124,7 @@ class AnnotationBox extends React.Component {
 
 	static defaultProps = {
 		formId: "MHL.15"
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;
@@ -170,7 +170,7 @@ class AnnotationBox extends React.Component {
 			this.props.formContext.services.blocker.pop();
 			this.setState({fail: true});
 		});
-	}
+	};
 
 	onAnnotationChange = (formData) => {
 		let state = {};
@@ -183,7 +183,7 @@ class AnnotationBox extends React.Component {
 		}
 		state.addFormData = formData;
 		this.setState(state);
-	}
+	};
 
 	getAddOptions = () => {
 		const {add, formContext: {uiSchemaContext: {isAdmin}}} = this.props;
@@ -191,7 +191,7 @@ class AnnotationBox extends React.Component {
 		const submitOnChange = "submitOnChange" in addOptions ? addOptions.submitOnChange : false;
 		const type = isAdmin ? "MAN.typeAdmin" : addOptions.type;
 		return {...addOptions, submitOnChange, type};
-	}
+	};
 
 	renderAdd = () => {
 		const {formContext, add} = this.props;
@@ -258,7 +258,7 @@ class AnnotationBox extends React.Component {
 				</div>}
 			</LajiForm>
 		) : null;
-	}
+	};
 
 	getUiSchema = () => {
 		const {uiSchema} = this.props;
@@ -271,7 +271,7 @@ class AnnotationBox extends React.Component {
 			},
 			"ui:showShortcutsButton": false
 		};
-	}
+	};
 
 	onDelete = (id) => () => {
 		this.props.formContext.apiClient.fetchRaw(`/annotations/${id}`, undefined, {
@@ -284,7 +284,7 @@ class AnnotationBox extends React.Component {
 		}).catch(() => {
 			this.setState({deleteFail: true});
 		});
-	}
+	};
 
 	render() {
 		const {formContext: {translations, lang, apiClient}} = this.props;

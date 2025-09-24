@@ -27,14 +27,14 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array]).isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
 		this.state = {visible: this.getInitialVisible(props), ...this.getStateFromProps(props)};
 	}
 
-	getTogglePersistenceContextKey = (props) => `$additional_toggle_persistence_${props.idSchema.$id}`
+	getTogglePersistenceContextKey = (props) => `$additional_toggle_persistence_${props.idSchema.$id}`;
 
 	getInitialVisible(props) {
 		const {additionalFields} = getUiOptions(props.uiSchema);
@@ -69,7 +69,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 		const context = getContext(this.props.formContext.contextId);
 		context[this.getTogglePersistenceContextKey(this.props)] = visible;
 		this.setState({visible});
-	}
+	};
 
 
 	render() {

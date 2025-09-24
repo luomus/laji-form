@@ -10,7 +10,7 @@ export default class AsArrayField extends React.Component<FieldProps> {
 			type: PropTypes.oneOf(["array", "object", "string", "integer", "number", "boolean"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool])
-	}
+	};
 
 	static getName() {return "AsArrayField";}
 
@@ -33,5 +33,5 @@ export default class AsArrayField extends React.Component<FieldProps> {
 
 	onChange = (formData: any[]) => {
 		this.props.onChange(formData?.[0]);
-	}
+	};
 }

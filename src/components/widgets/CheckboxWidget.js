@@ -21,7 +21,7 @@ export default class CheckboxWidget extends React.Component {
 			type: PropTypes.oneOf(["boolean"])
 		}),
 		value: PropTypes.bool
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -51,21 +51,21 @@ export default class CheckboxWidget extends React.Component {
 			}
 			input.setAttribute("tabindex", -1);
 		});
-	}
+	};
 
 	onChange = (value) => {
 		if (value !== undefined && this.getOptions(this.props).invert) {
 			value = !value;
 		}
 		this.props.onChange(value);
-	}
+	};
 
 	onButtonGroupChange = (value) => {
 		if (value === "undefined") {
 			value = undefined;
 		}
 		this.onChange(value);
-	}
+	};
 
 	getOptions = (props) => {
 		const {Yes, No, Unknown} = props.registry.formContext.translations;
@@ -79,7 +79,7 @@ export default class CheckboxWidget extends React.Component {
 			required: this.props.required,
 			...getUiOptions(props)
 		};
-	}
+	};
 
 	render() {
 		const {
@@ -172,7 +172,7 @@ export default class CheckboxWidget extends React.Component {
 		const {allowUndefined, showUndefined} = this.getOptions(props);
 		const displayUndefined = (allowUndefined && showUndefined);
 		return !displayUndefined;
-	}
+	};
 
 	onGroupKeyDown = this.props.formContext.utils.keyboardClick((e) => {
 		this.getToggleMode(this.props) && this.toggle(e);
@@ -182,19 +182,19 @@ export default class CheckboxWidget extends React.Component {
 		this.onChange(true);
 		e.preventDefault();
 		e.stopPropagation();
-	})
+	});
 
 	onFalseKeyDown = this.props.formContext.utils.keyboardClick((e) => {
 		this.onChange(false);
 		e.preventDefault();
 		e.stopPropagation();
-	})
+	});
 
 	onUndefinedKeyDown = this.props.formContext.utils.keyboardClick((e) => {
 		this.onChange(undefined);
 		e.preventDefault();
 		e.stopPropagation();
-	})
+	});
 
 	toggle = (e) => {
 		if (this.props.disabled || this.props.readonly) {
@@ -206,7 +206,7 @@ export default class CheckboxWidget extends React.Component {
 		}
 		e.preventDefault();
 		this.props.onChange(!this.props.value);
-	}
+	};
 
 	formatValue(value, options, props) {
 		return value === undefined

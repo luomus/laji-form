@@ -27,7 +27,7 @@ export default class UiFieldMapperArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	static getName() {return "UiFieldMapperArrayField";}
 
@@ -52,7 +52,7 @@ export default class UiFieldMapperArrayField extends React.Component {
 				this.childProps[idx] = nextFieldProps;
 			}
 		});
-	}
+	};
 
 	getFieldPropsForIdx = (props, idx) => {
 		return {
@@ -66,7 +66,7 @@ export default class UiFieldMapperArrayField extends React.Component {
 				this.tmpItemFormData = formData;
 			}
 		};
-	}
+	};
 
 	applyFunctionsToChildProps = (props, childProps) => {
 		let {functions} = getUiOptions(props.uiSchema);
@@ -105,11 +105,11 @@ export default class UiFieldMapperArrayField extends React.Component {
 				}
 			};
 		}, childProps);
-	}
+	};
 
 	getFunctionOutputForIdx = (props, idx) => {
 		return this.applyFunctionsToChildProps(props, this.getFieldPropsForIdx(props, idx));
-	}
+	};
 
 	getStateFromProps(props, origProps) {
 		const templateOutput = this.functionOutputProps && this.functionOutputProps.length ? 
@@ -149,5 +149,5 @@ export default class UiFieldMapperArrayField extends React.Component {
 			}
 			return item;
 		}));
-	}
+	};
 }

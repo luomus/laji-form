@@ -29,7 +29,7 @@ export default class FilterArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 	getStateFromProps(props) {
 		if (props.schema.items.type !== "object") {
 			throw new Error("Can't use FilterArrayField if items aren't objects");
@@ -115,7 +115,7 @@ export default class FilterArrayField extends React.Component {
 				? this.filteredToOffsets[idx]
 				: this.filteredTotal;
 		this.cachedOnActiveChange(idx === undefined ? undefined : idx + offset, prop, callback);
-	}
+	};
 
 	onChange = (formData) => {
 		this.props.onChange(Object.keys(this.filteredIdxs).sort().reduce((_formData, idx) => {
@@ -125,7 +125,7 @@ export default class FilterArrayField extends React.Component {
 		},
 		formData
 		));
-	}
+	};
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;

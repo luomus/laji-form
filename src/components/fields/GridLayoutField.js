@@ -29,10 +29,10 @@ const GridLayoutField = (props) => {
 GridLayoutField.propTypes = {
 	uiSchema: PropTypes.shape({
 		"ui:grid": PropTypes.shape({
-		 lg: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-		 md: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-		 sm: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-		 xs: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+			lg: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+			md: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+			sm: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+			xs: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
 		})
 	}),
 	schema: PropTypes.shape({

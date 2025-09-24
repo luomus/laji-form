@@ -41,7 +41,7 @@ export default class TableField extends React.Component {
 			type: PropTypes.oneOf(["array"]),
 			items: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 		}).isRequired
-	}
+	};
 
 	render() {
 		const {schema, uiSchema = {}, formData, registry: {fields: {ArrayField}}, formContext} = this.props;

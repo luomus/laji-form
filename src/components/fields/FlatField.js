@@ -22,7 +22,7 @@ export default class FlatField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	static getName() {return "FlatField";}
 
@@ -182,10 +182,10 @@ export default class FlatField extends React.Component {
 			formData = {...formData, [deepContainerName]: deepSchema.type === "array" ? [changedDeep] : changedDeep};
 		});
 		return formData;
-	}
+	};
 
 	onChange = (formData) => {
 		const _formData = this._onChange(formData, this.props.schema, this.getUiOptions().fields);
 		this.props.onChange(_formData);
-	}
+	};
 }

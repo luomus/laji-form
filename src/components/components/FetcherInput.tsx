@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const FetcherInput = forwardRef((props: Props, ref) => {
-	const {loading, validationState, glyph, extra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+	const {loading, validationState, glyph, extra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props;  
 	const {InputGroup, FormGroup} = useContext(ReactContext).theme;
 	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 

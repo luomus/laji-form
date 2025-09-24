@@ -25,7 +25,7 @@ export default class DependentBooleanField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "DependentBooleanField";}
 
@@ -67,7 +67,7 @@ export default class DependentBooleanField extends React.Component {
 
 		formData = {...formData, [booleanField]: newData};
 		this.props.onChange(formData);
-	}
+	};
 
 	getDictionarifiedFormData = (formData, field) => {
 		let formDataDictionarified = {};
@@ -75,9 +75,9 @@ export default class DependentBooleanField extends React.Component {
 			formDataDictionarified[value] = true;
 		});
 		return formDataDictionarified;
-	}
+	};
 
 	getDictionarifiedBooleanFieldData = (formData) => {
 		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField);
-	}
+	};
 }

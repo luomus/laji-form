@@ -59,16 +59,16 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 		} else {
 			return getInnerUiSchema(props.uiSchema);
 		}
-	}
+	};
 
 	isGatheringsArray = (schema: JSONSchemaObject | JSONSchemaArray<JSONSchemaObject>)
 	: schema is JSONSchemaArray<JSONSchemaObject> =>
-		schema.type === "array"
+		schema.type === "array";
 
 	onPlaceSelected = (place: NamedPlace) => {
 		const getGathering = (schema: JSONSchemaObject) => {
 			let gathering = getDefaultFormState(schema);
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			 
 			const placeGathering = place.prepopulatedDocument!.gatherings[0];
 			PLACE_WHITELIST.forEach(prop => {
 				if (prop in placeGathering && prop in schema.properties) {
@@ -111,7 +111,7 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 		} catch (e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}
-	}
+	};
 
 	onPlaceDeleted = (place: NamedPlace, success: () => void) => {
 		this.props.formContext.apiClient.fetchRaw(`/named-places/${place.id}`, undefined, {method: "DELETE"}).then(response => {
@@ -126,11 +126,11 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 			this.setState({failed: PLACE_DELETE_FAIL});
 			this.props.formContext.notifier.error(this.props.formContext.translations.PlaceRemovalFailed);
 		});
-	}
+	};
 
 	onButtonClick = () => () => {
 		this.setState({show: true});
-	}
+	};
 
 	updatePlaces = () => {
 		this.props.formContext.apiClient.fetchCached<{ results: NamedPlace[] }>("/named-places", {includePublic: false, pageSize: 100000}).then(response => {
@@ -164,7 +164,7 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 		}).catch(() => {
 			this.setState({failed: PLACES_FETCH_FAIL});
 		});
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;

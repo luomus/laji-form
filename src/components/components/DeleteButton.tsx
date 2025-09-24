@@ -36,11 +36,11 @@ export class DeleteButton extends React.Component<Props, State> {
 	onButtonKeyDown = ({key}: React.KeyboardEvent) => {
 		if (key === "Enter") this.onConfirmedClick();
 		else if (key === "Escape") this.setState({show: false});
-	}
+	};
 
 	onHideConfirm = () => {
 		this.setState({show: false});
-	}
+	};
 
 	onShowConfirm = (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -50,28 +50,28 @@ export class DeleteButton extends React.Component<Props, State> {
 				this.browserConfirm();
 			}
 		});
-	}
+	};
 
 	onConfirmedClick = (e?: React.KeyboardEvent | React.MouseEvent) => {
 		e && e.preventDefault();
 		e && e.stopPropagation();
 		this.props.onClick();
 		this.onHideConfirm();
-	}
+	};
 
 	onClick = (e: React.MouseEvent) => {
 		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick(e);
-	}
+	};
 
 	setConfirmAutofocus = (elem?: React.ReactInstance) => {
 		setTimeout(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
 			(findDOMNode(elem) as HTMLElement)?.focus();
 		});
-	}
+	};
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, confirmPlacement, confirmStyle, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, confirmPlacement, confirmStyle, ...maybeProps} = props;  
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
@@ -104,7 +104,7 @@ export class DeleteButton extends React.Component<Props, State> {
 			return this.renderConfirmPopup();
 		}
 		return null;
-	}
+	};
 
 	getOverlayTarget = () => findDOMNode(this.buttonRef.current);
 

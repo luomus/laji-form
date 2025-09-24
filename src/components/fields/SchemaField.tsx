@@ -86,7 +86,7 @@ export default class _SchemaField extends React.Component<FieldProps> {
 
 	render() {
 		const props = this.applyFunction(this.props);
-		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		let {schema, uiSchema = {}, formContext, registry, ..._props} = props;  
 		const {formContext: _formContext} = registry;
 
 		// rjsf displays a duplicate label if 'uniqueItems' is true in some cases. We prevent that here.

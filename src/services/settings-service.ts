@@ -56,7 +56,7 @@ export default class SettingsService {
 			this.settings = settings;
 			this._onSettingsChange(settings, global);
 		}
-	}
+	};
 
 	/**
 	 * Should be binded at React Class Component constructor. The component will unbind automatically when unmounted.

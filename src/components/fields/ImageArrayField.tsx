@@ -51,14 +51,14 @@ export default class ImageArrayField extends React.Component<FieldProps<any, JSO
 	GLYPH = "camera";
 	TRANSLATION_TAKE_NEW = "TakeNewPhoto";
 	TRANSLATION_SELECT_FILE = "SelectPhoto";
-	TRANSLATION_NO_MEDIA = "NoPhoto"
-	CONTAINER_CLASS = "images-container"
-	METADATA_FORM_ID = "JX.111712"
+	TRANSLATION_NO_MEDIA = "NoPhoto";
+	CONTAINER_CLASS = "images-container";
+	METADATA_FORM_ID = "JX.111712";
 
-	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />
-	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} />
-	onMediaClick = (i: number) => (this as any).openModalFor(i)
-	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
+	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />;
+	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} />;
+	onMediaClick = (i: number) => (this as any).openModalFor(i);
+	renderModalMedia = () => <img src={this.state.modalMediaSrc} />;
 
 	formatValue(value: string[], options: any, props: FieldProps) {
 		const {translations} = props.formContext;
@@ -126,7 +126,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}).isRequired
 			}).isRequired,
 			formData: PropTypes.array
-		}
+		};
 
 		static displayName = getReactComponentName(ComposedComponent);
 
@@ -181,7 +181,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				&& (props.formData || []).length === 0
 				&& !props.formContext.uiSchemaContext.isEdit
 			) {
-				(this.state as any).addModal = addModal; // eslint-disable-line react/no-direct-mutation-state
+				(this.state as any).addModal = addModal;  
 			}
 		}
 
@@ -196,7 +196,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			});
 			return options;
-		}
+		};
 
 		componentDidMount() {
 			this.mounted = true;
@@ -218,7 +218,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		defaultOnClick = () => {
 			const {addModal} = getUiOptions(this.props.uiSchema);
 			this.setState({addModal});
-		}
+		};
 
 		render() {
 			const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
@@ -310,7 +310,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					              id={`${this.props.idSchema.$id}_${i}`} />
 				</div>
 			));
-		}
+		};
 
 		renderLoadingMedias = () => {
 			const containerId = this.getContainerId();
@@ -323,7 +323,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					</div>
 				);
 			});
-		}
+		};
 
 		openModalFor = (i: number) => () => {
 			const item = this.props.formData[i];
@@ -334,7 +334,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				this._context.metadatas[item] = response;
 				this.setState({modalIdx: i, modalMediaSrc: response.fullURL, modalMetadata: this._context.metadatas[item]});
 			});
-		}
+		};
 
 		onMediaRmClick = (i: number) => () => {
 			const id = this.props.formData[i];
@@ -343,7 +343,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				method: "DELETE",
 				failSilently: true
 			});
-		}
+		};
 
 		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
 
@@ -417,7 +417,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 						</div>
 					</Modal.Body>
 				</Modal> : null;
-		}
+		};
 
 		onHideMediaAddModal = () => this.setState({addModal: undefined}, () => {
 			this.parseExif([]);
@@ -467,11 +467,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					</Modal.Body>
 				</Modal>
 			);
-		}
+		};
 
 		onAlertOk = () => {
 			this.setState({alert: false, alertMsg: undefined});
-		}
+		};
 
 		parseExif = (files: File[]): undefined | Promise<any> => {
 			const {exifParsers = []} = getUiOptions(this.props.uiSchema);
@@ -551,7 +551,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				});
 				return formData;
 			});
-		}
+		};
 
 		sideEffects = (formData: any) => {
 			const lajiFormInstance = this.props.formContext.services.rootInstance;
@@ -581,7 +581,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			if (formData !== lajiFormFormData) {
 				lajiFormInstance.onChange(formData);
 			}
-		}
+		};
 
 		onFileFormChange = (files: File[]) => {
 			if (this.state.addModal) {
@@ -631,12 +631,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			});
 
 			this.props.formContext.services.submitHooks.add(this.props as any, saveAndOnChange);
-		}
+		};
 
 		getContainerId = () => {
 			const {_parentLajiFormId = "root"} = this.props.formContext;
 			return _parentLajiFormId;
-		}
+		};
 
 		saveMedias(files: File[]) {
 			const containerId = this.getContainerId();
@@ -739,11 +739,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		addNameToDataURL = (dataURL: string, name: string) => {
 			return dataURL.replace(";base64", `;name=${name};base64`);
-		}
+		};
 
 		processFiles = (files: File[]): Promise<ProcessedFile[]> => {
 			return Promise.all([].map.call(files, this.processFile));
-		}
+		};
 
 		processFile = (file: File) => {
 			const {name, size, type} = file;
@@ -759,7 +759,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				};
 				reader.readAsDataURL(file);
 			});
-		}
+		};
 
 		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
 			this.props.formContext.services.blocker.push();
@@ -782,7 +782,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				this.props.formContext.services.blocker.pop();
 				this.mounted && this.setState({metadataSaveSuccess: false});
 			});
-		}
+		};
 
 		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
 			let mediaMetadata : any =
@@ -801,16 +801,16 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 						}
 					)).catch(() => Promise.resolve(mediaMetadata))
 					: mediaMetadata;
-		}
+		};
 
 		getMaxFileSizeAsString = () => {
 			let maxSize = this.MAX_FILE_SIZE.toString().substring(0, this.MAX_FILE_SIZE.toString().length - 6);
 			return maxSize + " " + `${this.props.formContext.translations.Mb}`;
-		}
+		};
 
 		getAllowedMediaFormatsTranslationKey = () => {
 			return this.ALLOWED_FILE_TYPES.length === 1 ? "AllowedFileFormat" : "AllowedFileFormats";
-		}
+		};
 
 		getAllowedMediaFormatsAsString = () => {
 			let formats = "";
@@ -825,7 +825,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			}
 
 			return formats;
-		}
+		};
 	}
 	return MediaArrayField;
 }
@@ -870,7 +870,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL, linkUrl: response.originalURL});
 		});
-	}
+	};
 
 	render() {
 		const url = this.state.url || this.props.dataURL;

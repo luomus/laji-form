@@ -36,7 +36,7 @@ export default class GeocoderField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	static getName() {return "GeocoderField";}
 	static contextType = ReactContext;
@@ -54,7 +54,7 @@ export default class GeocoderField extends React.Component {
 
 	onLocate = (geometry) => {
 		this.updateForGeometry(this.props, undefined, this.normalizeGeometry(geometry));
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;
@@ -76,7 +76,7 @@ export default class GeocoderField extends React.Component {
 			fields: ["country", "municipality", "biologicalProvince", "biogeographicalProvince", "administrativeProvince"],
 			...getUiOptions((props || this.props).uiSchema)
 		};
-	}
+	};
 
 	componentDidUpdate(prevProps) {
 		const {updateOnlyEmpty, button, fields} = this.getOptions(this.props);
@@ -150,7 +150,7 @@ export default class GeocoderField extends React.Component {
 			this.update(this.props, (failed = false) => {
 				this.mounted && this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 			});
-	}
+	};
 
 	getGeometry = (props) => {
 		const {uiSchema, formData = {}} = props;
@@ -164,7 +164,7 @@ export default class GeocoderField extends React.Component {
 			}
 		});
 		return geometry;
-	}
+	};
 
 	normalizeGeometry = (geometry) => {
 		if (!geometry || !geometry.type) {
@@ -173,7 +173,7 @@ export default class GeocoderField extends React.Component {
 			geometry = {type: "GeometryCollection", geometries: [geometry]};
 		}
 		return geometry;
-	}
+	};
 
 	fetch = (url) => {
 		cache[url] = cache[url] || fetch(url).then(response => {
@@ -186,16 +186,16 @@ export default class GeocoderField extends React.Component {
 			throw new Error(this.props.formContext.translations.RequestFailed);
 		});
 		return cache[url];
-	}
+	};
 
 	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
 		this.updateForGeometry(props, callback, geometry);
-	}
+	};
 
 	getComponentContext = () => {
 		return getContext(`${this.props.formContext.contextId}_${getFieldUUID(this.props)}_GEOCODERFIELD`);
-	}
+	};
 
 	updateForGeometry = (props, callback, geometry) => {
 		const {fields} = this.getOptions();
@@ -209,7 +209,7 @@ export default class GeocoderField extends React.Component {
 			return;
 		}
 
-		const bounds = L.geoJson({ // eslint-disable-line no-undef
+		const bounds = L.geoJson({  
 			type: "FeatureCollection",
 			features: geometry.geometries.map(geometry => {
 				return {type: "Feature", properties: {}, geometry};
@@ -398,7 +398,7 @@ export default class GeocoderField extends React.Component {
 		} else {
 			doAsync();
 		}
-	}
+	};
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;

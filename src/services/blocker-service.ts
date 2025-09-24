@@ -26,7 +26,7 @@ export default class BlockerService {
 			this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 			this.formContext.services.keyHandler.block();
 		}
-	}
+	};
 
 	pop = () => {
 		this.blockingLoaderCounter--;
@@ -53,5 +53,5 @@ export default class BlockerService {
 			});
 			this.formContext.services.keyHandler.unblock();
 		}
-	}
+	};
 }

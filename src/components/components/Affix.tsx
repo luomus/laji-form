@@ -71,7 +71,7 @@ export class Affix extends React.Component<Props, State> {
 		const containerVisibleHeight = containerHeight + containerTop;
 		const wrapperHeight = wrapperElem.offsetHeight;
 		const wrapperScrollHeight = wrapperElem.scrollHeight;
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		 
 		const scrolled = this.containerRef.current!.getBoundingClientRect().top < topOffset;
 
 		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -116,15 +116,15 @@ export class Affix extends React.Component<Props, State> {
 				? (affixHeight ?? 0) + (change ?? 0)
 				: 0;
 		return { affixState, width, top, affixHeight, fixerHeight, change };
-	}
+	};
 
 	_onScroll = () => {
 		this.setState(this.getState(this.props));
-	}
+	};
 
 	onScroll = () => {
 		requestAnimationFrame(this._onScroll);
-	}
+	};
 	
 	_onResize = () => {
 		const positioner = findDOMNode(this.positionerRef.current) as HTMLElement;
@@ -138,11 +138,11 @@ export class Affix extends React.Component<Props, State> {
 		}
 
 		this.setState(nextState);
-	}
+	};
 
 	onResize = () => {
 		requestAnimationFrame(this._onResize);
-	}
+	};
 
 	render() {
 		const {children, style: containerStyle} = this.props;

@@ -29,7 +29,7 @@ export default class InputWithDefaultValueButtonField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.object]).isRequired
-	}
+	};
 
 	static getName() {return "InputWithDefaultValueButtonField";}
 
@@ -63,5 +63,5 @@ export default class InputWithDefaultValueButtonField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 }

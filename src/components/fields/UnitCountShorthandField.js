@@ -25,7 +25,7 @@ export default class UnitCountShorthandField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);

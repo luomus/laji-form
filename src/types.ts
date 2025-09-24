@@ -59,7 +59,7 @@ export function isJSONSchemaEnum(jsonSchema: JSONSchema): jsonSchema is JSONSche
 export type Lang = "fi" | "en" | "sv";
 
 export type WithNonNullableKeys<T, K extends keyof T> = Omit<T, K> & {
-		[P in K]-?: NonNullable<T[P]>;
+	[P in K]-?: NonNullable<T[P]>;
 };
 
 export type FieldProps<T = any, S extends JSONSchemaObject | JSONSchemaArray = JSONSchemaObject> =

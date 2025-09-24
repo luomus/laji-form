@@ -21,7 +21,7 @@ export default class UiFieldApplierField extends React.Component {
 			})
 		}),
 		formData: PropTypes.object
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -37,7 +37,7 @@ export default class UiFieldApplierField extends React.Component {
 			functions = [functions];
 		}
 		return functions;
-	}
+	};
 
 	getStateFromProps(props) {
 		if (this.functions.length !== this.getFunctions().length) {
@@ -96,7 +96,7 @@ export default class UiFieldApplierField extends React.Component {
 		const {field} = this.getUiOptions();
 		this.onChangeFormData = formData;
 		this.functions[this.functions.length - 1].fn.onChange(parseJSONPointer(formData, field));
-	}
+	};
 
 	combinedOnChange(formData) {
 		const {field} = this.getUiOptions();

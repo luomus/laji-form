@@ -16,22 +16,22 @@ export default class ErrorListTemplate extends React.Component {
 		if (!this.state.popped) this.setState({popped: true});
 		this.refs.errorPanel.expand();
 		this.refs.warningPanel.expand();
-	}
+	};
 
 	poppedToggle = (e) => {
 		e.stopPropagation();
 		this.setState({popped: !this.state.popped, poppedTouched: true});
-	}
+	};
 
 	revalidate = () => {
 		this.props.formContext.services.rootInstance.validate();
 		this.refs.errorPanel.expand();
 		this.refs.warningPanel.expand();
-	}
+	};
 
 	submitWithWarnings = () => {
 		this.props.formContext.services.rootInstance.submitWithWarnings();
-	}
+	};
 
 	render() {
 		const {errorSchema, schema, formContext, uiSchema} = this.props;

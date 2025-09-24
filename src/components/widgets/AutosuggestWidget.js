@@ -19,7 +19,7 @@ export default class _AutosuggestWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 
 	render() {
 		if (this.props.options) {
@@ -157,7 +157,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuccessGlyph = () => {
 			const {Glyphicon} = this.context.theme;
 			return <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>;
-		}
+		};
 
 		renderSuggestion(suggestion) {
 			const renderedSuggestion = "autocompleteDisplayName" in suggestion
@@ -168,7 +168,7 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		parseChooseImages = (chooseImages) => {
 			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj);
-		}
+		};
 
 		renderChooseImages = () => {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
@@ -193,7 +193,7 @@ function TaxonAutosuggest(ComposedComponent) {
 					</Col>
 				</Row>
 			);
-		}
+		};
 
 		onTaxonImgSelected = (taxonID, taxon) => {
 			this.autosuggestRef.selectSuggestion({
@@ -201,11 +201,11 @@ function TaxonAutosuggest(ComposedComponent) {
 				value: taxon.vernacularName,
 				payload: taxon
 			});
-		}
+		};
 
 		setAutosuggestRef = (elem) => {
 			this.autosuggestRef = elem;
-		}
+		};
 
 		render() {
 			const {props} = this;
@@ -296,7 +296,7 @@ class FriendsAutosuggestWidget extends React.Component {
 		return isAdmin && showID
 			? {...suggestion, value: `${suggestion.value} (${suggestion.key})`}
 			: suggestion;
-	}
+	};
 
 	isValueSuggested(value) {
 		return !isEmptyString(value) && value.match(/MA\.\d+/);
@@ -304,7 +304,7 @@ class FriendsAutosuggestWidget extends React.Component {
 
 	findExactMatch = (suggestions, inputValue) => {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
-	}
+	};
 
 	renderSuccessGlyph = () => {
 		const {Glyphicon} = this.context.theme;
@@ -313,7 +313,7 @@ class FriendsAutosuggestWidget extends React.Component {
 			           glyph="user"
 			           className="form-control-feedback"/>
 		);
-	}
+	};
 
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
@@ -400,13 +400,13 @@ class BasicAutosuggestWidget extends React.Component {
 		validValueRegexp: PropTypes.string,
 		cache: PropTypes.bool,
 		Wrapper: PropTypes.object
-	}
+	};
 
 	static defaultProps = {
 		nameField: "name",
 		validValueRegexp: "",
 		cache: true
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -439,7 +439,7 @@ class BasicAutosuggestWidget extends React.Component {
 
 	findExactMatch = (suggestions, inputValue) => {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
-	}
+	};
 
 	render() {
 		const options = {
@@ -477,19 +477,19 @@ export class Autosuggest extends React.Component {
 		informalTaxonGroups: PropTypes.string,
 		onInformalTaxonGroupSelected: PropTypes.func,
 		cache: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		allowNonsuggestedValue: true,
 		suggestionReceive: "key",
 		cache: true
-	}
+	};
 
 	isValueSuggested = (props) => {
 		const {isValueSuggested, suggestionReceive, onSuggestionSelected} = props;
 		if (!onSuggestionSelected && suggestionReceive !== "key") return undefined;
 		return isValueSuggested ? isValueSuggested(props.value) : undefined;
-	}
+	};
 
 	wrapperRef = React.createRef();
 
@@ -535,7 +535,7 @@ export class Autosuggest extends React.Component {
 			}
 			return false;
 		}
-	}
+	};
 
 	triggerConvert = (props) => {
 		const {value, getSuggestionFromValue} = props;
@@ -554,7 +554,7 @@ export class Autosuggest extends React.Component {
 			if (!this.mounted) return;
 			this.setState({isLoading: false});
 		});
-	}
+	};
 
 	getSuggestionValue = (suggestion) => {
 		const {getSuggestionValue} = this.props;
@@ -562,13 +562,13 @@ export class Autosuggest extends React.Component {
 		return getSuggestionValue
 			? getSuggestionValue(suggestion, def)
 			: def;
-	}
+	};
 
 	renderSuggestion = (suggestion) => {
 		let {renderSuggestion} = this.props;
 		if (!renderSuggestion) renderSuggestion = suggestion => suggestion.value;
 		return (<span>{renderSuggestion(suggestion)}</span>);
-	}
+	};
 
 	selectSuggestion = (suggestion) => {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
@@ -587,7 +587,7 @@ export class Autosuggest extends React.Component {
 		this.mounted
 			? this.setState(state, afterStateChange)
 			: afterStateChange();
-	}
+	};
 
 	selectUnsuggested = (inputValue) => {
 		if (isEmptyString(inputValue) && isEmptyString(this.props.value)) return;
@@ -606,15 +606,15 @@ export class Autosuggest extends React.Component {
 		this.mounted
 			? this.setState(state, afterStateChange)
 			: afterStateChange();
-	}
+	};
 
 	onSuggestionSelected = (suggestion) => {
 		this.selectSuggestion(suggestion);
-	}
+	};
 
 	onUnsuggestedSelected = (inputValue) => {
 		this.selectUnsuggested(inputValue);
-	}
+	};
 
 	findExactMatch = (suggestions, inputValue = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
@@ -622,7 +622,7 @@ export class Autosuggest extends React.Component {
 		return findExactMatch
 			? findExactMatch(suggestions, inputValue)
 			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
-	}
+	};
 
 	findTheOnlyOneMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
@@ -630,7 +630,7 @@ export class Autosuggest extends React.Component {
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
-	}
+	};
 	
 	findNonMatching = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
@@ -638,7 +638,7 @@ export class Autosuggest extends React.Component {
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
-	}
+	};
 
 	onInputChange = (e, reason, callback) => {
 		let {value} = e.target;
@@ -648,7 +648,7 @@ export class Autosuggest extends React.Component {
 			value = this.props.inputProps.onChange(e, reason, callback);
 		} 
 		this.setState({inputValue: value}, callback);
-	}
+	};
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
 		if (value === undefined || value === null) value = "";
@@ -691,12 +691,12 @@ export class Autosuggest extends React.Component {
 		} else {
 			request();
 		}
-	}
+	};
 
 	onFocus = (e) => {
 		this.setState({focused: true});
 		triggerParentComponent("onFocus", e, this.props.inputProps);
-	}
+	};
 
 	onBlur = (e) => {
 		this.setState({focused: false}, () => {
@@ -710,7 +710,7 @@ export class Autosuggest extends React.Component {
 				}, 1);
 			}
 		});
-	}
+	};
 
 	afterBlurAndFetch = (suggestions, callback) => {
 		const {inputValue = ""} = this.state;
@@ -745,7 +745,7 @@ export class Autosuggest extends React.Component {
 		}
 
 		callback && callback();
-	}
+	};
 
 	render() {
 		const {props} = this;
@@ -804,33 +804,33 @@ export class Autosuggest extends React.Component {
 
 	setRef = (elem) => {
 		this.autosuggestRef = elem;
-	}
+	};
 
 	onInformalTaxonGroupsOpened = (open) => {
 		this.setState({informalTaxonGroupsOpen: open});
-	}
+	};
 
 	onInformalTaxonGroupSelected = (id) => {
 		this.setState({informalTaxonGroupsOpen: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
-	}
+	};
 
 	onInformalTaxonGroupHide = () => {
 		this.setState({informalTaxonGroupsOpen: false});
-	}
+	};
 
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
 		setTimeout(() => this.props.formContext.utils.focusById(this.props.id), 1); // Refocus input
-	}
+	};
 
 	onKeyDown = this.props.formContext.utils.keyboardClick(this.onToggle);
 
 	isSuggested = () => {
 		const {suggestion} = this.state;
 		return !!suggestion && this.isValueSuggested(this.props);
-	}
+	};
 
 	renderInput = (inputProps) => {
 		let {value, renderSuccessGlyph, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true, Wrapper} = this.props;
@@ -973,7 +973,7 @@ export class Autosuggest extends React.Component {
 			);
 		}
 		return component;
-	}
+	};
 }
 
 class _TaxonWrapper extends React.Component {
@@ -1131,11 +1131,11 @@ class InformalTaxonGroupsAddon extends React.Component {
 	onClear = (e) => {
 		e.stopPropagation();
 		if (this.props.onClear) this.props.onClear(undefined);
-	}
+	};
 
 	toggle = () => {
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
-	}
+	};
 
 
 	onKeyDown = this.props.formContext.utils.keyboardClick(this.toggle);
@@ -1162,7 +1162,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 			) : (
 				<GlyphButton {...buttonProps} glyph="menu-hamburger" className="autosuggest-input-addon informal-taxon-group-chooser"/>
 			);
-	}
+	};
 
 	render() {
 		if (!this.onKeyDown) { // Context not available before first render, so we initialize the key handler here.
@@ -1207,16 +1207,16 @@ class TaxonImgChooser extends React.Component {
 
 	showModal = () => {
 		this.setState({modal: true});
-	}
+	};
 
 	hideModal = () => {
 		this.setState({modal: false});
-	}
+	};
 
 	onSelected = () => {
 		this.props.onSelect(this.props.id, this.state.taxon);
 		this.hideModal();
-	}
+	};
 
 	render() {
 		const {thumbnail, taxon, modal} = this.state;
@@ -1290,14 +1290,14 @@ class ReactAutosuggest extends React.Component {
 		this.setState({focused: true, hideSuggestions: false});
 		this.requestFetch(this.state.inputValue);
 		this.props.inputProps && this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
-	}
+	};
 
 	onInputTryBlur = (e) => {
 		if (this.suggestionMouseDownFlag) {
 			return;
 		}
 		this.onBlur(e);
-	}
+	};
 
 	onBlur(e) {
 		if (e.relatedTarget && e.relatedTarget === findDOMNode(this.listRef.current)) {
@@ -1311,7 +1311,7 @@ class ReactAutosuggest extends React.Component {
 
 	onListBlur = (e) => {
 		this.onBlur(e);
-	}
+	};
 
 	onInputKeyDown = (e) => {
 		let state;
@@ -1360,11 +1360,11 @@ class ReactAutosuggest extends React.Component {
 			this.setState({touched: true});
 		}
 		this.props.inputProps?.onKeyDown?.(e);
-	}
+	};
 
 	onInputChange = (e) => {
 		this._onInputChange(e.target.value, "keystroke");
-	}
+	};
 
 	_onInputChange = (value, reason) => {
 		const callback = reason === "click"
@@ -1373,11 +1373,11 @@ class ReactAutosuggest extends React.Component {
 		this.props.inputProps && this.props.inputProps.onChange
 			? this.props.inputProps.onChange({target: {value}}, reason, callback)
 			: this.setState({inputValue: value}, callback);
-	}
+	};
 
 	setInputRef = (elem) => {
 		this.inputElem = findDOMNode(elem);
-	}
+	};
 
 	renderInput() {
 		const {inputProps, renderInputComponent = this.renderDefaultInputComponent} = this.props;
@@ -1423,7 +1423,7 @@ class ReactAutosuggest extends React.Component {
 
 	onSuggestionMouseDown = () => {
 		this.suggestionMouseDownFlag = true;
-	}
+	};
 
 	onSuggestionMouseUp = (e) => {
 		this.suggestionMouseDownFlag = false;
@@ -1432,7 +1432,7 @@ class ReactAutosuggest extends React.Component {
 			this._onInputChange(suggestion.value, "click");
 			this.onBlur(e);
 		});
-	}
+	};
 
 	getSuggestionFromClick = ({target}) => {
 		let idx;
@@ -1441,7 +1441,7 @@ class ReactAutosuggest extends React.Component {
 			target = target.parentElement;
 		}
 		return this.props.suggestions[idx];
-	}
+	};
 
 	onSuggestionSelected(suggestion) {
 		this.setState({inputValue: suggestion.value, hideSuggestions: true});

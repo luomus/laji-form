@@ -34,7 +34,7 @@ export default class InjectField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "InjectField";}
 
@@ -100,5 +100,5 @@ export default class InjectField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 }

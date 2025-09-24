@@ -45,7 +45,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 				...propsWithInnerUiSchema,
 				...state,
 			};
-		}
+		};
 
 		render = () => {
 			if (super.render) return super.render();
@@ -73,7 +73,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 					{...filterProps({...this.props, ...this.state})}
 				/>
 			);
-		}
+		};
 	}
 
 	if ((ComposedComponent as any).getName) {

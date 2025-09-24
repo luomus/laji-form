@@ -11,7 +11,7 @@ export default class MultiLanguageField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -64,5 +64,5 @@ export default class MultiLanguageField extends React.Component {
 	onChange = (lang) => (formData) => {
 		const newFormData = {...this.props.formData, [lang]: formData};
 		this.props.onChange(newFormData);
-	}
+	};
 }

@@ -99,7 +99,7 @@ export default class _ArrayField extends React.Component {
 
 	onChange = (formData) => {
 		this.props.onChange(onArrayFieldChange(formData, this.props));
-	}
+	};
 
 	render() {
 		const {props} = this;
@@ -164,5 +164,5 @@ export default class _ArrayField extends React.Component {
 			},
 			changesFormData: true
 		}
-	}
+	};
 }

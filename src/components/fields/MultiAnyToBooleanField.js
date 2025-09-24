@@ -24,7 +24,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -72,7 +72,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 		}, []);
 
 		this.props.onChange(formData);
-	}
+	};
 
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));

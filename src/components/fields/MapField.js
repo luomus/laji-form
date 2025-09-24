@@ -64,7 +64,7 @@ export default class MapField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -81,7 +81,7 @@ export default class MapField extends React.Component {
 		} else if (!this.getGeometry(this.props)) {
 			this.setState({locateOn: true});
 		}
-	}
+	};
 
 	componentDidMount() {
 		const {uiSchema} = this.props;
@@ -131,24 +131,24 @@ export default class MapField extends React.Component {
 				this.map.geocode(result.name, undefined, 8);
 			});
 		}
-	}
+	};
 
 	zoomIfExternalEdit = (props) => {
 		if (!equals(this._lastFormData, props.formData)) {
 			this.map.zoomToData();
 		}
-	}
+	};
 
 	setMapRef = (mapComponent) => {
 		if (mapComponent && mapComponent.refs && mapComponent.refs.map) {
 			this.map = mapComponent.refs.map.map;
 			this.setState({mapRendered: true});
 		}
-	}
+	};
 
 	showMobileEditorMap = () => {
 		this.setState({mobileEditor: {visible: true, options: (this.state.mobileEditor || {}).options || {}}});
-	}
+	};
 
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
@@ -255,7 +255,7 @@ export default class MapField extends React.Component {
 			});
 		}
 		return drawOptions;
-	}
+	};
 
 	getGeometry = (props) => {
 		const {formData} = props;
@@ -273,7 +273,7 @@ export default class MapField extends React.Component {
 		}
 
 		return formData && Object.keys(formData).length ? formData : undefined;
-	}
+	};
 
 	getMobileGeometry = () => {
 		if (this.props.formData) {
@@ -284,7 +284,7 @@ export default class MapField extends React.Component {
 				coordinates: [24.94782264266911, 60.17522413438655]
 			};
 		}
-	}
+	};
 
 	getFormDataFromGeometry = (geometry) => {
 		const {geometryCollection = true, coordinateFields} = getUiOptions(this.props.uiSchema);
@@ -304,15 +304,15 @@ export default class MapField extends React.Component {
 		}
 
 		return formData;
-	}
+	};
 
 	setMoved = (moved) => {
 		this.setState({ moved });
-	}
+	};
 
 	onOptionsChanged = (options) => {
 		this.setState({mapOptions: {...this.state.mapOptions, ...options}});
-	}
+	};
 
 	onChange = (events) => {
 		let formData;
@@ -330,7 +330,7 @@ export default class MapField extends React.Component {
 		});
 		this._zoomToDataOnNextTick = true;
 		this.props.onChange(formData);
-	}
+	};
 
 	onMobileEditorChange = (point) => {
 		const geometry = this.getGeometry(this.props);
@@ -343,11 +343,11 @@ export default class MapField extends React.Component {
 		} else {
 			this.onChange([{type: "create", feature}]);
 		}
-	}
+	};
 
 	onHideMobileEditorMap = (options) => {
 		this.setState({mobileEditor: {visible: false, options}});
-	}
+	};
 
 	onLocate = (latlng, radius, forceShow) => {
 		const {mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
@@ -373,7 +373,7 @@ export default class MapField extends React.Component {
 			const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
 			this.props.onChange(this.getFormDataFromGeometry(geometry));
 		}
-	}
+	};
 
 	onLocateError = () => {
 		this.setState({
@@ -383,7 +383,7 @@ export default class MapField extends React.Component {
 			},
 		});
 
-	}
+	};
 
 	renderBlocker() {
 		const {blockBeforeLocation} = getUiOptions(this.props.uiSchema);
@@ -422,11 +422,11 @@ class MobileEditorMap extends React.Component {
 		}
 
 		this.setState({mapRendered: true});
-	}
+	};
 
 	setOkButtonRef = (elem) => {
 		this.okButtonElem = findDOMNode(elem);
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;
@@ -471,7 +471,7 @@ class MobileEditorMap extends React.Component {
 			this.props.onChange(markerGeometry);
 		}
 		this.onClose();
-	}
+	};
 
 	handleMapClick = (e) => {
 		if (!this.props.moved) { this.props.setMoved(true); }
@@ -484,20 +484,20 @@ class MobileEditorMap extends React.Component {
 		} else {
 			this.marker = L.marker(latlng, { icon: this.map._createIcon(), draggable: true }).addTo(this.map.map);
 		}
-	}
+	};
 
 	invisibleStyle = () => {
 		return {
 			opacity: 0,
 			fillOpacity: 0
 		};
-	}
+	};
 
 	onKeyDown = ({key}) => {
 		if (key === "Escape") {
 			this.onClose();
 		}
-	}
+	};
 
 	activateLocate = () => {
 		this.handleLocateToggle(true);
@@ -516,10 +516,10 @@ class MobileEditorMap extends React.Component {
 
 		if (!this.state.hasLocated) { this.setState({hasLocated: true}); }
 		if (!this.props.moved) { this.props.setMoved(true); }
-	}
+	};
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, locate, ...options} = this.props.map.getOptions();  
 		const {userLocation} = this.props;
 
 		const {translations} = this.props.formContext;
@@ -558,5 +558,5 @@ class MobileEditorMap extends React.Component {
 
 	onClose = () => {
 		this.props.onClose(this.map.getOptions());
-	}
+	};
 }

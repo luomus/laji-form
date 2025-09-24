@@ -21,10 +21,10 @@ export interface PanelProps extends HasMaybeRef, HasMaybeClassName, HasMaybeStyl
 }
 
 export type Panel = React.ComponentType<PanelProps> & {
-    Body: React.ComponentType;
-    Heading: React.ComponentType;
-    Collapse: React.ComponentType;
-    Footer: React.ComponentType;
+	Body: React.ComponentType;
+	Heading: React.ComponentType;
+	Collapse: React.ComponentType;
+	Footer: React.ComponentType;
 }
 
 export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -57,9 +57,8 @@ export interface OverlayProps extends JSX.IntrinsicAttributes {
 	show?: boolean;
 	placement?: "top" | "bottom" | "left" | "right" | string;
 	rootClose?: boolean;
-	onHide?: Function; // eslint-disable-line @typescript-eslint/ban-types
-	target?: Function // eslint-disable-line @typescript-eslint/ban-types
-		| React.ReactInstance;
+	onHide?: Function;
+	target?: Function | React.ReactInstance;
 	container?: React.Component;
 }
 
@@ -90,7 +89,7 @@ export interface ModalProps {
 	keyboard?: boolean;
 	onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 	dialogClassName?: string;
-	onHide: Function // eslint-disable-line @typescript-eslint/ban-types
+	onHide: Function
 		| (() => void);
 }
 
@@ -99,10 +98,10 @@ export interface ModalHeader extends React.HTMLProps<any> {
 }
 
 export type Modal = React.ComponentType<ModalProps> & {
-    Body: React.ComponentType;
-    Header: React.ComponentType<ModalHeader>;
-    Title: React.ComponentType;
-    Footer: React.ComponentType;
+	Body: React.ComponentType;
+	Header: React.ComponentType<ModalHeader>;
+	Title: React.ComponentType;
+	Footer: React.ComponentType;
 }
 
 export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren, HasMaybeClassName {
@@ -182,7 +181,7 @@ export interface PagerItemProps {
 }
 
 export type Pager = React.ComponentType<JSX.IntrinsicAttributes> & {
-    Item: React.ComponentType<PagerItemProps>;
+	Item: React.ComponentType<PagerItemProps>;
 }
 
 export interface AccordionProps extends JSX.IntrinsicAttributes {

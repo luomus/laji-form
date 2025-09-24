@@ -14,7 +14,7 @@ export default class TextareaWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}),
 		value: PropTypes.string
-	}
+	};
 	static contextType = ReactContext;
 
 	constructor(props) {
@@ -31,12 +31,12 @@ export default class TextareaWidget extends React.Component {
 
 	getStateFromProps = (props) => {
 		return {value: props.value};
-	}
+	};
 
 	onFocus = (e) => {
 		this.focused = true;
 		this.props.onFocus && this.props.onFocus(e);
-	}
+	};
 
 	onBlur = (e) => {
 		this.focused = false;
@@ -45,7 +45,7 @@ export default class TextareaWidget extends React.Component {
 		}
 		if (this.timeout) clearTimeout(this.timeout);
 		this.props.onBlur && this.props.onBlur(e);
-	}
+	};
 
 	onChange = (value) => {
 		this.setState({value}, () => {
@@ -58,11 +58,11 @@ export default class TextareaWidget extends React.Component {
 				}, 1000);
 			}
 		});
-	}
+	};
 
 	_onChange = ({target: {value}}) => {
 		this.onChange(value);
-	}
+	};
 
 	render() {
 		const {

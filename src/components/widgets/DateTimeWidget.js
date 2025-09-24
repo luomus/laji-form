@@ -52,7 +52,7 @@ export default class DateTimeWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}),
 		value: PropTypes.string
-	}
+	};
 
 	static defaultProps = {
 		type: "text",
@@ -61,7 +61,7 @@ export default class DateTimeWidget extends React.Component {
 		required: false,
 		calendar: true,
 		time: true
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -78,7 +78,7 @@ export default class DateTimeWidget extends React.Component {
 
 	focus = () => {
 		this.dateTimePickerRef.focus();
-	}
+	};
 
 	getStateFromProps(props) {
 		const {lang, translations} = props.formContext;
@@ -148,31 +148,31 @@ export default class DateTimeWidget extends React.Component {
 		this.timeWritten = hasTime;
 		this.onlyYearWritten = onlyYear;
 		return onlyYear ? isoValue : moment(isoValue).toDate();
-	}
+	};
 
 	onChange = (value) => {
 		this.props.onChange(value, !!"force");
-	}
+	};
 
 	onToggle = p => {
 		if (p !== false) this.toggle = p; //"time" or "date"
-	}
+	};
 
 	setRef = (elem) => {
 		this.dateTimePickerRef = elem;
-	}
+	};
 
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
-	}
+	};
 
 	onTextWidgetFocus = () => {
 		this.setState({textInputFocused: true}, this.focus);
-	}
+	};
 
 	onBlur = () => {
 		!isDescendant(findDOMNode(this.containerRef), document.activeElement) && this.setState({textInputFocused: false});
-	}
+	};
 
 	onDateTimePickerChange = (value) => {
 		const momentValue = moment(value);
@@ -189,7 +189,7 @@ export default class DateTimeWidget extends React.Component {
 		this.toggle = undefined;
 		this.timeWritten = false;
 		this.onlyYearWritten = false;
-	}
+	};
 
 	render() {
 		const {value, readonly, disabled} = this.props;
@@ -289,15 +289,15 @@ export default class DateTimeWidget extends React.Component {
 		const {value} = this.props;
 		const time = value !== undefined && value !== null ? value.split("T")[1] : false;
 		return time ? `${date}T${time}` : date;
-	}
+	};
 
 	setToday = () => {
 		this.onChange(this.getDateWithCurrentTime(moment().format("YYYY-MM-DD")));
-	}
+	};
 
 	setYesterday = () => {
 		this.onChange(this.getDateWithCurrentTime(moment().subtract(1, "d").format("YYYY-MM-DD")));
-	}
+	};
 
 	setSameAsToday = () => {
 		const formData = this.props.formContext.services.rootInstance.getFormData();
@@ -307,7 +307,7 @@ export default class DateTimeWidget extends React.Component {
 		if (today) {
 			this.onChange(today);
 		}
-	}
+	};
 
 	setPlusSixMonths = () => {
 		const plusSixMonthOptions = getUiOptions(this.props).showButtons.plusSixMonths || {};
@@ -316,7 +316,7 @@ export default class DateTimeWidget extends React.Component {
 		if (date) {
 			this.onChange(date.add(6, "M").format("YYYY-MM-DD"));
 		}
-	}
+	};
 
 	setPlusYear = () => {
 		const plusYearOptions = getUiOptions(this.props).showButtons.plusYear || {};
@@ -325,7 +325,7 @@ export default class DateTimeWidget extends React.Component {
 		if (date) {
 			this.onChange(date.add(1, "y").format("YYYY-MM-DD"));
 		}
-	}
+	};
 
 	formatValue(value, options, props) {
 		if (!value) return value;

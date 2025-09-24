@@ -17,7 +17,7 @@ export default class ArrayBulkField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -33,7 +33,7 @@ export default class ArrayBulkField extends React.Component {
 			state.rowAmount = props.formData.length + state.rowAddAmount - (props.formData.length % state.rowAddAmount);
 		}
 		return state;
-	}
+	};
 
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
@@ -69,7 +69,7 @@ export default class ArrayBulkField extends React.Component {
 			idx++;
 		});
 		return rows;
-	}
+	};
 
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
@@ -78,10 +78,10 @@ export default class ArrayBulkField extends React.Component {
 			formData[idx] = itemFormData;
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length;}));
 		};
-	}
+	};
 
 	onAddClick = (event) => {
 		event.preventDefault();
 		this.setState({rowAmount: this.state.rowAmount + this.state.rowAddAmount});
-	}
+	};
 }

@@ -22,7 +22,7 @@ export default class _FieldTemplate extends React.Component {
 		const {formContext} = this.props;
 		const {uiSchema = {}} = (formContext.formRef.current || {props: {}}).props;
 		return uiSchema.autoFocus !== false;
-	}
+	};
 
 	componentDidMount() {
 		const {formContext} = this.props;
@@ -52,7 +52,7 @@ export default class _FieldTemplate extends React.Component {
 				this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll);
 			}
 		});
-	}
+	};
 
 	componentWillUnmount() {
 		if (getUiOptions(this.props.uiSchema).reserveId === false) {

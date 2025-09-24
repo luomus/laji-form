@@ -475,7 +475,7 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 			});
 			this.props.onChange(sortedToOriginal);
 		}
-	}
+	};
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField as any; // TODO as any

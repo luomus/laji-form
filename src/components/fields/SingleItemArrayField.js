@@ -11,7 +11,7 @@ export default class SingleItemArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	static getName() {return "SingleItemArrayField";}
 
@@ -28,7 +28,7 @@ export default class SingleItemArrayField extends React.Component {
 	getStateFromProps(props) {
 		const activeIdx = this.getActiveIdx(props);
 		if (typeof activeIdx !== "number" || isNaN(activeIdx)) {
-		 return {
+			return {
 				...props,
 				uiSchema: {
 					"ui:field": "HiddenField"
@@ -75,12 +75,12 @@ export default class SingleItemArrayField extends React.Component {
 		return "activeIdx" in options
 			? options.activeIdx
 			: 0;
-	}
+	};
 
 	onChange = (formData) => {
 		const activeIdx = this.getActiveIdx(this.props);
 		const copy = (this.props.formData || []).slice();
 		copy[activeIdx] = formData;
 		this.props.onChange(copy);
-	}
+	};
 }

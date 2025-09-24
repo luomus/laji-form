@@ -30,7 +30,7 @@ export default class InjectDefaultValueField extends React.Component {
 			type: PropTypes.oneOf(["object", "array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
-	}
+	};
 
 	static getName() {return "InjectDefaultValueField";}
 
@@ -56,6 +56,6 @@ export default class InjectDefaultValueField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 }
 

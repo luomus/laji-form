@@ -14,7 +14,7 @@ export default class ImageSelectWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}),
 		value: PropTypes.string
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -46,5 +46,5 @@ export default class ImageSelectWidget extends React.Component {
 			this._context[enumName] = path;
 			return <span className="select-icon"><Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg></span>;
 		}
-	}
+	};
 }

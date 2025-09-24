@@ -24,22 +24,22 @@ export default class MultiArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
-	itemIds = {}
+	itemIds = {};
 
 	render() {
 		const {props} = this;
 		let {groups, cache = true, arrayMerge, persistByParent, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
-			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
+			this.cache = Array(groups.length).fill(undefined).map(_ => ({}));  
 		}
 		if (groups.length) {
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));
 		}
 
 		if (groups.length && !this.groupItemIds) {
-			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
+			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({}));  
 			if (persistByParent) {
 				const parentId = this.props.formContext._parentLajiFormId;
 				const context = getContext(`${parentId}_MULTI`);
@@ -54,7 +54,7 @@ export default class MultiArrayField extends React.Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line @typescript-eslint/no-unused-vars
+		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);   
 		const addToGroup = (idx, item) => {
 			const id = getUUID(item);
 			itemGroups[idx].push(item);
@@ -208,7 +208,7 @@ export default class MultiArrayField extends React.Component {
 			return [...flat, ...groupItems];
 		}, []);
 		this.props.onChange(newFormData);
-	}
+	};
 }
 
 const getArrayKeyFunctions = (that) => {

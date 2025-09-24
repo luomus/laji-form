@@ -28,7 +28,7 @@ export default class SplitField extends React.Component<FieldProps> {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
@@ -78,11 +78,11 @@ export default class SplitField extends React.Component<FieldProps> {
 				readonly={this.props.readonly}
 			/>
 		);
-	}
+	};
 
 	onChange = (fields: string[]) => (formData: any) => {
 		this.props.onChange(fields.reduce((updatedFormData, field) => {
 			return {...updatedFormData, [field]: formData[field]};
 		}, this.props.formData));
-	}
+	};
 }

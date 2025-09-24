@@ -20,7 +20,7 @@ export default class InputGroupWidget extends React.Component {
 		}).isRequired,
 		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		required: PropTypes.bool
-	}
+	};
 
 	render() {
 		const {InputGroup} = this.context.theme;

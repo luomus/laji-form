@@ -35,7 +35,7 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	static getName() {return "CondensedObjectField";}
 
@@ -94,7 +94,7 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 
 		this.setState({selectedFields: newSelectedFields, formData: newFormData});
 		this.props.onChange(newFormData);
-	}
+	};
 
 	onFieldChange = memoize((idx: number) => (formData: any) => {
 		const selectedFields = this.state.selectedFields;

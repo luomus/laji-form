@@ -99,7 +99,7 @@ export default class SingleActiveArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -119,7 +119,7 @@ export default class SingleActiveArrayField extends React.Component {
 		const formDataLength = (formData || []).length;
 		const options = getUiOptions(uiSchema);
 		return (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx;
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;
@@ -186,7 +186,7 @@ export default class SingleActiveArrayField extends React.Component {
 				count++;
 			});
 		});
-	}
+	};
 
 	getStateFromProps(props) {
 		const state = {};
@@ -210,7 +210,7 @@ export default class SingleActiveArrayField extends React.Component {
 
 	onHeaderAffixChange = (elem, value) => {
 		this.setState({scrollHeightFixed: value ? elem.scrollHeight : 0});
-	}
+	};
 
 	getLocalFormContext = () => {
 		if (this.localContextKey === this.state.scrollHeightFixed) {
@@ -220,7 +220,7 @@ export default class SingleActiveArrayField extends React.Component {
 		this.localContext = {...this.props.formContext, topOffset: this.props.formContext.topOffset + this.state.scrollHeightFixed};
 		this.localContext.utils = ReactUtils(this.localContext);
 		return this.localContext;
-	}
+	};
 
 	render() {
 		const {renderer = "accordion", tableActiveItemClassNames} = getUiOptions(this.props.uiSchema);
@@ -288,7 +288,7 @@ export default class SingleActiveArrayField extends React.Component {
 
 	updateRenderingMode = (normalRendering, callback) => {
 		this.setState({normalRendering}, () => callback && callback(normalRendering));
-	}
+	};
 
 	onActiveChange = (idx, prop, callback) => {
 		if (idx !== undefined) {
@@ -301,7 +301,7 @@ export default class SingleActiveArrayField extends React.Component {
 
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, prop, callback) : this.setState({activeIdx: idx}, callback);
-	}
+	};
 
 	onDelete = (item) => (e) => {
 		const newLength = this.props.formData.length - 1;
@@ -311,7 +311,7 @@ export default class SingleActiveArrayField extends React.Component {
 			this.onActiveChange(newLength - 1);
 		}
 		item.onDropIndexClick(item.index)(e);
-	}
+	};
 
 	buttonDefinitions = {
 		add: {
@@ -343,7 +343,7 @@ export default class SingleActiveArrayField extends React.Component {
 				minLength: 1
 			}
 		}
-	}
+	};
 }
 
 class Popup extends React.Component {
@@ -424,7 +424,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					});
 				}];
 			});
-		}
+		};
 
 		addSetOpenHandlers() {
 			this.setAllOpenHandlers = this.getSetOpenHandlers(this.props);
@@ -453,7 +453,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					}
 				}];
 			});
-		}
+		};
 
 		getChildKeyHandlers(props) {
 			const that = props.formContext.this;
@@ -505,12 +505,12 @@ export class AccordionArrayFieldTemplate extends React.Component {
 
 	setHeaderRef = (elem) => {
 		this.headerRef = elem;
-	}
+	};
 
 	onSelect = key => {
 		const that = this.props.formContext.this;
 		that.onActiveChange(key);
-	}
+	};
 
 	render() {
 		const that = this.props.formContext.this;
@@ -600,7 +600,7 @@ class PagerArrayFieldTemplate extends React.Component {
 
 	setHeaderRef = (elem) => {
 		this.headerRef = elem;
-	}
+	};
 
 	render() {
 		const that = this.props.formContext.this;
@@ -688,7 +688,7 @@ class PagerArrayFieldTemplate extends React.Component {
 		const elem = this.headerRef;
 		const that = this.props.formContext.this;
 		that.onHeaderAffixChange(elem, value);
-	}
+	};
 
 	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
 	navigateNext = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx + 1);
@@ -743,7 +743,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 	onResize = () => {
 		this.updateLayout();
-	}
+	};
 
 	componentDidMount() {
 		this._updateRenderingMode = () => this.updateRenderingMode();
@@ -780,7 +780,7 @@ class TableArrayFieldTemplate extends React.Component {
 				tHeadHeightChanged = this.prevTHeadHeight && tHeadHeight !== this.prevTHeadHeight;
 			}
 
-			 if (activeChanged || itemsLengthChanged || tHeadHeightChanged) {
+			if (activeChanged || itemsLengthChanged || tHeadHeightChanged) {
 				this.updateLayout(this.props.formContext.this.state.activeIdx);
 			}
 			if (tHeadHeight) this.prevTHeadHeight = tHeadHeight;
@@ -831,16 +831,16 @@ class TableArrayFieldTemplate extends React.Component {
 				this.updateLayout(null, _callback);
 			}
 		});
-	}
+	};
 
 	setActiveRef = (elem) => {
 		this.activeElem = elem;
 		this.activeElem && this.resizeObserver.observe(this.activeElem);
-	}
+	};
 
 	setTHeadRef = (elem) => {
 		this.tHeadRef = elem;
-	}
+	};
 
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
@@ -859,7 +859,7 @@ class TableArrayFieldTemplate extends React.Component {
 			};
 			this.setState(state, _callback);
 		});
-	}
+	};
 
 	getStyles = () => {
 		const that = this.props.formContext.this;
@@ -878,7 +878,7 @@ class TableArrayFieldTemplate extends React.Component {
 				height: this.activeElem.offsetHeight + activeHeightOffset
 			} : {}
 		};
-	}
+	};
 
 	getDeleteButtonRef = (idx) => {
 		const that = this.props.formContext.this;
@@ -887,12 +887,12 @@ class TableArrayFieldTemplate extends React.Component {
 				that.deleteButtonRefs[idx] = elem;
 			});
 		return that.deleteButtonRefSetters[idx];
-	}
+	};
 
 	customEventSender = memoize((eventName) => memoize((idx) => () => {
 		const that = this.props.formContext.this;
 		that.props.formContext.services.customEvents.send(that.props.idSchema.$id, eventName, {idx});
-	}))
+	}));
 
 	onKeyDownActivate = memoize((idx) => (e) => {
 		if (idx !== this.state.activeIdx && (e.key === " " || e.key === "Enter")) {
@@ -900,14 +900,14 @@ class TableArrayFieldTemplate extends React.Component {
 			e.preventDefault();
 			e.stopPropagation();
 		}
-	})
+	});
 
 	getOnChangeActive = memoize(idx => () => {
 		const that = this.props.formContext.this;
 		idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
 	});
 
-	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col))
+	getOnHeaderClick = memoize((col, onSortToggle) => () => onSortToggle(col));
 
 	getSortableHeaderProps(col, props) {
 		const {onSortToggle, sortCols, ui, sortableColumns, sortColTooltips} = getUiOptions(props.uiSchema);
@@ -1165,7 +1165,7 @@ const headerFormatters = {
 						name: response.name
 					});
 				});
-			}
+			};
 
 			render() {
 				const {name} = this.state;
@@ -1246,7 +1246,7 @@ class AccordionHeader extends React.Component {
 		}
 		that.onActiveChange(idx);
 		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
-	}
+	};
 
 	onMouseEnter = () => {
 		this.getFormatters().forEach(formatter => {
@@ -1284,23 +1284,23 @@ class AccordionHeader extends React.Component {
 				}
 			};
 		});
-	}
+	};
 
 	static state = { focused: false };
 
 	onHelpFocus = () => {
 		this.setState({ focused: true });
-	}
+	};
 
 	onHelpBlur = () => {
 		this.setState({ focused: false });
-	}
+	};
 
 	onHelpClick = (e) => {
 		e.preventDefault();
-	}
+	};
 
-	onKeyDown = this.props.that.props.formContext.utils.keyboardClick(this.onHeaderClick)
+	onKeyDown = this.props.that.props.formContext.utils.keyboardClick(this.onHeaderClick);
 
 	render() {
 		const {that, idx} = this.props;

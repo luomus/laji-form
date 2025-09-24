@@ -23,11 +23,11 @@ export default class LajiFormWrapper {
 
 	submit = () => {
 		this.lajiForm.submit();
-	}
+	};
 
 	submitOnlySchemaValidations = () => {
 		this.lajiForm.submitOnlySchemaValidations();
-	}
+	};
 
 	setState = (state: Partial<LajiFormProps>) => {
 		this.state = {...this.state, ...state};
@@ -35,36 +35,36 @@ export default class LajiFormWrapper {
 			React.createElement(LajiForm, {...this.props, ...this.state}, null),
 			this.rootElem
 		);
-	}
+	};
 
 	pushBlockingLoader = () => {
 		this.lajiForm.pushBlockingLoader();
-	}
+	};
 
 	popBlockingLoader = () => {
 		this.lajiForm.popBlockingLoader();
-	}
+	};
 
 	focusField = (id: string) => {
 		this.lajiForm.focusField(id);
-	}
+	};
 
 	openAllMultiActiveArrays = () => {
 		this.lajiForm.openAllMultiActiveArrays();
-	}
+	};
 
 	closeAllMultiActiveArrays = () => {
 		this.lajiForm.closeAllMultiActiveArrays();
-	}
+	};
 
 	getSettings = () => {
 		return this.lajiForm.getSettings();
-	}
+	};
 
 	destroy = () => {
 		this.lajiForm.destroy();
 		unmountComponentAtNode(this.rootElem);
-	}
+	};
 
-	unmount = this.destroy
+	unmount = this.destroy;
 }

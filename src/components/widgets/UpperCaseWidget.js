@@ -8,7 +8,7 @@ export default class UpperCaseWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 
 	render() {
 		return <BaseInputTemplate {...this.props} formatValue={this.formatValue} />;

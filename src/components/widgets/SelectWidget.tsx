@@ -8,7 +8,7 @@ import { findDOMNode } from "react-dom";
 import Spinner  from "react-spinner";
 
 const useRangeIncrementor = (length: number, defaultIdx?: number)
-	: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
+: [number | undefined, () => void, () => void, (idx?: number) => void]  => {
 	const [idx, _setIdx] = useState<number | undefined>(defaultIdx);
 	const setIdx = useCallback((idx?: number) => {
 		let nextIdx: number | undefined = idx;
@@ -87,13 +87,13 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const enumOptions = useMemo(() =>
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		 
 		getEnumOptions<T>(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
 
 	const getLabelFromValue = useCallback((value: T | undefined) => 
 		value !== undefined && value !== "" && value !== null
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			 
 			? enumOptions.find(item => item.value === value)!.label
 			: ""
 	, [enumOptions]);
@@ -219,7 +219,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 	} = props;
 	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		 
 		: getEnumOptions<T>(options.enumOptions!, uiSchema, false)
 	);
 
@@ -280,7 +280,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 	const loadEnums = useCallback(() => {
 		const asyncOp = async () => {
 			try {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				 
 				const enums = await getEnumOptionsAsync!();
 				setEnumOptions(enums);
 			} finally {
@@ -359,7 +359,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 			break;
 		case "Backspace":
 			if (inputValue === "" && value?.length) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				 
 				onChange(value!.slice(0, -1));
 				e.preventDefault();
 			}
@@ -367,7 +367,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		}
 	}, [activeIdx, activeIdxDown, activeIdxUp, filteredEnums, inputValue, onChange, onItemSelected, value]);
 
-	/* eslint-disable @typescript-eslint/no-non-null-assertion */
+	 
 	const onDelete = useCallback((enu: EnumOptionsType) => {
 		const filtered = value!.filter(v => v !== enu.value);
 		onChange(value!.length === 0 ? undefined : filtered);
@@ -375,7 +375,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 			inputRef.current?.focus();
 		}
 	}, [isOpen, onChange, value]);
-	/* eslint-enable @typescript-eslint/no-non-null-assertion */
+	 
 
 	const redirectFocusToInput = useCallback((e) => {
 		// Only the input wrapper should redirect focus, otherwise the existing label deletion buttons will also redirect, breaking shift + tab navigation on the input.
@@ -430,7 +430,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 }
 
 function SelectedMultiValue<T extends string | number | undefined>({ children: enu, onDelete, readonly }:
-	{ children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
+{ children: EnumOptionsType<T>, onDelete: (enu: EnumOptionsType<T>) => void, readonly: boolean }) {
 	const onDeleteClick = useCallback(() => !readonly && onDelete(enu), [enu, onDelete, readonly]);
 	return (
 		<li key={enu.value} style={{display: "inline-table"}} className="laji-form-multiselect-tag">

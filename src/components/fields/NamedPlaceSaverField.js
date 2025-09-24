@@ -23,7 +23,7 @@ export default class NamedPlaceSaverField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	getStateFromProps(props) {
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
@@ -53,13 +53,13 @@ export default class NamedPlaceSaverField extends React.Component {
 
 	onButtonClick = () => () => {
 		this.setState({show: !this.state.show});
-	}
+	};
 
 	onSave = (place) => {
 		this.setState({show: false}, () => {
 			this.props.onChange({...(this.props.formData || {}), namedPlaceID: place.id});
 		});
-	}
+	};
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.show !== this.state.show) this.setState(this.getStateFromProps(this.props));
@@ -143,14 +143,14 @@ class PlaceSaverDialog extends React.Component {
 
 	onInputChange = ({target: {value}}) => {
 		this.setState({value});
-	}
+	};
 
 	getGathering = () => {
 		return ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription", "coordinateRadius"].reduce((gathering, key) => {
 			gathering[key] = this.props.gathering[key];
 			return gathering;
 		}, {});
-	}
+	};
 
 	onSave(place) {
 		place = {
@@ -179,49 +179,49 @@ class PlaceSaverDialog extends React.Component {
 
 	onSaveNew = (e) => {
 		e.preventDefault();
-		const {namedPlaceID, ...gathering} = this.getGathering(); //eslint-disable-line @typescript-eslint/no-unused-vars
+		const {namedPlaceID, ...gathering} = this.getGathering();  
 		this.onSave({
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
 		});
-	}
+	};
 
 	onOverwriteCurrentFor = memoize((namedPlaceID) => () => {
-		const gathering = this.getGathering(); //eslint-disable-line no-unused-vars
+		const gathering = this.getGathering();  
 		this.onSave({
 			...this.state.placeIdsToPlaces[namedPlaceID],
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
 		});
-	})
+	});
 	
 	onOverwriteSelected = memoize((place) => () => {
-		const gathering = this.getGathering(); //eslint-disable-line no-unused-vars
+		const gathering = this.getGathering();  
 		this.onSave({
 			...place,
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
 		});
-	})
+	});
 
 	onOverwriteExistingFor = memoize((place) => () => {
 		this.onOverwriteSelected(place)();
-	})
+	});
 
 	// Hack that fixed autofocus cursor position
 	onFocus = (e) => {
 		var val = e.target.value;
 		e.target.value = "";
 		e.target.value = val;
-	}
+	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
-	}
+	};
 
 	setInputRef = (elem) => {
 		this.inputRef = elem;
-	}
+	};
 
 	render() {
 		const {value, placeNamesToPlaces = {}, loading} = this.state;

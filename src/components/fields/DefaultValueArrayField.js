@@ -27,7 +27,7 @@ export default class DefaultValueArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array]).isRequired
-	}
+	};
 
 	static getName() {return "DefaultValueArrayField";}
 
@@ -46,5 +46,5 @@ export default class DefaultValueArrayField extends React.Component {
 			});
 		});
 		this.props.onChange(formData);
-	}
+	};
 }

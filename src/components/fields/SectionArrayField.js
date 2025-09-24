@@ -14,7 +14,7 @@ const getOptions = (options) => {
 		sectionField = "/section",
 		rowDefinerField = "/units/%{row}/identifications/0/taxonVerbatim",
 		rowDefinerFields = [
-			 "/units/%{row}/identifications/0/taxonID"
+			"/units/%{row}/identifications/0/taxonID"
 		],
 		rowValueField = "/units/%{row}/individualCount",
 	} = options;
@@ -85,7 +85,7 @@ export default class SectionArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -163,10 +163,10 @@ class SectionArrayFieldTemplate extends React.Component {
 
 	containerRef = React.createRef();
 
-	onFocuses = []
+	onFocuses = [];
 	getOnFocus = (i) => () => {
 		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
-	}
+	};
 
 	getElemsForRowIdx = (rowIdx) => {
 		const {rowValueField, rowDefinerField} = getOptions(getUiOptions(this.props.uiSchema));
@@ -174,7 +174,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			`${this.props.idSchema.$id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", rowIdx))}`,
 			...this.props.formData.map((_, idx) => `${this.props.idSchema.$id}_${idx}_${JSONPointerToId(rowValueField.replace("%{row}", rowIdx))}`)
 		].map(id => document.getElementById(id));
-	}
+	};
 
 	onContainerFocus = (e) => {
 		const {id} = e.target;
@@ -187,7 +187,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				}
 			});
 		}
-	}
+	};
 
 	onContainerBlur = () => {
 		if (this.focusedRowIdx !== undefined) {
@@ -197,7 +197,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				}
 			});
 		}
-	}
+	};
 
 	render() {
 		return (
@@ -337,7 +337,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 	getAddButtonElem = () => {
 		return findDOMNode(this.addButtonRef.current);
-	}
+	};
 
 	showAddSection = () => {
 		this.setState({showAddSection: true}, () => {
@@ -345,11 +345,11 @@ class SectionArrayFieldTemplate extends React.Component {
 				findDOMNode(this.sectionInputRef.current).focus();
 			});
 		});
-	}
+	};
 
 	hideAddSection = () => {
 		this.setState({showAddSection: false, newSection: undefined});
-	}
+	};
 
 	getAddSectionPopup = () => {
 		const {translations} = this.props.formContext;
@@ -367,17 +367,17 @@ class SectionArrayFieldTemplate extends React.Component {
 				<Button onClick={this.hideAddSection} variant="default">{translations.Cancel}</Button>
 			</div>
 		);
-	}
+	};
 
 	sectorIsValid = (newSection) => {
 		const {sectionField} = getOptions(getUiOptions(this.props.uiSchema));
 		const existingNumbers = this.props.formData.map(item => "" + parseJSONPointer(item, sectionField));
 		return !(isNaN(parseInt(newSection)) || parseInt(newSection) < 0 || parseInt(newSection) > 50 || existingNumbers.includes(newSection));
-	}
+	};
 
 	onNewSectionChange = (e) => {
 		this.setState({newSection: e.target.value.replace(/[^0-9/-]/g, "")});
-	}
+	};
 
 	onNewSectionKeyDown = (e) => {
 		if (e.key === "Enter") {
@@ -388,7 +388,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			this.hideAddSection();
 			e.stopPropagation();
 		}
-	}
+	};
 
 	addSection = () => {
 		const {registry, formContext, uiSchema, schema} = this.props;
@@ -398,7 +398,7 @@ class SectionArrayFieldTemplate extends React.Component {
 		const [containerPointer] = rowDefinerField.split("/%{row}");
 		const copiedRowDefinerData = (parseJSONPointer(this.props.formData[0] || {}, containerPointer) || []).reduce((result, item, idx) => {
 			return [rowDefinerField, ...rowDefinerFields].reduce((_result, field) => {
-				const [_, parsedField] = field.split("/%{row}"); // eslint-disable-line @typescript-eslint/no-unused-vars
+				const [_, parsedField] = field.split("/%{row}");  
 				return updateFormDataWithJSONPointer(
 					{
 						schema: schema.items,
@@ -424,7 +424,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		formContext.this.props.onChange(items);
 		this.hideAddSection();
-	}
+	};
 
 	renderRowDefinerSumColumn() {
 		const {schema, registry, formData} = this.props;
@@ -526,7 +526,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					ids = {...ids, ..._ids};
 				}
 				const updatedUnit = [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
-					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line @typescript-eslint/no-unused-vars
+					const [_, contentPointer] = field.split("%{row}");  
 					const pointer = field.replace("%{row}", idx);
 					const value = parseJSONPointer(formData, pointer);
 					return updateFormDataWithJSONPointer(
@@ -558,7 +558,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				this.props.formContext.services.submitHooks.remove(id);
 			}
 		});
-	}
+	};
 }
 
 const withoutItemPointers = pointer => pointer.replace(/\/([0-9]+|%{row})/g, "");

@@ -12,7 +12,7 @@ class TextSelectWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 
 	constructor(props) {
 		super(props);

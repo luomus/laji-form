@@ -70,7 +70,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	state: State = {activeButtonIdx: undefined};
 
@@ -159,7 +159,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 	onChange = memoize((key: string) => (formData: any) => {
 		const newFormData = {...this.props.formData, [key]: formData};
 		this.props.onChange(newFormData);
-	})
+	});
 
 	onButtonClick = memoize((idx: number) => () => {
 		const {activeButtonIdx} = this.state;
@@ -180,7 +180,7 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 		} else if (operation === "move" || operation === "delete") {
 			this.setState({activeButtonIdx: idx});
 		}
-	})
+	});
 
 	onTagClick = memoize((fromField: string) => (idx: number, e: React.MouseEvent<HTMLButtonElement>) => {
 		const {activeButtonIdx} = this.state;
@@ -214,5 +214,5 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 
 			this.props.onChange(formData);
 		}
-	})
+	});
 }

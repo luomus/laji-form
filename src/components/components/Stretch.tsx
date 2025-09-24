@@ -21,7 +21,7 @@ type State = {
 }
 
 export type WithNonNullableKeys<T, K extends keyof T> = Omit<T, K> & {
-		[P in K]-?: NonNullable<T[P]>;
+	[P in K]-?: NonNullable<T[P]>;
 };
 
 export class Stretch extends React.Component<Props, State> {
@@ -65,11 +65,11 @@ export class Stretch extends React.Component<Props, State> {
 			}
 		}
 		this.update(state, callback);
-	}
+	};
 
 	onScroll = () => {
 		requestAnimationFrame(this._onScroll);
-	}
+	};
 
 	update = (state: Partial<State>, callback?: () => void) => {
 		const afterStateChange = () => {
@@ -79,7 +79,7 @@ export class Stretch extends React.Component<Props, State> {
 		state ? this.setState(state, () => {
 			afterStateChange();
 		}) : afterStateChange;
-	}
+	};
 
 	getState = (): Partial<State> => {
 		const {containerRef, topOffset = 0, bottomOffset = 0, minHeight} = this.props;
@@ -114,7 +114,7 @@ export class Stretch extends React.Component<Props, State> {
 				0),
 			top: Math.max(-container.getBoundingClientRect().top + topOffset, 0)
 		};
-	}
+	};
 
 	render() {
 		const {children} = this.props;

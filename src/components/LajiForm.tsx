@@ -304,13 +304,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		settings: PropTypes.object,
 		validators: PropTypes.object,
 		warnings: PropTypes.object,
-	}
+	};
 
 	static defaultProps = {
 		lang: "en" as Lang,
 		schema: {},
 		uiSchema: {}
-	}
+	};
 
 	constructor(props: LajiFormProps) {
 		super(props);
@@ -446,7 +446,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	onSubmitHooksChange = (submitHooks: SubmitHook[], callback?: () => void) => {
 		this.setState({submitHooks}, callback);
-	}
+	};
 
 	resetShortcuts(shortcuts: ShortcutKeys = {}) {
 		this.memoizedFormContext.services.keyHandler.setShortcuts(shortcuts, this.keyFunctions);
@@ -470,7 +470,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return notifier;
 		}, {} as Notifier);
 		return this.defaultNotifier;
-	}
+	};
 
 	onChange = ({formData}: {formData: any}) => {
 		this.setState({formData}, () => {
@@ -484,11 +484,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.memoizedFormContext.services.rootInstance.setFormData(formData);
 			!this.validating && this.validate(true, false);
 		});
-	}
+	};
 
-	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})})
-	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
-	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
+	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})});
+	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})});
+	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})});
 
 	getContext = (props: LajiFormProps, context: ContextProps): ContextProps => {
 		const nextKey = (["theme"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
@@ -504,7 +504,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			} as unknown as ContextProps;
 			return this.memoizedContext;
 		}
-	}
+	};
 
 	render() {
 		if (this.state.error) return null;
@@ -615,7 +615,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				<ProgressBar now={100 / jobsAmount * (jobsAmount - runningAmount)} />
 			</div>
 		);
-	}
+	};
 
 	validateAndSubmit = (warnings = true, onlySchema = false) => {
 		const {formData} = this.state;
@@ -631,7 +631,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				onValidationError && onValidationError(this.state.extraErrors);
 			}
 		});
-	}
+	};
 
 	validate = (warnings = true, nonlive = true, onlySchema = false) => {
 		this.validating = true;
@@ -703,7 +703,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			});
 			return {live, rest};
 		}
-	}
+	};
 
 	onSubmit = (onlySchemaValidations?: "onlySchemaValidations"): false | undefined => {
 		const _onlySchemaValidations = onlySchemaValidations === "onlySchemaValidations";
@@ -725,7 +725,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			highlightElem(findDOMNode(this.bgJobRef?.current) as Element);
 		});
 		return undefined;
-	}
+	};
 
 	popErrorListIfNeeded = () => {
 		const errorList = this.memoizedFormContext.services.rootInstance.getErrorListInstance();
@@ -743,20 +743,20 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			errorList.expand();
 		}
 		highlightElem(errorListElem);
-	}
+	};
 
 	_onDefaultSubmit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		this.submit();
-	}
+	};
 
 	submit = () => {
 		this.onSubmit();
-	}
+	};
 
 	submitOnlySchemaValidations = () => {
 		this.onSubmit("onlySchemaValidations");
-	}
+	};
 
 	getShorcutButtonTooltip = () => {
 		const {translations} = this.state.formContext;
@@ -764,11 +764,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return translate(translations, "ShortcutHelp", {key: stringifyKeyCombo(this.keyCombo)});
 		}
 		return undefined;
-	}
+	};
 
 	toggleHelp = (e: React.MouseEvent) => {
 		this.helpVisible ? this.dismissHelp(e) : this.showHelp();
-	}
+	};
 
 	showHelp = () => {
 		const node = findDOMNode(this.shortcutHelpRef.current) as Element;
@@ -776,7 +776,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			if (node) node.className = node.className.replace(" hidden", "");
 			this.helpVisible = true;
 		}
-	}
+	};
 
 	dismissHelp = (e: Event | React.SyntheticEvent) => {
 		const node = findDOMNode(this.shortcutHelpRef.current) as Element;
@@ -790,7 +790,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		document.removeEventListener("keyup", this.dismissHelp);
 		window.removeEventListener("blur", this.dismissHelp);
 		clearTimeout(this.helpTimeout);
-	}
+	};
 
 	keyFunctions = {
 		navigate: (e: KeyboardEvent, {reverse}: any) => {
@@ -811,28 +811,28 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		revalidate: () => {
 			this.submit();
 		}
-	}
+	};
 
 	pushBlockingLoader = () => {
 		this.memoizedFormContext.services.blocker.push();
-	}
+	};
 
 	popBlockingLoader = () => {
 		this.memoizedFormContext.services.blocker.pop();
-	}
+	};
 
 	focusField = (fieldName: string) => {
 		const id = JSONPointerToId(fieldName);
 		this.memoizedFormContext.services.focus.focus("root_" + id);
-	}
+	};
 
 	openAllMultiActiveArrays = () => {
 		this.memoizedFormContext.services.multiActiveArray.openAll();
-	}
+	};
 
 	closeAllMultiActiveArrays = () => {
 		this.memoizedFormContext.services.multiActiveArray.closeAll();
-	}
+	};
 
 	getSettings(global = false) {
 		return this.memoizedFormContext.services.settings.getSettings(global);
@@ -840,18 +840,18 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	onSettingsChange = (settings: Settings, global = false) => {
 		if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
-	}
+	};
 
 	addEventListener = (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => {
 		target.addEventListener(name, fn);
 		this.eventListeners.push([target, name ,fn]);
-	}
+	};
 
 	setTimeout = (fn: () => void, time = 0) => {
 		const timeout = window.setTimeout(fn, time);
 		this.timeouts.push(timeout);
 		return timeout;
-	}
+	};
 
 	destroy = () => {
 		if (this.eventListeners) this.eventListeners.forEach(([target, name, fn]) => {
@@ -861,7 +861,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			clearTimeout(timeout);
 		});
 		this.eventListeners = [];
-	}
+	};
 
 	getSchemaValidationErrors = (formData: any) => {
 		const errors = rjsfValidator.validateFormData(
@@ -871,7 +871,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			((e: any) => transformErrors(this.state.formContext.translations, e))
 		).errors;
 		return toErrorSchema(errors);
-	}
+	};
 }
 
 const removeUndefinedFromArrays = (formData: any) => {

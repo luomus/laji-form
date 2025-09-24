@@ -88,7 +88,7 @@ export default class ApiClient {
 
 	flushCache = () => {
 		this.cache = {};
-	}
+	};
 
 	onCachePathInvalidation(path: string, callback: () => void) {
 		if (!this.on[path]) this.on[path] = [];

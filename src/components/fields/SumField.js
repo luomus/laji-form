@@ -44,7 +44,7 @@ export default class SumField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 
 	getSums = (formData) => {
 		let {sums} = this.getUiOptions();
@@ -78,5 +78,5 @@ export default class SumField extends React.Component {
 		});
 
 		return results;
-	}
+	};
 }

@@ -25,9 +25,9 @@ export default class FormSelect extends Component {
 			options.push(<option value={id} key={id}>{this.props.forms[id].title}</option>);
 		});
 		return options;
-	}
+	};
 
 	onChange = (e) => {
 		if (typeof this.props.onChange === "function") this.props.onChange(this.props.forms[e.target.value]);
-	}
+	};
 }

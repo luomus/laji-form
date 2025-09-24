@@ -15,7 +15,7 @@ export default class InformalTaxonGroupChooserWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}),
 		value: PropTypes.string
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -48,27 +48,27 @@ export default class InformalTaxonGroupChooserWidget extends React.Component {
 	getDefaultOptions = (props) => {
 		const {button = true, rootOnly = false, grid = {lg: 1, md: 2, sm: 3, xs: 12} } = getUiOptions(props);
 		return {button, rootOnly, grid};
-	}
+	};
 
 	onSelected = (id) => {
 		this.props.onChange(id);
 		const {button} = this.getDefaultOptions(this.props);
 		if (button) this.hide();
 		if (this.state.informalTaxonGroupsById && id) this.setState({informalTaxonGroup: this.state.informalTaxonGroupsById[id]});
-	}
+	};
 
 	show = () => {
 		this.setState({show: true});
-	}
+	};
 
 	hide = () => {
 		this.setState({show: false});
-	}
+	};
 
 	onClear = (e) => {
 		e.stopPropagation();
 		this.onSelected(undefined);
-	}
+	};
 
 	render () {
 		let imageID = this.props.value;
@@ -155,7 +155,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	static propTypes = {
 		onSelected: PropTypes.func.isRequired,
 		formContext: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -185,13 +185,13 @@ export class InformalTaxonGroupChooser extends React.Component {
 
 	onSelected = (id) => () => {
 		this.props.onSelected(id);
-	}
+	};
 
 	onSubgroupSelected = (id) => () => {
 		let path;
 		const existingIdx = this.state.path.indexOf(id);
 		path = (existingIdx >= 0)
-			 ? this.state.path.slice(0, existingIdx + 1)
+			? this.state.path.slice(0, existingIdx + 1)
 			: [...this.state.path, id];
 		this.setState({
 			informalTaxonGroups: id 
@@ -199,7 +199,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 				: this.state.root,
 			path
 		});
-	}
+	};
 
 	Container = ({children}) => {
 		const {modal, onHide} = this.props;
@@ -219,7 +219,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 				{children}
 			</div>
 		);
-	}
+	};
 
 	getButtonGroup = (id) => {
 		const {translations} = this.props.formContext;
@@ -231,7 +231,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 				<Button key="select" onClick={this.onSelected(id)}>{translations.Select}</Button>
 			</ButtonGroup>
 		);
-	}
+	};
 
 	getLabel = (id) => {
 		const {path, informalTaxonGroupsById} = this.state;
@@ -266,7 +266,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 				</Panel>
 			</Col>
 		);
-	}
+	};
 
 	render() {
 		const {path, informalTaxonGroupsById, informalTaxonGroups} = this.state;

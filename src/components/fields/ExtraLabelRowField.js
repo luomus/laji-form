@@ -104,5 +104,5 @@ export default class ExtraLabelRowField extends React.Component {
 		});
 
 		return cols;
-	}
+	};
 }

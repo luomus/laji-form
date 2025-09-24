@@ -18,9 +18,9 @@ export default class AudioArrayField extends React.Component {
 	GLYPH = "headphones";
 	TRANSLATION_TAKE_NEW = "TakeNewRecording";
 	TRANSLATION_SELECT_FILE = "SelectRecording";
-	TRANSLATION_NO_MEDIA = "NoRecording"
-	CONTAINER_CLASS = "audios-container"
-	METADATA_FORM_ID = "MHL.63"
+	TRANSLATION_NO_MEDIA = "NoRecording";
+	CONTAINER_CLASS = "audios-container";
+	METADATA_FORM_ID = "MHL.63";
 
 	renderMedia = (id, idx) => (
 		<div className="audio-container">
@@ -31,20 +31,20 @@ export default class AudioArrayField extends React.Component {
 			/>
 			<GlyphButton className="audio-metadata-button" variant="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
 		</div>
-	)
-	renderLoadingMedia = () => null
-	renderLoadingMedia = () => <div className="audio-container loading"><Spinner /></div>
-	onMediaClick = () => null
+	);
+	renderLoadingMedia = () => null;
+	renderLoadingMedia = () => <div className="audio-container loading"><Spinner /></div>;
+	onMediaClick = () => null;
 	renderModalMedia = (idx) => (
 		<div>
 			<img src={this.state.modalMediaSrc} />
 			<LajiAudio id={this.props.formData[idx]} style={{width: "100%"}} apiClient={this.props.formContext.apiClient} downloadLinks={true} translations={this.props.formContext.translations} />
 		</div>
-	)
+	);
 	formatValue = (value) => {
 		const {Glyphicon} = this.context.theme;
 		return  (value || []).map((id, idx) => <Glyphicon key={idx} glyph="headphones" />);
-	}
+	};
 }
 
 const AudioButton = React.forwardRef((props, ref) => {

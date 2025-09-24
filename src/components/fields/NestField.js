@@ -126,7 +126,7 @@ export default class NestField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object
-	}
+	};
 
 	static getName() {return "NestField";}
 
@@ -253,7 +253,7 @@ export default class NestField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 
 }
 

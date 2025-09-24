@@ -27,7 +27,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	// these are required by the AccordionArrayFieldTemplate
 	deleteButtonRefs = {};
@@ -47,7 +47,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		const {formData} = props;
 		const formDataLength = (formData || []).length;
 		return [...Array(formDataLength).keys()];
-	}
+	};
 
 	getStateFromProps(props: FieldProps<JSONSchemaObject>): State | null {
 		let activeIdx: number[]|undefined;
@@ -131,7 +131,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		}
 
 		this.setState({activeIdx: newActiveIdx}, callback);
-	}
+	};
 
 	onDelete = (item: any) => (e: any) => {
 		const idx = item.index;
@@ -140,7 +140,7 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 		this.setState({activeIdx: newActiveIdx});
 
 		item.onDropIndexClick(item.index)(e);
-	}
+	};
 
 	buttonDefinitions = {
 		add: {
@@ -172,5 +172,5 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 				minLength: 1
 			}
 		}
-	}
+	};
 }

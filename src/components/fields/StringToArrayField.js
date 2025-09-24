@@ -10,7 +10,7 @@ export default class StringToArrayField extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		formData: PropTypes.string
-	}
+	};
 
 	static getName() {return "StringToArrayField";}
 
@@ -41,5 +41,5 @@ export default class StringToArrayField extends React.Component {
 	onChange = (formData) => {
 		const {delimiter = " "} = this.getUiOptions();
 		this.props.onChange(formData.filter(v => v).join(delimiter));
-	}
+	};
 }

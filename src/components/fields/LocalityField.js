@@ -16,7 +16,7 @@ export default class LocalityField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -55,18 +55,18 @@ export default class LocalityField extends React.Component {
 
 	showEditor = () => {
 		this.setState({modal: true});
-	}
+	};
 
 	hideEditor = () => {
 		this.setState({modal: false});
-	}
+	};
 
 	setFormRef = (elem) => {
 		this.lajiForm = elem;
-	}
+	};
 
 	renderModal = () => {
-		const {onChange, ...props} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {onChange, ...props} = this.props;  
 		const {Modal} = this.context.theme;
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
@@ -91,14 +91,14 @@ export default class LocalityField extends React.Component {
 				</Modal.Body>
 			</Modal>
 		);
-	}
+	};
 
 	onSubmitClick = (e) => {
 		this.lajiForm._onDefaultSubmit(e);
-	}
+	};
 
 	onSubmit = ({formData}) => {
 		this.props.onChange(formData);
 		this.hideEditor();
-	}
+	};
 }

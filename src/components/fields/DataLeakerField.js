@@ -33,7 +33,7 @@ export default class DataLeakerField extends React.Component {
 			type: PropTypes.oneOf(["array", "object"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
-	}
+	};
 
 	static getName() {return "DataLeakerField";}
 

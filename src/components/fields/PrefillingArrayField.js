@@ -16,7 +16,7 @@ export default class PrefillingArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array.isRequired
-	}
+	};
 
 	static getName() {return "PrefillingArrayField";}
 
@@ -65,9 +65,9 @@ export default class PrefillingArrayField extends React.Component {
 				[this.getUiOptions().field]: prefiller
 			};
 		});
-	}
+	};
 
 	onChange = (formData) => {
 		this.props.onChange(this.mapFormData(formData));
-	}
+	};
 }

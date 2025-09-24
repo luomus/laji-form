@@ -13,7 +13,7 @@ export default class SeparatedDateTimeWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 
 	getStateFromProps(props) {
 		let {value} = props;
@@ -30,11 +30,11 @@ export default class SeparatedDateTimeWidget extends React.Component {
 
 	onDateChange = (value) => {
 		this.props.onChange(value ? (this.state.time ? value + this.state.time : value) : null);
-	}
+	};
 
 	onTimeChange = (value) => {
 		this.props.onChange(value ? this.state.date + value : this.state.date);
-	}
+	};
 
 	render() {
 		const hasDate = !!this.state.date;

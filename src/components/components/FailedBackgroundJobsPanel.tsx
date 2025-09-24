@@ -30,18 +30,18 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 		e.stopPropagation();
 		if (running) return;
 		this.props.formContext.services.submitHooks.remove(undefined, hook);
-	}
+	};
 
 	retryFailedJob = ({hook, running}: SubmitHook) => (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (running) return;
 		hook();
-	}
+	};
 
 	poppedToggle = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		this.setState({popped: !this.state.popped, poppedTouched: true});
-	}
+	};
 
 	render() {
 		const {jobs = [], schema, uiSchema = {}, formContext: {translations}} = this.props;

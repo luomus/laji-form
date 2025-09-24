@@ -64,11 +64,11 @@ export class OverlayTrigger extends React.Component<Props, State> {
 
 	overlayMouseOver = () => {
 		this.setState({hoveringOverlay: true});
-	}
+	};
 
 	overlayMouseOut = () => {
 		this.setState({hoveringOverlay: false, hoveringElem: false});
-	}
+	};
 
 	render() {
 		const {

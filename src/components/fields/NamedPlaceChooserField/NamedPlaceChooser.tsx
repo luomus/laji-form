@@ -32,7 +32,7 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 	mapRef = React.createRef<any>();
 
 	idxToLayer?: Record<string, any>;
-	geometryCollectionData?: { geoData: any }
+	geometryCollectionData?: { geoData: any };
 
 	constructor(props: Props) {
 		super(props);
@@ -41,7 +41,7 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 
 	onPlaceSelected = (place: NamedPlace) => {
 		this.props.onSelected(place);
-	}
+	};
 
 	onPlaceDeleted = (place: NamedPlace) => {
 		const onDelete = () => {
@@ -50,7 +50,7 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 		};
 		this.setState({deleting: true});
 		this.props.onDeleted(place, onDelete);
-	}
+	};
 
 	onSelectChange = (idx: number | undefined) => {
 		if (idx === undefined) {
@@ -63,7 +63,7 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 		const center = bounds.getCenter();
 		map.fitBounds(bounds, {animate: false});
 		layer.fire("click", {latlng: center});
-	}
+	};
 
 	componentDidUpdate(_: Props, prevState: State) {
 		const {map} = this.mapRef.current as any;
@@ -109,7 +109,7 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 		const {idx} = feature.properties || {};
 		const color = idx === this.state.popupIdx ? ACTIVE_COLOR : getColor(idx);
 		return {color, fillColor: color};
-	}
+	};
 
 	getPopup = ({feature}: any, givePopupToLajiMap: (element: HTMLElement) => void) => {
 		const { elem, button } = this.popupRef.current!;
@@ -117,18 +117,18 @@ export class NamedPlaceChooser extends React.Component<Props, State> {
 		this.setState({popupIdx: idx});
 		givePopupToLajiMap(elem);
 		this.props.formContext.setTimeout(() => (findDOMNode(button) as HTMLElement).focus());
-	}
+	};
 
 	onPopupClose = () => {
 		this.popupContainerRef.current!.appendChild(findDOMNode(this.popupRef.current!.elem) as HTMLElement);
-	}
+	};
 
 	getEnumOptions = memoize((places: NamedPlace[], translations: ByLang) => ({
 		placeholder:  `${translations.SelectPlaceFromList}...`,
 		enumOptions: (places || []).map((place, idx) => {
 			return {value: idx, label: place.name};
 		})
-	}))
+	}));
 
 	render() {
 		const {places, failed, formContext: {translations}} = this.props;

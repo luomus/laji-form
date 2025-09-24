@@ -94,7 +94,7 @@ export default class CombinedValueDisplayField extends React.Component {
 
 	getFieldValue = (formData, field) => {
 		return field[0] === "/" ? parseJSONPointer(formData, field, !!"safely") : formData[field];
-	}
+	};
 
 	toMinutes = (time) => {
 		const parts = time.split(":");
@@ -103,7 +103,7 @@ export default class CombinedValueDisplayField extends React.Component {
 
 	getCount = (value) => {
 		return Array.isArray(value) ? value.length : (typeof value === "number" ? value : 0);
-	}
+	};
 
 	onChange = (formData) => {
 		const uiOptions = this.getUiOptions();
@@ -118,6 +118,6 @@ export default class CombinedValueDisplayField extends React.Component {
 		});
 
 		this.props.onChange(formData);
-	}
+	};
 }
 

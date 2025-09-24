@@ -18,7 +18,7 @@ export default class InitiallyHiddenField extends React.Component {
 			type: PropTypes.oneOf(["object", "array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -31,7 +31,7 @@ export default class InitiallyHiddenField extends React.Component {
 
 	toggleVisibility = () => {
 		this.setState({visible: !this.state.visible});
-	}
+	};
 
 
 	render() {

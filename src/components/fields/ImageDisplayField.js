@@ -18,7 +18,7 @@ export default class ImageDisplayField extends React.Component {
 			type: PropTypes.oneOf(["array", "object"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
-	}
+	};
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		let uiSchema = getInnerUiSchema(this.props.uiSchema);

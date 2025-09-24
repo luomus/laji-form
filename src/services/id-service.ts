@@ -2,7 +2,7 @@ import { RJSFSchema } from "@rjsf/utils";
 import { addLajiFormIds, getAllLajiFormIdsDeeply, removeLajiFormIds, isObject } from "../utils";
 
 export default class IdService {
-	private tmpIdTree: any
+	private tmpIdTree: any;
 	private formData: any;
 
 	constructor(schema: RJSFSchema, formData: any) {

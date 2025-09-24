@@ -221,7 +221,7 @@ export function handlesArrayKeys(ComposedComponent) {
 			} else {
 				console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
 			}
-		}
+		};
 
 		onCopy = (options = {}) => {
 			const {type = "blacklist", filter = []} = options;
@@ -233,7 +233,7 @@ export function handlesArrayKeys(ComposedComponent) {
 					copy.callback();
 				}
 			}
-		}
+		};
 
 		getCustomEventListeners() {
 			return [
@@ -270,11 +270,11 @@ const SortableItem = SortableElement(({item}) => item);
 export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
-	}
-	onFocuses = []
+	};
+	onFocuses = [];
 	getOnFocus = (i) => () => {
 		getContext(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
-	}
+	};
 
 	render() {
 		const {props} = this;

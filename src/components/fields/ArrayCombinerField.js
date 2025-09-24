@@ -24,7 +24,7 @@ export default class ArrayCombinerField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "ArrayCombinerField";}
 
@@ -119,5 +119,5 @@ export default class ArrayCombinerField extends React.Component {
 			});
 		}
 		this.props.onChange(origArraysContainer);
-	}
+	};
 }

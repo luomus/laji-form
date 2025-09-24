@@ -58,7 +58,7 @@ export default class MapArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
-	}
+	};
 
 	render() {
 		const {geometryMapper = "default"} = getUiOptions(this.props.uiSchema);
@@ -255,7 +255,7 @@ class DefaultMapArrayField extends React.Component {
 
 @_MapArrayField
 class UnitsMapArrayField extends React.Component {
-	field = "units"
+	field = "units";
 
 	constructor(props) {
 		super(props);
@@ -281,7 +281,7 @@ class UnitsMapArrayField extends React.Component {
 
 	isGeometryCollection = (idx) => {
 		return this.props.formData[this.state.activeIdx].units[idx].unitGathering.geometry.type === "GeometryCollection";
-	}
+	};
 
 	getOptions = (options) => {
 		const {formData} = this.props;
@@ -360,8 +360,8 @@ class UnitsMapArrayField extends React.Component {
 						if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
 						return units;
 					}, [])
-			  },
-			  ...getCommonOptions()
+				},
+				...getCommonOptions()
 			},
 			...Object.keys(unitGeometryCollections).map(idx => {
 				idx = +idx;
@@ -384,7 +384,7 @@ class UnitsMapArrayField extends React.Component {
 			{} : {draw: false};
 
 		return {draw, data, controls, emptyMode};
-	}
+	};
 
 	getUnitFeatureStyle = () => {
 		let color = "#55AEFA";
@@ -392,7 +392,7 @@ class UnitsMapArrayField extends React.Component {
 			color = combineColors(color, "#ffffff", 30);
 		}
 		return {color: color, fillColor: color, weight: 4};
-	}
+	};
 
 
 	startHighlight = ({idx}) => {
@@ -439,7 +439,7 @@ class UnitsMapArrayField extends React.Component {
 		if (this.highlightedElem) {
 			this.highlightedElem.className += " map-highlight";
 		}
-	}
+	};
 
 	onMouseOut = (unitIdx) => (e, {feature}) => {
 		const idx = unitIdx !== undefined ? unitIdx : feature.properties.idx;
@@ -454,7 +454,7 @@ class UnitsMapArrayField extends React.Component {
 		if (this.highlightedElem) {
 			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
 		}
-	}
+	};
 
 	getData()  {
 		const {formData} = this.props;
@@ -496,7 +496,7 @@ class UnitsMapArrayField extends React.Component {
 				break;
 			}
 		});
-	}
+	};
 
 	onUnitRemove = (e, unitIdx) => {
 		if (unitIdx === undefined) { // Isn't a geometry collection (unitIdx stored in feature properties)
@@ -539,7 +539,7 @@ class UnitsMapArrayField extends React.Component {
 				}
 			}));
 		}
-	}
+	};
 
 	onUnitEdited = ({features}, unitIdx) => {
 		if (unitIdx === undefined) { // Isn't a geometry collection (unitIdx stored in feature properties)
@@ -575,7 +575,7 @@ class UnitsMapArrayField extends React.Component {
 				}
 			}));
 		}
-	}
+	};
 
 	parsePopupPointer(col, options) {
 		return col.replace("[idx]", options.feature.properties.idx);
@@ -649,7 +649,7 @@ class LineTransectMapArrayField extends React.Component {
 		this.props.onChange(onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set:
 			event.feature.geometry
 		}}}), this.props));
-	}
+	};
 
 	onChange = (events) => {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
@@ -708,7 +708,7 @@ class LineTransectMapArrayField extends React.Component {
 					[idx, 1],
 					[target, 0, formData[idx]],
 				];
-				 // Splices must be executed in reverse order to keep idxs correct.
+				// Splices must be executed in reverse order to keep idxs correct.
 				if (target > idx) splices = splices.reverse();
 				formData = update(formData, {$splice: splices});
 				break;
@@ -728,11 +728,11 @@ class LineTransectMapArrayField extends React.Component {
 			}
 		};
 		Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
-	}
+	};
 
 	getFeatureStyle = ({lineIdx, style, type}) => {
 		if (this.props.errorSchema[lineIdx]) {
-			return (type === L.CircleMarker) // eslint-disable-line no-undef
+			return (type === L.CircleMarker)  
 				? style
 				: {...style, fillColor: "#f33"};
 		}
@@ -741,7 +741,7 @@ class LineTransectMapArrayField extends React.Component {
 		if (!lineTransectSegmentCounted) {
 			return { ...style, fillColor: "#444444"};
 		}
-	}
+	};
 
 	getTooltip = (lineIdx, content) => {
 		const {translations} = this.props.formContext;
@@ -752,7 +752,7 @@ class LineTransectMapArrayField extends React.Component {
 		const {lineTransectSegmentCounted} = gatheringFact;
 		if (!lineTransectSegmentCounted) content = `${content}<br/>${translations.LineTransectSegmentNotCounted}`;
 		return content;
-	}
+	};
 
 	afterActiveChange(idx) {
 		this.focusOnMap(idx);
@@ -769,9 +769,9 @@ class LineTransectMapArrayField extends React.Component {
 			return;
 		}
 		this.props.formContext.setTimeout(() => {
-			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100}); // eslint-disable-line no-undef
+			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100});  
 		});
-	}
+	};
 
 	componentDidUpdate(prevProps) {
 		if (!this.hasLineTransectFeature(prevProps) || !this.hasLineTransectFeature(this.props)) return;
@@ -939,7 +939,7 @@ class LolifeMapArrayField extends React.Component {
 			}
 		});
 		this.props.onChange(formData);
-	}
+	};
 
 	onChangeForUnits = (events) => {
 		let formData = this.props.formData[0].units;
@@ -956,7 +956,7 @@ class LolifeMapArrayField extends React.Component {
 			}
 		});
 		this.props.onChange(updateSafelyWithJSONPointer(this.props.formData, formData, "/0/units"));
-	}
+	};
 
 	cavityTreeStyle() {return {color: "#9e713b"};}
 	droppingsTreeStyle() {return {color: "#b89220"};}
@@ -1015,7 +1015,7 @@ class LolifeMapArrayField extends React.Component {
 			return getFeatureStyleWithHighlight(style);
 		}
 		return style;
-	}
+	};
 
 	getUnitFeatureStyle = ({feature}) => {
 		const droppingsTreeStyle = {color: "#b89220"};
@@ -1039,7 +1039,7 @@ class LolifeMapArrayField extends React.Component {
 			return getFeatureStyleWithLowerOpacity(style);
 		}
 		return style;
-	}
+	};
 
 	getHighlightElem(idx, unit) {
 		if (unit) {
@@ -1086,7 +1086,7 @@ class LolifeMapArrayField extends React.Component {
 		const color = combineColors(style.color, "#ffffff", 150);
 		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
 		layer && this.map.setLayerStyle(layer, {...style, color, fillColor: color});
-	}
+	};
 
 	endHighlight = ({id}) => {
 		let mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
@@ -1099,7 +1099,7 @@ class LolifeMapArrayField extends React.Component {
 		}
 		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
 		layer && this.map.setLayerStyle(layer, style);
-	}
+	};
 
 	onClick = (e, {feature}) => {
 		const {idx, unit} = feature.properties;
@@ -1115,7 +1115,7 @@ class LolifeMapArrayField extends React.Component {
 		const elem = this.getHighlightElem(idx, unit);
 		scrollIntoViewIfNeeded(elem, topOffset, bottomOffset);
 		highlightElem(elem);
-	}
+	};
 
 	getFormDataForPopup({feature}) {
 		if (feature.properties.unit) {
@@ -1126,455 +1126,455 @@ class LolifeMapArrayField extends React.Component {
 }
 
 function _MapArrayField(ComposedComponent) {
-class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
-	static contextType = ReactContext;
+	class _MapArrayField extends ComposedComponent {  
+		static contextType = ReactContext;
 
-	constructor(props) {
-		super(props);
-		this.props.formContext.services.settings.bind(this, props);
-		this._context = getContext(`${props.formContext.contextId}_MAP_CONTAINER`);
-		this._context.featureIdxsToItemIdxs = {};
-		this._context.setState = (state, callback) => this.setState(state, callback);
+		constructor(props) {
+			super(props);
+			this.props.formContext.services.settings.bind(this, props);
+			this._context = getContext(`${props.formContext.contextId}_MAP_CONTAINER`);
+			this._context.featureIdxsToItemIdxs = {};
+			this._context.setState = (state, callback) => this.setState(state, callback);
 
-		const initialState = {...(this.state || {}), activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
-		const options = getUiOptions(props.uiSchema);
-		if ((this.props.formData || []).length && "activeIdx" in options) initialState.activeIdx = options.activeIdx;
-		this.state = {...initialState, ...(this.state || {})};
+			const initialState = {...(this.state || {}), activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
+			const options = getUiOptions(props.uiSchema);
+			if ((this.props.formData || []).length && "activeIdx" in options) initialState.activeIdx = options.activeIdx;
+			this.state = {...initialState, ...(this.state || {})};
 
-		this.getDraftStyle = this.getDraftStyle.bind(this);
-	}
-
-	stretchContainerRef = React.createRef();
-
-	componentDidMount() {
-		if (super.componentDidMount) super.componentDidMount();
-		this.setState({mounted: true});
-		this.props.formContext.services.keyHandler.addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		this.map = this.refs.map.refs.map.map;
-		this._setActiveEventHandler = idx => {
-			this.setState({activeIdx: idx});
-		};
-		this._zoomToDataEventHandler = () => {
-			this._zoomToDataOnNextTick = true;
-		};
-		this._tileLayersEventHandler = (tileLayerOptions, callback) => {
-			this._tileLayerNameOnNextTick = tileLayerOptions;
-			this._tileLayerNameOnNextTickCallback = callback;
-		};
-		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-
-		if (this.state.activeIdx !== undefined) {
-			this.afterActiveChange(this.state.activeIdx, !!"initial call");
-		}
-	}
-
-	afterActiveChange(idx) {
-		super.afterActiveChange && super.afterActiveChange(idx);
-		this.onLocateOrAddNew();
-	}
-
-	componentWillUnmount() {
-		this.setState({mounted: false});
-		this.props.formContext.services.keyHandler.removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-	}
-
-	componentDidUpdate(...params) {
-		if (super.componentDidUpdate) super.componentDidUpdate(...params);
-
-		const [prevProps, prevState] = params; // eslint-disable-line no-unused-vars
-
-		if (prevState.activeIdx !== this.state.activeIdx) {
-			if (!this.nestedHandledActiveChange && this.state.activeIdx !== undefined) {
-				const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
-				this.props.formContext.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
-			}
-			this.nestedHandledActiveChange = false;
-			this.afterActiveChange(this.state.activeIdx);
+			this.getDraftStyle = this.getDraftStyle.bind(this);
 		}
 
-		if (this.refs.stretch) {
-			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
-			if (resizeTimeout) {
-				this.props.formContext.setTimeout(this.refs.stretch.update, resizeTimeout);
-			} else {
-				this.refs.stretch.update();
+		stretchContainerRef = React.createRef();
+
+		componentDidMount() {
+			if (super.componentDidMount) super.componentDidMount();
+			this.setState({mounted: true});
+			this.props.formContext.services.keyHandler.addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+			this.map = this.refs.map.refs.map.map;
+			this._setActiveEventHandler = idx => {
+				this.setState({activeIdx: idx});
+			};
+			this._zoomToDataEventHandler = () => {
+				this._zoomToDataOnNextTick = true;
+			};
+			this._tileLayersEventHandler = (tileLayerOptions, callback) => {
+				this._tileLayerNameOnNextTick = tileLayerOptions;
+				this._tileLayerNameOnNextTickCallback = callback;
+			};
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+
+			if (this.state.activeIdx !== undefined) {
+				this.afterActiveChange(this.state.activeIdx, !!"initial call");
 			}
 		}
-		if (this._zoomToDataOnNextTick) {
-			this._zoomToDataOnNextTick = false;
-			this.map.zoomToData();
-		}
-		if (this._tileLayerNameOnNextTick) {
-			const tileLayerName = this._tileLayerNameOnNextTick;
-			this._tileLayerNameOnNextTick = false;
-			this.map.setTileLayerByName(tileLayerName);
+
+		afterActiveChange(idx) {
+			super.afterActiveChange && super.afterActiveChange(idx);
+			this.onLocateOrAddNew();
 		}
 
-		this.computeArea(prevProps);
-	}
+		componentWillUnmount() {
+			this.setState({mounted: false});
+			this.props.formContext.services.keyHandler.removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+			this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+			this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+			this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		}
 
-	geocode = () => {
+		componentDidUpdate(...params) {
+			if (super.componentDidUpdate) super.componentDidUpdate(...params);
+
+			const [prevProps, prevState] = params;  
+
+			if (prevState.activeIdx !== this.state.activeIdx) {
+				if (!this.nestedHandledActiveChange && this.state.activeIdx !== undefined) {
+					const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
+					this.props.formContext.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
+				}
+				this.nestedHandledActiveChange = false;
+				this.afterActiveChange(this.state.activeIdx);
+			}
+
+			if (this.refs.stretch) {
+				const {resizeTimeout} = getUiOptions(this.props.uiSchema);
+				if (resizeTimeout) {
+					this.props.formContext.setTimeout(this.refs.stretch.update, resizeTimeout);
+				} else {
+					this.refs.stretch.update();
+				}
+			}
+			if (this._zoomToDataOnNextTick) {
+				this._zoomToDataOnNextTick = false;
+				this.map.zoomToData();
+			}
+			if (this._tileLayerNameOnNextTick) {
+				const tileLayerName = this._tileLayerNameOnNextTick;
+				this._tileLayerNameOnNextTick = false;
+				this.map.setTileLayerByName(tileLayerName);
+			}
+
+			this.computeArea(prevProps);
+		}
+
+		geocode = () => {
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
-		const item = (this.props.formData || [])[this.state.activeIdx];
-		const {areaField} = getUiOptions(this.props.uiSchema);
-		if (!item || !areaField) {
-			return;
-		}
-		let area = item[areaField];
-		if (area instanceof Array) {
-			area = area[0];
-		}
-		const geometries = this.getGeometries();
-		if (geometries.length === 0 && area && area.length > 0) {
-			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
-				this.map.geocode(result.name, undefined, 8);
-			});
-		}
-	}
-
-	computeArea = () => {
-		const {activeIdx} = this.state;
-		if (activeIdx === undefined) return;
-		let {computeAreaField, areaInHectares} = getUiOptions(this.props.uiSchema);
-		const {formData} = this.props;
-
-		if (!computeAreaField) return;
-		const geometries = this.getGeometries();
-		const polygonsArea = geometries
-			.filter(({type}) => type === "Polygon")
-			.map(({coordinates}) => coordinates[0].slice(1).map(c => L.latLng(c.slice(0).reverse())))
-			.reduce((area, latLngs) =>
-				area + L.GeometryUtil.geodesicArea(latLngs)
-			, 0);
-		const circlesArea = geometries
-			.filter(({type, radius}) => type === "Point" && radius)
-			.reduce((_area, {radius}) => 
-				_area + (Math.PI) * (radius * radius)
-			, 0);
-		const sumArea =  polygonsArea + circlesArea;
-		const area = sumArea === 0
-			? undefined
-			: Math.round(areaInHectares ? sumArea / 10000 : sumArea);
-
-		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField, true);
-		currentArea !== area && this.props.onChange(updateSafelyWithJSONPointer(
-			formData,
-			area,
-			`/${activeIdx}/${computeAreaField}`
-		));
-	}
-
-
-
-	_getPlaceholderStyle() {
-		return {
-			color: "#999999",
-			fillOpacity: 0,
-			weight: 8
+			const item = (this.props.formData || [])[this.state.activeIdx];
+			const {areaField} = getUiOptions(this.props.uiSchema);
+			if (!item || !areaField) {
+				return;
+			}
+			let area = item[areaField];
+			if (area instanceof Array) {
+				area = area[0];
+			}
+			const geometries = this.getGeometries();
+			if (geometries.length === 0 && area && area.length > 0) {
+				this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+					this.map.geocode(result.name, undefined, 8);
+				});
+			}
 		};
-	}
 
-	onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true})
-	onPopupClose = () => {
+		computeArea = () => {
+			const {activeIdx} = this.state;
+			if (activeIdx === undefined) return;
+			let {computeAreaField, areaInHectares} = getUiOptions(this.props.uiSchema);
+			const {formData} = this.props;
+
+			if (!computeAreaField) return;
+			const geometries = this.getGeometries();
+			const polygonsArea = geometries
+				.filter(({type}) => type === "Polygon")
+				.map(({coordinates}) => coordinates[0].slice(1).map(c => L.latLng(c.slice(0).reverse())))
+				.reduce((area, latLngs) =>
+					area + L.GeometryUtil.geodesicArea(latLngs)
+				, 0);
+			const circlesArea = geometries
+				.filter(({type, radius}) => type === "Point" && radius)
+				.reduce((_area, {radius}) => 
+					_area + (Math.PI) * (radius * radius)
+				, 0);
+			const sumArea =  polygonsArea + circlesArea;
+			const area = sumArea === 0
+				? undefined
+				: Math.round(areaInHectares ? sumArea / 10000 : sumArea);
+
+			const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField, true);
+			currentArea !== area && this.props.onChange(updateSafelyWithJSONPointer(
+				formData,
+				area,
+				`/${activeIdx}/${computeAreaField}`
+			));
+		};
+
+
+
+		_getPlaceholderStyle() {
+			return {
+				color: "#999999",
+				fillOpacity: 0,
+				weight: 8
+			};
+		}
+
+		onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true});
+		onPopupClose = () => {
 		// Move popup content back to the React container so React won't crash.
-		if (this.refs.popupContainer && this.refs.popup.refs.popup) {
-			findDOMNode(this.refs.popupContainer).appendChild(this.refs.popup.refs.popup);
-		}
-		this.setState({popupIdx: undefined});
-	}
-	onFocusGrab = () => this.setState({focusGrabbed: true})
-	onFocusRelease = () => this.setState({focusGrabbed: false})
-	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}}, () => {
-		if (this._tileLayerNameOnNextTickCallback) {
-			this._tileLayerNameOnNextTickCallback();
-			this._tileLayerNameOnNextTickCallback = undefined;
-		}
-	})
-	onEnterViewPort = () => {
-		this.afterActiveChange(this.state.activeIdx, !!"initial call");
-	}
-
-	getMapOptions = () => {
-		const options = getUiOptions(this.props.uiSchema);
-		let _options = merge.all([
-			{clickBeforeZoomAndPan: true},
-			(options.mapOptions || {}),
-			(this.getOptions(options) || {}),
-			(this.state.mapOptions || {})
-		]);
-		const changes = {};
-		if (options.createOnLocate && !_options.locate) {
-			changes.locate = [this.onLocate];
-		}
-		const {readonly, disabled} = this.props;
-		if (readonly || disabled) {
-			if (isObject(_options.draw)) {
-				changes.draw = {
-					..._options.draw,
-					editable: false
-				};
+			if (this.refs.popupContainer && this.refs.popup.refs.popup) {
+				findDOMNode(this.refs.popupContainer).appendChild(this.refs.popup.refs.popup);
 			}
-			if (_options.data) {
-				if (_options.data instanceof Array) {
-					changes.data = _options.data.map(d => ({...d, editable: false}));
-				} else if (isObject(_options.data)) {
-					changes.data = {..._options.data, editable: false};
-				}
+			this.setState({popupIdx: undefined});
+		};
+		onFocusGrab = () => this.setState({focusGrabbed: true});
+		onFocusRelease = () => this.setState({focusGrabbed: false});
+		onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}}, () => {
+			if (this._tileLayerNameOnNextTickCallback) {
+				this._tileLayerNameOnNextTickCallback();
+				this._tileLayerNameOnNextTickCallback = undefined;
 			}
-		}
-		if (Object.keys(changes).length) {
-			_options = {
-				..._options,
-				...changes
-			};
-		}
-		return _options;
-	}
-
-	onActiveChange = (idx, prop, callback) => {
-		this.nestedHandledActiveChange = true;
-		this.setState({activeIdx: idx}, () => {
-			if (!callback) return;
-			callback();
 		});
-	}
-	
-	customAdd = () => () => {
-		const nextActive = this.props.formData.length;
-		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props));
-		this.setState({activeIdx: nextActive});
-	}
-
-	getSchemas() {
-		if (super.getSchemas) return super.getSchemas();
-		 return this.props;
-	}
-
-	render() {
-		const {registry: {fields: {SchemaField}}} = this.props;
-		let {uiSchema, errorSchema, schema} = this.getSchemas();
-		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp, passActiveIdxToBelow = true} = options;
-		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
-		const {activeIdx} = this.state;
-
-		const activeIdxProps = {
-			activeIdx,
-			onActiveChange: this.onActiveChange,
-			idToFocusAfterNavigate,
-			idToScrollAfterNavigate
+		onEnterViewPort = () => {
+			this.afterActiveChange(this.state.activeIdx, !!"initial call");
 		};
 
-		uiSchema = getInnerUiSchema(uiSchema);
-		if (getUiOptions(this.props.uiSchema).buttons) {
-			uiSchema = {
-				...uiSchema,
-				"ui:options": {
-					...uiSchema["ui:options"],
-					buttons: [...(uiSchema["ui:options"].buttons || []), ...getUiOptions(this.props.uiSchema).buttons]
-				}
-			};
-		}
-
-		let mapOptions = this.getMapOptions();
-
-		const mapSizes = options.mapSizes || getBootstrapCols(6);
-
-		const schemaSizes = ["lg", "md", "sm", "xs"].reduce((sizes, size) => {
-			sizes[size] = 12 - mapSizes[size] || 12;
-			return sizes;
-		}, {});
-
-		const getChildProps = () => {
-			return {
-				schema: schema.items,
-				uiSchema: uiSchema.items || {},
-				idSchema: this.props.registry.schemaUtils.toIdSchema(
-					schema.items,
-					`${this.props.idSchema.$id}_${activeIdx}`
-				),
-				formData: (this.props.formData || [])[activeIdx],
-				errorSchema: this.props.errorSchema[activeIdx] || {}
-			};
-		};
-
-		const putChildsToParents = (props, key) => {
-			if (!this.onChangeFor) {
-				this.onChangeFor = {};
+		getMapOptions = () => {
+			const options = getUiOptions(this.props.uiSchema);
+			let _options = merge.all([
+				{clickBeforeZoomAndPan: true},
+				(options.mapOptions || {}),
+				(this.getOptions(options) || {}),
+				(this.state.mapOptions || {})
+			]);
+			const changes = {};
+			if (options.createOnLocate && !_options.locate) {
+				changes.locate = [this.onLocate];
 			}
-			if (!this.onChangeFor[key]) {
-				this.onChangeFor[key] = formData => {
-					this.props.onChange(formData.map((item, idx) => {
-						return {
-							...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items)), 
-							...item
-						};
-					}));
+			const {readonly, disabled} = this.props;
+			if (readonly || disabled) {
+				if (isObject(_options.draw)) {
+					changes.draw = {
+						..._options.draw,
+						editable: false
+					};
+				}
+				if (_options.data) {
+					if (_options.data instanceof Array) {
+						changes.data = _options.data.map(d => ({...d, editable: false}));
+					} else if (isObject(_options.data)) {
+						changes.data = {..._options.data, editable: false};
+					}
+				}
+			}
+			if (Object.keys(changes).length) {
+				_options = {
+					..._options,
+					...changes
 				};
 			}
-			return {
-				...this.props,
-				schema: {...schema, items: props.schema},
-				uiSchema: {...uiSchema, items: props.uiSchema},
-				onChange: this.onChangeFor[key]
+			return _options;
+		};
+
+		onActiveChange = (idx, prop, callback) => {
+			this.nestedHandledActiveChange = true;
+			this.setState({activeIdx: idx}, () => {
+				if (!callback) return;
+				callback();
+			});
+		};
+	
+		customAdd = () => () => {
+			const nextActive = this.props.formData.length;
+			this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props));
+			this.setState({activeIdx: nextActive});
+		};
+
+		getSchemas() {
+			if (super.getSchemas) return super.getSchemas();
+			return this.props;
+		}
+
+		render() {
+			const {registry: {fields: {SchemaField}}} = this.props;
+			let {uiSchema, errorSchema, schema} = this.getSchemas();
+			const options = getUiOptions(this.props.uiSchema);
+			const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp, passActiveIdxToBelow = true} = options;
+			let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
+			const {activeIdx} = this.state;
+
+			const activeIdxProps = {
+				activeIdx,
+				onActiveChange: this.onActiveChange,
+				idToFocusAfterNavigate,
+				idToScrollAfterNavigate
 			};
-		};
 
-		const defaultProps = {...this.props, schema, uiSchema};
-		const overrideProps = propsToPassToInlineSchema.reduce((_props, field) => {
-			_props[field] = this.props[field];
-			return _props;
-		}, {});
-
-		const childProps = getChildProps();
-		const inlineSchemaProps = putChildsToParents(getPropsForFields(childProps, Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
-
-		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(childProps, belowFields)) : null;
-
-		const inlineItemsUiSchema = {...uiSchema.items, ...inlineSchemaProps.uiSchema.items};
-		let inlineUiSchema = {
-			...inlineSchemaProps.uiSchema, 
-		};
-		if (inlineUiSchemaRoot) {
-			inlineUiSchema = {...inlineUiSchema, ...inlineUiSchemaRoot};
-			inlineUiSchema.items = {...inlineItemsUiSchema, ...(inlineUiSchemaRoot.items || {})};
-		} else {
-			inlineUiSchema.items = inlineItemsUiSchema;
-		}
-
-		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot} : {};
-
-		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
-		belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...(passActiveIdxToBelow ? activeIdxProps : {})}};
-
-		if (!belowUiSchema.items) {
-			belowUiSchema.items = {};
-		}
-		if (!belowUiSchema.items["ui:options"]) {
-			belowUiSchema.items["ui:options"] = {};
-		}
-		belowUiSchema.items["ui:options"].reserveId = false;
-
-		const {buttonsPath, addButtonPath, showErrors = true} = getUiOptions(this.props.uiSchema);
-		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
-		let _buttonsPath = buttonsPath || addButtonPath;
-
-		const prependAddButton = (buttons) => {
-			const addButton = buttons.find(({fn}) => fn === "add");
-			return [
-				...buttons.filter(button => button !== addButton),
-				{
-					...(addButton || {}),
-					fn: this.customAdd,
-					fnName: "add",
-					glyph: "plus",
-					id: this.props.idSchema.$id
-				}
-			];
-		};
-
-		let buttons = undefined;
-		let renderButtonsBelow = false;
-		if ((mapOptions.emptyMode || activeIdx !== undefined) && options.buttons) {
-			if (_buttonsPath) {
-				buttons = prependAddButton(options.buttons);
-				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
-				inlineUiSchema["ui:options"].renderAdd = false;
-			} else if (options.renderButtonsBelow) {
-				buttons = prependAddButton(options.buttons);
-				inlineUiSchema["ui:options"].renderAdd = false;
-				renderButtonsBelow = true;
-			} else {
-				buttons = options.buttons;
+			uiSchema = getInnerUiSchema(uiSchema);
+			if (getUiOptions(this.props.uiSchema).buttons) {
+				uiSchema = {
+					...uiSchema,
+					"ui:options": {
+						...uiSchema["ui:options"],
+						buttons: [...(uiSchema["ui:options"].buttons || []), ...getUiOptions(this.props.uiSchema).buttons]
+					}
+				};
 			}
-		} 
 
-		if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
-			inlineUiSchema["ui:options"].buttons = options.buttons || [];
-		}
+			let mapOptions = this.getMapOptions();
 
-		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
-		const belowSchema = belowFields ? <SchemaField {...this.props} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+			const mapSizes = options.mapSizes || getBootstrapCols(6);
 
-		buttons = buttons && (!_buttonsPath || mapOptions.emptyMode)
-			? buttons.map(button => getButton(button, {
-				canAdd: mapOptions.emptyMode ? (button.fn !== "add" && button.fnName !== "add") : true,
-				uiSchema: this.props.uiSchema,
-				idSchema: this.props.idSchema,
-				formData: this.props.formData,
+			const schemaSizes = ["lg", "md", "sm", "xs"].reduce((sizes, size) => {
+				sizes[size] = 12 - mapSizes[size] || 12;
+				return sizes;
+			}, {});
+
+			const getChildProps = () => {
+				return {
+					schema: schema.items,
+					uiSchema: uiSchema.items || {},
+					idSchema: this.props.registry.schemaUtils.toIdSchema(
+						schema.items,
+						`${this.props.idSchema.$id}_${activeIdx}`
+					),
+					formData: (this.props.formData || [])[activeIdx],
+					errorSchema: this.props.errorSchema[activeIdx] || {}
+				};
+			};
+
+			const putChildsToParents = (props, key) => {
+				if (!this.onChangeFor) {
+					this.onChangeFor = {};
+				}
+				if (!this.onChangeFor[key]) {
+					this.onChangeFor[key] = formData => {
+						this.props.onChange(formData.map((item, idx) => {
+							return {
+								...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items)), 
+								...item
+							};
+						}));
+					};
+				}
+				return {
+					...this.props,
+					schema: {...schema, items: props.schema},
+					uiSchema: {...uiSchema, items: props.uiSchema},
+					onChange: this.onChangeFor[key]
+				};
+			};
+
+			const defaultProps = {...this.props, schema, uiSchema};
+			const overrideProps = propsToPassToInlineSchema.reduce((_props, field) => {
+				_props[field] = this.props[field];
+				return _props;
+			}, {});
+
+			const childProps = getChildProps();
+			const inlineSchemaProps = putChildsToParents(getPropsForFields(childProps, Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
+
+			const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(childProps, belowFields)) : null;
+
+			const inlineItemsUiSchema = {...uiSchema.items, ...inlineSchemaProps.uiSchema.items};
+			let inlineUiSchema = {
+				...inlineSchemaProps.uiSchema, 
+			};
+			if (inlineUiSchemaRoot) {
+				inlineUiSchema = {...inlineUiSchema, ...inlineUiSchemaRoot};
+				inlineUiSchema.items = {...inlineItemsUiSchema, ...(inlineUiSchemaRoot.items || {})};
+			} else {
+				inlineUiSchema.items = inlineItemsUiSchema;
+			}
+
+			let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot} : {};
+
+			inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
+			belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...(passActiveIdxToBelow ? activeIdxProps : {})}};
+
+			if (!belowUiSchema.items) {
+				belowUiSchema.items = {};
+			}
+			if (!belowUiSchema.items["ui:options"]) {
+				belowUiSchema.items["ui:options"] = {};
+			}
+			belowUiSchema.items["ui:options"].reserveId = false;
+
+			const {buttonsPath, addButtonPath, showErrors = true} = getUiOptions(this.props.uiSchema);
+			if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
+			let _buttonsPath = buttonsPath || addButtonPath;
+
+			const prependAddButton = (buttons) => {
+				const addButton = buttons.find(({fn}) => fn === "add");
+				return [
+					...buttons.filter(button => button !== addButton),
+					{
+						...(addButton || {}),
+						fn: this.customAdd,
+						fnName: "add",
+						glyph: "plus",
+						id: this.props.idSchema.$id
+					}
+				];
+			};
+
+			let buttons = undefined;
+			let renderButtonsBelow = false;
+			if ((mapOptions.emptyMode || activeIdx !== undefined) && options.buttons) {
+				if (_buttonsPath) {
+					buttons = prependAddButton(options.buttons);
+					belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
+					inlineUiSchema["ui:options"].renderAdd = false;
+				} else if (options.renderButtonsBelow) {
+					buttons = prependAddButton(options.buttons);
+					inlineUiSchema["ui:options"].renderAdd = false;
+					renderButtonsBelow = true;
+				} else {
+					buttons = options.buttons;
+				}
+			} 
+
+			if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
+				inlineUiSchema["ui:options"].buttons = options.buttons || [];
+			}
+
+			const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
+			const belowSchema = belowFields ? <SchemaField {...this.props} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+
+			buttons = buttons && (!_buttonsPath || mapOptions.emptyMode)
+				? buttons.map(button => getButton(button, {
+					canAdd: mapOptions.emptyMode ? (button.fn !== "add" && button.fnName !== "add") : true,
+					uiSchema: this.props.uiSchema,
+					idSchema: this.props.idSchema,
+					formData: this.props.formData,
+					formContext: this.props.formContext,
+					disabled: this.props.disabled,
+					readonly: this.props.readonly,
+				})).filter(button => button)
+				: undefined;
+
+			const _errors = errorSchema && parseJSONPointer(errorSchema[activeIdx] || {}, geometryField);
+			const errors = _errors
+				? _errors.__errors.map(formatErrorMessage)
+				: null;
+
+			const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
+			const wholeErrorId = `${this.props.idSchema.$id}_${activeIdx}${errorId}`;
+
+			const mapPropsToPass = {
 				formContext: this.props.formContext,
-				disabled: this.props.disabled,
-				readonly: this.props.readonly,
-			})).filter(button => button)
-			: undefined;
+				onPopupClose: this.onPopupClose,
+				markerPopupOffset: 45,
+				featurePopupOffset: 5,
+				popupOnHover: true,
+				onFocusGrab: this.onFocusGrab,
+				onFocusRelease: this.onFocusRelease,
+				panel: errors && errors.length && showErrors ? {
+					header: this.props.formContext.translations.Error,
+					panelTextContent: <div>{errors}</div>,
+					variant: "danger",
+					id: `laji-form-error-container-${wholeErrorId}`
+				} : null,
+				draw: false,
+				zoomToData: true,
+				onOptionsChanged: this.onOptionsChanged,
+				fullscreenable: true,
+				help: options.help,
+				...mapOptions
+			};
 
-		const _errors = errorSchema && parseJSONPointer(errorSchema[activeIdx] || {}, geometryField);
-		const errors = _errors
-			? _errors.__errors.map(formatErrorMessage)
-			: null;
-
-		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
-		const wholeErrorId = `${this.props.idSchema.$id}_${activeIdx}${errorId}`;
-
-		const mapPropsToPass = {
-			formContext: this.props.formContext,
-			onPopupClose: this.onPopupClose,
-			markerPopupOffset: 45,
-			featurePopupOffset: 5,
-			popupOnHover: true,
-			onFocusGrab: this.onFocusGrab,
-			onFocusRelease: this.onFocusRelease,
-			panel: errors && errors.length && showErrors ? {
-				header: this.props.formContext.translations.Error,
-				panelTextContent: <div>{errors}</div>,
-				variant: "danger",
-				id: `laji-form-error-container-${wholeErrorId}`
-			} : null,
-			draw: false,
-			zoomToData: true,
-			onOptionsChanged: this.onOptionsChanged,
-			fullscreenable: true,
-			help: options.help,
-			...mapOptions
-		};
-
-		const map = (
+			const map = (
 			<MapComponent
 				ref="map"
 				{...mapPropsToPass}
 			/>
-		);
+			);
 
-		const wrapperProps = {
-			containerRef: this.stretchContainerRef,
-			topOffset: topOffset === undefined ? this.props.formContext.topOffset : topOffset,
-			bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
-			onResize: this.onResize,
-			mounted: this.state.mounted,
-			className: this.state.focusGrabbed ? "pass-block" : "",
-			minHeight: getUiOptions(this.props.uiSchema).minHeight,
-			onEnterViewPort: this.onEnterViewPort,
-			enterViewPortTreshold: 200
-		};
+			const wrapperProps = {
+				containerRef: this.stretchContainerRef,
+				topOffset: topOffset === undefined ? this.props.formContext.topOffset : topOffset,
+				bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
+				onResize: this.onResize,
+				mounted: this.state.mounted,
+				className: this.state.focusGrabbed ? "pass-block" : "",
+				minHeight: getUiOptions(this.props.uiSchema).minHeight,
+				onEnterViewPort: this.onEnterViewPort,
+				enterViewPortTreshold: 200
+			};
 
-		const wrappedMap = (
+			const wrappedMap = (
 			<Stretch
 				{...wrapperProps}
 				ref="stretch"
 			>
 				{map}
 			</Stretch>
-		);
+			);
 
-		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
-		const {Popover, Row, Col, ButtonToolbar} = this.context.theme;
+			const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
+			const {Popover, Row, Col, ButtonToolbar} = this.context.theme;
 
-		return (
+			return (
 			<React.Fragment>
 				<Row>
 					<Col {...mapSizes}>
@@ -1616,138 +1616,138 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 					</Row>
 				): null}
 			</React.Fragment>
-		);
-	}
-
-	getDraftStyle() {
-		if (super.getDraftStyle) {
-			return super.getDraftStyle();
+			);
 		}
-		return {color: "#25B4CA", opacity: 1};
-	}
 
-	mapKeyFunctions = {
-		splitLineTransectByMeters: () => {
-			this.map.splitLTByMeters(this.state.activeIdx);
+		getDraftStyle() {
+			if (super.getDraftStyle) {
+				return super.getDraftStyle();
+			}
+			return {color: "#25B4CA", opacity: 1};
 		}
-	};
 
-	filterPopupOptions({dataIdx, featureIdx, feature}) {
-		return {dataIdx, featureIdx, feature};
-	}
+		mapKeyFunctions = {
+			splitLineTransectByMeters: () => {
+				this.map.splitLTByMeters(this.state.activeIdx);
+			}
+		};
 
-	getPopup = (options, openPopupCallback) => {
-		if (!this.refs.popup) return;
-		this.setState({popupIdx: this.filterPopupOptions(options)}, () => {
-			this.refs.popup && hasData(this.getPopupData(options)) && openPopupCallback(this.refs.popup.refs.popup);
-		});
-	}
-
-	getPopupData(options) {
-		if (super.getPopupData) {
-			return super.getPopupData(options);
-		} else {
-			return this.getFeaturePopupData(options);
+		filterPopupOptions({dataIdx, featureIdx, feature}) {
+			return {dataIdx, featureIdx, feature};
 		}
-	}
 
-	getFormDataForPopup(options) {
-		if (super.getFormDataForPopup) {
-			return super.getFormDataForPopup(options);
-		} else {
-			return this.state.activeIdx !== undefined ? this.props.formData[this.state.activeIdx] : undefined;
-		}
-	}
+		getPopup = (options, openPopupCallback) => {
+			if (!this.refs.popup) return;
+			this.setState({popupIdx: this.filterPopupOptions(options)}, () => {
+				this.refs.popup && hasData(this.getPopupData(options)) && openPopupCallback(this.refs.popup.refs.popup);
+			});
+		};
 
-	popupStrategies = {
-		lolifeUnit: (formData) => {
-			const {nestType, indirectObservationType, identifications} = formData;
-			if (nestType) {
-				return {value: this.props.formContext.translations.NestObservation};
-			} else if (indirectObservationType) {
-				return {value: this.props.formContext.translations.TraceObservation};
-			} else if (identifications) {
-				return {value: this.props.formContext.translations.Observation};
+		getPopupData(options) {
+			if (super.getPopupData) {
+				return super.getPopupData(options);
+			} else {
+				return this.getFeaturePopupData(options);
 			}
 		}
-	}
 
-	getFeaturePopupData = (options) => {
-		if (!options) return [];
-
-		const {popupFields} = getUiOptions(this.props.uiSchema);
-		const formData = this.getFormDataForPopup(options);
-
-		let data = [];
-
-		popupFields.forEach(({field: col, template, value: _value, title: _title, if: _if, strategy}) => {
-			let value, title;
-			if (strategy) {
-				const strategyResult = this.popupStrategies[strategy](formData);
-				if (strategyResult) {
-					value = strategyResult.value;
-					title = strategyResult.title;
-				}
-			} else if (_value) {
-				value = _value;
-				title = _title;
-			} else if (col) {
-				if (this.parsePopupPointer) {
-					col = this.parsePopupPointer(col, options);
-				}
-				const _formData = parseJSONPointer(formData, col);
-				const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
-				const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);
-				title = schema.title;
-				value = formatValue({...this.props, formData: _formData, schema, uiSchema});
+		getFormDataForPopup(options) {
+			if (super.getFormDataForPopup) {
+				return super.getFormDataForPopup(options);
+			} else {
+				return this.state.activeIdx !== undefined ? this.props.formData[this.state.activeIdx] : undefined;
 			}
+		}
 
-			if (!isEmptyString(value)) {
-				let result;
-				if (_if) {
-					result = ["dataIdx", "featureIdx"].every(opt => !(opt in _if) || options[opt] === _if[opt]);
-					if (_if.reverse) {
-						result = !result;
+		popupStrategies = {
+			lolifeUnit: (formData) => {
+				const {nestType, indirectObservationType, identifications} = formData;
+				if (nestType) {
+					return {value: this.props.formContext.translations.NestObservation};
+				} else if (indirectObservationType) {
+					return {value: this.props.formContext.translations.TraceObservation};
+				} else if (identifications) {
+					return {value: this.props.formContext.translations.Observation};
+				}
+			}
+		};
+
+		getFeaturePopupData = (options) => {
+			if (!options) return [];
+
+			const {popupFields} = getUiOptions(this.props.uiSchema);
+			const formData = this.getFormDataForPopup(options);
+
+			let data = [];
+
+			popupFields.forEach(({field: col, template, value: _value, title: _title, if: _if, strategy}) => {
+				let value, title;
+				if (strategy) {
+					const strategyResult = this.popupStrategies[strategy](formData);
+					if (strategyResult) {
+						value = strategyResult.value;
+						title = strategyResult.title;
+					}
+				} else if (_value) {
+					value = _value;
+					title = _title;
+				} else if (col) {
+					if (this.parsePopupPointer) {
+						col = this.parsePopupPointer(col, options);
+					}
+					const _formData = parseJSONPointer(formData, col);
+					const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
+					const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);
+					title = schema.title;
+					value = formatValue({...this.props, formData: _formData, schema, uiSchema});
+				}
+
+				if (!isEmptyString(value)) {
+					let result;
+					if (_if) {
+						result = ["dataIdx", "featureIdx"].every(opt => !(opt in _if) || options[opt] === _if[opt]);
+						if (_if.reverse) {
+							result = !result;
+						}
+					}
+					if (!_if || result) {
+						data.push({title, template, value});
 					}
 				}
-				if (!_if || result) {
-					data.push({title, template, value});
-				}
-			}
-		});
-		return data;
-	}
-
-	onLocate = (latlng, radius) => {
-		this.location = latlng ? {latlng, radius} : undefined;
-		this.onLocateOrAddNew();
-	}
-
-	onLocateOrAddNew = () => {
-		if (!this.location) return;
-
-		const {latlng, radius} = this.location;
-		const {createOnLocate} = getUiOptions(this.props.uiSchema);
-		if (!createOnLocate) return;
-
-		const geometry = this.getGeometry(this.props.formData);
-		if (this.props.formData.length === 0 || (!geometry || !Object.keys(geometry).length)) {
-			let geometry = undefined;
-			if (createOnLocate === "marker") {
-				geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
-			}
-			if (createOnLocate === "circle") {
-				geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat], radius};
-			}
-			this.map.addFeatureToDraw({
-				type: "Feature",
-				properties: {},
-				geometry
 			});
-		}
-	}
-} // eslint-disable-line indent
-return _MapArrayField; // eslint-disable-line indent
+			return data;
+		};
+
+		onLocate = (latlng, radius) => {
+			this.location = latlng ? {latlng, radius} : undefined;
+			this.onLocateOrAddNew();
+		};
+
+		onLocateOrAddNew = () => {
+			if (!this.location) return;
+
+			const {latlng, radius} = this.location;
+			const {createOnLocate} = getUiOptions(this.props.uiSchema);
+			if (!createOnLocate) return;
+
+			const geometry = this.getGeometry(this.props.formData);
+			if (this.props.formData.length === 0 || (!geometry || !Object.keys(geometry).length)) {
+				let geometry = undefined;
+				if (createOnLocate === "marker") {
+					geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
+				}
+				if (createOnLocate === "circle") {
+					geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat], radius};
+				}
+				this.map.addFeatureToDraw({
+					type: "Feature",
+					properties: {},
+					geometry
+				});
+			}
+		};
+	}  
+	return _MapArrayField;  
 }
 
 class Popup extends React.Component {
@@ -1788,20 +1788,20 @@ export class MapComponent extends React.Component {
 
 	tileLayerChange = ({tileLayers}) => {
 		this.setState({mapOptions: {...this.state.mapOptions, tileLayers}});
-	}
+	};
 	overlaysChange = ({overlayNames}) => {
 		this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
-	}
+	};
 	tileLayerOpacityChangeEnd = ({tileLayerOpacity}) => {
 		this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
-	}
+	};
 	locateToggle = ({locate}) => {
 		if (this.props.onLocateToggle) {
 			this.props.onLocateToggle(locate.on); // propagate to parent
 		} else {
 			this.setState({mapOptions: {...this.state.mapOptions, locate}});
 		}
-	}
+	};
 
 	componentDidMount() {
 		this.map = this.refs.map.map;
@@ -1837,43 +1837,43 @@ export class MapComponent extends React.Component {
 		this.setState({focusGrabbed: true}, () => {
 			if (this.props.onFocusGrab) this.props.onFocusGrab();
 		});
-	}
+	};
 
 	releaseFocus = () => {
 		this.props.formContext.services.blocker.push();
 		this.setState({focusGrabbed: false}, () => {
 			if (this.props.onFocusRelease) this.props.onFocusRelease();
 		});
-	}
+	};
 
 	showPanel = (options) => {
 		this.setState({panel: true, ...options});
-	}
+	};
 
 	hidePanel = () => {
 		this.setState({panel: false});
-	}
+	};
 
 	showHelp = () => {
 		this.setState({showHelp: true});
-	}
+	};
 
 	hideHelp = () => {
 		this.setState({showHelp: false});
-	}
+	};
 
 
 	setMapState = (options, callback) => {
 		this._callback = callback;
 		this.setState({mapOptions: options});
-	}
+	};
 
 	setOnUpdateMap = (fn) => {
 		this._permaCallback = fn;
-	}
+	};
 
 	render() {
-		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props; // eslint-disable-line
+		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props;  
 		const {Modal} = this.context.theme;
 
 		const controlledPanel = panel ?
@@ -1978,19 +1978,19 @@ export class Map extends React.Component {
 
 	getMapOptions = (props) => {
 		const {
-			className, // eslint-disable-line @typescript-eslint/no-unused-vars
-			style, // eslint-disable-line @typescript-eslint/no-unused-vars
-			hidden, // eslint-disable-line @typescript-eslint/no-unused-vars
-			singleton, // eslint-disable-line @typescript-eslint/no-unused-vars
-			emptyMode, // eslint-disable-line @typescript-eslint/no-unused-vars
-			onComponentDidMount, // eslint-disable-line @typescript-eslint/no-unused-vars
-			fullscreenable, // eslint-disable-line @typescript-eslint/no-unused-vars
-			formContext, // eslint-disable-line @typescript-eslint/no-unused-vars
-			controlSettings, // eslint-disable-line @typescript-eslint/no-unused-vars
+			className,  
+			style,  
+			hidden,  
+			singleton,  
+			emptyMode,  
+			onComponentDidMount,  
+			fullscreenable,  
+			formContext,  
+			controlSettings,  
 			...mapOptions
 		} = props;
 		return mapOptions;
-	}
+	};
 
 	getEnhancedMapOptions = (props) => {
 		const mapOptions = this.getMapOptions(props);
@@ -2023,7 +2023,7 @@ export class Map extends React.Component {
 			mapOptions.lajiGeoServerAddress = lajiGeoServerAddress;
 		}
 		return mapOptions;
-	}
+	};
 
 	setMapOptions = (prevOptions, options) => {
 		if (!this.map) {
@@ -2057,7 +2057,7 @@ export class Map extends React.Component {
 				}
 			}
 		});
-	}
+	};
 
 	initializeMap = (props) => {
 		const mapOptions = this.getEnhancedMapOptions(props);
@@ -2070,7 +2070,7 @@ export class Map extends React.Component {
 		}
 		this.map.map.invalidateSize();
 		if (props.onComponentDidMount) props.onComponentDidMount(this.map);
-	}
+	};
 
 	render() {
 		return (

@@ -11,7 +11,7 @@ export default class FakePropertyField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "FakePropertyField";}
 

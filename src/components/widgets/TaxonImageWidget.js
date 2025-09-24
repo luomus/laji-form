@@ -8,7 +8,7 @@ export default class TaxonImageWidget extends React.Component {
 			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		const {uiSchema} = getUiOptions(this.props);
@@ -26,5 +26,5 @@ export default class TaxonImageWidget extends React.Component {
 
 	onTaxonImageClick = (taxonID) => () => {
 		this.props.onChange(taxonID);
-	}
+	};
 }

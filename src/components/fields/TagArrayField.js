@@ -26,7 +26,7 @@ export default class TagArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	render() {
 		const {FieldTemplate} = this.props.registry.templates;
@@ -52,12 +52,12 @@ export class TagInputComponent extends React.Component {
 
 	getStateFromProps = ({value}) => {
 		return {value};
-	}
+	};
 
 	getSeparatorKeys = (uiSchema) => {
 		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(uiSchema);
 		return separatorKeys;
-	}
+	};
 
 	onKeyDown = (e) => {
 		const value = this.processValue(this.state.value);
@@ -71,19 +71,19 @@ export class TagInputComponent extends React.Component {
 			this.onRemove(tags.length - 1)();
 		}
 		triggerParentComponent("onKeyDown", e, this.props);
-	}
+	};
 
 	onRemove = memoize((idx) => () => {
 		const tags = [...(this.props.tags || [])];
 		tags.splice(idx, 1);
 		this.props.onChange(tags, "remove");
-	})
+	});
 
 	onFocus = (e) => {
 		this.setState({focused: true}, () => {
 			triggerParentComponent("onFocus", e, this.props);
 		});
-	}
+	};
 
 	onBlur = (e) => {
 		this.setState({focused: false});
@@ -93,15 +93,15 @@ export class TagInputComponent extends React.Component {
 			this.props.onChange([...(this.props.tags || []), value], "blur");
 		}
 
-	}
+	};
 
 	setInputRef = (ref) => {
 		this.inputRef = ref;
-	}
+	};
 
 	onClick = () => {
 		findDOMNode(this.inputRef).focus();
-	}
+	};
 
 	onInputChange = (e) => {
 		const {onInputChange} = this.props;
@@ -119,7 +119,7 @@ export class TagInputComponent extends React.Component {
 				this.props.onChange([...(this.props.tags || []), ...splitted]);
 			}
 		});
-	}
+	};
 
 	onTagClick = memoize((idx) => (e) => {
 		const {onTagClick} = getUiOptions(this.props.uiSchema);

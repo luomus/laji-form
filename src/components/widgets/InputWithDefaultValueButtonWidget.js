@@ -18,7 +18,7 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 			type: PropTypes.oneOf(["string", "number", "integer"]),
 		}).isRequired,
 		value: PropTypes.string
-	}
+	};
 
 	render() {
 		const {InputGroup, Button} = this.context.theme;
@@ -48,5 +48,5 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 		if (onClick) {
 			onClick();
 		}
-	}
+	};
 }

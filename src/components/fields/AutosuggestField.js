@@ -62,7 +62,7 @@ export default class AutosuggestField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	static getName() {return "AutosuggestField";}
 
@@ -78,10 +78,10 @@ export default class AutosuggestField extends React.Component {
 			this.onNextTick();
 			this.onNextTick = undefined;
 		}
-	}
+	};
 
-	getTogglePersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`
-	getInformalTaxonGroupsPersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_PERSISTENCE_${props.uiSchema["ui:options"].informalTaxonGroupPersistenceKey}`
+	getTogglePersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`;
+	getInformalTaxonGroupsPersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_PERSISTENCE_${props.uiSchema["ui:options"].informalTaxonGroupPersistenceKey}`;
 	
 	getStateFromProps = (props, toggled) => {
 		let {schema, uiSchema, formData} = props;
@@ -176,12 +176,12 @@ export default class AutosuggestField extends React.Component {
 
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
-	}
+	};
 
 	getActiveOptions = (options, toggled) => {
 		toggled = (toggled !== undefined) ? toggled : (this.state || {}).toggled;
 		return toggled ? merge(options, options.toggleable) : options;
-	}
+	};
 
 	getSuggestionReceiverValue(suggestion, suggestionReceiver) {
 		// undefined suggestion clears value.
@@ -208,7 +208,7 @@ export default class AutosuggestField extends React.Component {
 		return suggestionValueParse
 			? this.getSuggestionReceiverValue(suggestion, suggestionValueParse)
 			: def;
-	}
+	};
 
 	onSuggestionSelected = (suggestion, mounted) => {
 		if (suggestion === null) suggestion = undefined;
@@ -262,7 +262,7 @@ export default class AutosuggestField extends React.Component {
 			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
 			lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 		}
-	}
+	};
 
 	onConfirmUnsuggested = (value) => {
 		let {formData, uiSchema} = this.props;
@@ -273,7 +273,7 @@ export default class AutosuggestField extends React.Component {
 		});
 		formData = updateFormDataWithJSONPointer({...this.props, formData}, value, suggestionInputField);
 		this.props.onChange(formData);
-	}
+	};
 
 	onInputChange = ({target: {value}}) => {
 		let {formData, uiSchema} = this.props;
@@ -292,7 +292,7 @@ export default class AutosuggestField extends React.Component {
 			}
 		}
 		return value;
-	}
+	};
 
 	isValueSuggested = () => {
 		const {formData, uiSchema} = this.props;
@@ -306,7 +306,7 @@ export default class AutosuggestField extends React.Component {
 			}
 		}
 		return true;
-	}
+	};
 
 	getSuggestionFromValue = () => {
 		const {formData, uiSchema} = this.props;
@@ -326,7 +326,7 @@ export default class AutosuggestField extends React.Component {
 		}
 
 		return suggestion ? Promise.resolve(suggestion) : Promise.reject();
-	}
+	};
 
 	onInformalTaxonGroupSelected = (informalTaxonID) => {
 		const {uiSchema} = this.props;
@@ -337,7 +337,7 @@ export default class AutosuggestField extends React.Component {
 		} else {
 			this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		}
-	}
+	};
 
 	onToggleChange = (value) => {
 		const {togglePersistenceKey} = getUiOptions(this.props.uiSchema);
@@ -345,7 +345,7 @@ export default class AutosuggestField extends React.Component {
 			getContext(this.props.formContext.contextId)[this.getTogglePersistenceContextKey(this.props)] = value;
 		}
 		this.setState(this.getStateFromProps(this.props, value));
-	}
+	};
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;

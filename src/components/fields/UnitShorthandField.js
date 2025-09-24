@@ -26,7 +26,7 @@ export default class UnitShorthandField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -49,11 +49,11 @@ export default class UnitShorthandField extends React.Component {
 		}
 
 		return {showSchema};
-	}
+	};
 
 	UNSAFE_componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));
-	}
+	};
 
 	componentDidUpdate() {
 		if (this.onNextTick) {
@@ -69,7 +69,7 @@ export default class UnitShorthandField extends React.Component {
 			showSchema = true;
 		}
 		return showSchema;
-	}
+	};
 
 	onToggleButtonClick = () => () => {
 		const {persistenceKey} = getUiOptions(this.props.uiSchema);
@@ -77,7 +77,7 @@ export default class UnitShorthandField extends React.Component {
 			this.props.formContext.utils.focusById(this.props.idSchema.$id);
 			getContext(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
 		});
-	}
+	};
 
 	getToggleButton = () => {
 		return {
@@ -87,7 +87,7 @@ export default class UnitShorthandField extends React.Component {
 			tooltipPlacement: "left",
 			active: !this.state.showSchema
 		};
-	}
+	};
 
 	onCodeChange = (formData = {}) => {
 		const {autocopy, autofocus} = getUiOptions(this.props.uiSchema);
@@ -101,7 +101,7 @@ export default class UnitShorthandField extends React.Component {
 			this.setState({showSchema: true});
 		};
 		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}));
-	}
+	};
 
 	render() {
 		const {uiSchema, formContext, disabled, readonly} = this.props;
@@ -160,7 +160,7 @@ class CodeReader extends React.Component {
 			state.value = props.value;
 		}
 		return state;
-	}
+	};
 
 	componentDidMount() {
 		this.mounted = true;
@@ -174,28 +174,28 @@ class CodeReader extends React.Component {
 		if (e.key === "Enter") {
 			this.getCode();
 		}
-	}
+	};
 
 	onFetcherInputChange = ({target: {value}}) => {
 		if (this.mounted) this.setState({value});
-	}
+	};
 
 	onAutosuggestChange = (formData) => {
 		this.props.onChange(formData);
-	}
+	};
 
 	onSuggestionSelected = ({payload: {unit}}) => {
 		const {formContext} = this.props;
 		unit = bringRemoteFormData(unit, formContext);
 		this.props.onChange(unit);
-	}
+	};
 
 	renderSuggestion = (suggestion) => {
 		const {translations} = this.props;
 		return suggestion.payload.isNonMatching
 			? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
 			: suggestion.value;
-	}
+	};
 
 	render() {
 		const {translations, readonly, disabled} = this.props;
@@ -267,5 +267,5 @@ class CodeReader extends React.Component {
 				this.mounted && this.setState({failed: true, loading: false});
 			});
 		}
-	}
+	};
 }

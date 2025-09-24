@@ -74,7 +74,7 @@ export default class ScopeField extends React.Component {
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
 		formData: PropTypes.object.isRequired
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -147,7 +147,7 @@ export default class ScopeField extends React.Component {
 		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
 		if (includeUndefined) items = ["undefined", ...items];
 		return items;
-	}
+	};
 
 
 	getStateFromProps(props) {
@@ -363,11 +363,11 @@ export default class ScopeField extends React.Component {
 			defaultFields,
 			fieldsToShow
 		};
-	}
+	};
 
 	onToggleAdditionals = () => {
 		this.setState({additionalsOpen: !this.state.additionalsOpen});
-	}
+	};
 
 	renderAdditionalsButtons = () => {
 		const glyphButtons = this.renderGlyphFields();
@@ -394,16 +394,16 @@ export default class ScopeField extends React.Component {
 				: this.renderFieldsDropdown(additionalProperties),
 			...(glyphButtons ? glyphButtons : [])
 		];
-	}
+	};
 
 	onSelect = () => { 
 		this.preventCloseDropdown = true;
-	}
+	};
 
 	onToggle = (isOpen) => {
 		if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
 		this.preventCloseDropdown = false;
-	}
+	};
 
 
 	renderFieldsDropdown(additionalProperties) {
@@ -465,7 +465,7 @@ export default class ScopeField extends React.Component {
 		);
 
 		return this.renderFieldsButton();
-	}
+	};
 
 	renderFieldsButton = (bsRole) => {
 		const {OverlayTrigger, Tooltip} = this.context.theme;
@@ -480,7 +480,7 @@ export default class ScopeField extends React.Component {
 				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`} variant="primary" />
 			</OverlayTrigger>
 		);
-	}
+	};
 
 	renderGlyphFields = () => {
 		const {glyphFields} = getUiOptions(this.props.uiSchema);
@@ -497,13 +497,13 @@ export default class ScopeField extends React.Component {
 				            toggleAdditionalProperty={this.toggleAdditionalProperty}
 				/>
 			) : null;
-	}
+	};
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
 		const isIncluded = additionalFields[property] === true || this.state.fieldsToShow[property];
 		return !!isIncluded;
-	}
+	};
 
 	toggleAdditionalProperty = (fields) => {
 		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(this.props.uiSchema);
@@ -529,7 +529,7 @@ export default class ScopeField extends React.Component {
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
-	}
+	};
 
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
@@ -553,7 +553,7 @@ export default class ScopeField extends React.Component {
 					</ElemType>
 				);
 			});
-	}
+	};
 
 	translateAdditionalsGroups = (props) => {
 		let options = getUiOptions(props.uiSchema);
@@ -584,7 +584,7 @@ export default class ScopeField extends React.Component {
 				}
 			});
 		});
-	}
+	};
 }
 
 const getGroupFields = (group, additionalProperties, schema) => {

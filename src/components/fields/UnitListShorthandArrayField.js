@@ -18,7 +18,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array.isRequired
-	}
+	};
 
 	getStateFromProps(props) {
 		const buttonDefinition = {
@@ -51,15 +51,15 @@ export default class UnitListShorthandArrayField extends React.Component {
 
 	onButtonClick = () => () => {
 		this.setState({show: !this.state.show});
-	}
+	};
 
 	onHide = () => {
 		this.setState({show: false, value: ""});
-	}
+	};
 
 	onTagFieldChange = (tags) => {
 		this.setState({value: tags.join(",")});
-	}
+	};
 
 	onSubmit = () => {
 		const value = this.state.value + (isEmptyString(this.tagRef.state.value) ? "" : `,${this.tagRef.state.value}`);
@@ -86,17 +86,17 @@ export default class UnitListShorthandArrayField extends React.Component {
 				: notifier.success(translations.UnitListShorthandSuccess);
 			this.props.formContext.services.blocker.pop();
 		});
-	}
+	};
 
 	onKeyDown = (e) => {
 		if (e.key === "Enter") {
 			this.onSubmit(e);
 		}
-	}
+	};
 
 	setTagArrayRef = (ref) => {
 		this.tagRef = ref;
-	}
+	};
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;

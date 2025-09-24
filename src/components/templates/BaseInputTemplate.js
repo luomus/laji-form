@@ -17,7 +17,7 @@ export default class _BaseInputTemplate extends React.Component {
 
 	getStateFromProps = (props) => {
 		return {value: props.value, ...getUiOptions(props).inputOptions};
-	}
+	};
 
 	onChange = (value) => {
 		if (this.props.formatValue) value = this.props.formatValue(value);
@@ -45,12 +45,12 @@ export default class _BaseInputTemplate extends React.Component {
 				}, 1000);
 			}
 		});
-	}
+	};
 
 	onFocus = (e) => {
 		this.focused = true;
 		this.props.onFocus && this.props.onFocus(e);
-	}
+	};
 
 	onBlur = (e) => {
 		this.focused = false;
@@ -59,11 +59,11 @@ export default class _BaseInputTemplate extends React.Component {
 		}
 		if (this.timeout) clearTimeout(this.timeout);
 		this.props.onBlur && this.props.onBlur(e);
-	}
+	};
 
 	render() {
 		const {
-			formatValue, // eslint-disable-line @typescript-eslint/no-unused-vars
+			formatValue,  
 			...props
 		} = this.props;
 		const options = props.schema.type === "number" || props.schema.type === "integer"
