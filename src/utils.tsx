@@ -641,24 +641,16 @@ export function getScrollPositionForScrollIntoViewIfNeeded(elem: Element, topOff
 	if (!elem) return getWindowScrolled();
 	const rect = elem.getBoundingClientRect();
 	const html = document.documentElement;
-	const height = elem.scrollHeight;
 	const inView = (
 		rect.top >= topOffset &&
 		rect.bottom <= (window.innerHeight || html.clientHeight) - bottomOffset
 	);
 	const elemTopDistFromViewportTop = rect.top;
-	const viewportHeight = (window.innerHeight || html.clientHeight);
-	const elemBottomDistFromViewportBottom = -(elemTopDistFromViewportTop + height - viewportHeight);
 	const pageScrolled = getWindowScrolled();
 
 	if (inView) return pageScrolled;
 
-	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
-	if (pageScrolled + elemTopDistFromViewportTop - topOffset > elemTopDistFromViewportTop) {
-		return pageScrolled + elemTopDistFromViewportTop - topOffset;
-	} else {
-		return pageScrolled - elemBottomDistFromViewportBottom + bottomOffset;
-	}
+	return pageScrolled + elemTopDistFromViewportTop - topOffset;
 }
 
 export function scrollIntoViewIfNeeded(elem: HTMLElement, topOffset = 0, bottomOffset = 0) {

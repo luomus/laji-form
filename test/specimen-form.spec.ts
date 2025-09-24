@@ -1,5 +1,13 @@
 import { test, expect, Page, Locator } from "@playwright/test";
-import { DemoPageForm, createForm, EnumWidgetPOI, getFocusedElement, getRemoveUnit } from "./test-utils";
+import {
+	DemoPageForm,
+	createForm,
+	EnumWidgetPOI,
+	getFocusedElement,
+	getRemoveUnit,
+	updateValue,
+	DateWidgetPO
+} from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
 test.describe.configure({mode: "serial"});
@@ -7,8 +15,8 @@ test.describe.configure({mode: "serial"});
 test.describe("specimen form (MHL.1158)", () => {
 	let page: Page;
 	let form: DemoPageForm;
-	let addMeasurementEnum$: EnumWidgetPOI;
-	let removeUnit: (g: number, u: number) => Promise<void>;
+	let dateBeginWidget: DateWidgetPO;
+	let dateEndWidget: DateWidgetPO;
 
 	const uiSchemaContext = {
 		userName: "Test, User",
@@ -20,8 +28,30 @@ test.describe("specimen form (MHL.1158)", () => {
 		form = await createForm(page, {id: "MHL.1158"});
 		await form.setState({uiSchemaContext});
 
-		addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
-		removeUnit = getRemoveUnit(page);
+		dateBeginWidget = form.getDateWidget("gatherings.0.dateBegin");
+		dateEndWidget = form.getDateWidget("gatherings.0.dateEnd");
+	});
+
+	test("dates are automatically filled if only year is given", async () => {
+		await updateValue(dateBeginWidget.$input, "2015");
+
+		expect(dateBeginWidget.$input).toHaveValue("01.01.2015");
+		expect(dateEndWidget.$input).toHaveValue("31.12.2015");
+
+		const formData = await form.getChangedData();
+		expect(formData.gatherings[0].dateBegin).toEqual("2015-01-01");
+		expect(formData.gatherings[0].dateEnd).toEqual("2015-12-31");
+	});
+
+	test("dates are automatically filled if only year and month is given", async () => {
+		await updateValue(dateBeginWidget.$input, "6.2016");
+
+		expect(dateBeginWidget.$input).toHaveValue("01.06.2016");
+		expect(dateEndWidget.$input).toHaveValue("30.06.2016");
+
+		const formData = await form.getChangedData();
+		expect(formData.gatherings[0].dateBegin).toEqual("2016-06-01");
+		expect(formData.gatherings[0].dateEnd).toEqual("2016-06-30");
 	});
 
 	test("point can be added to map", async () => {
@@ -36,9 +66,11 @@ test.describe("specimen form (MHL.1158)", () => {
 
 	test.describe("units", () => {
 		let $unitAdd: Locator;
+		let removeUnit: (g: number, u: number) => Promise<void>;
 
 		test.beforeAll(async () => {
 			$unitAdd = form.$locateButton("gatherings.0.units", "add");
+			removeUnit = getRemoveUnit(page);
 		});
 
 		test("has one by default", async () => {
@@ -79,6 +111,34 @@ test.describe("specimen form (MHL.1158)", () => {
 			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
 		});
 
+		test.describe("samples", () => {
+			let $sampleAdd: Locator;
+			let preparationTypeEnum$: EnumWidgetPOI;
+			let preparationMaterialEnum$: EnumWidgetPOI;
+
+			test.beforeAll(async () => {
+				$sampleAdd = form.$locateButton("gatherings.0.units.0.samples", "add");
+				preparationTypeEnum$ = form.$getEnumWidget("gatherings.0.units.0.samples.0.preparationType");
+				preparationMaterialEnum$ = form.$getEnumWidget("gatherings.0.units.0.samples.0.material");
+			});
+
+			test("can be added", async () => {
+				await $sampleAdd.click();
+				await expect(form.$locate("gatherings.0.units.0.samples.0")).toBeVisible();
+			});
+
+			test("preparation material options depends on the preparation type", async () => {
+				await preparationTypeEnum$.openEnums();
+				await preparationTypeEnum$.$$enums.nth(2).click();
+
+				await preparationMaterialEnum$.openEnums();
+				await preparationMaterialEnum$.$$enums.nth(1).click();
+
+				const formData = await form.getChangedData();
+				expect(formData.gatherings[0].units[0].samples[0].material).toEqual("MF.materialSkull");
+			});
+		});
+
 		test("can be deleted", async () => {
 			await removeUnit(0, 1);
 
@@ -87,6 +147,12 @@ test.describe("specimen form (MHL.1158)", () => {
 	});
 
 	test.describe("measurements", () => {
+		let addMeasurementEnum$: EnumWidgetPOI;
+
+		test.beforeAll(async () => {
+			addMeasurementEnum$ = form.$getEnumWidget("gatherings.0.units.0.measurement");
+		});
+
 		test("can add a measurement field", async () => {
 			await addMeasurementEnum$.openEnums();
 			await addMeasurementEnum$.$$enums.nth(1).click();
@@ -138,6 +204,56 @@ test.describe("specimen form (MHL.1158)", () => {
 
 			const formData = await form.getChangedData();
 			expect(formData.gatherings[0].units[0].measurement).toEqual(undefined);
+		});
+	});
+
+	test.describe("relationship", () => {
+		let addRelationshipEnum$: EnumWidgetPOI;
+
+		test.beforeAll(async () => {
+			addRelationshipEnum$ = form.$getEnumWidget("relationship");
+		});
+
+		test("can add a relationship prefix", async () => {
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(1).click();
+
+			expect(form.$locate("relationship.0")).toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:"]);
+		});
+
+		test("can add multiple relationships", async () => {
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(2).click();
+			await addRelationshipEnum$.openEnums();
+			await addRelationshipEnum$.$$enums.nth(1).click();
+
+			expect(form.$locate("relationship.1")).toBeVisible();
+			expect(form.$locate("relationship.2")).toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:", "parasite:", "host:"]);
+		});
+
+		test("can edit relationship fields", async () => {
+			await form.$locate("relationship.0").locator("input").fill("1");
+			await form.$locate("relationship.1").locator("input").fill("2");
+			await form.$locate("relationship.0").locator("input").fill("3");
+			await getFocusedElement(page).press("Tab");
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["host:3", "parasite:2", "host:"]);
+		});
+
+		test("can remove relationship field", async () => {
+			await form.$locateButton("relationship.0", "delete").click();
+
+			expect(form.$locate("relationship.2")).not.toBeVisible();
+
+			const formData = await form.getChangedData();
+			expect(formData.relationship).toEqual(["parasite:2", "host:"]);
 		});
 	});
 });
