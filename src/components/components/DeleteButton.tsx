@@ -52,6 +52,12 @@ export class DeleteButton extends React.Component<Props, State> {
 		});
 	};
 
+	onCancelClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		this.onHideConfirm();
+	};
+
 	onConfirmedClick = (e?: React.KeyboardEvent | React.MouseEvent) => {
 		e && e.preventDefault();
 		e && e.stopPropagation();
@@ -120,7 +126,7 @@ export class DeleteButton extends React.Component<Props, State> {
 						<Button variant="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
 							{translations.Remove}
 						</Button>
-						<Button variant="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+						<Button variant="default" onClick={this.onCancelClick} id={`${this.props.id}-delete-confirm-no`}>
 							{translations.Cancel}
 						</Button>
 					</ButtonGroup>
