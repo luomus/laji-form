@@ -2,6 +2,13 @@
   "schema": {
     "type": "object",
     "properties": {
+      "images": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Images"
+      },
       "datatype": {
         "type": "string",
         "title": "Datatype"
@@ -3454,6 +3461,12 @@
     "strict": false
   },
   "uiSchema": {
+    "images": {
+      "ui:field": "ImageArrayField",
+      "ui:options": {
+        "metadataFormId": "MHL.1160"
+      }
+    },
     "owner": {
       "ui:help": "Team or organisation that owns the record and can edit it."
     },
@@ -4637,6 +4650,7 @@
     },
     "ui:order": [
       "generalFields",
+      "images",
       "basicFields",
       "gatherings",
       "otherFields",
