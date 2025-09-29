@@ -80,8 +80,13 @@ if (mockApi) {
 	const createMock = () => {
 		let resolve, reject;
 		const promise = new Promise((_resolve, _reject) => {
-			resolve = (response, raw) =>  _resolve(raw ? {...(response || {}), json: () =>  (response || {}).json} : {json: () => response, status: 200});
-			reject = (response, raw) => _reject(raw ? {...(response || {}), json: () => (response || {}).json} : response);
+			resolve = (response, raw) =>  _resolve(raw
+				? {...(response || {}), json: () =>  (response || {}).json, headers: { get: () => "application/json" }}
+				: {json: () => response, status: 200, headers: { get: () => "application/json" }});
+			reject = (response, raw) => _reject(raw
+				? {...(response || {}), json: () => (response || {}).json}
+				: response
+			);
 		});
 		const mock = {promise, resolve, reject};
 		return mock;

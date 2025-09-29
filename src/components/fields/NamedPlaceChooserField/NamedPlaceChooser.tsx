@@ -6,10 +6,11 @@ import { Map } from "../MapArrayField";
 import { NORMAL_COLOR, ACTIVE_COLOR } from "@luomus/laji-map/lib/globals";
 import { SearchableDrowndown } from "../../widgets/SelectWidget";
 import { ByLang, FormContext } from "../../LajiForm";
-import { NamedPlace } from "@luomus/laji-schema";
 import type { DataOptions as LajiMapData } from "@luomus/laji-map/lib/defs";
 import { Popup } from "./Popup";
 import memoize from "memoizee";
+import type { components } from "generated/api.d";
+type NamedPlace = components["schemas"]["namedPlace"];
 
 type Props = {
 	places: NamedPlace[];

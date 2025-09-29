@@ -139,7 +139,7 @@ export function getInformalGroups(apiClient) {
 	if (informalTaxonGroups) {
 		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
 	}
-	return apiClient.fetchCached("/informal-taxon-groups/tree").then(response => {
+	return apiClient.get("/informal-taxon-groups/tree").then(response => {
 		// Contains the current taxon group.
 		const informalTaxonGroups = mapGroupsById(response.results);
 		// Contains all groups in flat object.

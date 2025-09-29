@@ -110,7 +110,7 @@ class PlaceSaverDialog extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
+		this.apiClient.get("/named-places", { query: { includePublic: false, pageSize: 100000 } }).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,
@@ -152,29 +152,25 @@ class PlaceSaverDialog extends React.Component {
 		}, {});
 	};
 
-	onSave(place) {
+	async onSave(place) {
 		place = {
 			...place,
 			geometry: place.prepopulatedDocument.gatherings[0].geometry
 		};
 
 		this.props.formContext.services.blocker.push();
-		this.apiClient.fetchRaw(`/named-places${place.id ? `/${place.id}` : ""}`, undefined, {
-			method: place.id ? "PUT" : "POST",
-			headers: {
-				"accept": "application/json",
-				"content-type": "application/json"
-			},
-			body: JSON.stringify(place)
-		}).then(response => {
+		try {
+			const savedPlace = await this.apiClient[place.id ? "put" : "post"](
+				`/named-places${place.id ? "/{id}" : ""}`,
+				place.id ? { path: { id: place.id } } : undefined,
+				place
+			);
 			this.props.formContext.services.blocker.pop();
-			this.apiClient.invalidateCachePath("/named-places");
-			return response.json();
-		}).then(this.props.onSave)
-			.catch(() => {
-				this.props.formContext.services.blocker.pop();
-				this.setState({failed: SAVE});
-			});
+			await this.props.onSave(savedPlace);
+		} catch (e) {
+			this.props.formContext.services.blocker.pop();
+			this.setState({failed: SAVE});
+		}
 	}
 
 	onSaveNew = (e) => {

@@ -8,7 +8,7 @@ import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 function renderFlag(suggestion, prepend) {
-	return (suggestion && suggestion.payload || {}).finnish
+	return (suggestion || {}).finnish
 		? <React.Fragment>{prepend || null}<img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16"/></React.Fragment>
 		: null;
 }
@@ -24,10 +24,11 @@ export default class _AutosuggestWidget extends React.Component {
 	render() {
 		if (this.props.options) {
 			switch (this.props.options.autosuggestField) {
+			case "taxa":
 			case "taxon":
-				return <TaxonAutosuggestWidget {...this.props} />;
+				return <TaxonAutosuggestWidget {...this.props} options={ { ...this.props.options, autosuggestField: "taxa" } } />;
 			case "unit":
-				return <UnitAutosuggestWidget {...this.props} />;
+				return <UnitAutosuggestWidget {...this.props} basePath="/shorthand/unit/trip-report" />;
 			case "friends":
 			case "person":
 				return <FriendsAutosuggestWidget {...this.props} />;
@@ -49,6 +50,7 @@ export default class _AutosuggestWidget extends React.Component {
 			let component = undefined;
 			switch (options.autosuggestField) {
 			case "taxon":
+			case "taxa":
 				component = TaxonAutosuggestWidget;
 				break;
 			case "unit":
@@ -131,18 +133,17 @@ function TaxonAutosuggest(ComposedComponent) {
 			}
 		}
 
-		getSuggestionFromValue(value) {
+		async getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
-				return this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
-					if (vernacularName !== undefined) {
-						return {value: vernacularName, key: value};
-					}
-					if (scientificName !== undefined) {
-						return {value: scientificName, key: value};
-					}
-				});
+				const {vernacularName, scientificName} = await this.props.formContext.apiClient.get(`/taxa/${id}`)
+				if (vernacularName !== undefined) {
+					return {value: vernacularName, key: value};
+				}
+				if (scientificName !== undefined) {
+					return {value: scientificName, key: value};
+				}
 			} else {
-				return Promise.reject();
+				throw new Error("Unknown taxon");
 			}
 		}
 
@@ -199,7 +200,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			this.autosuggestRef.selectSuggestion({
 				key: taxonID,
 				value: taxon.vernacularName,
-				payload: taxon
+				...taxon
 			});
 		};
 
@@ -250,12 +251,12 @@ class UnitAutosuggestWidget extends React.Component {
 		this.renderSuggestion = this.renderSuggestion.bind(this);
 	}
 	renderSuggestion(suggestion) {
-		const {count, maleIndividualCount, femaleIndividualCount} = suggestion.payload.interpretedFrom;
+		const {count, maleIndividualCount, femaleIndividualCount} = suggestion.interpretedFrom;
 		const [countElem, maleElem, femaleElem] = [count, maleIndividualCount, femaleIndividualCount].map(val => 
 			val && <span className="text-muted">{val}</span>
 		);
-		const taxonName = suggestion.payload.unit.identifications[0].taxon;
-		const name = suggestion.payload.isNonMatching
+		const taxonName = suggestion.unit.identifications[0].taxon;
+		const name = suggestion.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
 		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag(suggestion)}</span>;
@@ -271,22 +272,21 @@ class FriendsAutosuggestWidget extends React.Component {
 		this.isValueSuggested = this.isValueSuggested.bind(this);
 	}
 
-	getSuggestionFromValue(value) {
+	async getSuggestionFromValue(value) {
 		const {showID} = getUiOptions(this.props);
 		const {isAdmin} = this.props.formContext.uiSchemaContext;
 		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/person/by-id/${value}`).then(({fullName, group, id}) => {
-				if (fullName) {
-					const addGroup = str => group ? `${str} (${group})` : str;
-					const addID = str => isAdmin && showID ? `${str} (${id})` : str;
-					return {
-						value: addID(addGroup(fullName)),
-						key: value
-					};
-				}
-			});
+			const {fullName, group, id} = await this.props.formContext.apiClient.get(`/person/by-id/${value}`);
+			if (fullName) {
+				const addGroup = str => group ? `${str} (${group})` : str;
+				const addID = str => isAdmin && showID ? `${str} (${id})` : str;
+				return {
+					value: addID(addGroup(fullName)),
+					key: value
+				};
+			}
 		} else {
-			return Promise.reject();
+			throw new Error("Unknown friend");
 		}
 	}
 
@@ -414,21 +414,18 @@ class BasicAutosuggestWidget extends React.Component {
 		this.isValueSuggested = this.isValueSuggested.bind(this);
 	}
 
-	getSuggestionFromValue(value) {
+	async getSuggestionFromValue(value) {
 		const { autosuggestField, nameField } = this.props;
 		if (this.isValueSuggested(value)) {
-			const apiClient = this.props.formContext.apiClient;
-			const fetch = (this.props.cache ? apiClient.fetchCached : apiClient.fetch).bind(apiClient);
-			return fetch(`/${autosuggestField}/by-id/${value}`).then(result => {
-				if (result[nameField]) {
-					return {
-						value: result[nameField],
-						key: value
-					};
-				}
-			});
+			const result = await this.props.formContext.apiClient.get(`/${autosuggestField}/by-id/${value}`, undefined, this.props.cache);
+			if (result[nameField]) {
+				return {
+					value: result[nameField],
+					key: value
+				};
+			}
 		} else {
-			return Promise.reject();
+			throw new Error("Not autosuggested value");
 		}
 	}
 
@@ -621,12 +618,12 @@ export class Autosuggest extends React.Component {
 		const {findExactMatch} = this.props;
 		return findExactMatch
 			? findExactMatch(suggestions, inputValue)
-			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
+			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase() && !suggestion.isNonMatching));
 	};
 
 	findTheOnlyOneMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		const filtered = suggestions.filter(suggestion => !suggestion || !suggestion.payload || !suggestion.payload.isNonMatching);
+		const filtered = suggestions.filter(suggestion => !suggestion || !suggestion.isNonMatching);
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
@@ -634,7 +631,7 @@ export class Autosuggest extends React.Component {
 	
 	findNonMatching = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		const filtered = suggestions.filter(suggestion => suggestion && suggestion.payload  && suggestion.payload.isNonMatching);
+		const filtered = suggestions.filter(suggestion => suggestion && suggestion.isNonMatching);
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
@@ -662,11 +659,23 @@ export class Autosuggest extends React.Component {
 
 		this.setState({isLoading: true});
 
-		const request = () => {
+		const request = async () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			const fetch = (this.props.cache ? this.apiClient.fetchCached : this.apiClient.fetch).bind(this.apiClient);
-			fetch("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
+			try {
+				let suggestionsResponse = await this.apiClient.get(this.props.basePath || "/autocomplete" + "/" + autosuggestField,
+					{ query: {
+						// Hack for laji-form in Kotka, since it uses API that isn't laji-api and q was renamed to query in laji-api
+						q: value,
+						query: value,
+						matchType: "exact,partial",
+						includeHidden: false,
+						...query
+					} },
+					this.props.cache
+				);
+				// Hack for laji-form in Kotka, since it uses API that isn't laji-api and might have different response signature.
+				let suggestions = Array.isArray(suggestionsResponse) ? suggestionsResponse : suggestionsResponse.results;
 				if (this.props.prepareSuggestion) {
 					suggestions = suggestions.map(s => this.props.prepareSuggestion(s));
 				}
@@ -676,11 +685,11 @@ export class Autosuggest extends React.Component {
 				this.mounted
 					? this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions))
 					: this.afterBlurAndFetch(suggestions);
-			}).catch(() => {
+			} catch (e) {
 				this.mounted
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)
 					: this.afterBlurAndFetch();
-			});
+			}
 		};
 
 		if (this.timeout) {
@@ -777,29 +786,27 @@ export class Autosuggest extends React.Component {
 
 		const {renderExtra} = props;
 
-		return (
-			<React.Fragment>
-				{renderExtra && renderExtra()}
-				<div className={classNames("autosuggest-wrapper", props.wrapperClassName)}>
-					<ReactAutosuggest
-						id={`${this.props.id}-autosuggest`}
-						inputProps={inputProps}
-						renderInputComponent={this.renderInput}
-						suggestions={suggestions}
-						renderSuggestion={this.renderSuggestion}
-						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-						onSuggestionSelected={this.onSuggestionSelected}
-						onUnsuggestedSelected={this.onUnsuggestedSelected}
-						highlightFirstSuggestion={highlightFirstSuggestion}
-						suggestionsOpenOnFocus={!this.isSuggested()}
-						theme={cssClasses}
-						formContext={this.props.formContext}
-						ref={this.setRef}
-					/>
-				</div>
-			</React.Fragment>
-		);
+		return <>
+			{renderExtra && renderExtra()}
+			<div className={classNames("autosuggest-wrapper", props.wrapperClassName)}>
+				<ReactAutosuggest
+					id={`${this.props.id}-autosuggest`}
+					inputProps={inputProps}
+					renderInputComponent={this.renderInput}
+					suggestions={suggestions}
+					renderSuggestion={this.renderSuggestion}
+					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+					onSuggestionSelected={this.onSuggestionSelected}
+					onUnsuggestedSelected={this.onUnsuggestedSelected}
+					highlightFirstSuggestion={highlightFirstSuggestion}
+					suggestionsOpenOnFocus={!this.isSuggested()}
+					theme={cssClasses}
+					formContext={this.props.formContext}
+					ref={this.setRef}
+				/>
+			</div>
+		</>;
 	}
 
 	setRef = (elem) => {
@@ -997,40 +1004,38 @@ class _TaxonWrapper extends React.Component {
 		this.fetch(value);
 	}
 
-	fetch(value) {
+	async fetch(value) {
 		if (!value) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
+			this.props.formContext.apiClient.get(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalGroups, finnish}) => {
 				if (!this.mounted) return;
-				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
+				this.setState({value, taxonRank, informalTaxonGroups: informalGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
 
 				getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
 					this.setState({informalTaxonGroupsById});
 				});
 			});
-			this.props.formContext.apiClient.fetchCached(`/taxa/${value}/parents`).then(parents => {
-				if (!this.mounted) return;
-				const state = {order: undefined, family: undefined};
-				for (let parent of parents) {
-					const {vernacularName, scientificName, cursiveName} = parent;
-					if (parent.taxonRank === "MX.order") {
-						state.order = {vernacularName, scientificName, cursiveName};
-					} else if (parent.taxonRank === "MX.family") {
-						state.family = {vernacularName, scientificName, cursiveName};
-					}
-					if (state.order && state.family) {
-						this.setState(state);
-						break;
-					}
+			const parents = (await this.props.formContext.apiClient.get(`/taxa/${value}/parents`)).results;
+			if (!this.mounted) return;
+			const state = {order: undefined, family: undefined};
+			for (let parent of parents) {
+				const {vernacularName, scientificName, cursiveName} = parent;
+				if (parent.taxonRank === "MX.order") {
+					state.order = {vernacularName, scientificName, cursiveName};
+				} else if (parent.taxonRank === "MX.family") {
+					state.family = {vernacularName, scientificName, cursiveName};
 				}
-				this.setState({...state, higherThanOrder: !state.order && !state.family});
-			});
-			this.props.formContext.apiClient.fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
-				if (!this.mounted) return;
-				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
-			});
+				if (state.order && state.family) {
+					this.setState(state);
+					break;
+				}
+			}
+			this.setState({...state, higherThanOrder: !state.order && !state.family});
+			const taxonRanks = await this.props.formContext.apiClient.get("/metadata/ranges/MX.taxonRankEnum");
+			if (!this.mounted) return;
+			this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
 		}
 	}
 
@@ -1185,7 +1190,7 @@ class TaxonImgChooser extends React.Component {
 
 	componentDidMount(){
 		this.mounted = true;
-		this.props.formContext.apiClient.fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
+		this.props.formContext.apiClient.get(`/taxa/${this.props.id}`, { query: { includeMedia: true }}).then(taxon => {
 			if (!this.mounted) return;
 
 			if (taxon.multimedia && taxon.multimedia.length) {
@@ -1256,7 +1261,7 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		<React.Fragment>
 			{`${vernacularName}${vernacularName ? " " : ""}`}
 			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-			{renderFlag({payload: {finnish}}, " ")}
+			{renderFlag({finnish}, " ")}
 		</React.Fragment>
 	);
 };

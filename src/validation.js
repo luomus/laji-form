@@ -2,7 +2,7 @@ import * as lajiValidate from "@luomus/laji-validate";
 
 export function initializeValidation(apiClient) {
 	lajiValidate.extend(lajiValidate.validators.remote, {
-		fetch: (...params) => apiClient.fetchRaw(...params)
+		fetch: (...params) => apiClient.apiClient.fetch(...params)
 	});
 }
 

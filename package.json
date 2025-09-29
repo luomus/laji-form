@@ -28,7 +28,8 @@
     "test:docker": "npm run test:docker:build && npm run test:docker:run --",
     "test:lightweight": "npx playwright test --project chromium",
     "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
-    "test:docker:run": "docker run laji-form-test"
+    "test:docker:run": "docker run laji-form-test",
+    "generate:api-client": "openapi-typescript https://apitest.laji.fi/explorer-json -o ./generated/api.d.ts --properties-required-by-default"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -82,6 +83,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "mini-css-extract-plugin": "^2.1.0",
     "notus": "^0.3.2",
+    "openapi-typescript": "^7.9.1",
     "querystring": "^0.2.1",
     "rimraf": "^2.5.4",
     "style-loader": "^3.0.0",

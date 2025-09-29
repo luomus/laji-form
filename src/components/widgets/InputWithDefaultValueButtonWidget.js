@@ -59,10 +59,9 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 		} else if (apiQueryForDefaultValue) {
 			const {path, query = {}, resultKey, cache = false} = apiQueryForDefaultValue;
 			const apiClient = this.props.formContext.apiClient;
-			const fetch = (cache ? apiClient.fetchCached : apiClient.fetch).bind(apiClient);
 
 			this.setState({fetching: true});
-			return fetch(path, query).then(result => {
+			return apiClient.get(path, { query }, cache).then(result => {
 				if (result[resultKey]) {
 					this.props.onChange(result[resultKey]);
 				}

@@ -6,7 +6,7 @@ import merge from "deepmerge";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
-		return suggestion.payload ? suggestion.payload.informalTaxonGroups.map(item => typeof item === "string" ? item : item.id) : [];
+		return (suggestion.informalGroups || []).map(item => typeof item === "string" ? item : item.id);
 	}
 };
 
@@ -34,8 +34,8 @@ const parseQuery = (query, props, taxonGroups) => {
  *  suggestionValueField: <fieldName> (the field which the value for autosuggest is pulled from)
  *  suggestionReceivers: {
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
- *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
- *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "/payload/informalgroups/0"}
+ *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", informalGroups: ["linnut"]}
+ *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "/informalgroups/0"}
  *                                         If fieldName start  with '$', then a function from autosuggestFieldSettings parses the suggestion. Example: $taxonGroup
  *                                         If fieldName start  with '/', it is handled as a JSON pointer.
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
@@ -225,7 +225,7 @@ export default class AutosuggestField extends React.Component {
 		};
 
 		if (autosuggestField === "unit") {
-			let {unit} = suggestion.payload;
+			let {unit} = suggestion;
 			if (unit.unitType) {
 				unit.informalTaxonGroups = unit.unitType;
 				delete unit.unitType;

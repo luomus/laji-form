@@ -67,8 +67,8 @@ export default class UnitListShorthandArrayField extends React.Component {
 		this.onHide();
 		const {translations, notifier, apiClient} = this.props.formContext;
 		this.props.formContext.services.blocker.push();
-		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
-			units = units.map(unit => {
+		apiClient.get("/shorthand/unit/list", { query: { query: value } }).then(({results, nonMatchingCount}) => {
+			const units = results.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit);
 				unit = bringRemoteFormData(unit, this.props.formContext);
 				unit = assignUUID(unit);

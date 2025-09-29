@@ -67,7 +67,7 @@ export default class UnitCountShorthandField extends React.Component {
 				return;
 			}
 
-			apiClient.fetchCached("/autocomplete/pairCount", {q: value, taxonID: taxonId}).then(suggestion => {
+			apiClient.get("/shorthand/unit/water-bird-pair-count", { query: { query: value, taxonID: taxonId } }).then(suggestion => {
 				if (timestamp !== this.promiseTimestamp) {
 					reject();
 					return;

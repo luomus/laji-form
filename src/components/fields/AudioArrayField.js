@@ -83,13 +83,16 @@ const LajiAudio = React.forwardRef((props, ref) => {
 	const [mp3Url, setMp3Url] = useState(null);
 	const [wavUrl, setWavUrl] = useState(null);
 	const [flacUrl, setFlacUrl] = useState(null);
-	useEffect(() => {
-		props.apiClient.fetchCached(`/audio/${props.id}`, undefined, {failSilently: true}).then(response => {
+	useEffect(async () => {
+		let response;
+		try {
+			response = await props.apiClient.get(`/audio/${props.id}`);
 			setMp3Url(response.mp3URL);
 			setWavUrl(response.wavURL);
 			setFlacUrl(response.flacURL);
-			props.onLoaded && props.onLoaded(true);
-		});
+		} catch (e) {
+		}
+		props.onLoaded && props.onLoaded(true);
 	});
 	return !mp3Url ? <Spinner style={props.style} /> : (
 		<div>

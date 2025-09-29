@@ -48,7 +48,7 @@ test.describe("NAFI (MHL.6)", () => {
 		});
 
 		test("selects suggestion value", async () => {
-			const autocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
+			const autocompleteMock = await form.setMockResponse("/autocomplete/taxa", false);
 			await taxonAutosuggest.$input.fill("kettu");
 			await autocompleteMock.resolve(taxonAutocompleteResponse);
 			await taxonAutosuggest.$suggestions.first().click();

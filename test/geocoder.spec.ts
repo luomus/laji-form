@@ -121,7 +121,7 @@ test.describe("Geocoder", () => {
 			expect(await form.getSubmittedData()).toBe(undefined);
 			await expect(form.$runningJobs).toBeVisible();
 
-			await reject();
+			await reject("foo");
 			await remove();
 
 			await expect(form.failedJobs.$$errors).toHaveCount(1);

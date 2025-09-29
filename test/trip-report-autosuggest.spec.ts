@@ -72,7 +72,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 		test.beforeAll(async () => {
 			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.0.identifications.0.taxon");
 			$addUnit = form.$locateButton("gatherings.0.units", "add");
-			mock = await form.setMockResponse("/autocomplete/taxon");
+			mock = await form.setMockResponse("/autocomplete/taxa");
 			await mock.resolve(require("./mock/autocomplete-taxon-kettu.json"));
 		});
 
@@ -255,32 +255,30 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 		});
 
 		test("works when autocomplete response has autocompleteSelectedName", async() => {
-			const mockKuusi = await form.setMockResponse("/autocomplete/taxon");
+			const mockKuusi = await form.setMockResponse("/autocomplete/taxa");
 			await taxonAutosuggest.$input.fill("kuusi");
 			const autocompleteSelectedName = "foobar";
-			await mockKuusi.resolve([{
+			await mockKuusi.resolve({ results: [{
 				"key": "MX.37812",
 				"value": "kuusi",
 				autocompleteSelectedName,
-				"payload": {
-					"matchingName": "kuusi",
-					"informalTaxonGroups": [
-						{
-							"id": "MVL.343",
-							"name": "Putkilokasvit"
-						}
-					],
-					"scientificName": "Picea abies",
-					"scientificNameAuthorship": "(L.) H. Karst.",
-					"taxonRankId": "MX.species",
-					"matchType": "exactMatches",
-					"cursiveName": true,
-					"finnish": true,
-					"species": true,
-					"nameType": "MX.obsoleteVernacularName",
-					"vernacularName": "metsäkuusi"
-				}
-			}]);
+				"matchingName": "kuusi",
+				"informalGroups": [
+					{
+						"id": "MVL.343",
+						"name": "Putkilokasvit"
+					}
+				],
+				"scientificName": "Picea abies",
+				"scientificNameAuthorship": "(L.) H. Karst.",
+				"taxonRankId": "MX.species",
+				"type": "exactMatches",
+				"cursiveName": true,
+				"finnish": true,
+				"species": true,
+				"nameType": "MX.obsoleteVernacularName",
+				"vernacularName": "metsäkuusi"
+			}] });
 
 			await expect(taxonAutosuggest.$suggestions.first()).toBeVisible();
 			await taxonAutosuggest.$input.press("Tab");

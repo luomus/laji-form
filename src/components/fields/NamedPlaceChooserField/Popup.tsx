@@ -1,10 +1,11 @@
 import * as React from "react";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-import { NamedPlace } from "@luomus/laji-schema";
 import { FormContext } from "src/components/LajiForm";
 import Spinner from "react-spinner";
 import { isEmptyString } from "../../../utils";
 import { Button, DeleteButton } from "../../../components/components";
+import type { components } from "generated/api.d";
+type NamedPlace = components["schemas"]["namedPlace"];
 
 type Props = {
 	onPlaceSelected: (place: NamedPlace) => void

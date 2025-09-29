@@ -1159,12 +1159,12 @@ const headerFormatters = {
 
 			fetch = (props) =>  {
 				const {namedPlaceID} = (props.that.props.formData || {})[props.idx] || {};
-				if (namedPlaceID) props.that.props.formContext.apiClient.fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
+				if (namedPlaceID) props.that.props.formContext.apiClient.get(`/named-places/{id}`, { path: { id: namedPlaceID } }).then(response => {
 					if (this.mounted && response.name !== this.state.name) this.setState({
 						namedPlaceID,
 						name: response.name
 					});
-				});
+				}).catch(() => {});
 			};
 
 			render() {

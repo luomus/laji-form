@@ -329,7 +329,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const item = this.props.formData[i];
 			this.setState({metadataModalOpen: i});
 			this.fetching = item;
-			this.apiClient.fetch(`/${this.ENDPOINT}/${item}`).then((response: any) => {
+			this.apiClient.get(`/${this.ENDPOINT}/{id}` as any, { path: { id: item } }).then((response: any) => {
 				if (response.id !== this.fetching) return;
 				this._context.metadatas[item] = response;
 				this.setState({modalIdx: i, modalMediaSrc: response.fullURL, modalMetadata: this._context.metadatas[item]});
@@ -339,10 +339,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		onMediaRmClick = (i: number) => () => {
 			const id = this.props.formData[i];
 			this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
-			this.apiClient.fetch(`/${this.ENDPOINT}/${id}`, undefined, {
-				method: "DELETE",
-				failSilently: true
-			});
+			try {
+			this.apiClient.delete(`/${this.ENDPOINT}/{id}` as any, { path: { id } });
+			} catch (e) {
+			}
 		};
 
 		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
@@ -356,7 +356,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const metadataForm = this.state.metadataForm || {};
 
 			if (typeof metadataModalOpen === "number" && !this.state.metadataForm) {
-				this.apiClient.fetchCached(`/forms/${this.METADATA_FORM_ID}`, {lang, format: "schema"})
+				this.apiClient.get("/forms/{id}", { path: { id: this.METADATA_FORM_ID }, query: {lang, format: "schema"} })
 					.then(metadataForm => {
 						if (this.mounted) {
 							this.setState({metadataForm});
@@ -638,9 +638,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return _parentLajiFormId;
 		};
 
-		saveMedias(files: File[]) {
+		async saveMedias(files: File[]) {
 			const containerId = this.getContainerId();
-			let tmpMedias: number[];
+			let tmpMedias: number[] = [];
 
 			const fail = (translationKey: string | string[], additionalInfo = "") => {
 				const translation = (Array.isArray(translationKey) ? translationKey : [translationKey])
@@ -649,7 +649,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				throw `${translation} ${additionalInfo}`;
 			};
 
-			return this.processFiles(files).then(processedFiles => {
+			try {
+				const processedFiles = await this.processFiles(files);
+
 				let invalidFile = (files.length <= 0);
 				let fileTooLarge = false;
 				let noValidData = true;
@@ -664,7 +666,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				});
 				this.mounted && this.setState({tmpMedias: [...(this.state.tmpMedias || []), ...tmpMedias]});
 
-				const formDataBody = files.reduce((body, file) => {
+				const formData = files.reduce((body, file) => {
 					if (!this.ALLOWED_FILE_TYPES.includes(file.type)) {
 						invalidFile = true;
 					} else if (file.size > this.MAX_FILE_SIZE) {
@@ -682,59 +684,27 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				} else if (noValidData && fileTooLarge) {
 					fail("AllowedFileSize", this.getMaxFileSizeAsString() + ".");
 					return;
-				} else {
-					return this.apiClient.fetchRaw(`/${this.ENDPOINT}`, undefined, {
-						method: "POST",
-						body: formDataBody
-					});
 				}
-			}).then(response => {
-				if (!response) return;
-				if (response.status < 400) {
-					return response.json();
-				} else if (response.status ===  400) {
-					fail("InvalidFile");
-				} else if (response.status === 503) {
-					fail("InsufficientSpace");
-				} else {
-					fail(["SomethingWentWrong", "TryAgainLater"]);
-				}
-			}).then(response => {
-				if (!response) return;
-				return this.getMetadataPromise().then(mediaMetadata => {
-					return Promise.all(response.map((item: any) => {
-						return this.apiClient.fetchRaw(`/${this.ENDPOINT}/${item.id}`, undefined, {
-							method: "POST",
-							headers: {
-								"accept": "application/json",
-								"content-type": "application/json"
-							},
-							body: JSON.stringify(mediaMetadata)
-						}).then(response => {
-							if (response.status < 400) {
-								return response.json();
-							}
-						});
-					}));
-				});
-			}).then(response => {
-				if (!response) return;
-				const ids = response.map((item: any) => item ? item.id : undefined).filter(item => item !== undefined);
+
+				const tmpMediaEntities = await this.apiClient.post(`/${this.ENDPOINT}` as any, undefined, formData as any) as any;
+				const mediaMetadata = await this.getMetadataPromise();
+				const mediaEntities = await Promise.all(tmpMediaEntities.map((item: any) => 
+					this.apiClient.post(`/${this.ENDPOINT}/{id}` as any, { path: { id: item.id } }, mediaMetadata as any)
+				));
+				const ids = mediaEntities.map((item: any) => item ? item.id : undefined).filter(item => item !== undefined);
 
 				tmpMedias.forEach(id => {
 					delete this._context.tmpMedias[containerId][id];
 				});
 				this.mounted && this.setState({tmpMedias: this.state.tmpMedias.filter(id => !tmpMedias.includes(id))});
 				return ids;
-			}).catch((e) => {
-				if (tmpMedias) {
-					tmpMedias.forEach(id => {
-						delete this._context.tmpMedias[containerId][id];
-					});
-					this.mounted && this.setState({tmpMedias: this.state.tmpMedias.filter(id => !tmpMedias.includes(id))});
-				}
+			} catch (e) {
+				tmpMedias.forEach(id => {
+					delete this._context.tmpMedias[containerId][id];
+				});
+				this.mounted && this.setState({tmpMedias: this.state.tmpMedias.filter(id => !tmpMedias.includes(id))});
 				throw e;
-			});
+			}
 		}
 
 		addNameToDataURL = (dataURL: string, name: string) => {
@@ -761,16 +731,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			});
 		};
 
-		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
+		onMediaMetadataUpdate = async ({formData}: {formData: any}) => {
 			this.props.formContext.services.blocker.push();
-			this.apiClient.fetch(`/${this.ENDPOINT}/${formData.id}`, undefined, {
-				method: "PUT",
-				headers: {
-					"accept": "application/json",
-					"content-type": "application/json"
-				},
-				body: JSON.stringify(formData)
-			}).then(() => {
+			try {
+				await this.apiClient.put(`/${this.ENDPOINT}/{id}` as any, { path: { id: formData.id } }, formData)
 				this.props.formContext.services.blocker.pop();
 				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {
@@ -778,10 +742,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				} else {
 					notify();
 				}
-			}).catch(() => {
+			} catch (e) {
 				this.props.formContext.services.blocker.pop();
 				this.mounted && this.setState({metadataSaveSuccess: false});
-			});
+			}
 		};
 
 		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
@@ -793,7 +757,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return ("capturerVerbatim" in mediaMetadata)
 				? Promise.resolve({...mediaMetadata, capturerVerbatim: [mediaMetadata.capturerVerbatim]})
 				: MACode
-					? this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName = MACode}) => (
+					? this.apiClient.get("/person/by-id/{personId}", { path: { personId: MACode } }).then(({fullName = MACode}) => (
 						{
 							capturerVerbatim: Array.isArray(fullName) ? fullName : [fullName],
 							...mediaMetadata,
@@ -864,12 +828,14 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 		this.updateURL(props);
 	}
 
-	updateURL = ({id, apiClient, apiEndpoint = "images"}: ThumbnailProps) => {
+	updateURL = async ({id, apiClient, apiEndpoint = "images"}: ThumbnailProps) => {
 		if (!id) return;
-		apiClient.fetchCached(`/${apiEndpoint}/${id}`, undefined, {failSilently: true}).then((response: any) => {
+		try {
+			const response = await apiClient.get(`/${apiEndpoint}/{id}` as any, { path: { id } }) as any;
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL, linkUrl: response.originalURL});
-		});
+		} catch (e) {
+		}
 	};
 
 	render() {

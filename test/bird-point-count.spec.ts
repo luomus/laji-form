@@ -32,7 +32,7 @@ test.describe("Bird point count (MHL.75)", () => {
 	test("when two units and 1st is removed, the autosuggest input value updated to the value of the 1st", async () => {
 		const taxonAutosuggest1 = form.getTaxonAutosuggestWidget("gatherings.0.units.0.identifications.0.taxonVerbatim");
 		const taxonAutosuggest2 = form.getTaxonAutosuggestWidget("gatherings.0.units.1.identifications.0.taxonVerbatim");
-		const mockQueue = await form.createMockResponseQueue("/autocomplete/taxon");
+		const mockQueue = await form.createMockResponseQueue("/autocomplete/taxa");
 		const peippoMock = await mockQueue.create();
 		const mustarastasMock = await mockQueue.create();
 

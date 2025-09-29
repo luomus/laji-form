@@ -1218,7 +1218,7 @@ function _MapArrayField(ComposedComponent) {
 			this.computeArea(prevProps);
 		}
 
-		geocode = () => {
+		geocode = async () => {
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
 			const item = (this.props.formData || [])[this.state.activeIdx];
 			const {areaField} = getUiOptions(this.props.uiSchema);
@@ -1231,9 +1231,8 @@ function _MapArrayField(ComposedComponent) {
 			}
 			const geometries = this.getGeometries();
 			if (geometries.length === 0 && area && area.length > 0) {
-				this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
-					this.map.geocode(result.name, undefined, 8);
-				});
+				const { name } = await this.props.formContext.apiClient.get(`/areas/${area}`)
+				this.map.geocode(name, undefined, 8);
 			}
 		};
 

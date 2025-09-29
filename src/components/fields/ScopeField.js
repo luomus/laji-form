@@ -13,7 +13,7 @@ import { orderProperties } from "@rjsf/utils";
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (props, taxonGroup) => {
-			return props.formContext.apiClient.fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
+			return props.formContext.apiClient.get("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
 				return "";

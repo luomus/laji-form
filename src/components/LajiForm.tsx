@@ -329,7 +329,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	UNSAFE_componentWillReceiveProps(props: LajiFormProps) {
-		if ( props.apiClient && props.apiClient !== this.apiClient) {
+		if ( props.apiClient && props.apiClient !== this.apiClient.apiClient) {
 			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
 		}
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {

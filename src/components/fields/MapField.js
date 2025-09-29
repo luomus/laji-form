@@ -114,7 +114,7 @@ export default class MapField extends React.Component {
 		}
 	}
 
-	geocode = (prevProps) => {
+	geocode = async (prevProps) => {
 		let {area} = getUiOptions(this.props.uiSchema);
 		if (area instanceof Array) {
 			area = area[0];
@@ -127,9 +127,8 @@ export default class MapField extends React.Component {
 				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
 		});
 		if (isEmptyAndWasEmpty && area && area.length > 0) {
-			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result) => {
-				this.map.geocode(result.name, undefined, 8);
-			});
+			const { name } = await this.props.formContext.apiClient.get(`/areas/${area}`);
+			this.map.geocode(name, undefined, 8);
 		}
 	};
 

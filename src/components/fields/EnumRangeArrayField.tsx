@@ -16,7 +16,7 @@ export default function EnumRangeArrayField(props: FieldProps<JSONSchemaArray<JS
 	}, [propsOnChange]);
 	const getEnumOptionsAsync = useCallback(
 		async () => {
-			const enums = await props.formContext.apiClient.fetchCached<{ id: string, value: string }[]>(`/metadata/ranges/${range}`);
+			const enums = await (props.formContext.apiClient.get as any)(`/metadata/ranges/${range}`) as { id: string, value: string }[];
 			return enums.map(({value}) => ({value, label: value}));
 		},
 		[props.formContext.apiClient, range]

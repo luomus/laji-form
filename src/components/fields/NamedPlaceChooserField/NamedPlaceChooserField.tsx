@@ -2,9 +2,11 @@ import * as React from "react";
 import ReactContext from "../../../ReactContext";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../../types";
 import { addLajiFormIds, getDefaultFormState, getInnerUiSchema, getUiOptions } from "../../../utils";
-import { NamedPlace } from "@luomus/laji-schema";
+// import { NamedPlace } from "@luomus/laji-schema";
 import getContext from "../../../Context";
 import { NamedPlaceChooser } from "./NamedPlaceChooser";
+import type { components } from "generated/api.d";
+type NamedPlace = components["schemas"]["namedPlace"];
 
 type Props = FieldProps<NamedPlace, JSONSchemaObject | JSONSchemaArray<JSONSchemaObject>>
 type State = { 
@@ -33,7 +35,6 @@ const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
 export default class NamedPlaceChooserField extends React.Component<Props, State> {
 	static contextType = ReactContext;
 
-	removeIds: Record<string, boolean> = {};
 	mounted = false;
 
 	state: State = {};
@@ -113,68 +114,65 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 		}
 	};
 
-	onPlaceDeleted = (place: NamedPlace, success: () => void) => {
-		this.props.formContext.apiClient.fetchRaw(`/named-places/${place.id}`, undefined, {method: "DELETE"}).then(response => {
-			if (response.status < 400) {
-				// It takes a while for API to remove the place, so we remove it locally and then invalidate again after some time.
-				this.removeIds[place.id!] = true;
-				this.props.formContext.apiClient.invalidateCachePath("/named-places");
-				setTimeout(() => this.props.formContext.apiClient.invalidateCachePath("/named-places"), 2000);
-				success();
-			}
-		}).catch(() => {
+	onPlaceDeleted = async (place: NamedPlace & { id: string }, end: () => void) => {
+		try {
+			await this.props.formContext.apiClient.delete(`/named-places/{id}`, { path: { id: place.id } })
+			end();
+		} catch (e) {
 			this.setState({failed: PLACE_DELETE_FAIL});
 			this.props.formContext.notifier.error(this.props.formContext.translations.PlaceRemovalFailed);
-		});
+			end();
+		}
 	};
 
 	onButtonClick = () => () => {
 		this.setState({show: true});
 	};
 
-	updatePlaces = () => {
-		this.props.formContext.apiClient.fetchCached<{ results: NamedPlace[] }>("/named-places", {includePublic: false, pageSize: 100000}).then(response => {
-			if (!this.mounted) return;
-			const state: State = {places: response.results.filter(p => !this.removeIds[p.id!]).sort((a, b) => {
-				if (a.name < b.name) return -1;
-				if (a.name > b.name) return 1;
-				return 0;
-			})};
+	updatePlaces = (response: { results: NamedPlace[] }) => {
+		if (!this.mounted) return;
+		const state: State = {places: response.results.sort((a, b) => {
+			if (a.name < b.name) return -1;
+			if (a.name > b.name) return 1;
+			return 0;
+		})};
 
-			if (!response.results?.length) {
-				return;
-			}
-			const buttonDefinition: any = {
-				fn: this.onButtonClick,
-				fnName: "addNamedPlace",
-				glyph: "map-marker",
-				label: this.props.formContext.translations.ChooseFromNamedPlace,
-				id: this.props.idSchema.$id,
-				changesFormData: true,
-				variant: "primary"
-			};
-			if (this.isGatheringsArray(this.props.schema)) {
-				buttonDefinition.rules = {canAdd: true};
-			} else {
-				buttonDefinition.position = "top";
-			}
-			state.buttonDefinition = buttonDefinition;
+		if (!response.results?.length) {
+			return;
+		}
+		const buttonDefinition: any = {
+			fn: this.onButtonClick,
+			fnName: "addNamedPlace",
+			glyph: "map-marker",
+			label: this.props.formContext.translations.ChooseFromNamedPlace,
+			id: this.props.idSchema.$id,
+			changesFormData: true,
+			variant: "primary"
+		};
+		if (this.isGatheringsArray(this.props.schema)) {
+			buttonDefinition.rules = {canAdd: true};
+		} else {
+			buttonDefinition.position = "top";
+		}
+		state.buttonDefinition = buttonDefinition;
 
-			this.setState(state);
-		}).catch(() => {
-			this.setState({failed: PLACES_FETCH_FAIL});
-		});
+		this.setState(state);
 	};
+
+	getNamedPlacesUnsubscribe: () => void;
 
 	componentDidMount() {
 		this.mounted = true;
-		this.updatePlaces();
-		this.props.formContext.apiClient.onCachePathInvalidation("/named-places", this.updatePlaces);
+		this.getNamedPlacesUnsubscribe = this.props.formContext.apiClient.subscribe("/named-places", { query: { includePublic: false, pageSize: 100000 } },
+			this.updatePlaces,
+			() => this.setState({failed: PLACES_FETCH_FAIL}),
+			1000
+		);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this.props.formContext.apiClient.removeOnCachePathInvalidation("/named-places", this.updatePlaces);
+		this.getNamedPlacesUnsubscribe();
 	}
 
 	onHide = () => this.setState({show: false});

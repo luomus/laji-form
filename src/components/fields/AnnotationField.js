@@ -128,7 +128,7 @@ class AnnotationBox extends React.Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		this.props.formContext.apiClient.fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
+		this.props.formContext.apiClient.get(`/forms/${this.props.formId}`, { query: { format: "schema" } })
 			.then(metadataForm => {
 				if (!this.mounted) return;
 				const {filter: _filter} = this.props;
@@ -148,28 +148,22 @@ class AnnotationBox extends React.Component {
 		this.mounted = false;
 	}
 
-	onAnnotationSubmit = ({formData}) => {
+	onAnnotationSubmit = async ({formData}) => {
 		const {type} = this.getAddOptions();
 		const rootID = this.props.formContext.services.rootInstance.getFormData().id;
 		this.props.formContext.services.blocker.push();
-		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
-			method: "POST",
-			body: JSON.stringify({...formData, targetID: this.props.id, rootID, type, byRole: "MMAN.formAdmin"})
-		}).then(response => {
-			if (response.status >= 400) {
-				throw new Error("Request failed");
-			}
-			return response.json();
-		}).then(annotation => {
+		const body = {...formData, targetID: this.props.id, rootID, type, byRole: "MMAN.formAdmin"};
+		try {
+			const annotation = await this.props.formContext.apiClient.post("/annotations", undefined, body);
 			this.props.formContext.services.blocker.pop();
 			const annotationContext = getContext(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
-		}).catch(() => {
+		} catch (e) {
 			this.props.formContext.services.blocker.pop();
 			this.setState({fail: true});
-		});
+		}
 	};
 
 	onAnnotationChange = (formData) => {
@@ -254,7 +248,7 @@ class AnnotationBox extends React.Component {
 								{translations[this.state.fail ? "SaveFail" : "SaveSuccess"]}
 							</Alert>
 					}
-					{renderSubmit && <Button id="submit" type="submit">{translations.Submit}</Button>}
+					{renderSubmit && <Button id="submit" type="submit" onClick={this.onAnnotationSubmit}>{translations.Submit}</Button>}
 				</div>}
 			</LajiForm>
 		) : null;
@@ -273,17 +267,16 @@ class AnnotationBox extends React.Component {
 		};
 	};
 
-	onDelete = (id) => () => {
-		this.props.formContext.apiClient.fetchRaw(`/annotations/${id}`, undefined, {
-			method: "DELETE"
-		}).then(() => {
+	onDelete = (id) => async () => {
+		try {
+			await this.props.formContext.apiClient.delete("/annotations/{id}", { path: { id } });
 			const annotationContext = getContext(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = this.state.annotations.filter(({id: _id}) => _id !== id);
 			annotationContext[this.props.id] = annotations;
 			this.setState({deleteFail: false, annotations});
-		}).catch(() => {
+		} catch (e) {
 			this.setState({deleteFail: true});
-		});
+		}
 	};
 
 	render() {

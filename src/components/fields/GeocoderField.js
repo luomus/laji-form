@@ -376,19 +376,11 @@ export default class GeocoderField extends React.Component {
 
 				!bounds.overlaps(FINLAND_BOUNDS)
 					? fetchForeign()
-					: this.props.formContext.apiClient.fetchRaw("/coordinates/location", undefined, {
-						method: "POST",
-						headers: {
-							"accept": "application/json",
-							"content-type": "application/json"
-						},
-						body: JSON.stringify(geometry)
-					}).then(
-						response => response.json()
+					: this.props.formContext.apiClient.post("/coordinates/location", undefined, geometry).then(
 					).then(
 						handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")
 					).catch((e) => {
-						fail(e.message);
+						fail(typeof e === "string" ? e : e.message);
 					});
 			}));
 		};

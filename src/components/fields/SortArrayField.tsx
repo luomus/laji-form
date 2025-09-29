@@ -66,10 +66,6 @@ interface ColumnOptions {
 	tooltip?: string;
 }
 
-type TaxaResponse = {
-	results: { id: string }[];
-}
-
 type ColumnOptionsUIProps = ColumnOptions & {
 	field: string;
 	updateSortCol: (sortCol: Omit<SortCol, "name">) => void;
@@ -105,7 +101,7 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 	private idToIdx: Record<string, number>;
 
 	async initialize() {
-		this.idToIdx = (await this.formContext.apiClient.fetchCached<TaxaResponse>("/taxa", {...this.options.query, pageSize: 10000, selectedFields: "id"}))
+		this.idToIdx = (await this.formContext.apiClient.get("/taxa", { query: {...this.options.query, pageSize: 10000, selectedFields: "id" } }))
 			.results.reduce((idToIdx, {id}: {id: string}, idx: number) => {
 				idToIdx[id] = idx;
 				return idToIdx;

@@ -184,7 +184,7 @@ class CodeReader extends React.Component {
 		this.props.onChange(formData);
 	};
 
-	onSuggestionSelected = ({payload: {unit}}) => {
+	onSuggestionSelected = ({unit}) => {
 		const {formContext} = this.props;
 		unit = bringRemoteFormData(unit, formContext);
 		this.props.onChange(unit);
@@ -192,7 +192,7 @@ class CodeReader extends React.Component {
 
 	renderSuggestion = (suggestion) => {
 		const {translations} = this.props;
-		return suggestion.payload.isNonMatching
+		return suggestion.isNonMatching
 			? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
 			: suggestion.value;
 	};
@@ -261,8 +261,8 @@ class CodeReader extends React.Component {
 		} else if (value.length >= 3) {
 			this.mounted && this.setState({loading: true});
 
-			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID, includePayload: true}).then(response => {
-				this.props.onChange(response.payload.unit);
+			this.apiClient.get("/shorthand/unit/line-transect", { query: { query: value } }).then(response => {
+				this.props.onChange(response.unit);
 			}).catch(() => {
 				this.mounted && this.setState({failed: true, loading: false});
 			});
