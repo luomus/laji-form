@@ -72,7 +72,7 @@
     "@playwright/test": "^1.40.1",
     "@stylistic/eslint-plugin": "^5.4.0",
     "@types/jasmine": "^3.7.7",
-    "@types/node": "^20.17.0",
+    "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "copy-webpack-plugin": "^9.0.1",
