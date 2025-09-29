@@ -1,6 +1,6 @@
 {
   "name": "@luomus/laji-form",
-  "version": "15.1.64",
+  "version": "15.1.66",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -72,7 +72,7 @@
     "@playwright/test": "^1.40.1",
     "@stylistic/eslint-plugin": "^5.4.0",
     "@types/jasmine": "^3.7.7",
-    "@types/node": "^20.10.1",
+    "@types/node": "^20.17.0",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "copy-webpack-plugin": "^9.0.1",

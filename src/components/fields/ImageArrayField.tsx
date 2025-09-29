@@ -116,7 +116,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					autoOpenAddModal: PropTypes.bool,
 					autoOpenMetadataModal: PropTypes.bool,
 					sideEffects: PropTypes.object,
-					exifParsers: PropTypes.arrayOf(PropTypes.object)
+					exifParsers: PropTypes.arrayOf(PropTypes.object),
+					metadataFormId: PropTypes.string
 				})
 			}),
 			schema: PropTypes.shape({
@@ -356,7 +357,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const metadataForm = this.state.metadataForm || {};
 
 			if (typeof metadataModalOpen === "number" && !this.state.metadataForm) {
-				this.apiClient.get("/forms/{id}", { path: { id: this.METADATA_FORM_ID }, query: {lang, format: "schema"} })
+				const {metadataFormId = this.METADATA_FORM_ID} = getUiOptions(this.props.uiSchema);
+				this.apiClient.get("/forms/{id}", { path: { id: metadataFormId }, query: {lang, format: "schema"} })
 					.then(metadataForm => {
 						if (this.mounted) {
 							this.setState({metadataForm});

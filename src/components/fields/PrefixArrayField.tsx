@@ -9,12 +9,12 @@ import update from "immutability-helper";
 import BaseComponent from "../BaseComponent";
 
 interface FieldValue {
-    prefix: string;
-    value: string;
+	prefix: string;
+	value: string;
 }
 
 interface State {
-    fieldValues: FieldValue[];
+	fieldValues: FieldValue[];
 }
 
 @BaseComponent
@@ -32,7 +32,7 @@ export default class PrefixArrayField extends React.Component<FieldProps<JSONSch
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.array
-	}
+	};
 
 	static getName() {return "PrefixArrayField";}
     
@@ -60,7 +60,7 @@ export default class PrefixArrayField extends React.Component<FieldProps<JSONSch
 		const separator = this.getSeparator(this.props.uiSchema);
 		const newFormData = [...(this.props.formData || []), prefix + separator];
 		this.props.onChange(newFormData);
-	}
+	};
 
 	onFieldChange = memoize((idx: number) => (value: any) => {
 		const separator = this.getSeparator(this.props.uiSchema);
