@@ -116,7 +116,7 @@ export default class NamedPlaceChooserField extends React.Component<Props, State
 
 	onPlaceDeleted = async (place: NamedPlace & { id: string }, end: () => void) => {
 		try {
-			await this.props.formContext.apiClient.delete(`/named-places/{id}`, { path: { id: place.id } })
+			await this.props.formContext.apiClient.delete("/named-places/{id}", { path: { id: place.id } });
 			end();
 		} catch (e) {
 			this.setState({failed: PLACE_DELETE_FAIL});

@@ -1231,7 +1231,7 @@ function _MapArrayField(ComposedComponent) {
 			}
 			const geometries = this.getGeometries();
 			if (geometries.length === 0 && area && area.length > 0) {
-				const { name } = await this.props.formContext.apiClient.get(`/areas/${area}`)
+				const { name } = await this.props.formContext.apiClient.get(`/areas/${area}`);
 				this.map.geocode(name, undefined, 8);
 			}
 		};

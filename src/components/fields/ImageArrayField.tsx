@@ -341,7 +341,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const id = this.props.formData[i];
 			this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
 			try {
-			this.apiClient.delete(`/${this.ENDPOINT}/{id}` as any, { path: { id } });
+				this.apiClient.delete(`/${this.ENDPOINT}/{id}` as any, { path: { id } });
 			} catch (e) {
 			}
 		};
@@ -736,7 +736,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		onMediaMetadataUpdate = async ({formData}: {formData: any}) => {
 			this.props.formContext.services.blocker.push();
 			try {
-				await this.apiClient.put(`/${this.ENDPOINT}/{id}` as any, { path: { id: formData.id } }, formData)
+				await this.apiClient.put(`/${this.ENDPOINT}/{id}` as any, { path: { id: formData.id } }, formData);
 				this.props.formContext.services.blocker.pop();
 				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {

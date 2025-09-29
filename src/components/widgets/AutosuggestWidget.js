@@ -135,7 +135,7 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		async getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
-				const {vernacularName, scientificName} = await this.props.formContext.apiClient.get(`/taxa/${id}`)
+				const {vernacularName, scientificName} = await this.props.formContext.apiClient.get(`/taxa/${id}`);
 				if (vernacularName !== undefined) {
 					return {value: vernacularName, key: value};
 				}
