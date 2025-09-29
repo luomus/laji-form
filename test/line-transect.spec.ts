@@ -73,7 +73,7 @@ test.describe("Line transect (MHL.1)", () => {
 		$shortHandForIdx = (g, u) => form.$getInputWidget(`gatherings.${g}.units.${u}.shortHandText`);
 
 		unitAutocompleteMock = await form.setMockResponse("/autocomplete/unit", false);
-		taxonAutocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
+		taxonAutocompleteMock = await form.setMockResponse("/autocomplete/taxa", false);
 	});
 
 	test("shorthand unit is shown", async () => {

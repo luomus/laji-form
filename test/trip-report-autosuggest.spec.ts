@@ -168,8 +168,41 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			await $addUnit.click();
 		});
 
+		test("works when autocomplete response has autocompleteSelectedName", async () => {
+			const mockKuusi = await form.setMockResponse("/autocomplete/taxa");
+			await taxonAutosuggest.$input.fill("kuusi");
+			const autocompleteSelectedName = "foobar";
+			await mockKuusi.resolve({ results: [{
+				"key": "MX.37812",
+				"value": "kuusi",
+				autocompleteSelectedName,
+				"matchingName": "kuusi",
+				"informalGroups": [
+					{
+						"id": "MVL.343",
+						"name": "Putkilokasvit"
+					}
+				],
+				"scientificName": "Picea abies",
+				"scientificNameAuthorship": "(L.) H. Karst.",
+				"taxonRankId": "MX.species",
+				"type": "exactMatches",
+				"cursiveName": true,
+				"finnish": true,
+				"species": true,
+				"nameType": "MX.obsoleteVernacularName",
+				"vernacularName": "metsäkuusi"
+			}] });
+
+			await expect(taxonAutosuggest.$suggestions.first()).toBeVisible();
+			await taxonAutosuggest.$input.press("Tab");
+			await mockKuusi.remove();
+
+			await expect(taxonAutosuggest.$input).toHaveValue(autocompleteSelectedName);
+			expect((await form.getChangedData()).gatherings[0].units[0].identifications[0].taxon).toBe(autocompleteSelectedName);
+		});
+
 		test("typing exact match with sp suffix keeps sp suffix in value but selects the exact match", async () => {
-			await mock.remove();
 			for (const suffix of ["sp", "spp", "sp.", "spp."]) {
 				await taxonAutosuggest.$input.fill(`parus ${suffix}`);
 				await taxonAutosuggest.$input.press("Tab");
@@ -251,41 +284,6 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 				await removeUnit(0, 0);
 				await $addUnit.click();
 			});
-
-		});
-
-		test("works when autocomplete response has autocompleteSelectedName", async() => {
-			const mockKuusi = await form.setMockResponse("/autocomplete/taxa");
-			await taxonAutosuggest.$input.fill("kuusi");
-			const autocompleteSelectedName = "foobar";
-			await mockKuusi.resolve({ results: [{
-				"key": "MX.37812",
-				"value": "kuusi",
-				autocompleteSelectedName,
-				"matchingName": "kuusi",
-				"informalGroups": [
-					{
-						"id": "MVL.343",
-						"name": "Putkilokasvit"
-					}
-				],
-				"scientificName": "Picea abies",
-				"scientificNameAuthorship": "(L.) H. Karst.",
-				"taxonRankId": "MX.species",
-				"type": "exactMatches",
-				"cursiveName": true,
-				"finnish": true,
-				"species": true,
-				"nameType": "MX.obsoleteVernacularName",
-				"vernacularName": "metsäkuusi"
-			}] });
-
-			await expect(taxonAutosuggest.$suggestions.first()).toBeVisible();
-			await taxonAutosuggest.$input.press("Tab");
-			await mockKuusi.remove();
-
-			await expect(taxonAutosuggest.$input).toHaveValue(autocompleteSelectedName);
-			expect((await form.getChangedData()).gatherings[0].units[0].identifications[0].taxon).toBe(autocompleteSelectedName);
 		});
 	});
 });
