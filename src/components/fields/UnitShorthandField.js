@@ -221,10 +221,6 @@ class CodeReader extends React.Component {
 			<div className="unit-shorthand">
 				<Autosuggest
 					autosuggestField="unit"
-					query={{
-						formID,
-						includeNonMatching: true
-					}}
 					onSuggestionSelected={this.onSuggestionSelected}
 					renderSuggestion={this.renderSuggestion}
 					onChange={this.onAutosuggestChange}
