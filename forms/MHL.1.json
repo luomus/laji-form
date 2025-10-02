@@ -1015,7 +1015,8 @@
                 "ui:options": {
                   "shorthandField": "shortHandText",
                   "injectButtons": true,
-                  "autofocus": true
+                  "autofocus": true,
+									"lineTransect": true
                 }
               },
               {
