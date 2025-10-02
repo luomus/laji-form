@@ -104,15 +104,15 @@ export default class UnitShorthandField extends React.Component {
 	render() {
 		const {uiSchema, formContext, disabled, readonly} = this.props;
 		const {SchemaField} = this.props.registry.fields;
-		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
+		const { shorthandField, lineTransect } = getUiOptions(this.props.uiSchema);
 		const toggleButton = this.getToggleButton();
 
 		const tailUiSchema = getNestedTailUiSchema(uiSchema);
-		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:belowHelp"];
-		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:belowHelp": {$set: undefined}}});
+		let help = tailUiSchema && tailUiSchema[shorthandField] && tailUiSchema[shorthandField]["ui:belowHelp"];
+		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandField]: {"ui:belowHelp": {$set: undefined}}});
 
-		const id = (shorthandFieldName && this.props.idSchema[shorthandFieldName]) ?
-			this.props.idSchema[shorthandFieldName].$id :
+		const id = (shorthandField && this.props.idSchema[shorthandField]) ?
+			this.props.idSchema[shorthandField].$id :
 			`${this.props.idSchema.$id}_shortHandField`;
 
 		let innerUiSchema = undefined;
@@ -126,13 +126,14 @@ export default class UnitShorthandField extends React.Component {
 			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
 				            onChange={this.onCodeChange}
-				            value={this.props.formData[shorthandFieldName]}
+				            value={this.props.formData[shorthandField]}
 				            formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
 				            help={help} 
 				            id={id}
 				            formContext={formContext}
 				            disabled={disabled}
 				            readonly={readonly}
+				            lineTransect={lineTransect}
 				            className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
@@ -196,14 +197,13 @@ class CodeReader extends React.Component {
 	};
 
 	render() {
-		const {translations, readonly, disabled, uiSchema} = this.props;
+		const {translations, readonly, disabled, lineTransect} = this.props;
 
 		let validationState = null;
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
 		const {formContext} = this.props;
-		const { lineTransect } = getUiOptions(uiSchema);
 
 		const inputElem = lineTransect ? (
 			<FetcherInput
