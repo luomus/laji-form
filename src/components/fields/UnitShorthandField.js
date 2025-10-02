@@ -8,8 +8,6 @@ import { FetcherInput } from "../components";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { getButton } from "../templates/ArrayFieldTemplate";
 
-const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
-
 @BaseComponent
 export default class UnitShorthandField extends React.Component {
 	static propTypes = {
@@ -198,15 +196,16 @@ class CodeReader extends React.Component {
 	};
 
 	render() {
-		const {translations, readonly, disabled} = this.props;
+		const {translations, readonly, disabled, uiSchema} = this.props;
 
 		let validationState = null;
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
-		const {formID, formContext} = this.props;
+		const {formContext} = this.props;
+		const { lineTransect } = getUiOptions(uiSchema);
 
-		const inputElem = LINE_TRANSECT_IDS.includes(formID) ? (
+		const inputElem = lineTransect ? (
 			<FetcherInput
 				id={this.props.id}
 				loading={this.state.loading}

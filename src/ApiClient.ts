@@ -140,6 +140,7 @@ export default class ApiClient {
 	async get<P extends PathWithMethod<"get">, R extends Responses<P, "get" extends Method<P> ? "get" : never>>(
 		path: P,
 		params?: RelaxQuery<Parameters<paths[P]["get"]>, MiddlewareInjectedKeys>,
+		/** Defaults to true */
 		useCache = true
 	): Promise<ExtractContentIfExists<R[IntersectUnionTypes<keyof R, HttpSuccessCodes>]>> {
 		let cacheNode: CacheNode;

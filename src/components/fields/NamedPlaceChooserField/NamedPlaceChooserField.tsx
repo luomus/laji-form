@@ -2,7 +2,6 @@ import * as React from "react";
 import ReactContext from "../../../ReactContext";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../../types";
 import { addLajiFormIds, getDefaultFormState, getInnerUiSchema, getUiOptions } from "../../../utils";
-// import { NamedPlace } from "@luomus/laji-schema";
 import getContext from "../../../Context";
 import { NamedPlaceChooser } from "./NamedPlaceChooser";
 import type { components } from "generated/api.d";
