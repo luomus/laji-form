@@ -773,7 +773,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const MACode = this.props.formContext.uiSchemaContext.creator;
 
 			const metadataPromise = ("capturerVerbatim" in mediaMetadata)
-				? Promise.resolve({...mediaMetadata, capturerVerbatim: [mediaMetadata.capturerVerbatim]})
+				? Promise.resolve({
+					...mediaMetadata,
+					capturerVerbatim: Array.isArray(mediaMetadata.capturerVerbatim) ? mediaMetadata.capturerVerbatim : [mediaMetadata.capturerVerbatim]
+				})
 				: MACode
 					? this.apiClient.get("/person/by-id/{personId}", { path: { personId: MACode } }).then(({fullName = MACode}) => (
 						{

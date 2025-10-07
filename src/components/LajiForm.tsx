@@ -223,7 +223,7 @@ export interface LajiFormState {
 }
 
 export interface MediaMetadata {
-	capturerVerbatim: string;
+	capturerVerbatim?: string|string[];
 	intellectualOwner: string;
 	intellectualRights: string;
 }
