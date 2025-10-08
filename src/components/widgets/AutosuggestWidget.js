@@ -665,8 +665,6 @@ export class Autosuggest extends React.Component {
 			try {
 				let suggestionsResponse = await this.apiClient.get(this.props.basePath || "/autocomplete" + "/" + autosuggestField,
 					{ query: {
-						// Hack for laji-form in Kotka, since it uses API that isn't laji-api and q was renamed to query in laji-api
-						q: value,
 						query: value,
 						matchType: "exact,partial",
 						includeHidden: false,

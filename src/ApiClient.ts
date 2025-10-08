@@ -234,7 +234,7 @@ export default class ApiClient {
 
 		options = {
 			...options,
-			headers: { 
+			headers: {
 				...(options.header || {}),
 				"API-Version": 1,
 				"Accept-Language": this.lang
