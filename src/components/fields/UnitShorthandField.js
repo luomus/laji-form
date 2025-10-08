@@ -8,7 +8,7 @@ import { FetcherInput } from "../components";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { getButton } from "../templates/ArrayFieldTemplate";
 
-const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
+const LINE_TRANSECT_IDS = ["MHL.1162", "MHL.27", "MHL.28"];
 
 @BaseComponent
 export default class UnitShorthandField extends React.Component {
