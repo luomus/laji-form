@@ -19,7 +19,7 @@ export default class ApiClient {
 		options.headers = {
 			...(options.headers || {}),
 			...this.getHeaders()
-		}
+		};
 		return fetch(`${this.BASE_URL}${path}?${queryString.stringify(query)}`, options);
 	}
 }
