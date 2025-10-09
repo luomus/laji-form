@@ -518,8 +518,8 @@ export class AccordionArrayFieldTemplate extends React.Component {
 
 		const activeIdx = that.state.activeIdx;
 
-		const {confirmDelete, closeButton, affixed} = getUiOptions(arrayFieldTemplateProps.uiSchema);
-		const {translations} = this.props.formContext;
+		const {translations, uiSchemaContext} = this.props.formContext;
+		const {confirmDelete = uiSchemaContext.confirmDelete, closeButton, affixed} = getUiOptions(arrayFieldTemplateProps.uiSchema);
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
 		const containerRefs = {};
@@ -604,9 +604,9 @@ class PagerArrayFieldTemplate extends React.Component {
 
 	render() {
 		const that = this.props.formContext.this;
-		const	arrayTemplateFieldProps = this.props;
-		const {translations} = that.props.formContext;
-		const {buttons, affixed, headerClassName, confirmDelete} = getUiOptions(arrayTemplateFieldProps.uiSchema);
+		const arrayTemplateFieldProps = this.props;
+		const {translations, uiSchemaContext} = that.props.formContext;
+		const {buttons, affixed, headerClassName, confirmDelete = uiSchemaContext.confirmDelete} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
 
 		const {Pager} = this.context.theme;
@@ -972,7 +972,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const {errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
-		const {confirmDelete} = getUiOptions(uiSchema);
+		const {confirmDelete = this.props.formContext.uiSchemaContext.confirmDelete} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = (idx, item) => {
 			return removable && <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 

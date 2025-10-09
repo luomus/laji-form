@@ -3464,7 +3464,14 @@
     "images": {
       "ui:field": "ImageArrayField",
       "ui:options": {
-        "metadataFormId": "MHL.1160"
+        "metadataFormId": "MHL.1160",
+        "exifParsers": [
+          {
+            "field": "/captureDateTime",
+            "parse": "date",
+            "type": "mutateMetadata"
+          }
+        ]
       }
     },
     "owner": {

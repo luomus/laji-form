@@ -264,6 +264,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					id={`${this.props.idSchema.$id}_${index}`}
 					disabled={disabled || readonly}
 					translations={this.props.formContext.translations}
+					confirm={this.props.formContext.uiSchemaContext.confirmDelete}
 					onClick={onDropIndexClick(index)}
 					className="horizontally-centered" />
 			);

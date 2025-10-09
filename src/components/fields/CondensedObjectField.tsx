@@ -147,8 +147,22 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField as any;
 
-		const {schema, uiSchema, idSchema, errorSchema, formData = {}, required, formContext: {Label, translations}} = this.props;
-		const uiOptions = getUiOptions(uiSchema);
+		const {
+			schema,
+			uiSchema,
+			idSchema,
+			errorSchema,
+			formData = {},
+			required,
+			disabled,
+			readonly,
+			formContext: {Label, translations, uiSchemaContext}
+		} = this.props;
+
+		const {
+			addFieldPlaceholder = `${translations.AddField}`,
+			confirmDelete = uiSchemaContext.confirmDelete
+		} = getUiOptions(uiSchema);
 
 		const childProps: Pick<FieldProps<any, any>, "schema"|"uiSchema"|"idSchema"|"errorSchema"|"formData">[] = this.state.selectedFields.map(field => {
 			let childSchema = schema.properties[field.name];
@@ -189,8 +203,6 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 			label: schema.properties[prop].title || prop,
 		}));
 
-		const addFieldPlaceholder = uiOptions.addFieldPlaceholder ?? `${translations.AddField}`;
-
 		return (
 			<>
 				<Label label={this.props.schema.title} required={required || uiSchema["ui:required"]} id={this.props.idSchema.$id} uiSchema={this.props.uiSchema} />
@@ -209,6 +221,8 @@ export default class CondensedObjectField extends React.Component<FieldProps<JSO
 								id={props.idSchema.$id}
 								onClick={this.onFieldDelete(idx)}
 								translations={translations}
+								confirm={confirmDelete}
+								disabled={disabled || readonly}
 							/>
 						</div>
 					</div>

@@ -41,6 +41,11 @@ interface MediaMetadataSchema {
 	intellectualRights?: string
 }
 
+interface ProcessedExifData {
+	formData?: any;
+	defaultMediaMetadata?: any;
+}
+
 @MediaArrayField
 export default class ImageArrayField extends React.Component<FieldProps<any, JSONSchemaArray<JSONSchemaObject>>, ImageArrayFieldState> {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
@@ -475,9 +480,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			this.setState({alert: false, alertMsg: undefined});
 		};
 
-		parseExif = (files: File[]): undefined | Promise<any> => {
+		parseExif = (files: File[]): Promise<ProcessedExifData> => {
 			const {exifParsers = []} = getUiOptions(this.props.uiSchema);
-			if (!exifParsers) return;
+			if (!exifParsers) return Promise.resolve({});
 
 			const found = exifParsers.reduce((found: any, {parse} : {parse: string}) => {
 				found[parse] = false;
@@ -543,15 +548,21 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				const lajiFormInstance = this.props.formContext.services.rootInstance;
 				const schema = lajiFormInstance.getSchema();
 				let formData = lajiFormInstance.getFormData();
+				let defaultMediaMetadata: any = {};
+
 				exifParsers.filter((f: any) => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}: any) => {
 					if (type === "mutate") {
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
+					}
+					if (type === "mutateMetadata") {
+						defaultMediaMetadata = updateSafelyWithJSONPointer(defaultMediaMetadata, found[parse], field);
 					}
 					if (type === "event") {
 						this.props.formContext.services.customEvents.send(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 					}
 				});
-				return formData;
+
+				return { formData, defaultMediaMetadata };
 			});
 		};
 
@@ -590,12 +601,17 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				this.setState({addModal: undefined});
 			}
 
-			this.parseExif(files)?.then(this.sideEffects);
+			const exifDataPromise = this.parseExif(files);
+			exifDataPromise.then(data => {
+				if (data.formData) {
+					this.sideEffects(data.formData);
+				}
+			});
 
 			const id = this.getContainerId();
-
 			const lajiFormInstance = this.props.formContext.services.rootInstance;
-			const saveAndOnChange = () => this.saveMedias(files).then(mediaIds => {
+
+			const saveAndOnChange = () => this.saveMedias(files, exifDataPromise).then(mediaIds => {
 				if (!lajiFormInstance.isMounted() || !mediaIds) {
 					return;
 				}
@@ -640,7 +656,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return _parentLajiFormId;
 		};
 
-		async saveMedias(files: File[]) {
+		async saveMedias(files: File[], exifDataPromise: Promise<ProcessedExifData>) {
 			const containerId = this.getContainerId();
 			let tmpMedias: number[] = [];
 
@@ -689,7 +705,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 
 				const tmpMediaEntities = await this.apiClient.post(`/${this.ENDPOINT}` as any, undefined, formData as any) as any;
-				const mediaMetadata = await this.getMetadataPromise();
+				const mediaMetadata = await this.getMetadataPromise(exifDataPromise);
 				const mediaEntities = await Promise.all(tmpMediaEntities.map((item: any) => 
 					this.apiClient.post(`/${this.ENDPOINT}/{id}` as any, { path: { id: item.id } }, mediaMetadata as any)
 				));
@@ -750,14 +766,17 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			}
 		};
 
-		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
-			let mediaMetadata : any =
+		getMetadataPromise = (exifDataPromise: Promise<ProcessedExifData>): Promise<MediaMetadataSchema> => {
+			let mediaMetadata : Record<string, any> =
 				this.props.formContext.mediaMetadata
 				|| {intellectualRights: "MZ.intellectualRightsARR"};
 			const MACode = this.props.formContext.uiSchemaContext.creator;
 
-			return ("capturerVerbatim" in mediaMetadata)
-				? Promise.resolve({...mediaMetadata, capturerVerbatim: [mediaMetadata.capturerVerbatim]})
+			const metadataPromise = ("capturerVerbatim" in mediaMetadata)
+				? Promise.resolve({
+					...mediaMetadata,
+					capturerVerbatim: Array.isArray(mediaMetadata.capturerVerbatim) ? mediaMetadata.capturerVerbatim : [mediaMetadata.capturerVerbatim]
+				})
 				: MACode
 					? this.apiClient.get("/person/by-id/{personId}", { path: { personId: MACode } }).then(({fullName = MACode}) => (
 						{
@@ -766,7 +785,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 							intellectualOwner: fullName
 						}
 					)).catch(() => Promise.resolve(mediaMetadata))
-					: mediaMetadata;
+					: Promise.resolve(mediaMetadata);
+
+			return Promise.all([exifDataPromise, metadataPromise]).then(([exifData, metadata]) => {
+				return { ...exifData.defaultMediaMetadata, ...metadata };
+			});
 		};
 
 		getMaxFileSizeAsString = () => {
