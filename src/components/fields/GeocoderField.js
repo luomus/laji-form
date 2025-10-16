@@ -281,72 +281,68 @@ export default class GeocoderField extends React.Component {
 						}
 					};
 
-					if (response.status === "OK") {
-						const found = {};
-						Object.keys(parsers).forEach(field => {
-							const parser = parsers[field];
-							parser.type.some((type, typeIdx) => {
-								response.results.forEach(result => result.address_components.forEach(addressComponent => {
-									if (addressComponent.types.includes(type)) {
-										if (!found[field]) found[field] = {};
-										if (!found[field][typeIdx]) found[field][typeIdx] = {};
-										const responseField = addressComponent[parser.responseField] ? parser.responseField : "short_name";
-										found[field][typeIdx][addressComponent[responseField]] = true;
+					const found = {};
+					Object.keys(parsers).forEach(field => {
+						const parser = parsers[field];
+						parser.type.some((type, typeIdx) => {
+							response.results.forEach(result => result.address_components.forEach(addressComponent => {
+								if (addressComponent.types.includes(type)) {
+									if (!found[field]) found[field] = {};
+									if (!found[field][typeIdx]) found[field][typeIdx] = {};
+									const responseField = addressComponent[parser.responseField] ? parser.responseField : "short_name";
+									found[field][typeIdx][addressComponent[responseField]] = true;
+								}
+							}));
+							return found[field] && found[field][typeIdx];
+						});
+					});
+					Object.keys(parsers).forEach(field => {
+						if (!fieldByKeys[field] || !this.props.schema.properties[field]) {
+							return;
+						}
+						if (found[field]) {
+							const keys = Object.keys(found[field]);
+							const responseForField = found[field][keys[0]];
+							Object.keys(responseForField).forEach(value => {
+								// If target field is array.
+								if (this.props.schema.properties[field].type === "array") {
+									const temp = Array.from((this.props.formData || {})[field] || []);
+
+									// Find correct enum from fieldOptions.
+									const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
+									const enumField = fieldOptions[fieldOptions.findIndex(element => {
+										return element.field === field;
+									})].enum;
+
+									// Find enum value from key (eg. municipalityName --> municipalityId).
+									const _enum = this.props.formContext.uiSchemaContext[enumField].oneOf;
+									const enumValue = _enum.find(item => item.title === value).const;
+
+									// Push enum value to changes.
+									if (enumValue !== undefined) {
+										!temp.includes(enumValue) && temp.push(enumValue);
+										changes[field] = temp;
 									}
-								}));
-								return found[field] && found[field][typeIdx];
+								} else {
+									changes[field] = join(changes[field], value);
+								}
 							});
-						});
-						Object.keys(parsers).forEach(field => {
-							if (!fieldByKeys[field] || !this.props.schema.properties[field]) {
-								return;
-							}
-							if (found[field]) {
-								const keys = Object.keys(found[field]);
-								const responseForField = found[field][keys[0]];
-								Object.keys(responseForField).forEach(value => {
-									// If target field is array.
-									if (this.props.schema.properties[field].type === "array") {
-										const temp = Array.from((this.props.formData || {})[field] || []);
-
-										// Find correct enum from fieldOptions.
-										const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
-										const enumField = fieldOptions[fieldOptions.findIndex(element => {
-											return element.field === field;
-										})].enum;
-
-										// Find enum value from key (eg. municipalityName --> municipalityId).
-										const _enum = this.props.formContext.uiSchemaContext[enumField].oneOf;
-										const enumValue = _enum.find(item => item.title === value).const;
-
-										// Push enum value to changes.
-										if (enumValue !== undefined) {
-											!temp.includes(enumValue) && temp.push(enumValue);
-											changes[field] = temp;
-										}
-									} else {
-										changes[field] = join(changes[field], value);
-									}
-								});
-							} else {
-								changes[field] = getDefaultFormState(this.props.schema.properties[field]);
-							}
-						});
-						if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
-						success(() => {
-							if (timestamp !== this.promiseTimestamp) return;
-							if (this.mounted) {
-								this.props.onChange({...(this.props.formData || {}), ...changes});
-							} else {
-								const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, getFieldUUID(this.props));
-								const newFormData = {...parseJSONPointer(lajiFormInstance.getFormData(), pointer), ...changes};
-								lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
-							}
-							if (callback) callback();
-						});
-					} else if (country) {
-						fetchForeign();
-					}
+						} else {
+							changes[field] = getDefaultFormState(this.props.schema.properties[field]);
+						}
+					});
+					if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
+					success(() => {
+						if (timestamp !== this.promiseTimestamp) return;
+						if (this.mounted) {
+							this.props.onChange({...(this.props.formData || {}), ...changes});
+						} else {
+							const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, getFieldUUID(this.props));
+							const newFormData = {...parseJSONPointer(lajiFormInstance.getFormData(), pointer), ...changes};
+							lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
+						}
+						if (callback) callback();
+					});
 				};
 
 				const fetchForeign = () => {
