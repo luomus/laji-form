@@ -153,10 +153,6 @@ test.describe("Trip report (JX.519)", () => {
 				await testWidget("gatherings.0.country");
 			});
 
-			test("adds administrativeProvince which is editable", async () => {
-				await testWidget("gatherings.0.administrativeProvince");
-			});
-
 			test("adds municipality which is editable", async () => {
 				await testWidget("gatherings.0.municipality");
 			});

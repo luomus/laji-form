@@ -1,47 +1,49 @@
-[
-    {
-        "address_components": [
-            {
-                "long_name": "Pohjois-Savo",
-                "short_name": "PS",
-                "types": [
-                    "biogeographicalProvince"
-                ]
-            }
-        ],
-        "formatted_address": "Pohjois-Savo (PS)",
-        "place_id": "ML.261",
-        "types": [
-            "biogeographicalProvince"
-        ]
-    },
-    {
-        "address_components": [
-            {
-                "short_name": "Pohjois-Savo",
-                "types": [
-                    "region"
-                ]
-            }
-        ],
-        "formatted_address": "Pohjois-Savo",
-        "types": [
-            "region"
-        ]
-    },
-    {
-        "address_components": [
-            {
-                "short_name": "Lapinlahti",
-                "types": [
-                    "municipality"
-                ]
-            }
-        ],
-        "formatted_address": "Lapinlahti",
-        "place_id": "ML.576",
-        "types": [
-            "municipality"
-        ]
-    }
-]
+{
+	"results": [
+		{
+			"address_components": [
+				{
+					"long_name": "Pohjois-Savo",
+					"short_name": "PS",
+					"types": [
+						"biogeographicalProvince"
+								]
+				}
+			],
+			"formatted_address": "Pohjois-Savo (PS)",
+			"place_id": "ML.261",
+			"types": [
+				"biogeographicalProvince"
+			]
+		},
+		{
+			"address_components": [
+				{
+					"short_name": "Pohjois-Savo",
+					"types": [
+						"region"
+					]
+				}
+			],
+			"formatted_address": "Pohjois-Savo",
+			"types": [
+				"region"
+			]
+		},
+		{
+			"address_components": [
+				{
+					"short_name": "Lapinlahti",
+					"types": [
+						"municipality"
+					]
+				}
+			],
+			"formatted_address": "Lapinlahti",
+			"place_id": "ML.576",
+			"types": [
+				"municipality"
+			]
+		}
+	]
+}
