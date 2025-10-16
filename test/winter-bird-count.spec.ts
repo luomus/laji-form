@@ -41,8 +41,11 @@ test.describe("WBC (MHL.3)", () => {
 		// ID for button is broken, should be gatheringEvent.leg?
 		await form.$locateButton("gatheringEvent", "add").click();
 		const autosuggestField = form.getPersonAutosuggestWidget("gatheringEvent.1.leg");
+		const mock = await form.setMockResponse("/autocomplete/person", false);
 		await autosuggestField.$input.fill("unit");
+		await mock.resolve( { results: [{ key: "MA.897", value: "Unit Tester 1" }] });
 		await autosuggestField.$suggestions.first().click();
+		await mock.remove();
 
 		await expect(autosuggestField.$suggestedGlyph).toBeVisible();
 	});
