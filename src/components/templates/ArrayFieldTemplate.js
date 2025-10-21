@@ -278,8 +278,10 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 	render() {
 		const {props} = this;
+		const {readonly, disabled} = this.props;
+		const {Label, uiSchemaContext} = this.props.formContext;
 		const {
-			confirmDelete,
+			confirmDelete = uiSchemaContext.confirmDelete,
 			renderTitleAsLabel,
 			deleteCorner,
 			removable = true,
@@ -289,10 +291,10 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 			"ui:deleteHelp": deleteHelp,
 			buttons = []
 		} = getUiOptions(props.uiSchema);
-		const {readonly, disabled} = this.props;
-		const {Label} = this.props.formContext;
+
 		const Title = renderTitleAsLabel ? Label : getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
 		const Description = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(props.uiSchema));
+
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const _buttons = getButtons(buttons, props);
@@ -301,7 +303,6 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 		const bottomButtons = getButtonsElem(getButtonsForPosition(props, _buttons, "bottom"), props);
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
-
 
 		const items = props.items.map((item, i) => {
 			const getDeleteButton = () => (

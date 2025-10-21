@@ -187,7 +187,7 @@ export interface LajiFormProps extends HasMaybeChildren {
 	topOffset?: number;
 	bottomOffset?: number;
 	formContext?: any;
-	uiSchemaContext?: any;
+	uiSchemaContext?: UiSchemaContext;
 	settings?: any;
 	id?: string;
 	googleApiKey?: string;
@@ -223,7 +223,7 @@ export interface LajiFormState {
 }
 
 export interface MediaMetadata {
-	capturerVerbatim: string;
+	capturerVerbatim?: string|string[];
 	intellectualOwner: string;
 	intellectualRights: string;
 }
@@ -263,6 +263,15 @@ export interface FormContext {
 		singletonMap: SingletonMapService,
 		multiActiveArray: MultiActiveArrayService
 	}
+}
+
+export interface UiSchemaContext {
+	isAdmin?: boolean;
+	isEdit?: boolean;
+	creator?: string;
+	confirmDelete?: boolean;
+	additionalClassNames?: Record<string, string>;
+	[key: string]: any;
 }
 
 export type NotifyMessager = (msg: string) => void;

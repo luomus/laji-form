@@ -133,7 +133,7 @@ class TableArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
 	render() {
 		const {props} = this;
-		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
+		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray, uiSchemaContext}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const {Label} = this.props.formContext;
 		const {Row, Col} = this.context.theme;
@@ -156,7 +156,7 @@ class TableArrayFieldTemplate extends React.Component {
 		});
 
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
+		const {confirmDelete = uiSchemaContext.confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};

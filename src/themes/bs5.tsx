@@ -26,7 +26,8 @@ import {
 	Dropdown,
 	Form,
 	ToggleButton,
-	ToggleButtonGroup
+	ToggleButtonGroup,
+	PageItem
 } from "react-bootstrap-5";
 import { Variant, ButtonVariant } from "react-bootstrap-5/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,6 +40,8 @@ import {
 	Dropdown as DropdownI,
 	PanelProps,
 	Panel as PanelI,
+	Pager as PagerI,
+	PagerItemProps,
 	GlyphiconProps,
 	ListGroupProps,
 	Variant as VariantI,
@@ -76,7 +79,7 @@ const mapValidationStateToClass = (validationState?: ValidationState|null): stri
 	return "text-" + (validationState === "error" ? "danger" : validationState);
 };
 
-const _Card = React.forwardRef<HTMLDivElement, PanelProps>((props, ref) => (
+const _Card = React.forwardRef<HTMLDivElement, PanelProps>(({eventKey, ...props}, ref) => (
 	<Card {...props} ref={ref} />
 ));
 let Panel = _Card as unknown as PanelI;
@@ -114,6 +117,11 @@ const _Popover = React.forwardRef<typeof Popover, any>(({children, ...props}, re
 	</Popover>
 ));
 
+const _Pager: PagerI = Pagination;
+_Pager.Item = React.forwardRef<HTMLLIElement, PagerItemProps>(({previous, next, ...props}, ref) => (
+	<PageItem {...props} ref={ref} />
+));
+
 const theme: Theme = {
 	Panel,
 	Table,
@@ -138,7 +146,7 @@ const theme: Theme = {
 	HelpBlock: React.forwardRef<HTMLElement, JSX.IntrinsicAttributes>((props, ref) => <Form.Text {...props} ref={ref} />),
 	MenuItem: Dropdown.Item,
 	Alert: React.forwardRef<HTMLDivElement, AlertProps>(({variant, ...props}, ref) => <Alert variant={mapVariant(variant)} {...props} ref={ref} />),
-	Pager: Pagination,
+	Pager: _Pager,
 	Accordion: React.forwardRef<typeof Accordion, AccordionProps>((props, ref) => <Accordion {...props as any} ref={ref} />),
 	Collapse,
 	Dropdown: _Dropdown,

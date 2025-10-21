@@ -77,8 +77,8 @@ export default class PrefixArrayField extends React.Component<FieldProps<JSONSch
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField as any;
 
-		const {schema, uiSchema, idSchema, errorSchema, required, formContext: {Label, translations}} = this.props;
-		const {prefixValues = [], addFieldPlaceholder} = getUiOptions(uiSchema);
+		const {schema, uiSchema, idSchema, errorSchema, required, disabled, readonly, formContext: {Label, translations, uiSchemaContext}} = this.props;
+		const {prefixValues = [], addFieldPlaceholder, confirmDelete = uiSchemaContext.confirmDelete} = getUiOptions(uiSchema);
 
 		const childProps: Pick<FieldProps<any, any>, "schema"|"uiSchema"|"idSchema"|"errorSchema"|"formData">[] = this.state.fieldValues.map((value: FieldValue, idx: number) => {
 			return {
@@ -121,6 +121,8 @@ export default class PrefixArrayField extends React.Component<FieldProps<JSONSch
 								id={props.idSchema.$id}
 								onClick={this.onFieldDelete(idx)}
 								translations={translations}
+								confirm={confirmDelete}
+								disabled={disabled || readonly}
 							/>
 						</div>
 					</div>
