@@ -25,7 +25,7 @@ import { Theme } from "../themes/theme";
 import Context, { ContextProps } from "../ReactContext";
 import StubTheme from "../themes/stub";
 import Form from "@rjsf/core";
-import { Field, Widget, TemplatesType } from "@rjsf/utils";
+import { Field, Widget, TemplatesType, ErrorSchema } from "@rjsf/utils";
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import instanceContext from "../Context";
 import translations from "../translations.json";
@@ -204,20 +204,22 @@ export interface LajiFormProps extends HasMaybeChildren {
 	renderSubmit?: boolean;
 	submitText?: string;
 	onSubmit?: (data: {formData: any}) => void;
-	onValidationError?: (extraErrors: any) => void;
+	onValidationError?: (extraErrors: ErrorSchema) => void;
 	validators?: any;
 	warnings?: any;
 	onSettingsChange?: (settings: any, global: boolean) => void;
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
 	lajiGeoServerAddress?: string;
+	extraErrors: ErrorSchema;
 }
 
 export interface LajiFormState {
 	submitHooks?: SubmitHook[];
 	formContext: FormContext;
 	formData?: any;
-	extraErrors?: any;
+	extraErrors?: ErrorSchema;
+	externalErrors?: ErrorSchema;
 	error?: boolean;
 	runningSubmitHooks?: boolean;
 }
@@ -344,12 +346,16 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang as Lang);
 		}
-		this.setState(this.getStateFromProps(props));
+		this.setState(this.getStateFromProps(props), this.popErrorListIfNeeded);
 	}
 
 	getStateFromProps(props: LajiFormProps) {
 		const state: LajiFormState = {
-			formContext: this.getMemoizedFormContext(props)
+			formContext: this.getMemoizedFormContext(props),
+			externalErrors: props.extraErrors,
+			extraErrors: this.state?.extraErrors
+				? merge(this.state.extraErrors, props.extraErrors || {})
+				: props.extraErrors
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
 			state.formData = state.formContext.services.ids.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema))[0];
@@ -567,7 +573,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						formContext={this.state.formContext}
 						validator={rjsfValidator}
 						noValidate={true}
-						extraErrors={this.state.extraErrors}
+						extraErrors={this.state.extraErrors || {}}
 						noHtml5Validate={true}
 						liveValidate={true}
 						autoComplete="off"
@@ -631,7 +637,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	validateAndSubmit = (warnings = true, onlySchema = false) => {
 		const {formData} = this.state;
 		const {onValidationError, onSubmit} = this.props;
-		return this.validate(warnings, true, onlySchema).then((valid) => {
+		this.setState({ externalErrors: undefined });
+		return this.validate(warnings, true, onlySchema).then(valid => {
 			if (formData !== this.state.formData) {
 				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
@@ -639,7 +646,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					this.memoizedFormContext.services.ids.removeLajiFormIds(formData)
 				)});
 			} else {
-				onValidationError && onValidationError(this.state.extraErrors);
+				onValidationError && onValidationError(this.state.extraErrors!);
 			}
 		});
 	};
@@ -685,13 +692,19 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					this.cachedNonliveValidations = merge(schemaErrors, _validations);
 					block && this.memoizedFormContext.services.blocker.pop();
 				}
-				const merged = merge(_liveValidations, !nonlive
+				const mergedInternalErrors = merge(_liveValidations, !nonlive
 					? (this.cachedNonliveValidations || {})
 					: merge(_validations, schemaErrors)
+				);
+				const mergedAll = merge(
+					this.state.externalErrors || {},
+					mergedInternalErrors as any
 				) as any;
 				this.validating = false;
-				resolve(!Object.keys(merged).length);
-				!equals((this.state.extraErrors || {}), merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
+				resolve(!Object.keys(mergedAll).length);
+				if (!equals((this.state.extraErrors || {}), mergedAll)) {
+					this.setState({extraErrors: mergedAll}, this.popErrorListIfNeeded);
+				}
 			}).catch((e) => {
 				block && this.memoizedFormContext.services.blocker.pop();
 
