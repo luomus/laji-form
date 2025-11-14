@@ -141,14 +141,14 @@ export class Form {
 	$mapFieldFullscreenMap = this.$locator.locator(".laji-form.fullscreen .laji-form-map");
 
 	getBooleanWidget(str: string) {
-		const $container = this.$locate(str).locator(".btn-toolbar");
+		const $container = this.$locate(str).locator(".checkbox-container");
 		return {
 			$container,
-			$true: $container.locator(".btn").nth(0), // eslint-disable-line  protractor/use-first-last
-			$false: $container.locator(".btn").nth(1),
-			$undefined: this.$locate(str).locator(".btn").nth(2),
-			$active: $container.locator(".btn.active"),
-			$nonactive: $container.locator(".btn:not(.active)").first()
+			$true: $container.locator("input").nth(0), // eslint-disable-line  protractor/use-first-last
+			$false: $container.locator("input").nth(1),
+			$undefined: this.$locate(str).locator("input").nth(2),
+			$active: $container.locator("input[checked]"),
+			$nonactive: $container.locator("input:not([checked])").first()
 		};
 	}
 

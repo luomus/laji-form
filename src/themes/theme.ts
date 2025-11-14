@@ -242,6 +242,16 @@ export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMayb
 	onChange?: React.EventHandler<any>;
 }
 
+// export interface RadioProps extends Omit<JSX.IntrinsicAttributes & HTMLInputElement, "form"> {
+// 	form?: string;
+// 	list?: string;
+// 	contentEditable?: "inherit" | boolean | "true" | "false";
+// 	style: React.CSSProperties;
+// 	translate: boolean;
+// }
+//
+// type a = RadioProps['form'];
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ComponentType<TableProps>;
@@ -275,4 +285,5 @@ export interface Theme {
 	Checkbox: React.ComponentType<CheckboxProps>;
 	ToggleButton: React.ComponentType<ToggleButtonProps>;
 	ToggleButtonGroup: React.ComponentType<ToggleButtonGroupProps>;
+	// Radio: React.ComponentType<RadioProps>
 }

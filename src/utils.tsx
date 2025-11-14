@@ -210,17 +210,19 @@ export function isSelect(schema: RJSFSchema) {
 	return _isSelect(rjsfValidator, schema);
 }
 
-const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
+const CHECKBOX_CLASS = "laji-form-checkbox-widget-tab-target";
 const IMG_ADD_CLASS = "laji-form-drop-zone";
 
 const tabbableSelectors = [
 	"input",
 	"select",
-	"textarea",
-	`.${SWITCH_CLASS}`,
+	"textarea"
+].map(type => `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input):not([type="radio"])`);
+const tabbableSelectorsQuery = [
+	...tabbableSelectors,
+	`.${CHECKBOX_CLASS}`,
 	`.${IMG_ADD_CLASS}`
-].map(type => `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`);
-const tabbableSelectorsQuery = tabbableSelectors.join(", ");
+].join(", ");
 
 export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLElement[] {
 	const fieldsNodeList = elem.querySelectorAll<HTMLElement>(tabbableSelectorsQuery);
@@ -233,7 +235,7 @@ export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLEle
 export function isTabbableInput(elem: HTMLElement) {
 	return elem.id.match(/^_laji-form_/)
 	|| ["input", "select", "textarea"].includes(elem.tagName.toLowerCase())
-	|| elem.className.includes(SWITCH_CLASS)
+	|| elem.className.includes(CHECKBOX_CLASS)
 	|| elem.className.includes(IMG_ADD_CLASS);
 }
 
