@@ -33,7 +33,6 @@ export default class CheckboxWidget extends React.Component {
 			return;
 		}
 		const inputs = this.containerRef.current.querySelectorAll("input");
-		console.log(inputs, document.activeElement);
 		if (["ArrowRight", "ArrowDown"].includes(e.key) && document.activeElement === inputs[inputs.length - 1]) {
 			e.preventDefault();
 		} else if (["ArrowLeft", "ArrowUp"].includes(e.key) && document.activeElement === inputs[0]) {
@@ -45,7 +44,6 @@ export default class CheckboxWidget extends React.Component {
 		if (value !== undefined && this.getOptions(this.props).invert) {
 			value = !value;
 		}
-		console.log("change", value);
 		this.props.onChange(value);
 	};
 
@@ -99,18 +97,17 @@ export default class CheckboxWidget extends React.Component {
 		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
 		const checkbox = (
-				<div ref={this.containerRef} className="checkbox-container"
-				     disabled={_disabled} >
+				<div ref={this.containerRef} className="checkbox-container">
 					<label>
-						<input type="radio" value="true" checked={_value === true} onChange={this.onChangeTrue} className={tabTargetClass} onKeyDown={this.onKeyDown}></input>
+						<input type="radio" value="true" checked={_value === true} onChange={this.onChangeTrue} className={tabTargetClass} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
 						{trueLabel}
 					</label>
 					<label>
-						<input type="radio" value="false" checked={_value === false} onChange={this.onChangeFalse} onKeyDown={this.onKeyDown}></input>
+						<input type="radio" value="false" checked={_value === false} onChange={this.onChangeFalse} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
 						{falseLabel}
 					</label>
 					{displayUndefined && (<label>
-						<input type="radio" value="undefined" checked={_value === undefined} onChange={this.onChangeUndefined} onKeyDown={this.onKeyDown}></input>
+						<input type="radio" value="undefined" checked={_value === undefined} onChange={this.onChangeUndefined} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
 						{unknownLabel}
 					</label>)}
 			</div>
