@@ -29,9 +29,9 @@ export default class _AutosuggestWidget extends React.Component {
 				return <TaxonAutosuggestWidget {...this.props} options={ { ...this.props.options, autosuggestField: "taxa" } } />;
 			case "unit":
 				return <UnitAutosuggestWidget {...this.props} basePath="/shorthand/unit/trip-report" />;
-			case "friends":
 			case "person":
 				return <FriendsAutosuggestWidget {...this.props} options={ { ...this.props.options, autosuggestField: "persons" } }/>;
+			case "friends":
 			case "persons":
 				return <FriendsAutosuggestWidget {...this.props} />;
 			case "organization":
