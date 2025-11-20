@@ -29,8 +29,10 @@ export default class _AutosuggestWidget extends React.Component {
 				return <TaxonAutosuggestWidget {...this.props} options={ { ...this.props.options, autosuggestField: "taxa" } } />;
 			case "unit":
 				return <UnitAutosuggestWidget {...this.props} basePath="/shorthand/unit/trip-report" />;
-			case "friends":
 			case "person":
+				return <FriendsAutosuggestWidget {...this.props} options={ { ...this.props.options, autosuggestField: "persons" } }/>;
+			case "friends":
+			case "persons":
 				return <FriendsAutosuggestWidget {...this.props} />;
 			case "organization":
 				return <OrganizationAutosuggestWidget {...this.props} />;
@@ -58,6 +60,7 @@ export default class _AutosuggestWidget extends React.Component {
 				break;
 			case "friends":
 			case "person":
+			case "persons":
 				component = FriendsAutosuggestWidget;
 				break;
 			case "organization":
@@ -276,7 +279,7 @@ class FriendsAutosuggestWidget extends React.Component {
 		const {showID} = getUiOptions(this.props);
 		const {isAdmin} = this.props.formContext.uiSchemaContext;
 		if (this.isValueSuggested(value)) {
-			const {fullName, group, id} = await this.props.formContext.apiClient.get(`/person/by-id/${value}`);
+			const {fullName, group, id} = await this.props.formContext.apiClient.get(`/person/${value}`);
 			if (fullName) {
 				const addGroup = str => group ? `${str} (${group})` : str;
 				const addID = str => isAdmin && showID ? `${str} (${id})` : str;
