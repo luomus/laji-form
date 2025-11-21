@@ -264,7 +264,7 @@ export default class MapField extends React.Component {
 			if (formData?.[coordinateFields.longitude] !== undefined && formData?.[coordinateFields.latitude] !== undefined) {
 				return {
 					type: "Point",
-					coordinates: [formData[coordinateFields.longitude], formData[coordinateFields.latitude]]
+					coordinates: [+formData[coordinateFields.longitude], +formData[coordinateFields.latitude]]
 				};
 			} else {
 				return undefined;
@@ -291,10 +291,24 @@ export default class MapField extends React.Component {
 		let formData;
 
 		if (coordinateFields) {
-			formData = geometry ? {
-				[coordinateFields.longitude]: geometry.coordinates[0],
-				[coordinateFields.latitude]: geometry.coordinates[1]
-			} : undefined;
+			if (geometry) {
+				let longitude = geometry.coordinates[0];
+				let latitude = geometry.coordinates[1];
+
+				if (this.props.schema.properties[coordinateFields.longitude].type === "string") {
+					longitude = "" + longitude;
+				}
+				if (this.props.schema.properties[coordinateFields.latitude].type === "string") {
+					latitude = "" + latitude;
+				}
+
+				formData = {
+					[coordinateFields.longitude]: longitude,
+					[coordinateFields.latitude]: latitude
+				};
+			} else {
+				formData = undefined;
+			}
 		} else {
 			formData = geometryCollection ? {
 				type: "GeometryCollection",
