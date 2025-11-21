@@ -8,19 +8,13 @@ import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, isNullOrUndefined } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
-import exif from "exif-js";
+import exif from "exifreader";
 import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
 import moment from "moment";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
-
-function toDecimal(number: any) {
-	if (!number) return undefined;
-	return number[0].numerator + number[1].numerator /
-		(60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
-}
 
 let mediaUuid = 0;
 
@@ -494,10 +488,13 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 				return promise.then(found =>
 					new Promise(resolve => {
-						(exif.getData as any)(file, function() {
+						exif.load(file).then(tags => {
 							if ("geometry" in found) try {
-								const coordinates = ["GPSLongitude", "GPSLatitude"].map(tag => toDecimal(exif.getTag(this, tag)));
-								const rawDatum = exif.getTag(this, "GPSMapDatum");
+								const coordinates = ["GPSLongitude", "GPSLatitude"].map(tag => {
+									const coord = tags[tag]?.description;
+									return coord;
+								});
+								const rawDatum = tags["GPSMapDatum"]?.description;
 								const datum = typeof rawDatum === "string"
 									? rawDatum.trim().toUpperCase()
 									: undefined;
@@ -525,7 +522,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 							if ("date" in found) {
 								try {
-									const rawDate = exif.getTag(this, "DateTimeOriginal");
+									const rawDate = tags["DateTimeOriginal"]?.description;
 									const momentDate = moment(rawDate, "YYYY:MM:DD HH:mm:ss");
 									if (momentDate.isValid()) {
 										found.date = momentDate.format("YYYY-MM-DDTHH:mm");

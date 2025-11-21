@@ -1,6 +1,6 @@
 {
   "name": "@luomus/laji-form",
-  "version": "15.1.74",
+  "version": "15.1.75",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -52,7 +52,7 @@
     "@types/react-spinner": "^0.2.0",
     "deep-equal": "^2.0.5",
     "deepmerge": "^4.2.2",
-    "exif-js": "^2.3.0",
+    "exifreader": "^4.32.0",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
     "memoizee": "^0.4.15",
