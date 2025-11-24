@@ -1930,9 +1930,14 @@ body .laji-form {
 	margin-left: -20px !important;
 }
 
+.laji-form .checkbox-container {
+	display: table;
+	border: 1px solid #00000038;
+	border-radius: 2px;
+}
 .laji-form .checkbox-container label {
 	font-weight: initial;
-	margin-right: 5px;
+	margin: 2px 7px;
 }
 .laji-form input[type="radio"] {
 	margin-right: 5px;
