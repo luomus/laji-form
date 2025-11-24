@@ -1932,8 +1932,8 @@ body .laji-form {
 
 .laji-form .checkbox-container {
 	display: table;
-	border: 1px solid #00000038;
-	border-radius: 2px;
+	outline: 1px solid #00000038;
+	border-radius: 1px;
 }
 .laji-form .checkbox-container label {
 	font-weight: initial;
