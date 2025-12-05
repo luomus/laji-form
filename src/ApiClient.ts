@@ -29,7 +29,7 @@ type RelaxQuery<P, K extends string> = P extends { query: infer Q }
 	)
 	: P;
 
-type MiddlewareInjectedKeys = "collectionID" | "formID" | "personToken";
+type MiddlewareInjectedKeys = "collectionID" | "formID";
 
 type Parameters<T> = "parameters" extends keyof T ? T["parameters"] : never;
 type ExtractContentIfExists<R> = R extends { content: infer C } ? C[keyof C] : null;
@@ -252,7 +252,11 @@ export default class ApiClient {
 			body = JSON.stringify(body) as any;
 		}
 
-		const response = await this.apiClient.fetch(pathSegments.join(""), _query, { method, body, ...options });
+		const response = await this.apiClient.fetch(
+			pathSegments.join(""),
+			((params as any)?.query || {}),
+			{ method, body, ...options }
+		);
 		if (response.status >= 400) {
 			const error: LajiApiErrorJSONContent = await response.json();
 			throw new LajiApiError(error?.message, response.status);

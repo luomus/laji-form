@@ -775,7 +775,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					capturerVerbatim: Array.isArray(mediaMetadata.capturerVerbatim) ? mediaMetadata.capturerVerbatim : [mediaMetadata.capturerVerbatim]
 				})
 				: MACode
-					? this.apiClient.get("/person/by-id/{personId}", { path: { personId: MACode } }).then(({fullName = MACode}) => (
+					? this.apiClient.get("/person/{id}", { path: { id: MACode } }).then(({fullName = MACode}) => (
 						{
 							capturerVerbatim: Array.isArray(fullName) ? fullName : [fullName],
 							...mediaMetadata,
