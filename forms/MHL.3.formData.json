@@ -10,7 +10,6 @@
     "editors": [
         "MA.279"
     ],
-	"id": "kek",
     "formID": "MHL.3",
     "gatheringEvent": {
         "@type": "MZ.gatheringEvent",
@@ -2169,7 +2168,6 @@
             ]
         }
     ],
-    "id": "JX.134338",
     "namedPlaceID": "MNP.22139",
     "publicityRestrictions": "MZ.publicityRestrictionsPrivate",
     "sourceID": "KE.389"

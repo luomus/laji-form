@@ -206,15 +206,11 @@ test.describe("Validations", () => {
 	});
 
 	const response = {
-		"error": {
-			"statusCode": 422,
-			"name": "Error",
-			"message": "Unprocessable Entity",
-			"details": {
-				".a": [
-					"mock"
-				]
-			}
+		"errorCode": "VALIDATION_EXCEPTION",
+		"details": {
+			"/a": [
+				"mock"
+			]
 		}
 	};
 

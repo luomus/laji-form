@@ -35,7 +35,7 @@ const log = (type) => console.info.bind(console, type);
 let lang = query.lang || "fi";
 
 const apiClient = new ApiClientImplementation(
-	"https://apitest.laji.fi/v0",
+	"https://apitest.laji.fi",
 	properties.accessToken,
 	properties.userToken,
 	lang
