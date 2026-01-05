@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
+import Spinner from "react-spinner";
 
 export default class InputWithDefaultValueButtonWidget extends React.Component {
 	static contextType = ReactContext;
@@ -18,6 +19,7 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 					resultKey: PropTypes.string.isRequired,
 					cache: PropTypes.bool
 				}),
+				disableButtonAfterUse: PropTypes.bool,
 				onClick: PropTypes.func
 			}).isRequired
 		}).isRequired,
@@ -29,7 +31,9 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {fetching: false};
+		this.fetching = false;
+		this.disabled = false;
+		this.state = {fetching: false, disabled: false};
 	}
 
 	render() {
@@ -41,8 +45,9 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 			<InputGroup>
 				<BaseInputTemplate {...this.props} />
 				<InputGroup.Button className={"input-group-button"}>
-					<Button onClick={this.onClick} disabled={disabled || readonly || this.state.fetching} variant={buttonVariant}>
+					<Button onClick={this.onClick} disabled={disabled || readonly || this.state.fetching || this.state.disabled} variant={buttonVariant}>
 						{buttonLabel}
+						{this.state.fetching && <Spinner />}
 					</Button>
 				</InputGroup.Button>
 			</InputGroup>
@@ -50,29 +55,44 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 	}
 
 	onClick = () => {
+		if (this.fetching || this.disabled) {
+			return;
+		}
+
 		const {contextFieldForDefaultValue, apiQueryForDefaultValue, onClick} = getUiOptions(this.props);
 
 		if (contextFieldForDefaultValue) {
 			const uiSchemaContext = this.props.formContext.uiSchemaContext || {};
 			const defaultValue = uiSchemaContext[contextFieldForDefaultValue];
-			this.props.onChange(defaultValue);
+			this.changeValue(defaultValue);
 		} else if (apiQueryForDefaultValue) {
 			const {path, query = {}, resultKey, cache = false} = apiQueryForDefaultValue;
 			const apiClient = this.props.formContext.apiClient;
 
+			this.fetching = true;
 			this.setState({fetching: true});
-			return apiClient.get(path, { query }, cache).then(result => {
-				if (result[resultKey]) {
-					this.props.onChange(result[resultKey]);
-				}
-				this.setState({fetching: false});
+
+			return apiClient.get(path, { query: { value: this.props.value, ...query } }, cache).then(result => {
+				result = resultKey ? result?.[resultKey] : result;
+				this.changeValue(result);
 			}).catch(() => {
+			}).finally(() => {
+				this.fetching = false;
 				this.setState({fetching: false});
 			});
 		}
 
 		if (onClick) {
 			onClick();
+		}
+	};
+
+	changeValue = (value) => {
+		const {disableButtonAfterUse = false} = getUiOptions(this.props);
+		this.props.onChange(value);
+		if (disableButtonAfterUse) {
+			this.disabled = true;
+			this.setState({disabled: true});
 		}
 	};
 }
