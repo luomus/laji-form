@@ -72,7 +72,7 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 			this.fetching = true;
 			this.setState({fetching: true});
 
-			return apiClient.get(path, { query: { value: this.props.value, ...query } }, cache).then(result => {
+			return apiClient.get(path, { query: { value: this.props.value ?? "", ...query } }, cache).then(result => {
 				result = resultKey ? result?.[resultKey] : result;
 				this.changeValue(result);
 			}).catch(() => {
