@@ -116,7 +116,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					autoOpenMetadataModal: PropTypes.bool,
 					sideEffects: PropTypes.object,
 					exifParsers: PropTypes.arrayOf(PropTypes.object),
-					metadataFormId: PropTypes.string
+					metadataFormId: PropTypes.string,
+					hideDeleteButton: PropTypes.bool,
+					deleteConfirmPlacement: PropTypes.string
 				})
 			}),
 			schema: PropTypes.shape({
@@ -297,17 +299,18 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;
-			const {deleteConfirmPlacement = "top"} = getUiOptions(this.props.uiSchema);
+			const {hideDeleteButton = false, deleteConfirmPlacement = "top"} = getUiOptions(this.props.uiSchema);
 			return (this.props.formData || []).map((item: any, i : number) => (
 				<div key={i} className="media-container">
 					<div className="media-container-link" onClick={(this as any).onMediaClick(i)}>{(this as any).renderMedia(item, i)}</div>
-					<DeleteButton corner={true}
-					              confirm={true}
-					              confirmPlacement={deleteConfirmPlacement}
-					              translations={this.props.formContext.translations}
-					              onClick={this.onMediaRmClick(i)}
-					              disabled={disabled || readonly}
-					              id={`${this.props.idSchema.$id}_${i}`} />
+					{ !hideDeleteButton && <DeleteButton corner={true}
+														 confirm={true}
+														 confirmPlacement={deleteConfirmPlacement}
+														 translations={this.props.formContext.translations}
+														 onClick={this.onMediaRmClick(i)}
+														 disabled={disabled || readonly}
+														 id={`${this.props.idSchema.$id}_${i}`} />
+					}
 				</div>
 			));
 		};
