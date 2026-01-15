@@ -10,13 +10,7 @@ export const rulePropType = PropTypes.oneOfType([
 		regexp: PropTypes.string,
 		valueIn: PropTypes.arrayOf(PropTypes.string),
 		valueLengthLessThan: PropTypes.number,
-		complement: PropTypes.bool
-	}),
-	PropTypes.shape({
-		contextField: PropTypes.string.isRequired,
-		regexp: PropTypes.string,
-		valueIn: PropTypes.arrayOf(PropTypes.string),
-		valueLengthLessThan: PropTypes.number,
+		prop: PropTypes.string,
 		complement: PropTypes.bool
 	}),
 	PropTypes.shape({

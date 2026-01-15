@@ -3468,8 +3468,9 @@
           "cases": [
             {
               "rules": {
-                "contextField": "imageDeletionAllowed",
-                "regexp": "true"
+                "field": "/uiSchemaContext/imageDeletionAllowed",
+                "regexp": "true",
+                "prop": "formContext"
               },
               "operations": {
                 "type": "merge",

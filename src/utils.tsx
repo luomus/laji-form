@@ -813,7 +813,7 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 			rule = {rule};
 		}
 
-		const {field, contextField, regexp, valueIn, valueIncludes, valueLengthLessThan, rule: _rule} = rule;
+		const {field, regexp, valueIn, valueIncludes, valueLengthLessThan, rule: _rule} = rule;
 		if (_rule) {
 			if (_rule === "isAdmin") {
 				passes = props.formContext.uiSchemaContext.isAdmin;
@@ -825,9 +825,7 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 				passes = props.readonly;
 			}
 		} else {
-			let value = contextField
-				? parseJSONPointer(props.formContext.uiSchemaContext || {}, contextField)
-				: parseJSONPointer(props[prop] || {}, field);
+			let value = parseJSONPointer(props[rule.prop || prop] || {}, field);
 
 			if (value === undefined) value = "";
 			if (regexp) {
