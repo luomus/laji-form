@@ -6,7 +6,7 @@ import {
 	getFocusedElement,
 	getRemoveUnit,
 	updateValue,
-	DateWidgetPO
+	DateWidgetPO, ImageArrayFieldPOI
 } from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
@@ -17,6 +17,7 @@ test.describe("specimen form (MHL.1158)", () => {
 	let form: DemoPageForm;
 	let dateBeginWidget: DateWidgetPO;
 	let dateEndWidget: DateWidgetPO;
+	let imgArrayField: ImageArrayFieldPOI;
 
 	const uiSchemaContext = {
 		userName: "Test, User",
@@ -30,6 +31,7 @@ test.describe("specimen form (MHL.1158)", () => {
 
 		dateBeginWidget = form.getDateWidget("gatherings.0.dateBegin");
 		dateEndWidget = form.getDateWidget("gatherings.0.dateEnd");
+		imgArrayField = form.getImageArrayField("");
 	});
 
 	test("dates are automatically filled if only year is given", async () => {
@@ -62,6 +64,30 @@ test.describe("specimen form (MHL.1158)", () => {
 		const formData = await form.getChangedData();
 		expect(formData.gatherings[0].wgs84Latitude).toBeDefined();
 		expect(formData.gatherings[0].wgs84Longitude).toBeDefined();
+	});
+
+	test.describe("images", () => {
+		test("delete button is hidden by default", async () => {
+			const {resolve, remove} = await form.mockImageUpload("");
+			await expect(imgArrayField.$$imgs).toHaveCount(1);
+			await resolve();
+
+			await expect(imgArrayField.$$imgLoading).toHaveCount(0);
+			await expect(imgArrayField.$$imgRemoves).toHaveCount(0);
+			await remove();
+		});
+
+		test("delete button is shown if imageDeletionAllowed is true", async () => {
+			await form.setState({ uiSchemaContext: { ...uiSchemaContext, imageDeletionAllowed: true } });
+
+			const {resolve, remove} = await form.mockImageUpload("");
+			await expect(imgArrayField.$$imgs).toHaveCount(1);
+			await resolve();
+
+			await expect(imgArrayField.$$imgLoading).toHaveCount(0);
+			await expect(imgArrayField.$$imgRemoves).toHaveCount(1);
+			await remove();
+		});
 	});
 
 	test.describe("units", () => {

@@ -6,8 +6,14 @@ import { checkRules, updateSafelyWithJSONPointer } from "../../utils";
 
 export const rulePropType = PropTypes.oneOfType([
 	PropTypes.shape({
-		container: PropTypes.string,
 		field: PropTypes.string.isRequired,
+		regexp: PropTypes.string,
+		valueIn: PropTypes.arrayOf(PropTypes.string),
+		valueLengthLessThan: PropTypes.number,
+		complement: PropTypes.bool
+	}),
+	PropTypes.shape({
+		contextField: PropTypes.string.isRequired,
 		regexp: PropTypes.string,
 		valueIn: PropTypes.arrayOf(PropTypes.string),
 		valueLengthLessThan: PropTypes.number,

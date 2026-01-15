@@ -3462,6 +3462,27 @@
   },
   "uiSchema": {
     "images": {
+      "ui:functions": {
+        "ui:field": "ConditionalUiSchemaField",
+        "ui:options": {
+          "cases": [
+            {
+              "rules": {
+                "contextField": "imageDeletionAllowed",
+                "regexp": "true"
+              },
+              "operations": {
+                "type": "merge",
+                "uiSchema": {
+                  "ui:options": {
+                    "hideDeleteButton": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
       "ui:field": "ImageArrayField",
       "ui:options": {
         "metadataFormId": "MHL.1160",
@@ -3471,7 +3492,8 @@
             "parse": "date",
             "type": "mutateMetadata"
           }
-        ]
+        ],
+        "hideDeleteButton": true
       }
     },
     "owner": {
