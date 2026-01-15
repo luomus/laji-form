@@ -208,7 +208,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
 				style={{ position: "absolute" }}
 				tabIndex={-1}
-			  ref={dropdownRef}>
+				ref={dropdownRef}>
 				{filteredEnums.map((oneOf, idx) => (
 					<ListItem
 						key={oneOf.value ?? ""}
@@ -427,12 +427,12 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 			<div className={wrapperClassNames} tabIndex={-1} onFocus={redirectFocusToInput} style={{cursor: "text"}}>
 				<ul style={{listStyle: "none", display: "inline-block"}}>{selectedListChildren}</ul>
 				<input disabled={disabled || readonly}
-				       id={id}
-				       onFocus={onFocus}
-				       value={inputValue}
-				       onChange={onInputChange}
-				       autoComplete="off"
-				       ref={inputRef} />
+					id={id}
+					onFocus={onFocus}
+					value={inputValue}
+					onChange={onInputChange}
+					autoComplete="off"
+					ref={inputRef} />
 				{ loading && <Spinner /> }
 			</div>
 			<Caret />

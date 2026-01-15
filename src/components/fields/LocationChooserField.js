@@ -555,11 +555,11 @@ class LocationButton extends React.Component {
 
 			return (
 				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
-				                overlay={overlay}
-				                placement="left"
-				                hoverable={true}
-				                formContext={that.props.formContext}
-				                onEntered={hasCoordinates ? this.onEntered : undefined} >
+					overlay={overlay}
+					placement="left"
+					hoverable={true}
+					formContext={that.props.formContext}
+					onEntered={hasCoordinates ? this.onEntered : undefined} >
 					{button}
 				</OverlayTrigger>
 			);

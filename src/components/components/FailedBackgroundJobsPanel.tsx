@@ -84,7 +84,7 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 
 		return (
 			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}
-			     style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : undefined} >
+				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : undefined} >
 				<ErrorPanel 
 					title={translations.FailedBackgroundJobs}
 					errors={errors}

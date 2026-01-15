@@ -708,7 +708,7 @@ class LineTransectMapArrayField extends React.Component {
 					[idx, 1],
 					[target, 0, formData[idx]],
 				];
-				// Splices must be executed in reverse order to keep idxs correct.
+					// Splices must be executed in reverse order to keep idxs correct.
 				if (target > idx) splices = splices.reverse();
 				formData = update(formData, {$splice: splices});
 				break;
@@ -1543,10 +1543,10 @@ function _MapArrayField(ComposedComponent) {
 			};
 
 			const map = (
-			<MapComponent
-				ref="map"
-				{...mapPropsToPass}
-			/>
+				<MapComponent
+					ref="map"
+					{...mapPropsToPass}
+				/>
 			);
 
 			const wrapperProps = {
@@ -1562,59 +1562,59 @@ function _MapArrayField(ComposedComponent) {
 			};
 
 			const wrappedMap = (
-			<Stretch
-				{...wrapperProps}
-				ref="stretch"
-			>
-				{map}
-			</Stretch>
+				<Stretch
+					{...wrapperProps}
+					ref="stretch"
+				>
+					{map}
+				</Stretch>
 			);
 
 			const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 			const {Popover, Row, Col, ButtonToolbar} = this.context.theme;
 
 			return (
-			<React.Fragment>
-				<Row>
-					<Col {...mapSizes}>
-						{wrappedMap}
-					</Col>
-					<Col
-						{...schemaSizes}
-						ref={this.stretchContainerRef}
-					>
-						{mapOptions.emptyMode ?
-							(!emptyHelp && (!buttons || !buttons.length) ? null :
-								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
-									<div>
-										{emptyHelp}
-										{buttons && buttons.length ? ` ${this.props.formContext.translations.or}` : null}
-										{buttons}
-									</div>
-								}</Popover>
-							) :
-							inlineSchema
-						}
-					</Col>
-				</Row>
-				{popupFields ?
-					<div style={{display: "none"}}
-					     ref="popupContainer"
-					>
-						<Popup data={this.getPopupData(this.state.popupIdx)}
-						       ref="popup"
-						/>
-					</div> : null}
-				<Row>
-					{mapOptions.emptyMode ? null : belowSchema}
-				</Row>
-				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
-					<Row className="map-array-field-below-buttons">
-						<TitleFieldTemplate title={getUiOptions(uiSchema).buttonsTitle} schema={this.props.schema} />
-						<ButtonToolbar>{buttons}</ButtonToolbar>
+				<React.Fragment>
+					<Row>
+						<Col {...mapSizes}>
+							{wrappedMap}
+						</Col>
+						<Col
+							{...schemaSizes}
+							ref={this.stretchContainerRef}
+						>
+							{mapOptions.emptyMode ?
+								(!emptyHelp && (!buttons || !buttons.length) ? null :
+									<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
+										<div>
+											{emptyHelp}
+											{buttons && buttons.length ? ` ${this.props.formContext.translations.or}` : null}
+											{buttons}
+										</div>
+									}</Popover>
+								) :
+								inlineSchema
+							}
+						</Col>
 					</Row>
-				): null}
-			</React.Fragment>
+					{popupFields ?
+						<div style={{display: "none"}}
+							ref="popupContainer"
+						>
+							<Popup data={this.getPopupData(this.state.popupIdx)}
+								ref="popup"
+							/>
+						</div> : null}
+					<Row>
+						{mapOptions.emptyMode ? null : belowSchema}
+					</Row>
+					{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
+						<Row className="map-array-field-below-buttons">
+							<TitleFieldTemplate title={getUiOptions(uiSchema).buttonsTitle} schema={this.props.schema} />
+							<ButtonToolbar>{buttons}</ButtonToolbar>
+						</Row>
+					): null}
+				</React.Fragment>
 			);
 		}
 
@@ -1754,7 +1754,7 @@ class Popup extends React.Component {
 		const { data } = this.props;
 		return data && data.length &&
 			<ul ref="popup"
-			    className="map-data-tooltip">
+				className="map-data-tooltip">
 				{data.map(({value, title, template}, i) => {
 					switch (template) {
 					case "title":
@@ -1877,10 +1877,10 @@ export class MapComponent extends React.Component {
 
 		const controlledPanel = panel ?
 			<MapPanel id={panel.id}
-			          variant={panel.variant || undefined}
-			          buttonThemeRole={panel.buttonThemeRole}
-			          header={panel.header}
-			          text={panel.panelTextContent} />
+				variant={panel.variant || undefined}
+				buttonThemeRole={panel.buttonThemeRole}
+				header={panel.header}
+				text={panel.panelTextContent} />
 			: null;
 
 		return (
@@ -1888,11 +1888,11 @@ export class MapComponent extends React.Component {
 				{controlledPanel}
 				{this.state.panel &&
 					<MapPanel id={panel.id}
-					          show={this.state.panel}
-					          text={this.state.panelTextContent}
-					          onClick={this.state.panelButtonOnClick}
-					          buttonText={this.state.panelButtonContent}
-					          buttonThemeRole={this.state.panelButtonBsStyle}
+						show={this.state.panel}
+						text={this.state.panelTextContent}
+						onClick={this.state.panelButtonOnClick}
+						buttonText={this.state.panelButtonContent}
+						buttonThemeRole={this.state.panelButtonBsStyle}
 					/>
 				}
 				{this.state.showHelp &&
@@ -1905,12 +1905,12 @@ export class MapComponent extends React.Component {
 					
 				}
 				<Map className={this.props.className}
-				     style={this.props.style} 
-				     ref="map"
-				     showHelp={this.showHelp}
-				     hideHelp={this.hideHelp}
-				     formContext={this.props.formContext}
-				     {...{...mapOptions, ...this.state.mapOptions}}
+					style={this.props.style} 
+					ref="map"
+					showHelp={this.showHelp}
+					hideHelp={this.hideHelp}
+					formContext={this.props.formContext}
+					{...{...mapOptions, ...this.state.mapOptions}}
 				/>
 			</div>
 		);
@@ -2079,7 +2079,7 @@ export class Map extends React.Component {
 					style={this.props.style}
 					ref="map"
 				/>
-		 </React.Fragment>
+			</React.Fragment>
 		);
 	}
 }

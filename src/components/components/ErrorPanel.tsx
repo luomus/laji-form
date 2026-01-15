@@ -46,15 +46,15 @@ export class ErrorPanel extends React.Component<Props, State> {
 		return (
 			<Panel collapsible="true" onToggle={this.collapseToggle} className={classNames}>
 				<Panel.Heading>
-					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
-						   <div className="panel-title">
-							   {title}
-							   <span className="pull-right">
-								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" />
-								   {showToggle ? <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle} /> : null}
-							   </span>
-						   </div>
-					   </div>
+					<div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
+						<div className="panel-title">
+							{title}
+							<span className="pull-right">
+								<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" />
+								{showToggle ? <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle} /> : null}
+							</span>
+						</div>
+					</div>
 				</Panel.Heading>
 				<Panel.Collapse in={this.state.expanded}>
 					<ListGroup>

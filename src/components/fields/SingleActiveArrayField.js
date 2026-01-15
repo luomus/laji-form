@@ -534,7 +534,7 @@ export class AccordionArrayFieldTemplate extends React.Component {
 					that={that}
 					idx={idx}
 					wrapperClassName="panel-title"
-			    className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header"
+					className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header"
 				>
 					{item.hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}`}
 						disabled={disabled || readonly}
@@ -565,11 +565,11 @@ export class AccordionArrayFieldTemplate extends React.Component {
 				<Accordion onSelect={this.onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
-									 ref={containerRefs[idx]}
-						       id={`${this.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-panel`}
-						       className="laji-form-panel laji-form-clickable-panel"
-									 eventKey={idx}
-									 variant={filteredErrors(that.props.errorSchema)[getFormDataIndex(idx, that.props.uiSchema)] ? "danger" : "default"}>
+							ref={containerRefs[idx]}
+							id={`${this.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-panel`}
+							className="laji-form-panel laji-form-clickable-panel"
+							eventKey={idx}
+							variant={filteredErrors(that.props.errorSchema)[getFormDataIndex(idx, that.props.uiSchema)] ? "danger" : "default"}>
 							<Panel.Heading>
 								{getHeader(item, idx)}
 							</Panel.Heading>
@@ -615,9 +615,9 @@ class PagerArrayFieldTemplate extends React.Component {
 			<div className={`laji-form-panel-header laji-form-accordion-header${headerClassName ? ` ${headerClassName}` : ""}`} ref={this.setHeaderRef}>
 				<Pager>
 					<Pager.Item previous 
-					            href="#"
-					            disabled={activeIdx <= 0 || activeIdx === undefined}
-					            onClick={this.navigatePrev}>
+						href="#"
+						disabled={activeIdx <= 0 || activeIdx === undefined}
+						onClick={this.navigatePrev}>
 						&larr; {translations.Previous}</Pager.Item>
 					{activeIdx !== undefined
 						? (
@@ -630,9 +630,9 @@ class PagerArrayFieldTemplate extends React.Component {
 						)
 						: null}
 					<Pager.Item next 
-					            href="#"
-					            disabled={activeIdx >= (that.props.formData || []).length - 1 || activeIdx === undefined}
-					            onClick={this.navigateNext}>
+						href="#"
+						disabled={activeIdx >= (that.props.formData || []).length - 1 || activeIdx === undefined}
+						onClick={this.navigateNext}>
 						{translations.Next}  &rarr;</Pager.Item>
 				</Pager>
 			</div>
@@ -976,12 +976,12 @@ class TableArrayFieldTemplate extends React.Component {
 
 		const getDeleteButtonFor = (idx, item) => {
 			return removable && <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
-										       disabled={disabled || readonly}
-			                     ref={this.getDeleteButtonRef(idx)}
-			                     key={getUUID(this.props.formData[item.index]) || item.key}
-			                     confirm={confirmDelete}
-			                     translations={this.props.formContext.translations}
-			                     onClick={that.onDelete(item)} />;
+				disabled={disabled || readonly}
+				ref={this.getDeleteButtonRef(idx)}
+				key={getUUID(this.props.formData[item.index]) || item.key}
+				confirm={confirmDelete}
+				translations={this.props.formContext.translations}
+				onClick={that.onDelete(item)} />;
 		};
 
 		const setItemRef = idx => elem => {
@@ -1030,16 +1030,16 @@ class TableArrayFieldTemplate extends React.Component {
 									if (filteredErrors(errorSchema)[getFormDataIndex(idx, uiSchema)]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
 										<tr key={getUUID(this.props.formData[item.index]) || item.key}
-										    onClick={this.getOnChangeActive(idx)}
-										    className={className}
-										    tabIndex={idx === activeIdx ? undefined : 0}
-										    role={idx === activeIdx ? undefined : "button"}
-										    id={idx !== activeIdx ? `_laji-form_${ArrayFieldPatched.prototype.getIdSchema(this.props, idx).$id}` : undefined}
-										    ref={setItemRef(idx)}
-										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
-										    onMouseEnter={onMouseEnter(idx)}
-										    onMouseLeave={onMouseLeave(idx)}
-										    onKeyDown={this.onKeyDownActivate(idx)}
+											onClick={this.getOnChangeActive(idx)}
+											className={className}
+											tabIndex={idx === activeIdx ? undefined : 0}
+											role={idx === activeIdx ? undefined : "button"}
+											id={idx !== activeIdx ? `_laji-form_${ArrayFieldPatched.prototype.getIdSchema(this.props, idx).$id}` : undefined}
+											ref={setItemRef(idx)}
+											style={idx === activeIdx ? this.state.activeTrStyle : undefined}
+											onMouseEnter={onMouseEnter(idx)}
+											onMouseLeave={onMouseLeave(idx)}
+											onKeyDown={this.onKeyDownActivate(idx)}
 										>
 											{cols.length ? cols.map(col => 
 												<td key={col}>
@@ -1338,13 +1338,13 @@ class AccordionHeader extends React.Component {
 
 		const header = (
 			<div className={this.props.className}
-			     role="tab"
-			     id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-header`}
-			     onClick={this.onHeaderClick}
-				   onMouseEnter={this.onMouseEnter}
-			     onMouseLeave={this.onMouseLeave}
-			     onKeyDown={this.onKeyDown}
-			     tabIndex="0" >
+				role="tab"
+				id={`${that.props.idSchema.$id}_${getFormDataIndex(idx, that.props.uiSchema)}-header`}
+				onClick={this.onHeaderClick}
+				onMouseEnter={this.onMouseEnter}
+				onMouseLeave={this.onMouseLeave}
+				onKeyDown={this.onKeyDown}
+				tabIndex="0" >
 				<div className={this.props.wrapperClassName}>
 					{headerTextComponent}
 					{this.props.children}
@@ -1354,7 +1354,7 @@ class AccordionHeader extends React.Component {
 
 		return hasData(popupData) ? (
 			<OverlayTrigger placement="left"
-			                overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
+				overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
 				{header}
 			</OverlayTrigger>
 		) : (

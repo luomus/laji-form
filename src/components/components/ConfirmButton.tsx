@@ -85,11 +85,11 @@ export class ConfirmButton extends React.Component<Props, State> {
 
 		const button = <>
 			<Button {...maybeProps}
-					disabled={disabled || readonly}
-					style={this.props.style}
-					ref={this.buttonRef}
-					onKeyDown={this.onButtonKeyDown}
-					onClick={this.onClick}>{this.props.children}</Button>
+				disabled={disabled || readonly}
+				style={this.props.style}
+				ref={this.buttonRef}
+				onKeyDown={this.onButtonKeyDown}
+				onClick={this.onClick}>{this.props.children}</Button>
 			{this.renderConfirm()}
 		</>;
 		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
@@ -114,7 +114,7 @@ export class ConfirmButton extends React.Component<Props, State> {
 		const {Overlay, Popover, ButtonGroup} = this.context.theme;
 		return (
 			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
-					 target={this.getOverlayTarget}>
+				target={this.getOverlayTarget}>
 				<Popover id={`${this.props.id}-button-confirm`}>
 					<span>{prompt}</span>
 					<ButtonGroup>

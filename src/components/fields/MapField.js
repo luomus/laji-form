@@ -558,8 +558,8 @@ class MobileEditorMap extends React.Component {
 		return (
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
 				<MapComponent
-				  {...mapComponentProps}
-				  onLocateToggle={this.handleLocateToggle}
+					{...mapComponentProps}
+					onLocateToggle={this.handleLocateToggle}
 				/>
 				<div className="floating-buttons-container">
 					<Button block onClick={this.onChange} className={"choose-location-button"} variant={"primary"} ref={this.setOkButtonRef} disabled={!this.props.moved}>{translations.ChooseThisLocation}</Button>

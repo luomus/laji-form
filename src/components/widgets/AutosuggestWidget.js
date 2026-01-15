@@ -185,10 +185,10 @@ function TaxonAutosuggest(ComposedComponent) {
 						<div className="laji-form-medias">
 							{this.parseChooseImages(chooseImages).map(taxonIDObj =>
 								<TaxonImgChooser id={taxonIDObj.id}
-								                 key={taxonIDObj.id}
-								                 url={taxonIDObj.url}
-								                 onSelect={this.onTaxonImgSelected}
-								                 formContext={this.props.formContext}/>
+									key={taxonIDObj.id}
+									url={taxonIDObj.url}
+									onSelect={this.onTaxonImgSelected}
+									formContext={this.props.formContext}/>
 							)}
 						</div>
 					</Col>
@@ -313,8 +313,8 @@ class FriendsAutosuggestWidget extends React.Component {
 		const {Glyphicon} = this.context.theme;
 		return (
 			<Glyphicon style={{pointerEvents: "none"}}
-			           glyph="user"
-			           className="form-control-feedback"/>
+				glyph="user"
+				className="form-control-feedback"/>
 		);
 	};
 
@@ -892,12 +892,12 @@ export class Autosuggest extends React.Component {
 
 		const addon = informalTaxonGroups && renderInformalTaxonGroupSelector
 			? <InformalTaxonGroupsAddon key="informal"
-					                        taxonGroupID={taxonGroupID} 
-				                          onClear={this.onInformalTaxonGroupSelected} 
-				                          open={this.state.informalTaxonGroupsOpen}
-				                          onOpen={this.onInformalTaxonGroupsOpened} 
-			                            onToggle={onToggle}
-				                          formContext={this.props.formContext} /> 
+				taxonGroupID={taxonGroupID} 
+				onClear={this.onInformalTaxonGroupSelected} 
+				open={this.state.informalTaxonGroupsOpen}
+				onOpen={this.onInformalTaxonGroupsOpened} 
+				onToggle={onToggle}
+				formContext={this.props.formContext} /> 
 			: null;
 
 		const getTogglerTooltip = () => {
@@ -961,13 +961,13 @@ export class Autosuggest extends React.Component {
 		if (displayValidationState && Wrapper) {
 			component = (
 				<Wrapper isSuggested={isSuggested}
-			           suggestion={suggestion}
-			           options={getUiOptions(this.props)}
-			           id={this.props.id}
-			           value={suggestion && suggestion.key}
-			           inputValue={value}
-				         ref={this.wrapperRef}
-			           formContext={this.props.formContext}>
+					suggestion={suggestion}
+					options={getUiOptions(this.props)}
+					id={this.props.id}
+					value={suggestion && suggestion.key}
+					inputValue={value}
+					ref={this.wrapperRef}
+					formContext={this.props.formContext}>
 					{component}
 				</Wrapper>
 			);
@@ -1101,11 +1101,11 @@ class _TaxonWrapper extends React.Component {
 
 		return (
 			<OverlayTrigger hoverable={true}
-			                placement={placement}
-			                contextId={this.props.formContext.contextId}
-			                overlay={popover}
-			                ref={this.props.overlayRef}
-			                formContext={this.props.formContext}>
+				placement={placement}
+				contextId={this.props.formContext.contextId}
+				overlay={popover}
+				ref={this.props.overlayRef}
+				formContext={this.props.formContext}>
 				{children}
 			</OverlayTrigger>
 		);
@@ -1416,10 +1416,10 @@ class ReactAutosuggest extends React.Component {
 				<ul className={suggestionsList} tabIndex={-1} ref={this.listRef} onBlur={this.onListBlur}>
 					{this.props.suggestions.map((s, i) =>
 						<li key={i}
-						    className={classNames(suggestion, this.state.focusedIdx === i && suggestionHighlighted)}
-						    onMouseDown={this.onSuggestionMouseDown}
-						    onMouseUp={this.onSuggestionMouseUp}
-						    data-idx={i}
+							className={classNames(suggestion, this.state.focusedIdx === i && suggestionHighlighted)}
+							onMouseDown={this.onSuggestionMouseDown}
+							onMouseUp={this.onSuggestionMouseUp}
+							data-idx={i}
 						>{this.props.renderSuggestion(s)}</li>
 					)}
 				</ul>

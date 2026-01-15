@@ -25,27 +25,7 @@ export default [
 			"@stylistic": stylistic
 		},
 		rules: {
-			"@stylistic/indent": ["error", "tab", {
-				// Allow alignment with spaces *after* initial tab indent
-				SwitchCase: 0,
-				ignoredNodes: [
-					"JSXElement *",
-					"JSXElement",
-					"JSXAttribute",
-					"JSXSpreadAttribute",
-					"JSXIdentifier",
-					"JSXNamespacedName",
-					"JSXMemberExpression",
-					"JSXOpeningElement",
-					"JSXClosingElement",
-					"JSXFragment",
-					"JSXOpeningFragment",
-					"JSXClosingFragment",
-					"JSXText",
-					"JSXEmptyExpression",
-					"JSXSpreadChild"
-				],
-			}],
+			"@stylistic/indent": ["error", "tab", { SwitchCase: 0 }],
 			"linebreak-style": ["error", "unix"],
 			quotes: ["error", "double"],
 			semi: ["error", "always"],

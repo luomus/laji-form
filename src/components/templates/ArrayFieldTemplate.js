@@ -308,13 +308,13 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 			const getDeleteButton = () => (
 				<div className="laji-form-field-template-buttons">
 					<DeleteButton id={`${props.idSchema.$id}_${i}`}
-					              disabled={disabled || readonly}
-					              ref={getRefFor(i)}
-					              onClick={item.onDropIndexClick(item.index)}
-					              confirm={confirmDelete}
-					              corner={deleteCorner}
-					              tooltip={deleteHelp}
-					              translations={props.formContext.translations}/>
+						disabled={disabled || readonly}
+						ref={getRefFor(i)}
+						onClick={item.onDropIndexClick(item.index)}
+						confirm={confirmDelete}
+						corner={deleteCorner}
+						tooltip={deleteHelp}
+						translations={props.formContext.translations}/>
 				</div>
 			);
 			if (!this.onFocuses[i]) {
@@ -339,12 +339,12 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 				{
 					orderable ?
 						<SortableList helperClass="laji-form reorder-active"
-						              distance={5}
-						              items={items}
-						              formData={props.formData}
-						              onSortEnd={this.onSort}
-						              itemProps={props.items}
-						              nonOrderables={nonOrderables} /> :
+							distance={5}
+							items={items}
+							formData={props.formData}
+							onSortEnd={this.onSort}
+							itemProps={props.items}
+							nonOrderables={nonOrderables} /> :
 						items
 				}
 				{bottomButtons}

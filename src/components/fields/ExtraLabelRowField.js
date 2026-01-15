@@ -54,9 +54,9 @@ export default class ExtraLabelRowField extends React.Component {
 		if (affixed) {
 			labelRow = (
 				<Affix containerRef={this.containerRef} 
-				       style={affixed ? {position: "relative", zIndex: 1} : undefined} 
-				       topOffset={this.props.formContext.topOffset}
-				       bottomOffset={this.props.formContext.bottomOffset}>
+					style={affixed ? {position: "relative", zIndex: 1} : undefined} 
+					topOffset={this.props.formContext.topOffset}
+					bottomOffset={this.props.formContext.bottomOffset}>
 					{labelRow}
 				</Affix>
 			);

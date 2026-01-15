@@ -237,10 +237,10 @@ export default class DateTimeWidget extends React.Component {
 			parse={this.parse}
 			disabled={readonly || disabled}
 			culture={culture}
-		  messages={{
-		    calendarButton: translations.ChooseDate,
-		    timeButton: translations.ChooseTime
-		  }}
+			messages={{
+				calendarButton: translations.ChooseDate,
+				timeButton: translations.ChooseTime
+			}}
 			onBlur={this.onBlur} 
 		/>);
 

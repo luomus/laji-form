@@ -488,13 +488,13 @@ export default class ScopeField extends React.Component {
 		return glyphFields ?
 			glyphFields.filter(settings => !settings.fn || settings.fn !== "setLocation").map((settings, i) => 
 				<GlyphField key={i}
-				            settings={settings}
-				            idSchema={this.props.idSchema}
-				            formData={this.props.formData}
-				            schema={this.props.schema}
-				            registry={this.props.registry}
-				            isIncluded={this.propertyIsIncluded(settings.show)}
-				            toggleAdditionalProperty={this.toggleAdditionalProperty}
+					settings={settings}
+					idSchema={this.props.idSchema}
+					formData={this.props.formData}
+					schema={this.props.schema}
+					registry={this.props.registry}
+					isIncluded={this.propertyIsIncluded(settings.show)}
+					toggleAdditionalProperty={this.toggleAdditionalProperty}
 				/>
 			) : null;
 	};
@@ -649,9 +649,9 @@ function GlyphField({settings, idSchema, formData, schema, isIncluded, toggleAdd
 	return (
 		<OverlayTrigger key={property} overlay={tooltip} placement="left">
 			<GlyphButton glyph={glyph}
-									 disabled={hasData}
-									 active={isIncluded}
-									 onClick={onButtonClick} />
+				disabled={hasData}
+				active={isIncluded}
+				onClick={onButtonClick} />
 		</OverlayTrigger>
 	);
 }

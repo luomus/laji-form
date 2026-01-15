@@ -259,12 +259,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 							{this.renderLoadingMedias()}
 							{showAdd && <OverlayTrigger overlay={tooltip}>
 								<DropZone accept={this.ACCEPT_FILE_TYPES}
-								          onDragEnter={this.onDragEnter}
-								          onDragLeave={this.onDragLeave}
-								          onDrop={this.onDrop}
-								          disabled={readonly || disabled}
-								          noKeyboard={true}
-									  >
+									onDragEnter={this.onDragEnter}
+									onDragLeave={this.onDragLeave}
+									onDrop={this.onDrop}
+									disabled={readonly || disabled}
+									noKeyboard={true}
+								>
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
 										const onClick = addModal ? this.defaultOnClick : _onClick;
@@ -304,12 +304,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				<div key={i} className="media-container">
 					<div className="media-container-link" onClick={(this as any).onMediaClick(i)}>{(this as any).renderMedia(item, i)}</div>
 					{ !hideDeleteButton && <DeleteButton corner={true}
-														 confirm={true}
-														 confirmPlacement={deleteConfirmPlacement}
-														 translations={this.props.formContext.translations}
-														 onClick={this.onMediaRmClick(i)}
-														 disabled={disabled || readonly}
-														 id={`${this.props.idSchema.$id}_${i}`} />
+						confirm={true}
+						confirmPlacement={deleteConfirmPlacement}
+						translations={this.props.formContext.translations}
+						onClick={this.onMediaRmClick(i)}
+						disabled={disabled || readonly}
+						id={`${this.props.idSchema.$id}_${i}`} />
 					}
 				</div>
 			));
@@ -385,7 +385,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			return typeof metadataModalOpen === "number" ?
 				<Modal dialogClassName="laji-form media-modal" show={true}
-				       onHide={this.hideMetadataModal}>
+					onHide={this.hideMetadataModal}>
 					<Modal.Header closeButton={true}>
 						<br />
 						<Pager>
@@ -452,9 +452,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 							]
 						].map(([captureMethod, label]) =>
 							<DropZone key={captureMethod || ""}
-							          accept={this.ACCEPT_FILE_TYPES}
-							          onDrop={this.onDrop}
-							          disabled={readonly || disabled}
+								accept={this.ACCEPT_FILE_TYPES}
+								onDrop={this.onDrop}
+								disabled={readonly || disabled}
 							>
 								{({getRootProps, getInputProps}) => {
 									return (

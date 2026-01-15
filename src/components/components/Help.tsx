@@ -35,10 +35,10 @@ export function Help({help, id, focusable = false, onFocus, onBlur, className, o
 	}, []);
 
 	const helpGlyph = <span className={classNames("laji-form-help-glyph", "text-muted", className)}
-	                        tabIndex={focusable ? 0 : -1}
-	                        onFocus={standalone ? onHelpFocus : onFocus}
-	                        onBlur={standalone ? onHelpBlur : onBlur}
-	                        onClick={onClick} />;
+		tabIndex={focusable ? 0 : -1}
+		onFocus={standalone ? onHelpFocus : onFocus}
+		onBlur={standalone ? onHelpBlur : onBlur}
+		onClick={onClick} />;
 	const tooltip = <Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help || ""}} /></Tooltip>;
 	return help ? (
 		<OverlayTrigger placement="right" overlay={tooltip} show={standalone && focused || undefined}>

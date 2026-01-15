@@ -49,8 +49,8 @@ function GridTemplate(props) {
 			rows[i].push(
 				<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
 					<Label id={idSchema.$id + "_row_" + i}
-								 label={rowTitles[i].title}
-								 uiSchema={{"ui:help": rowTitles[i].help}}/>
+						label={rowTitles[i].title}
+						uiSchema={{"ui:help": rowTitles[i].help}}/>
 				</Col>
 			);
 		}
@@ -115,10 +115,10 @@ function GridTemplate(props) {
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ?
 					<TitleFieldTemplate title={fieldTitle}
-					                    schema={schema}
-					                    uiSchema={titleUiSchema}
-					                    registry={props.registry}
-					                    id={idSchema.$id} /> : null}
+						schema={schema}
+						uiSchema={titleUiSchema}
+						registry={props.registry}
+						id={idSchema.$id} /> : null}
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>

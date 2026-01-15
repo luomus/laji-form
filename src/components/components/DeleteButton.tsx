@@ -43,13 +43,13 @@ export class DeleteButton extends React.Component<Props, State> {
 		}
 		return (
 			<ConfirmButton {...maybeProps}
-						   variant="danger"
-						   className={buttonClassName}
-						   prompt={props.translations.ConfirmRemove}
-						   confirmButtonVariant="danger"
-						   confirmButtonText={props.translations.Remove}
-			               confirmButtonId={`${this.props.id}-delete-confirm-yes`}
-			               cancelButtonId={`${this.props.id}-delete-confirm-no`}>
+				variant="danger"
+				className={buttonClassName}
+				prompt={props.translations.ConfirmRemove}
+				confirmButtonVariant="danger"
+				confirmButtonText={props.translations.Remove}
+				confirmButtonId={`${this.props.id}-delete-confirm-yes`}
+				cancelButtonId={`${this.props.id}-delete-confirm-no`}>
 				{this.props.children} {"✖"}
 			</ConfirmButton>
 		);

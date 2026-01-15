@@ -97,19 +97,19 @@ export default class CheckboxWidget extends React.Component {
 		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
 		const checkbox = (
-				<div ref={this.containerRef} className="checkbox-container">
-					<label>
-						<input type="radio" value="true" checked={_value === true} onChange={this.onChangeTrue} className={tabTargetClass} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
-						{trueLabel}
-					</label>
-					<label>
-						<input type="radio" value="false" checked={_value === false} onChange={this.onChangeFalse} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
-						{falseLabel}
-					</label>
-					{displayUndefined && (<label>
-						<input type="radio" value="undefined" checked={_value === undefined} onChange={this.onChangeUndefined} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
-						{unknownLabel}
-					</label>)}
+			<div ref={this.containerRef} className="checkbox-container">
+				<label>
+					<input type="radio" value="true" checked={_value === true} onChange={this.onChangeTrue} className={tabTargetClass} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
+					{trueLabel}
+				</label>
+				<label>
+					<input type="radio" value="false" checked={_value === false} onChange={this.onChangeFalse} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
+					{falseLabel}
+				</label>
+				{displayUndefined && (<label>
+					<input type="radio" value="undefined" checked={_value === undefined} onChange={this.onChangeUndefined} onKeyDown={this.onKeyDown} disabled={_disabled}></input>
+					{unknownLabel}
+				</label>)}
 			</div>
 		);
 		const {Label} = this.props.formContext;

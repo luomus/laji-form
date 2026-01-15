@@ -70,7 +70,7 @@ export default class SplitField extends React.Component<FieldProps> {
 			<SchemaField
 				{...this.props}
 				{..._props}
-			  onChange={this.onChange(fields)}
+				onChange={this.onChange(fields)}
 				name=""
 				onBlur={this.props.onBlur}
 				onFocus={this.props.onFocus}

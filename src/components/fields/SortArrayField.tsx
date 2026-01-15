@@ -198,10 +198,10 @@ const getUI = (
 		fieldToUI[field] = <>
 			{colsLoading(sortCols) && <Spinner />}
 			{(columns?.[field]?.compareStrategies?.length || 0) > 1 && <ColumnOptionsUI field={field}
-			                 {...columns?.[field]}
-			                 sortCol={sortCols?.find(c => c.name === field)}
-			                 updateSortCol={getUpdateSortCol(field, sortCols, setSortCols)}
-			                 formContext={formContext} />}
+				{...columns?.[field]}
+				sortCol={sortCols?.find(c => c.name === field)}
+				updateSortCol={getUpdateSortCol(field, sortCols, setSortCols)}
+				formContext={formContext} />}
 		</>;
 		return fieldToUI;
 	}, {} as Record<string, React.ReactNode>);

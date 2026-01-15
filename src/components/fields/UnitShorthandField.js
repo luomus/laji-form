@@ -125,16 +125,16 @@ export default class UnitShorthandField extends React.Component {
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
-				            onChange={this.onCodeChange}
-				            value={this.props.formData[shorthandField]}
-				            formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
-				            help={help} 
-				            id={id}
-				            formContext={formContext}
-				            disabled={disabled}
-				            readonly={readonly}
-				            lineTransect={lineTransect}
-				            className="laji-form-field-template-schema" />
+					onChange={this.onCodeChange}
+					value={this.props.formData[shorthandField]}
+					formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
+					help={help} 
+					id={id}
+					formContext={formContext}
+					disabled={disabled}
+					readonly={readonly}
+					lineTransect={lineTransect}
+					className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
 		) : (

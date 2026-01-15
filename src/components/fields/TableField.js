@@ -150,7 +150,7 @@ class TableArrayFieldTemplate extends React.Component {
 						id={idSchema[propName].$id}
 						required={(schema.items.required && schema.items.required.indexOf(propName) > -1)
 						|| propUiSchema["ui:required"]}
-					  uiSchema={propUiSchema} />
+						uiSchema={propUiSchema} />
 				</Col>
 			);
 		});
@@ -172,13 +172,13 @@ class TableArrayFieldTemplate extends React.Component {
 				{props.items.map((item, i) => {
 					const deleteButton = (
 						<DeleteButton ref={getRefFor(i)}
-						              id={`${props.idSchema.$id}_${i}`}
-						              disabled={readonly || disabled}
-						              onClick={item.onDropIndexClick(item.index)}
-						              confirm={confirmDelete}
-						              corner={deleteCorner}
-						              tooltip={deleteHelp}
-						              translations={props.formContext.translations}/>
+							id={`${props.idSchema.$id}_${i}`}
+							disabled={readonly || disabled}
+							onClick={item.onDropIndexClick(item.index)}
+							confirm={confirmDelete}
+							corner={deleteCorner}
+							tooltip={deleteHelp}
+							translations={props.formContext.translations}/>
 					);
 					return (
 						<Row key={getUUID(props.formData[item.index]) || item.key}>

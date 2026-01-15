@@ -81,23 +81,23 @@ export default class ErrorListTemplate extends React.Component {
 		);
 		return (
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
-				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
+				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
 				<ErrorPanel classNames="error-panel"
-				            ref="errorPanel"
-				            errors={errors}
-				            title={translations.Errors}
-				            clickHandler={clickHandler}
-				            showToggle={true}
-				            poppedToggle={this.poppedToggle}
-				            footer={footer} />
+					ref="errorPanel"
+					errors={errors}
+					title={translations.Errors}
+					clickHandler={clickHandler}
+					showToggle={true}
+					poppedToggle={this.poppedToggle}
+					footer={footer} />
 				<ErrorPanel classNames="warning-panel"
-				            ref="warningPanel"
-				            errors={warnings}
-				            title={translations.Warnings}
-				            clickHandler={clickHandler}
-				            showToggle={errors.length === 0}
-				            poppedToggle={this.poppedToggle}
-				            footer={footer} />
+					ref="warningPanel"
+					errors={warnings}
+					title={translations.Warnings}
+					clickHandler={clickHandler}
+					showToggle={errors.length === 0}
+					poppedToggle={this.poppedToggle}
+					footer={footer} />
 			</div>
 		);
 	}

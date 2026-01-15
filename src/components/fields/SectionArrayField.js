@@ -308,8 +308,8 @@ class SectionArrayFieldTemplate extends React.Component {
 			<React.Fragment>
 				<Affix containerRef={this.containerRef} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 					<Button id={`${this.props.idSchema.$id}-add`}
-					        onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}}
-					        ref={this.addButtonRef}>
+						onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}}
+						ref={this.addButtonRef}>
 						<Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}
 					</Button>
 				</Affix>

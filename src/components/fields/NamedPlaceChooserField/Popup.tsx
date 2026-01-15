@@ -55,12 +55,12 @@ export const Popup = forwardRef<any, Props>((props, ref) => {
 			}
 			<Button block disabled={!place} ref={buttonRef} onClick={_onPlaceSelected}>{translations.UseThisPlace}</Button>
 			<DeleteButton block
-			              onClick={_onPlaceDeleted}
-			              disabled={deleting}
-			              glyphButton={false}
-			              confirm={true}
-			              confirmStyle={"browser"}
-			              translations={translations}>
+				onClick={_onPlaceDeleted}
+				disabled={deleting}
+				glyphButton={false}
+				confirm={true}
+				confirmStyle={"browser"}
+				translations={translations}>
 				{translations.Remove} {deleting && <Spinner />}
 			</DeleteButton>
 		</div>

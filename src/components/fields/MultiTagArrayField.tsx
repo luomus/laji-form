@@ -108,8 +108,8 @@ export default class MultiTagArrayField extends React.Component<FieldProps<JSONS
 			<Row className={containerClassNames} ref={this.affixContainerRef}>
 				<Col xs={3} sm={3} md={2} lg={2} className={"laji-form-multi-tag-array-field-buttons"}>
 					<Affix containerRef={this.affixContainerRef}
-					       topOffset={this.props.formContext.topOffset + 15}
-					       bottomOffset={this.props.formContext.bottomOffset}>
+						topOffset={this.props.formContext.topOffset + 15}
+						bottomOffset={this.props.formContext.bottomOffset}>
 						<div className={"btn-group-vertical"}>
 							{ buttons.map((btnProps, idx) => (
 								<Button
