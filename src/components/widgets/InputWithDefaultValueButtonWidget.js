@@ -17,7 +17,7 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 				apiQueryForDefaultValue: PropTypes.shape({
 					path: PropTypes.string.isRequired,
 					query: PropTypes.object,
-					resultKey: PropTypes.string.isRequired,
+					resultKey: PropTypes.string,
 					cache: PropTypes.bool
 				}),
 				disableButtonAfterUse: PropTypes.bool,
