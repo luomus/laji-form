@@ -49,13 +49,14 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 			<InputGroup>
 				<BaseInputTemplate {...this.props} />
 				<InputGroup.Button className={"input-group-button"}>
-					<ConfirmButton id={`${id}-default-value-button`}
-						           translations={translations}
-								   confirm={confirmClick}
-								   onClick={this.onClick}
-								   disabled={disabled || readonly || this.state.fetching || this.state.disabled}
-								   variant={buttonVariant}
-								   prompt={confirmMessage}>
+					<ConfirmButton
+						id={`${id}-default-value-button`}
+						translations={translations}
+						confirm={confirmClick}
+						onClick={this.onClick}
+						disabled={disabled || readonly || this.state.fetching || this.state.disabled}
+						variant={buttonVariant}
+						prompt={confirmMessage}>
 						{this.state.fetching && <Spinner />}
 						{buttonLabel}
 					</ConfirmButton>
