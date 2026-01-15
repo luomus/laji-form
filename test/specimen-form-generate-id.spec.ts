@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { DemoPageForm, createForm } from "./test-utils";
+import { DemoPageForm, createForm, DateWidgetPO } from "./test-utils";
 import { JSONSchema7 } from "json-schema";
 
 test.describe.configure({mode: "serial"});
@@ -35,5 +35,33 @@ test.describe("Specimen form generate ID", () => {
 
 		await expect(form.$getInputWidget("")).toHaveValue("Afghanistan");
 		expect (await form.getChangedData()).toBe("Afghanistan");
+	});
+
+	test.describe("confirm click", () => {
+		test.beforeAll(async () => {
+			await form.setState({
+				uiSchema: {
+					...uiSchema,
+					"ui:options": {...uiSchema["ui:options"], confirmClick: true}
+				}
+			});
+			await form.$locate("").locator("input").fill("");
+		});
+
+		test("clicking cancel doesn't update the value", async () => {
+			await form.$locate("").locator("button").click();
+			await form.$locateButton("", "default-value-button-confirm-no", true).click();
+
+			await expect(form.$getInputWidget("")).toHaveValue("");
+			expect (await form.getChangedData()).toBe(undefined);
+		});
+
+		test("clicking ok updates the value", async () => {
+			await form.$locate("").locator("button").click();
+			await form.$locateButton("", "default-value-button-confirm-yes", true).click();
+
+			await expect(form.$getInputWidget("")).toHaveValue("Afghanistan");
+			expect (await form.getChangedData()).toBe("Afghanistan");
+		});
 	});
 });

@@ -809,7 +809,7 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 		let passes;
 
 		// BW compatibility for old string  rule
-		if (["isAdmin", "isEdit", "isReadonly"].includes(rule)) {
+		if (["isAdmin", "isLoggedIn", "isEdit", "isReadonly"].includes(rule)) {
 			rule = {rule};
 		}
 
@@ -825,7 +825,8 @@ export function checkRules(rules: any[], props: FieldProps, cache?: {[key: strin
 				passes = props.readonly;
 			}
 		} else {
-			let value = parseJSONPointer(props[prop] || {}, field);
+			let value = parseJSONPointer(props[rule.prop || prop] || {}, field);
+
 			if (value === undefined) value = "";
 			if (regexp) {
 				passes = `${value}`.match(new RegExp(regexp));
