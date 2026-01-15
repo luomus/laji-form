@@ -4,6 +4,7 @@ import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 import Spinner from "react-spinner";
+import { ConfirmButton } from "../components/ConfirmButton";
 
 export default class InputWithDefaultValueButtonWidget extends React.Component {
 	static contextType = ReactContext;
@@ -20,6 +21,8 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 					cache: PropTypes.bool
 				}),
 				disableButtonAfterUse: PropTypes.bool,
+				confirmClick: PropTypes.bool,
+				confirmMessage: PropTypes.string,
 				onClick: PropTypes.func
 			}).isRequired
 		}).isRequired,
@@ -37,18 +40,25 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 	}
 
 	render() {
-		const {InputGroup, Button} = this.context.theme;
-		const {buttonLabel, buttonVariant} = getUiOptions(this.props);
-		const {disabled, readonly} = this.props;
+		const {InputGroup} = this.context.theme;
+		const {buttonLabel, buttonVariant, confirmClick, confirmMessage} = getUiOptions(this.props);
+		const {disabled, readonly, id} = this.props;
+		const {translations} = this.props.formContext;
 
 		return (
 			<InputGroup>
 				<BaseInputTemplate {...this.props} />
 				<InputGroup.Button className={"input-group-button"}>
-					<Button onClick={this.onClick} disabled={disabled || readonly || this.state.fetching || this.state.disabled} variant={buttonVariant}>
-						{buttonLabel}
+					<ConfirmButton id={`${id}-default-value-button`}
+						           translations={translations}
+								   confirm={confirmClick}
+								   onClick={this.onClick}
+								   disabled={disabled || readonly || this.state.fetching || this.state.disabled}
+								   variant={buttonVariant}
+								   prompt={confirmMessage}>
 						{this.state.fetching && <Spinner />}
-					</Button>
+						{buttonLabel}
+					</ConfirmButton>
 				</InputGroup.Button>
 			</InputGroup>
 		);
