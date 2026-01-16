@@ -116,7 +116,7 @@ export class ConfirmButton extends React.Component<Props, State> {
 			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 				target={this.getOverlayTarget}>
 				<Popover id={`${this.props.id}-button-confirm`}>
-					<span>{prompt}</span>
+					<div>{prompt}</div>
 					<ButtonGroup>
 						<Button variant={confirmButtonVariant || "primary"} onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={confirmButtonId || `${this.props.id}-confirm-yes`}>
 							{confirmButtonText || "OK"}
