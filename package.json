@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "@luomus/laji-map": "^5.1.19",
-    "@luomus/laji-validate": "^0.0.124",
+    "@luomus/laji-validate": "^0.0.125",
     "@rjsf/core": "~5.1.0",
     "@rjsf/utils": "~5.1.0",
     "@rjsf/validator-ajv6": "~5.1.0",
