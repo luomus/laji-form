@@ -211,7 +211,7 @@ export interface LajiFormProps extends HasMaybeChildren {
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
 	lajiGeoServerAddress?: string;
-	extraErrors: ErrorSchema;
+	extraErrors?: ErrorSchema;
 }
 
 export interface LajiFormState {
