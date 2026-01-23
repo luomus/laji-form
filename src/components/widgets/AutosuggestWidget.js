@@ -7,9 +7,14 @@ import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } f
 import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
-function renderFlag(suggestion, prepend) {
-	return (suggestion || {}).finnish
-		? <React.Fragment>{prepend || null}<img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16"/></React.Fragment>
+function renderTaxonIcons(suggestion, prepend) {
+	const { finnish, checklist } = suggestion || {};
+
+	const flagIcon = finnish ? <img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16" className="flag-img"/> : null;
+	const gbifIcon = checklist === "MR.2" ? <img src="https://cdn.laji.fi/images/icons/gbif.svg" width="18"/> : null;
+
+	return flagIcon || gbifIcon
+		? <>{prepend || null}{flagIcon}{gbifIcon}</>
 		: null;
 }
 
@@ -166,7 +171,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuggestion(suggestion) {
 			const renderedSuggestion = "autocompleteDisplayName" in suggestion
 				&& <span dangerouslySetInnerHTML={{__html: suggestion.autocompleteDisplayName}} />
-				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
+				|| <React.Fragment>{suggestion.value}{renderTaxonIcons(suggestion)}</React.Fragment>;
 			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
 
@@ -262,7 +267,7 @@ class UnitAutosuggestWidget extends React.Component {
 		const name = suggestion.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
-		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag(suggestion)}</span>;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderTaxonIcons(suggestion)}</span>;
 	}
 }
 
@@ -1009,9 +1014,9 @@ class _TaxonWrapper extends React.Component {
 		if (!value) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			this.props.formContext.apiClient.get(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalGroups, finnish}) => {
+			this.props.formContext.apiClient.get(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalGroups, finnish, checklist}) => {
 				if (!this.mounted) return;
-				this.setState({value, taxonRank, informalTaxonGroups: informalGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
+				this.setState({value, taxonRank, informalTaxonGroups: informalGroups, taxon: {scientificName, vernacularName, cursiveName, finnish, checklist}});
 
 				getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
@@ -1254,15 +1259,15 @@ class TaxonImgChooser extends React.Component {
 	}
 }
 
-const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) => {
+const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish, checklist}) => {
 	const _scientificName = vernacularName && scientificName
-		?  `(${scientificName})`
+		? `(${scientificName})`
 		: (scientificName || "");
 	return (
 		<React.Fragment>
 			{`${vernacularName}${vernacularName ? " " : ""}`}
 			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-			{renderFlag({finnish}, " ")}
+			{renderTaxonIcons({finnish, checklist}, " ")}
 		</React.Fragment>
 	);
 };
