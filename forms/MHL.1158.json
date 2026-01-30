@@ -1683,10 +1683,6 @@
                               "title": "subspecific aggregate"
                             },
                             {
-                              "const": "MX.subspecies",
-                              "title": "subspecies"
-                            },
-                            {
                               "const": "MX.nothosubspecies",
                               "title": "nothosubspecies"
                             },
@@ -3847,6 +3843,17 @@
                     "md": 4,
                     "sm": 4,
                     "xs": 12
+                  },
+                  "ui:field": "ScientificNameTaxonAutosuggestField",
+                  "ui:options": {
+                    "allowNonsuggestedValue": true,
+                    "taxonField": "taxon",
+                    "taxonRankField": "taxonRank",
+                    "authorField": "author",
+                    "query": {
+                      "checklist": "MR.1,MR.2",
+                      "matchType": "exact,partial"
+                    }
                   }
                 },
                 "infraFields": {
