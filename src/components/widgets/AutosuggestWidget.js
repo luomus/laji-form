@@ -1034,7 +1034,7 @@ class _TaxonWrapper extends React.Component {
 				}
 			}
 			this.setState({...state, higherThanOrder: !state.order && !state.family});
-			const taxonRanks = await this.props.formContext.apiClient.get("/metadata/ranges/MX.taxonRankEnum");
+			const taxonRanks = (await this.props.formContext.apiClient.get("/metadata/properties/MX.taxonRank/alt")).results;
 			if (!this.mounted) return;
 			this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
 		}

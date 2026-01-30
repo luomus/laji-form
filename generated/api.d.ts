@@ -350,6 +350,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/metadata/alts/{alt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get alt values by alt name */
+        get: operations["MetadataController_getAlt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/collections": {
         parameters: {
             query?: never;
@@ -887,7 +904,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a page of areas */
+        /** Get an area by id */
         get: operations["AreaController_get"];
         put?: never;
         post?: never;
@@ -904,7 +921,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an areas by id */
+        /** Get a page of areas */
         get: operations["AreaController_getPage"];
         put?: never;
         post?: never;
@@ -914,16 +931,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api-users": {
+    "/api-user": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /** Returns info about an API user */
         get: operations["ApiUsersController_getInfo"];
         put?: never;
-        /** Register as an api user (access token will be sent to your email) */
+        /** Register as an api user. The access token will be sent to your email. You can use this endpoint to create a new
+         *     access token in case you forget it. Note that it won't delete existing tokens. */
         post: operations["ApiUsersController_register"];
         delete?: never;
         options?: never;
@@ -931,7 +950,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api-users/renew": {
+    "/api-user/{email}": {
         parameters: {
             query?: never;
             header?: never;
@@ -939,9 +958,9 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
-        /** Requests new access token (will be sent to your email). Please note that this will not delete any existing tokens. */
-        post: operations["ApiUsersController_renew"];
+        /** Assing a systemID for an access token. Available only for ICT admins. */
+        put: operations["ApiUsersController_update"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1232,7 +1251,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Returns id of the index page of some language */
+        /** Returns id of the index page. Allowed languages are 'fi', 'sv', 'en'. */
         get: operations["InformationController_getIndex"];
         put?: never;
         post?: never;
@@ -1266,7 +1285,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get information page contents */
+        /** Get information page contents. Allowed languages are 'fi', 'sv', 'en'. */
         get: operations["InformationController_getAll"];
         put?: never;
         post?: never;
@@ -1657,57 +1676,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/geo-convert/{fileId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GeoConvertController_get"];
-        put?: never;
-        /** Convert a FinBIF occurrence data file into a geographic data format */
-        post: operations["GeoConvertController_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/geo-convert/status/{conversionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get status of a conversion */
-        get: operations["GeoConvertController_status"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/geo-convert/output/{conversionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the output file of a conversion */
-        get: operations["GeoConvertController_output"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/html-to-pdf": {
         parameters: {
             query?: never;
@@ -1793,6 +1761,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/red-list-evaluation-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a page of red list evaluation groups */
+        get: operations["RedListEvaluationGroupsController_getPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/red-list-evaluation-groups/tree": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the red list evaluation group tree */
+        get: operations["RedListEvaluationGroupsController_getTree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/red-list-evaluation-groups/roots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get first level of the red list evaluation group tree */
+        get: operations["RedListEvaluationGroupsController_getRoots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/red-list-evaluation-groups/{id}": {
         parameters: {
             query?: never;
@@ -1800,8 +1819,59 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a red list evaluation group by id */
+        /** Get an red list evaluation group by id */
         get: operations["RedListEvaluationGroupsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/red-list-evaluation-groups/{id}/children": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an red list evaluation group's immediate children */
+        get: operations["RedListEvaluationGroupsController_getChildren"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/red-list-evaluation-groups/{id}/parent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get red list evaluation group's parents */
+        get: operations["RedListEvaluationGroupsController_getParent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/red-list-evaluation-groups/{id}/siblings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get red list evaluation group's siblings */
+        get: operations["RedListEvaluationGroupsController_getSiblings"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1920,7 +1990,7 @@ export interface paths {
             /** @description See [documentation](https://laji.fi/about/1402) for complete reference. Can contain multiple documents. */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["DwETL_DwRoot"];
+                    "application/json": components["schemas"]["WarehouseDwETL_DwRoot"];
                     "application/xml": string;
                     "application/rdf+xml": string;
                     "text/plain": string;
@@ -1943,7 +2013,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -1952,7 +2022,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -1961,7 +2031,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2008,7 +2078,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2017,7 +2087,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2026,7 +2096,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2089,7 +2159,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwSingle_Document"];
+                        "application/json": components["schemas"]["WarehouseDwSingle_Document"];
                         "application/xml": string;
                     };
                 };
@@ -2099,7 +2169,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2108,7 +2178,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2117,7 +2187,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2249,7 +2319,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -2262,7 +2332,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2271,7 +2341,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2280,7 +2350,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2486,7 +2556,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -2499,7 +2569,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2508,7 +2578,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2517,7 +2587,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2614,7 +2684,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -2627,7 +2697,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2636,7 +2706,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2645,7 +2715,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -2953,7 +3023,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_CountResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_CountResponse"];
                         "application/xml": string;
                         "text/plain": string;
                     };
@@ -2964,7 +3034,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -2973,7 +3043,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -2982,7 +3052,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -3302,7 +3372,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_ListResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "application/rdf+xml": string;
@@ -3314,7 +3384,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -3323,7 +3393,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -3332,7 +3402,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -3666,7 +3736,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -3679,7 +3749,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -3688,7 +3758,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -3697,7 +3767,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -3826,7 +3896,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -3839,7 +3909,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -3848,7 +3918,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -3857,7 +3927,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -4185,7 +4255,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_ListResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "application/rdf+xml": string;
@@ -4197,7 +4267,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -4206,7 +4276,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -4215,7 +4285,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -4535,7 +4605,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_ListResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "application/rdf+xml": string;
@@ -4547,7 +4617,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -4556,7 +4626,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -4565,7 +4635,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -4901,7 +4971,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_ListResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "application/rdf+xml": string;
@@ -4913,7 +4983,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -4922,7 +4992,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -4931,7 +5001,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5265,7 +5335,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwQuery_AggregateResponse"];
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
                         "application/geo+json": string;
                         "application/xml": string;
                         "text/csv": string;
@@ -5278,7 +5348,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5287,7 +5357,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5296,7 +5366,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5353,7 +5423,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5362,7 +5432,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5371,7 +5441,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5431,7 +5501,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5440,7 +5510,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5449,7 +5519,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5506,7 +5576,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5515,7 +5585,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5524,7 +5594,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5584,7 +5654,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5593,7 +5663,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5602,7 +5672,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5675,7 +5745,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5684,7 +5754,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description User limit per day was exceeded. */
@@ -5693,7 +5763,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5757,7 +5827,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Invalid credentials. Message has details. */
@@ -5766,7 +5836,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Too many pending requests for the access_token; max is 12 */
@@ -5775,7 +5845,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DwError"];
+                        "application/json": components["schemas"]["WarehouseDwError"];
                     };
                 };
                 /** @description Service is in unknown erroneous state. */
@@ -5835,7 +5905,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPISearchResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPISearchResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -5844,7 +5914,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -5853,7 +5923,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -5909,7 +5979,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -5918,7 +5988,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -5960,7 +6030,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["InputRow"];
+                        "application/json": components["schemas"]["TraitInputRow"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -5969,7 +6039,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -5978,7 +6048,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -5987,7 +6057,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6008,7 +6078,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"];
+                    "application/json": components["schemas"]["TraitInputRow"];
                 };
             };
             responses: {
@@ -6018,7 +6088,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["InputRow"];
+                        "application/json": components["schemas"]["TraitInputRow"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6027,7 +6097,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6036,7 +6106,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -6045,7 +6115,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -6054,7 +6124,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6063,7 +6133,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6091,7 +6161,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIOKResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPIOKResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6100,7 +6170,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -6109,7 +6179,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -6118,7 +6188,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6127,7 +6197,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6159,7 +6229,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"];
+                    "application/json": components["schemas"]["TraitInputRow"];
                 };
             };
             responses: {
@@ -6169,7 +6239,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6178,7 +6248,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6187,7 +6257,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6196,7 +6266,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6232,7 +6302,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"];
+                    "application/json": components["schemas"]["TraitInputRow"];
                 };
             };
             responses: {
@@ -6242,7 +6312,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6251,7 +6321,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6260,7 +6330,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -6269,7 +6339,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6278,7 +6348,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6320,7 +6390,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6329,7 +6399,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -6338,7 +6408,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6347,7 +6417,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6380,7 +6450,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"];
+                    "application/json": components["schemas"]["TraitInputRow"];
                 };
             };
             responses: {
@@ -6390,7 +6460,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["InputRow"];
+                        "application/json": components["schemas"]["TraitInputRow"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6399,7 +6469,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6408,7 +6478,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -6417,7 +6487,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6426,7 +6496,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6472,7 +6542,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitTSVValidationResponse"];
+                        "application/json": components["schemas"]["TraitTraitTSVValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6481,7 +6551,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6490,7 +6560,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6536,7 +6606,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["InputRow"][];
+                        "application/json": components["schemas"]["TraitInputRow"][];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6545,7 +6615,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoint before doing conversion. */
@@ -6554,7 +6624,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6563,7 +6633,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6596,7 +6666,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"][];
+                    "application/json": components["schemas"]["TraitInputRow"][];
                 };
             };
             responses: {
@@ -6606,7 +6676,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitMultiValidationResponse"];
+                        "application/json": components["schemas"]["TraitTraitMultiValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6615,7 +6685,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6624,7 +6694,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6633,7 +6703,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6666,7 +6736,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["InputRow"][];
+                    "application/json": components["schemas"]["TraitInputRow"][];
                 };
             };
             responses: {
@@ -6676,7 +6746,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIOKResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPIOKResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6685,7 +6755,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6694,7 +6764,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoint before doing insert. */
@@ -6703,7 +6773,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6712,7 +6782,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6764,7 +6834,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["InputRow"][];
+                        "application/json": components["schemas"]["TraitInputRow"][];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6773,7 +6843,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6782,7 +6852,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6791,7 +6861,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6827,7 +6897,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Dataset"][];
+                        "application/json": components["schemas"]["TraitDataset"][];
                     };
                 };
                 /** @description Unknown failure */
@@ -6836,7 +6906,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6855,7 +6925,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Dataset"];
+                    "application/json": components["schemas"]["TraitDataset"];
                 };
             };
             responses: {
@@ -6865,7 +6935,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Dataset"];
+                        "application/json": components["schemas"]["TraitDataset"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6874,7 +6944,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -6883,7 +6953,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -6892,7 +6962,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6901,7 +6971,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6938,7 +7008,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Dataset"];
+                        "application/json": components["schemas"]["TraitDataset"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -6947,7 +7017,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -6956,7 +7026,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -6977,7 +7047,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Dataset"];
+                    "application/json": components["schemas"]["TraitDataset"];
                 };
             };
             responses: {
@@ -6987,7 +7057,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Dataset"];
+                        "application/json": components["schemas"]["TraitDataset"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -6996,7 +7066,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7005,7 +7075,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7014,7 +7084,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7023,7 +7093,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7032,7 +7102,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7060,7 +7130,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIOKResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPIOKResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7069,7 +7139,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7078,7 +7148,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7087,7 +7157,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7096,7 +7166,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7128,7 +7198,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Dataset"];
+                    "application/json": components["schemas"]["TraitDataset"];
                 };
             };
             responses: {
@@ -7138,7 +7208,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7147,7 +7217,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7156,7 +7226,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7165,7 +7235,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7201,7 +7271,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Dataset"];
+                    "application/json": components["schemas"]["TraitDataset"];
                 };
             };
             responses: {
@@ -7211,7 +7281,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7220,7 +7290,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7229,7 +7299,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7238,7 +7308,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7247,7 +7317,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7289,7 +7359,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7298,7 +7368,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7307,7 +7377,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7316,7 +7386,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7353,7 +7423,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DatasetPermissions"][];
+                        "application/json": components["schemas"]["TraitDatasetPermissions"][];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7362,7 +7432,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7371,7 +7441,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7410,7 +7480,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DatasetPermissions"];
+                        "application/json": components["schemas"]["TraitDatasetPermissions"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7419,7 +7489,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7428,7 +7498,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7449,7 +7519,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["DatasetPermissions"];
+                    "application/json": components["schemas"]["TraitDatasetPermissions"];
                 };
             };
             responses: {
@@ -7459,7 +7529,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DatasetPermissions"];
+                        "application/json": components["schemas"]["TraitDatasetPermissions"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7468,7 +7538,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7477,7 +7547,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7486,7 +7556,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7495,7 +7565,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7504,7 +7574,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7541,7 +7611,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["DatasetPermissions"];
+                    "application/json": components["schemas"]["TraitDatasetPermissions"];
                 };
             };
             responses: {
@@ -7551,7 +7621,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7560,7 +7630,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7569,7 +7639,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7578,7 +7648,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7587,7 +7657,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7621,7 +7691,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitGroup"][];
+                        "application/json": components["schemas"]["TraitTraitGroup"][];
                     };
                 };
                 /** @description Unknown failure */
@@ -7630,7 +7700,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7646,7 +7716,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["TraitGroup"];
+                    "application/json": components["schemas"]["TraitTraitGroup"];
                 };
             };
             responses: {
@@ -7656,7 +7726,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitGroup"];
+                        "application/json": components["schemas"]["TraitTraitGroup"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7665,7 +7735,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7674,7 +7744,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7683,7 +7753,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7692,7 +7762,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7729,7 +7799,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitGroup"];
+                        "application/json": components["schemas"]["TraitTraitGroup"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7738,7 +7808,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7747,7 +7817,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7765,7 +7835,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["TraitGroup"];
+                    "application/json": components["schemas"]["TraitTraitGroup"];
                 };
             };
             responses: {
@@ -7775,7 +7845,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitGroup"];
+                        "application/json": components["schemas"]["TraitTraitGroup"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7784,7 +7854,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7793,7 +7863,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7802,7 +7872,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7811,7 +7881,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7820,7 +7890,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7845,7 +7915,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIOKResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPIOKResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7854,7 +7924,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -7863,7 +7933,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -7872,7 +7942,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7881,7 +7951,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7910,7 +7980,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["TraitGroup"];
+                    "application/json": components["schemas"]["TraitTraitGroup"];
                 };
             };
             responses: {
@@ -7920,7 +7990,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7929,7 +7999,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -7938,7 +8008,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -7947,7 +8017,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -7980,7 +8050,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["TraitGroup"];
+                    "application/json": components["schemas"]["TraitTraitGroup"];
                 };
             };
             responses: {
@@ -7990,7 +8060,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -7999,7 +8069,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8008,7 +8078,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8017,7 +8087,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8026,7 +8096,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8065,7 +8135,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8074,7 +8144,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8083,7 +8153,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8092,7 +8162,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8126,7 +8196,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Trait"][];
+                        "application/json": components["schemas"]["TraitTrait"][];
                     };
                 };
                 /** @description Unknown failure */
@@ -8135,7 +8205,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8151,7 +8221,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Trait"];
+                    "application/json": components["schemas"]["TraitTrait"];
                 };
             };
             responses: {
@@ -8161,7 +8231,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Trait"];
+                        "application/json": components["schemas"]["TraitTrait"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -8170,7 +8240,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8179,7 +8249,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -8188,7 +8258,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8197,7 +8267,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8234,7 +8304,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Trait"];
+                        "application/json": components["schemas"]["TraitTrait"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8243,7 +8313,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8252,7 +8322,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8270,7 +8340,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Trait"];
+                    "application/json": components["schemas"]["TraitTrait"];
                 };
             };
             responses: {
@@ -8280,7 +8350,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Trait"];
+                        "application/json": components["schemas"]["TraitTrait"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -8289,7 +8359,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8298,7 +8368,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8307,7 +8377,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -8316,7 +8386,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8325,7 +8395,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8350,7 +8420,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIOKResponse"];
+                        "application/json": components["schemas"]["TraitTraitAPIOKResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8359,7 +8429,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8368,7 +8438,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Validation failure - should call validation endpoints before calling upsert operations. */
@@ -8377,7 +8447,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8386,7 +8456,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8415,7 +8485,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Trait"];
+                    "application/json": components["schemas"]["TraitTrait"];
                 };
             };
             responses: {
@@ -8425,7 +8495,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -8434,7 +8504,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8443,7 +8513,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8452,7 +8522,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8485,7 +8555,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Trait"];
+                    "application/json": components["schemas"]["TraitTrait"];
                 };
             };
             responses: {
@@ -8495,7 +8565,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description Illegal arguments */
@@ -8504,7 +8574,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8513,7 +8583,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8522,7 +8592,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8531,7 +8601,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8570,7 +8640,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ValidationResponse"];
+                        "application/json": components["schemas"]["TraitValidationResponse"];
                     };
                 };
                 /** @description No access / Invalid authorization */
@@ -8579,7 +8649,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8588,7 +8658,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8597,7 +8667,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8631,7 +8701,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["UnitOfMeasurement"][];
+                        "application/json": components["schemas"]["TraitUnitOfMeasurement"][];
                     };
                 };
                 /** @description Unknown failure */
@@ -8640,7 +8710,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
@@ -8679,7 +8749,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["UnitOfMeasurement"];
+                        "application/json": components["schemas"]["TraitUnitOfMeasurement"];
                     };
                 };
                 /** @description No entity with the given id */
@@ -8688,7 +8758,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
                 /** @description Unknown failure */
@@ -8697,11 +8767,131 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TraitAPIError"];
+                        "application/json": components["schemas"]["TraitTraitAPIError"];
                     };
                 };
             };
         };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/convert-to-table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Convert GIS file to CSV table
+         * @description Upload a GIS file (Shapefile, GeoJSON, GPKG, etc.) and get back a CSV file with geometry as WKT
+         */
+        post: operations["convert_gis_to_table_convert_to_table_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Convert uploaded ZIP file to a zipped GeoPackage
+         * @description Upload a ZIP file containing TSV data ('occurrences.tsv') and convert it to a zipped GeoPackage format. ID is generated based on the original filename and parameters.
+         */
+        post: operations["convert_with_file__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/status/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Check conversion status
+         * @description Get the current status of a file conversion process
+         */
+        get: operations["get_status_status__id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Health check
+         * @description Verify that the service is running and healthy. Returns processing status of active conversions.
+         */
+        get: operations["health_check_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/output/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download conversion output
+         * @description Download the converted file for a completed conversion
+         */
+        get: operations["get_output_output__id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "geo-convert/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Convert TSV file from the data warehouse to a zipped GeoPackage
+         * @description Convert a TSV file that is stored in the data warehouse to a zipped GeoPackage format
+         */
+        get: operations["convert_with_id__id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8761,6 +8951,11 @@ export interface components {
             blocked: string[];
             /** @default [] */
             friendRequests: string[];
+        };
+        PersonTokenInfo: {
+            personId: string;
+            next: string;
+            target: string;
         };
         StoreDeleteResponse: {
             affected: number;
@@ -8888,17 +9083,19 @@ export interface components {
             vernacularName: Record<string, never>;
             colloquialVernacularName: Record<string, never>;
         };
-        Object: Record<string, never>;
         ApiUserEntity: {
             id: number;
+            accessToken: string;
             email: string;
             systemID?: string;
-            feedbackEmail?: string;
-            /** @default noop */
-            password: string;
+            /** Format: date-time */
+            created: string;
         };
         ApiUserCreateDto: {
             email: string;
+        };
+        ApiUserUpdateDto: {
+            systemID: string;
         };
         FileUploadResponse: {
             name: string;
@@ -8907,35 +9104,20 @@ export interface components {
             expires: number;
         };
         Image: {
-            author: string;
-            caption: string;
-            captureDateTime: string;
-            copyrightOwner: string;
+            /** @enum {string} */
+            intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0";
+            caption?: string;
+            captureDateTime?: string;
+            capturerVerbatim?: string[];
             fullURL: string;
-            /** @description Qname identifier */
-            id: string;
-            keywords: string[];
+            id?: string;
+            intellectualOwner: string;
+            keyword?: string[];
             largeURL: string;
-            licenseAbbreviation: string;
-            licenseFullname: components["schemas"]["LocalizedText"];
-            /** @description Qname identifier */
-            licenseId: string;
-            lifeStage: string[];
-            plantLifeStage: string[];
-            sex: string[];
-            /** @description Qname identifier */
-            side: string;
-            sortOrder: number;
-            /** @description Qname identifier */
-            source: string;
+            originalURL?: string;
             squareThumbnailURL: string;
-            taxon: components["schemas"]["SimpleTaxon"];
-            taxonDescriptionCaption: components["schemas"]["LocalizedText"];
             thumbnailURL: string;
-            /** @description Qname identifier */
-            type: string;
-            uploadDateTime: string;
-            primaryForTaxon: boolean;
+            uploadedBy?: string;
         };
         Audio: {
             /** @enum {string} */
@@ -9036,39 +9218,67 @@ export interface components {
             name: string;
             description: string;
         };
-        DwQuery_CountResponse: {
+        GetTmpTokenDto: {
+            loginURL?: string;
+            tmpToken: string;
+        };
+        CheckTmpTokenDto: {
+            tmpToken: string;
+        };
+        NewsDto: {
+            id: string;
+            featuredImage: string;
+            external: boolean;
+            externalURL?: boolean;
+            title: boolean;
+            content: boolean;
+            posted: boolean;
+            modified?: boolean;
+            tag: boolean;
+        };
+        NewsPagedDto: {
+            results: components["schemas"]["NewsDto"][];
+            currentPage: number;
+            pageSize: number;
+            total: number;
+            lastPage: number;
+            prevPage?: number;
+            nextPage?: number;
+            "@context": string;
+        };
+        WarehouseDwQuery_CountResponse: {
             total: number;
             cacheTimestamp: number;
         };
-        DwQuery_ListResponse: {
+        WarehouseDwQuery_ListResponse: {
             currentPage: number;
             prevPage: number;
             nextPage: number;
             lastPage: number;
             pageSize: number;
             total: number;
-            results: components["schemas"]["DwQuery_JoinedRow"][];
+            results: components["schemas"]["WarehouseDwQuery_JoinedRow"][];
             cacheTimestamp: number;
         };
-        DwQuery_AggregateResponse: {
+        WarehouseDwQuery_AggregateResponse: {
             currentPage: number;
             prevPage: number;
             nextPage: number;
             lastPage: number;
             pageSize: number;
             total: number;
-            results: components["schemas"]["DwQuery_AggregateRow"][];
+            results: components["schemas"]["WarehouseDwQuery_AggregateRow"][];
             cacheTimestamp: number;
         };
-        DwQuery_JoinedRow: {
-            document: components["schemas"]["DwQuery_Document"];
-            gathering: components["schemas"]["DwQuery_Gathering"];
-            unit: components["schemas"]["DwQuery_Unit"];
-            annotation: components["schemas"]["DwQuery_Annotation"];
-            media: components["schemas"]["DwQuery_MediaObject"];
-            sample: components["schemas"]["DwQuery_Sample"];
+        WarehouseDwQuery_JoinedRow: {
+            document: components["schemas"]["WarehouseDwQuery_Document"];
+            gathering: components["schemas"]["WarehouseDwQuery_Gathering"];
+            unit: components["schemas"]["WarehouseDwQuery_Unit"];
+            annotation: components["schemas"]["WarehouseDwQuery_Annotation"];
+            media: components["schemas"]["WarehouseDwQuery_MediaObject"];
+            sample: components["schemas"]["WarehouseDwQuery_Sample"];
         };
-        DwQuery_AggregateRow: {
+        WarehouseDwQuery_AggregateRow: {
             count: number;
             gatheringCount: number;
             securedCount: number;
@@ -9097,7 +9307,7 @@ export interface components {
             atlasClassMax: string;
             aggregateBy: Record<string, never>;
         };
-        DwQuery_Document: {
+        WarehouseDwQuery_Document: {
             /** Format: URI */
             documentId: string;
             /** @enum {string} */
@@ -9108,11 +9318,11 @@ export interface components {
             collectionId: string;
             licenseId: string;
             dataSource: string;
-            linkings: components["schemas"]["DwQuery_DocumentDWLinkings"];
-            quality: components["schemas"]["DwQuery_DocumentQuality"];
+            linkings: components["schemas"]["WarehouseDwQuery_DocumentDWLinkings"];
+            quality: components["schemas"]["WarehouseDwQuery_DocumentQuality"];
             /** Format: URI */
             sourceId: string;
-            namedPlace: components["schemas"]["DwQuery_NamedPlaceEntity"];
+            namedPlace: components["schemas"]["WarehouseDwQuery_NamedPlaceEntity"];
             siteType: string;
             siteStatus: string;
             keywords: string[];
@@ -9125,13 +9335,13 @@ export interface components {
             /** Format: yyyy-MM-dd */
             modifiedDate: string;
             notes: string;
-            annotations: components["schemas"]["DwQuery_Annotation"][];
+            annotations: components["schemas"]["WarehouseDwQuery_Annotation"][];
             completeListTaxonId: string;
             completeListType: string;
             editorUserIds: string[];
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             formId: string;
-            media: components["schemas"]["DwQuery_MediaObject"][];
+            media: components["schemas"]["WarehouseDwQuery_MediaObject"][];
             mediaCount: number;
             namedPlaceId: string;
             prefix: string;
@@ -9140,20 +9350,20 @@ export interface components {
             siteDead: boolean;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
         };
-        DwQuery_Gathering: {
+        WarehouseDwQuery_Gathering: {
             /** Format: URI */
             gatheringId: string;
             gatheringOrder: number;
             gatheringSection: number;
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             geo: Record<string, never>;
-            eventDate: components["schemas"]["DwQuery_DateRange"];
+            eventDate: components["schemas"]["WarehouseDwQuery_DateRange"];
             hourBegin: number;
             hourEnd: number;
             displayDateTime: string;
             team: string[];
-            conversions: components["schemas"]["DwQuery_GatheringConversions"];
-            interpretations: components["schemas"]["DwQuery_GatheringInterpretations"];
+            conversions: components["schemas"]["WarehouseDwQuery_GatheringConversions"];
+            interpretations: components["schemas"]["WarehouseDwQuery_GatheringInterpretations"];
             stateLand: boolean;
             accurateArea: boolean;
             higherGeography: string;
@@ -9162,31 +9372,31 @@ export interface components {
             biogeographicalProvince: string;
             province: string;
             locality: string;
-            quality: components["schemas"]["DwQuery_GatheringQuality"];
+            quality: components["schemas"]["WarehouseDwQuery_GatheringQuality"];
             notes: string;
             coordinatesVerbatim: string;
-            facts: components["schemas"]["DwQuery_Fact"][];
-            linkings: components["schemas"]["DwQuery_GatheringDWLinkings"];
-            media: components["schemas"]["DwQuery_MediaObject"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
+            linkings: components["schemas"]["WarehouseDwQuery_GatheringDWLinkings"];
+            media: components["schemas"]["WarehouseDwQuery_MediaObject"][];
             mediaCount: number;
             minutesBegin: number;
             minutesEnd: number;
             observerUserIds: string[];
-            taxonCensus: components["schemas"]["DwQuery_TaxonCensus"][];
+            taxonCensus: components["schemas"]["WarehouseDwQuery_TaxonCensus"][];
         };
-        DwQuery_Unit: {
+        WarehouseDwQuery_Unit: {
             /** Format: URI */
             unitId: string;
             unitOrder: number;
             taxonVerbatim: string;
-            quality: components["schemas"]["DwQuery_UnitQuality"];
+            quality: components["schemas"]["WarehouseDwQuery_UnitQuality"];
             /** @enum {string} */
             reportedTaxonConfidence: "SURE" | "UNSURE" | "SUBSPECIES_UNSURE";
-            linkings: components["schemas"]["DwQuery_UnitDWLinkings"];
+            linkings: components["schemas"]["WarehouseDwQuery_UnitDWLinkings"];
             abundanceString: string;
             /** @enum {string} */
             abundanceUnit: "OCCURS_DOES_NOT_OCCUR" | "INDIVIDUAL_COUNT" | "PAIRCOUNT" | "NESTS" | "BREEDING_SITES" | "FEEDING_SITES" | "COLONIES" | "QUEENS" | "FRUITBODIES" | "SPROUTS" | "HUMMOCKS" | "THALLI" | "FLOWERS" | "SPOTS" | "TRUNKS" | "SHELLS" | "DROPPINGS" | "FEEDING_MARKS" | "INDIRECT_MARKS" | "SQUARE_DM" | "SQUARE_M" | "RELATIVE_DENSITY";
-            interpretations: components["schemas"]["DwQuery_UnitInterpretations"];
+            interpretations: components["schemas"]["WarehouseDwQuery_UnitInterpretations"];
             /** @enum {string} */
             superRecordBasis: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
             /** @enum {string} */
@@ -9208,17 +9418,17 @@ export interface components {
             individualId: string;
             notes: string;
             annotationCount: number;
-            annotations: components["schemas"]["DwQuery_Annotation"][];
+            annotations: components["schemas"]["WarehouseDwQuery_Annotation"][];
             audioCount: number;
             author: string;
             externalMediaCount: number;
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             identificationBasis: string[];
-            identifications: components["schemas"]["DwQuery_IdentificationEvent"][];
+            identifications: components["schemas"]["WarehouseDwQuery_IdentificationEvent"][];
             imageCount: number;
             individualCountFemale: number;
             individualCountMale: number;
-            media: components["schemas"]["DwQuery_MediaObject"][];
+            media: components["schemas"]["WarehouseDwQuery_MediaObject"][];
             mediaCount: number;
             modelCount: number;
             primarySpecimen: boolean;
@@ -9227,17 +9437,17 @@ export interface components {
             /** Format: URI */
             reportedTaxonId: string;
             sampleCount: number;
-            samples: components["schemas"]["DwQuery_Sample"][];
+            samples: components["schemas"]["WarehouseDwQuery_Sample"][];
             samplingMethod: string;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
-            types: components["schemas"]["DwQuery_TypeSpecimen"][];
+            types: components["schemas"]["WarehouseDwQuery_TypeSpecimen"][];
             videoCount: number;
         };
-        DwQuery_Sample: {
+        WarehouseDwQuery_Sample: {
             notes: string;
             /** Format: URI */
             collectionId: string;
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             keywords: string[];
             material: string;
             multiple: boolean;
@@ -9248,7 +9458,7 @@ export interface components {
             status: string;
             type: string;
         };
-        DwQuery_MediaObject: {
+        WarehouseDwQuery_MediaObject: {
             author: string;
             caption: string;
             copyrightOwner: string;
@@ -9267,58 +9477,58 @@ export interface components {
             videoURL: string;
             wavURL: string;
         };
-        DwQuery_Coordinates: {
+        WarehouseDwQuery_Coordinates: {
             latMax: number;
             latMin: number;
             lonMax: number;
             lonMin: number;
         };
-        DwQuery_DateRange: {
+        WarehouseDwQuery_DateRange: {
             /** Format: yyyy-MM-dd */
             begin: string;
             /** Format: yyyy-MM-dd */
             end: string;
         };
-        DwQuery_Fact: {
+        WarehouseDwQuery_Fact: {
             fact: string;
             value: string;
             integerValue: number;
             decimalValue: number;
         };
-        DwQuery_TaxonCensus: {
+        WarehouseDwQuery_TaxonCensus: {
             /** Format: URI */
             taxonId: string;
             /** Format: URI */
             type: string;
         };
-        DwQuery_DocumentQuality: {
-            issue: components["schemas"]["DwQuery_Quality"];
+        WarehouseDwQuery_DocumentQuality: {
+            issue: components["schemas"]["WarehouseDwQuery_Quality"];
         };
-        DwQuery_GatheringQuality: {
-            issue: components["schemas"]["DwQuery_Quality"];
-            locationIssue: components["schemas"]["DwQuery_Quality"];
-            timeIssue: components["schemas"]["DwQuery_Quality"];
+        WarehouseDwQuery_GatheringQuality: {
+            issue: components["schemas"]["WarehouseDwQuery_Quality"];
+            locationIssue: components["schemas"]["WarehouseDwQuery_Quality"];
+            timeIssue: components["schemas"]["WarehouseDwQuery_Quality"];
         };
-        DwQuery_UnitQuality: {
+        WarehouseDwQuery_UnitQuality: {
             documentGatheringUnitQualityIssues: boolean;
-            issue: components["schemas"]["DwQuery_Quality"];
+            issue: components["schemas"]["WarehouseDwQuery_Quality"];
         };
-        DwQuery_Quality: {
+        WarehouseDwQuery_Quality: {
             /** @enum {string} */
             issue: "REPORTED_UNRELIABLE" | "MEDIA_ISSUE" | "INVALID_CREATED_DATE" | "INVALID_MODIFIED_DATE" | "COORDINATES_COUNTRY_MISMATCH" | "COORDINATES_MUNICIPALITY_MISMATCH" | "TOO_LARGE_AREA" | "INVALID_GEO" | "INVALID_YKJ_COORDINATES" | "INVALID_EUREF_COORDINATES" | "INVALID_WGS84_COORDINATES" | "DATE_END_BEFORE_BEGIN" | "DATE_END_GIVEN_WITHOUT_BEGIN" | "DATE_IN_FUTURE" | "DATE_TOO_FAR_IN_THE_PAST" | "INVALID_DATE" | "RECORD_BASIS_MISSING" | "INVALID_HOUR" | "INVALID_MINUTE" | "TIME_END_BEFORE_BEGIN" | "INVALID_COORDINATES" | "ETL_ISSUE";
             message: string;
             /** @enum {string} */
             source: "AUTOMATED_FINBIF_VALIDATION" | "ORIGINAL_DOCUMENT" | "QUALITY_CONTROL";
         };
-        DwQuery_IdentificationEvent: {
+        WarehouseDwQuery_IdentificationEvent: {
             notes: string;
             author: string;
             det: string;
             detDate: string;
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwQuery_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwQuery_IdentificationDwLinkings"];
             preferred: boolean;
             taxon: string;
             /** Format: URI */
@@ -9326,14 +9536,14 @@ export interface components {
             taxonSpecifier: string;
             taxonSpecifierAuthor: string;
         };
-        DwQuery_TypeSpecimen: {
+        WarehouseDwQuery_TypeSpecimen: {
             notes: string;
             author: string;
             basionymePublication: string;
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwQuery_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwQuery_IdentificationDwLinkings"];
             publication: string;
             /** Format: URI */
             status: string;
@@ -9347,12 +9557,12 @@ export interface components {
             /** Format: URI */
             verification: string;
         };
-        DwQuery_DocumentDWLinkings: {
+        WarehouseDwQuery_DocumentDWLinkings: {
             /** @enum {string} */
             collectionQuality: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
-            editors: components["schemas"]["DwQuery_Person"][];
+            editors: components["schemas"]["WarehouseDwQuery_Person"][];
         };
-        DwQuery_GatheringInterpretations: {
+        WarehouseDwQuery_GatheringInterpretations: {
             /** Format: URI */
             biogeographicalProvince: string;
             biogeographicalProvinceDisplayname: string;
@@ -9374,7 +9584,7 @@ export interface components {
             /** @enum {string} */
             sourceOfFinnishMunicipality: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
         };
-        DwQuery_GatheringConversions: {
+        WarehouseDwQuery_GatheringConversions: {
             /** Format: URI */
             birdAssociationArea: string;
             boundingBoxAreaInSquareMeters: number;
@@ -9383,8 +9593,8 @@ export interface components {
             dayOfYearBegin: number;
             dayOfYearEnd: number;
             decade: number;
-            euref: components["schemas"]["DwQuery_Coordinates"];
-            eurefCenterPoint: components["schemas"]["DwQuery_SingleCoordinates"];
+            euref: components["schemas"]["WarehouseDwQuery_Coordinates"];
+            eurefCenterPoint: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             eurefGeo: Record<string, never>;
             eurefWKT: string;
@@ -9392,37 +9602,37 @@ export interface components {
             month: number;
             seasonBegin: number;
             seasonEnd: number;
-            wgs84: components["schemas"]["DwQuery_Coordinates"];
-            wgs84CenterPoint: components["schemas"]["DwQuery_SingleCoordinates"];
+            wgs84: components["schemas"]["WarehouseDwQuery_Coordinates"];
+            wgs84CenterPoint: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             wgs84Geo: Record<string, never>;
-            wgs84Grid005: components["schemas"]["DwQuery_SingleCoordinates"];
-            wgs84Grid01: components["schemas"]["DwQuery_SingleCoordinates"];
-            wgs84Grid05: components["schemas"]["DwQuery_SingleCoordinates"];
-            wgs84Grid1: components["schemas"]["DwQuery_SingleCoordinates"];
+            wgs84Grid005: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            wgs84Grid01: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            wgs84Grid05: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            wgs84Grid1: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
             wgs84WKT: string;
             year: number;
-            ykj: components["schemas"]["DwQuery_Coordinates"];
-            ykj100km: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj100kmCenter: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj10km: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj10kmCenter: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj1km: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj1kmCenter: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj50km: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj50kmCenter: components["schemas"]["DwQuery_SingleCoordinates"];
+            ykj: components["schemas"]["WarehouseDwQuery_Coordinates"];
+            ykj100km: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj100kmCenter: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj10km: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj10kmCenter: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj1km: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj1kmCenter: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj50km: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj50kmCenter: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             ykjGeo: Record<string, never>;
             ykjWKT: string;
         };
-        DwQuery_GatheringDWLinkings: {
-            observers: components["schemas"]["DwQuery_Person"][];
+        WarehouseDwQuery_GatheringDWLinkings: {
+            observers: components["schemas"]["WarehouseDwQuery_Person"][];
         };
-        DwQuery_UnitDWLinkings: {
-            taxon: components["schemas"]["DwQuery_Taxon"];
-            originalTaxon: components["schemas"]["DwQuery_Taxon"];
+        WarehouseDwQuery_UnitDWLinkings: {
+            taxon: components["schemas"]["WarehouseDwQuery_Taxon"];
+            originalTaxon: components["schemas"]["WarehouseDwQuery_Taxon"];
         };
-        DwQuery_UnitInterpretations: {
+        WarehouseDwQuery_UnitInterpretations: {
             /** Format: URI */
             annotatedTaxonId: string;
             collectionAndRecordQuality: string;
@@ -9441,17 +9651,17 @@ export interface components {
             /** @enum {string} */
             reliability: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
         };
-        DwQuery_SingleCoordinates: {
+        WarehouseDwQuery_SingleCoordinates: {
             lat: number;
             lon: number;
         };
-        DwQuery_Person: {
+        WarehouseDwQuery_Person: {
             fullName: string;
             /** Format: URI */
             id: string;
             userId: string;
         };
-        DwQuery_Annotation: {
+        WarehouseDwQuery_Annotation: {
             addedTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
             /** Format: URI */
             annotationByPerson: string;
@@ -9471,32 +9681,32 @@ export interface components {
             deletedDateTime: string;
             /** Format: URI */
             id: string;
-            identification: components["schemas"]["DwQuery_Identification"];
+            identification: components["schemas"]["WarehouseDwQuery_Identification"];
             notes: string;
-            occurrenceAtTimeOfAnnotation: components["schemas"]["DwQuery_OccurrenceAtTimeOfAnnotation"];
+            occurrenceAtTimeOfAnnotation: components["schemas"]["WarehouseDwQuery_OccurrenceAtTimeOfAnnotation"];
             removedTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
             valid: boolean;
         };
-        DwQuery_Identification: {
+        WarehouseDwQuery_Identification: {
             notes: string;
             author: string;
-            facts: components["schemas"]["DwQuery_Fact"][];
+            facts: components["schemas"]["WarehouseDwQuery_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwQuery_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwQuery_IdentificationDwLinkings"];
             taxon: string;
             /** Format: URI */
             taxonID: string;
             taxonSpecifier: string;
             taxonSpecifierAuthor: string;
         };
-        DwQuery_OccurrenceAtTimeOfAnnotation: {
+        WarehouseDwQuery_OccurrenceAtTimeOfAnnotation: {
             countryVerbatim: string;
             /** Format: yyyy-MM-dd */
             dateBegin: string;
             /** Format: yyyy-MM-dd */
             dateEnd: string;
-            linkings: components["schemas"]["DwQuery_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwQuery_IdentificationDwLinkings"];
             locality: string;
             municipalityVerbatim: string;
             /** Format: URI */
@@ -9505,15 +9715,15 @@ export interface components {
             wgs84centerPointLat: number;
             wgs84centerPointLon: number;
         };
-        DwQuery_IdentificationDwLinkings: {
-            taxon: components["schemas"]["DwQuery_Taxon"];
+        WarehouseDwQuery_IdentificationDwLinkings: {
+            taxon: components["schemas"]["WarehouseDwQuery_Taxon"];
         };
-        DwQuery_RedListStatus: {
+        WarehouseDwQuery_RedListStatus: {
             /** Format: URI */
             status: string;
             year: number;
         };
-        DwQuery_HabitatObject: {
+        WarehouseDwQuery_HabitatObject: {
             /** Format: URI */
             habitat: string;
             habitatSpecificTypes: string[];
@@ -9521,7 +9731,7 @@ export interface components {
             id: string;
             order: number;
         };
-        DwQuery_NamedPlaceEntity: {
+        WarehouseDwQuery_NamedPlaceEntity: {
             alternativeId: string;
             alternativeIds: string;
             birdAssociationAreaDisplayName: string;
@@ -9532,21 +9742,21 @@ export interface components {
             municipalityId: string;
             name: string;
             tags: string[];
-            wgs84CenterPoint: components["schemas"]["DwQuery_SingleCoordinates"];
-            ykj10km: components["schemas"]["DwQuery_SingleCoordinates"];
+            wgs84CenterPoint: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
+            ykj10km: components["schemas"]["WarehouseDwQuery_SingleCoordinates"];
         };
-        DwETL_DwRoot: {
+        WarehouseDwETL_DwRoot: {
             /** Format: URI */
             documentId: string;
             /** Format: URI */
             sourceId: string;
             /** Format: URI */
             collectionId: string;
-            publicDocument: components["schemas"]["DwETL_Document"];
-            privateDocument: components["schemas"]["DwETL_Document"];
+            publicDocument: components["schemas"]["WarehouseDwETL_Document"];
+            privateDocument: components["schemas"]["WarehouseDwETL_Document"];
             deleteRequest: boolean;
         };
-        DwETL_Document: {
+        WarehouseDwETL_Document: {
             /** Format: URI */
             documentId: string;
             /** @enum {string} */
@@ -9556,7 +9766,7 @@ export interface components {
             collectionId: string;
             licenseId: string;
             dataSource: string;
-            quality: components["schemas"]["DwETL_DocumentQuality"];
+            quality: components["schemas"]["WarehouseDwETL_DocumentQuality"];
             /** Format: URI */
             sourceId: string;
             siteType: string;
@@ -9573,23 +9783,23 @@ export interface components {
             concealment: "PUBLIC" | "PRIVATE";
             deleted: boolean;
             editorUserIds: string[];
-            facts: components["schemas"]["DwETL_Fact"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
             formId: string;
-            gatherings: components["schemas"]["DwETL_Gathering"][];
-            media: components["schemas"]["DwETL_MediaObject"][];
+            gatherings: components["schemas"]["WarehouseDwETL_Gathering"][];
+            media: components["schemas"]["WarehouseDwETL_MediaObject"][];
             namedPlaceId: string;
             referenceURL: string;
             siteDead: boolean;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
         };
-        DwETL_Gathering: {
+        WarehouseDwETL_Gathering: {
             /** Format: URI */
             gatheringId: string;
             gatheringSection: number;
-            coordinates: components["schemas"]["DwETL_Coordinates"];
+            coordinates: components["schemas"]["WarehouseDwETL_Coordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             geo: Record<string, never>;
-            eventDate: components["schemas"]["DwETL_DateRange"];
+            eventDate: components["schemas"]["WarehouseDwETL_DateRange"];
             hourBegin: number;
             hourEnd: number;
             team: string[];
@@ -9601,22 +9811,22 @@ export interface components {
             biogeographicalProvince: string;
             province: string;
             locality: string;
-            quality: components["schemas"]["DwETL_GatheringQuality"];
+            quality: components["schemas"]["WarehouseDwETL_GatheringQuality"];
             notes: string;
             coordinatesVerbatim: string;
-            facts: components["schemas"]["DwETL_Fact"][];
-            media: components["schemas"]["DwETL_MediaObject"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
+            media: components["schemas"]["WarehouseDwETL_MediaObject"][];
             minutesBegin: number;
             minutesEnd: number;
             observerUserIds: string[];
-            taxonCensus: components["schemas"]["DwETL_TaxonCensus"][];
-            units: components["schemas"]["DwETL_Unit"][];
+            taxonCensus: components["schemas"]["WarehouseDwETL_TaxonCensus"][];
+            units: components["schemas"]["WarehouseDwETL_Unit"][];
         };
-        DwETL_Unit: {
+        WarehouseDwETL_Unit: {
             /** Format: URI */
             unitId: string;
             taxonVerbatim: string;
-            quality: components["schemas"]["DwETL_UnitQuality"];
+            quality: components["schemas"]["WarehouseDwETL_UnitQuality"];
             /** @enum {string} */
             reportedTaxonConfidence: "SURE" | "UNSURE" | "SUBSPECIES_UNSURE";
             abundanceString: string;
@@ -9644,27 +9854,27 @@ export interface components {
             /** Format: URI */
             autocompleteSelectedTaxonId: string;
             externalMediaCount: number;
-            facts: components["schemas"]["DwETL_Fact"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
             identificationBasis: string[];
-            identifications: components["schemas"]["DwETL_IdentificationEvent"][];
+            identifications: components["schemas"]["WarehouseDwETL_IdentificationEvent"][];
             individualCountFemale: number;
             individualCountMale: number;
-            media: components["schemas"]["DwETL_MediaObject"][];
+            media: components["schemas"]["WarehouseDwETL_MediaObject"][];
             primarySpecimen: boolean;
             /** Format: URI */
             reportedInformalTaxonGroup: string;
             /** Format: URI */
             reportedTaxonId: string;
-            samples: components["schemas"]["DwETL_Sample"][];
+            samples: components["schemas"]["WarehouseDwETL_Sample"][];
             samplingMethod: string;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
-            types: components["schemas"]["DwETL_TypeSpecimen"][];
+            types: components["schemas"]["WarehouseDwETL_TypeSpecimen"][];
         };
-        DwETL_Sample: {
+        WarehouseDwETL_Sample: {
             notes: string;
             /** Format: URI */
             collectionId: string;
-            facts: components["schemas"]["DwETL_Fact"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
             keywords: string[];
             material: string;
             multiple: boolean;
@@ -9674,7 +9884,7 @@ export interface components {
             status: string;
             type: string;
         };
-        DwETL_MediaObject: {
+        WarehouseDwETL_MediaObject: {
             author: string;
             caption: string;
             copyrightOwner: string;
@@ -9695,7 +9905,7 @@ export interface components {
             videoURL: string;
             wavURL: string;
         };
-        DwETL_Coordinates: {
+        WarehouseDwETL_Coordinates: {
             accuracyInMeters: number;
             latMax: number;
             latMin: number;
@@ -9704,46 +9914,46 @@ export interface components {
             /** @enum {string} */
             type: "WGS84" | "EUREF" | "YKJ";
         };
-        DwETL_DateRange: {
+        WarehouseDwETL_DateRange: {
             /** Format: yyyy-MM-dd */
             begin: string;
             /** Format: yyyy-MM-dd */
             end: string;
         };
-        DwETL_Fact: {
+        WarehouseDwETL_Fact: {
             fact: string;
             value: string;
         };
-        DwETL_TaxonCensus: {
+        WarehouseDwETL_TaxonCensus: {
             /** Format: URI */
             taxonId: string;
             /** Format: URI */
             type: string;
         };
-        DwETL_DocumentQuality: {
-            issue: components["schemas"]["DwETL_Quality"];
+        WarehouseDwETL_DocumentQuality: {
+            issue: components["schemas"]["WarehouseDwETL_Quality"];
         };
-        DwETL_GatheringQuality: {
-            issue: components["schemas"]["DwETL_Quality"];
-            locationIssue: components["schemas"]["DwETL_Quality"];
-            timeIssue: components["schemas"]["DwETL_Quality"];
+        WarehouseDwETL_GatheringQuality: {
+            issue: components["schemas"]["WarehouseDwETL_Quality"];
+            locationIssue: components["schemas"]["WarehouseDwETL_Quality"];
+            timeIssue: components["schemas"]["WarehouseDwETL_Quality"];
         };
-        DwETL_UnitQuality: {
-            issue: components["schemas"]["DwETL_Quality"];
+        WarehouseDwETL_UnitQuality: {
+            issue: components["schemas"]["WarehouseDwETL_Quality"];
         };
-        DwETL_Quality: {
+        WarehouseDwETL_Quality: {
             /** @enum {string} */
             issue: "REPORTED_UNRELIABLE" | "MEDIA_ISSUE" | "INVALID_CREATED_DATE" | "INVALID_MODIFIED_DATE" | "COORDINATES_COUNTRY_MISMATCH" | "COORDINATES_MUNICIPALITY_MISMATCH" | "TOO_LARGE_AREA" | "INVALID_GEO" | "INVALID_YKJ_COORDINATES" | "INVALID_EUREF_COORDINATES" | "INVALID_WGS84_COORDINATES" | "DATE_END_BEFORE_BEGIN" | "DATE_END_GIVEN_WITHOUT_BEGIN" | "DATE_IN_FUTURE" | "DATE_TOO_FAR_IN_THE_PAST" | "INVALID_DATE" | "RECORD_BASIS_MISSING" | "INVALID_HOUR" | "INVALID_MINUTE" | "TIME_END_BEFORE_BEGIN" | "INVALID_COORDINATES" | "ETL_ISSUE";
             message: string;
             /** @enum {string} */
             source: "AUTOMATED_FINBIF_VALIDATION" | "ORIGINAL_DOCUMENT" | "QUALITY_CONTROL";
         };
-        DwETL_IdentificationEvent: {
+        WarehouseDwETL_IdentificationEvent: {
             notes: string;
             author: string;
             det: string;
             detDate: string;
-            facts: components["schemas"]["DwETL_Fact"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
             /** Format: URI */
             id: string;
             preferred: boolean;
@@ -9753,11 +9963,11 @@ export interface components {
             taxonSpecifier: string;
             taxonSpecifierAuthor: string;
         };
-        DwETL_TypeSpecimen: {
+        WarehouseDwETL_TypeSpecimen: {
             notes: string;
             author: string;
             basionymePublication: string;
-            facts: components["schemas"]["DwETL_Fact"][];
+            facts: components["schemas"]["WarehouseDwETL_Fact"][];
             /** Format: URI */
             id: string;
             publication: string;
@@ -9773,7 +9983,7 @@ export interface components {
             /** Format: URI */
             verification: string;
         };
-        DwSingle_Document: {
+        WarehouseDwSingle_Document: {
             /** Format: URI */
             documentId: string;
             /** @enum {string} */
@@ -9784,11 +9994,11 @@ export interface components {
             collectionId: string;
             licenseId: string;
             dataSource: string;
-            linkings: components["schemas"]["DwSingle_DocumentDWLinkings"];
-            quality: components["schemas"]["DwSingle_DocumentQuality"];
+            linkings: components["schemas"]["WarehouseDwSingle_DocumentDWLinkings"];
+            quality: components["schemas"]["WarehouseDwSingle_DocumentQuality"];
             /** Format: URI */
             sourceId: string;
-            namedPlace: components["schemas"]["DwSingle_NamedPlaceEntity"];
+            namedPlace: components["schemas"]["WarehouseDwSingle_NamedPlaceEntity"];
             siteType: string;
             siteStatus: string;
             keywords: string[];
@@ -9801,14 +10011,14 @@ export interface components {
             /** Format: yyyy-MM-dd */
             modifiedDate: string;
             notes: string;
-            annotations: components["schemas"]["DwSingle_Annotation"][];
+            annotations: components["schemas"]["WarehouseDwSingle_Annotation"][];
             completeListTaxonId: string;
             completeListType: string;
             editorUserIds: string[];
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             formId: string;
-            gatherings: components["schemas"]["DwSingle_Gathering"][];
-            media: components["schemas"]["DwSingle_MediaObject"][];
+            gatherings: components["schemas"]["WarehouseDwSingle_Gathering"][];
+            media: components["schemas"]["WarehouseDwSingle_MediaObject"][];
             mediaCount: number;
             namedPlaceId: string;
             prefix: string;
@@ -9817,20 +10027,20 @@ export interface components {
             siteDead: boolean;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
         };
-        DwSingle_Gathering: {
+        WarehouseDwSingle_Gathering: {
             /** Format: URI */
             gatheringId: string;
             gatheringOrder: number;
             gatheringSection: number;
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             geo: Record<string, never>;
-            eventDate: components["schemas"]["DwSingle_DateRange"];
+            eventDate: components["schemas"]["WarehouseDwSingle_DateRange"];
             hourBegin: number;
             hourEnd: number;
             displayDateTime: string;
             team: string[];
-            conversions: components["schemas"]["DwSingle_GatheringConversions"];
-            interpretations: components["schemas"]["DwSingle_GatheringInterpretations"];
+            conversions: components["schemas"]["WarehouseDwSingle_GatheringConversions"];
+            interpretations: components["schemas"]["WarehouseDwSingle_GatheringInterpretations"];
             stateLand: boolean;
             accurateArea: boolean;
             higherGeography: string;
@@ -9839,32 +10049,32 @@ export interface components {
             biogeographicalProvince: string;
             province: string;
             locality: string;
-            quality: components["schemas"]["DwSingle_GatheringQuality"];
+            quality: components["schemas"]["WarehouseDwSingle_GatheringQuality"];
             notes: string;
             coordinatesVerbatim: string;
-            facts: components["schemas"]["DwSingle_Fact"][];
-            linkings: components["schemas"]["DwSingle_GatheringDWLinkings"];
-            media: components["schemas"]["DwSingle_MediaObject"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
+            linkings: components["schemas"]["WarehouseDwSingle_GatheringDWLinkings"];
+            media: components["schemas"]["WarehouseDwSingle_MediaObject"][];
             mediaCount: number;
             minutesBegin: number;
             minutesEnd: number;
             observerUserIds: string[];
-            taxonCensus: components["schemas"]["DwSingle_TaxonCensus"][];
-            units: components["schemas"]["DwSingle_Unit"][];
+            taxonCensus: components["schemas"]["WarehouseDwSingle_TaxonCensus"][];
+            units: components["schemas"]["WarehouseDwSingle_Unit"][];
         };
-        DwSingle_Unit: {
+        WarehouseDwSingle_Unit: {
             /** Format: URI */
             unitId: string;
             unitOrder: number;
             taxonVerbatim: string;
-            quality: components["schemas"]["DwSingle_UnitQuality"];
+            quality: components["schemas"]["WarehouseDwSingle_UnitQuality"];
             /** @enum {string} */
             reportedTaxonConfidence: "SURE" | "UNSURE" | "SUBSPECIES_UNSURE";
-            linkings: components["schemas"]["DwSingle_UnitDWLinkings"];
+            linkings: components["schemas"]["WarehouseDwSingle_UnitDWLinkings"];
             abundanceString: string;
             /** @enum {string} */
             abundanceUnit: "OCCURS_DOES_NOT_OCCUR" | "INDIVIDUAL_COUNT" | "PAIRCOUNT" | "NESTS" | "BREEDING_SITES" | "FEEDING_SITES" | "COLONIES" | "QUEENS" | "FRUITBODIES" | "SPROUTS" | "HUMMOCKS" | "THALLI" | "FLOWERS" | "SPOTS" | "TRUNKS" | "SHELLS" | "DROPPINGS" | "FEEDING_MARKS" | "INDIRECT_MARKS" | "SQUARE_DM" | "SQUARE_M" | "RELATIVE_DENSITY";
-            interpretations: components["schemas"]["DwSingle_UnitInterpretations"];
+            interpretations: components["schemas"]["WarehouseDwSingle_UnitInterpretations"];
             /** @enum {string} */
             superRecordBasis: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
             /** @enum {string} */
@@ -9886,17 +10096,17 @@ export interface components {
             individualId: string;
             notes: string;
             annotationCount: number;
-            annotations: components["schemas"]["DwSingle_Annotation"][];
+            annotations: components["schemas"]["WarehouseDwSingle_Annotation"][];
             audioCount: number;
             author: string;
             externalMediaCount: number;
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             identificationBasis: string[];
-            identifications: components["schemas"]["DwSingle_IdentificationEvent"][];
+            identifications: components["schemas"]["WarehouseDwSingle_IdentificationEvent"][];
             imageCount: number;
             individualCountFemale: number;
             individualCountMale: number;
-            media: components["schemas"]["DwSingle_MediaObject"][];
+            media: components["schemas"]["WarehouseDwSingle_MediaObject"][];
             mediaCount: number;
             modelCount: number;
             primarySpecimen: boolean;
@@ -9905,17 +10115,17 @@ export interface components {
             /** Format: URI */
             reportedTaxonId: string;
             sampleCount: number;
-            samples: components["schemas"]["DwSingle_Sample"][];
+            samples: components["schemas"]["WarehouseDwSingle_Sample"][];
             samplingMethod: string;
             sourceTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
-            types: components["schemas"]["DwSingle_TypeSpecimen"][];
+            types: components["schemas"]["WarehouseDwSingle_TypeSpecimen"][];
             videoCount: number;
         };
-        DwSingle_Sample: {
+        WarehouseDwSingle_Sample: {
             notes: string;
             /** Format: URI */
             collectionId: string;
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             keywords: string[];
             material: string;
             multiple: boolean;
@@ -9926,7 +10136,7 @@ export interface components {
             status: string;
             type: string;
         };
-        DwSingle_MediaObject: {
+        WarehouseDwSingle_MediaObject: {
             author: string;
             caption: string;
             copyrightOwner: string;
@@ -9945,58 +10155,58 @@ export interface components {
             videoURL: string;
             wavURL: string;
         };
-        DwSingle_Coordinates: {
+        WarehouseDwSingle_Coordinates: {
             latMax: number;
             latMin: number;
             lonMax: number;
             lonMin: number;
         };
-        DwSingle_DateRange: {
+        WarehouseDwSingle_DateRange: {
             /** Format: yyyy-MM-dd */
             begin: string;
             /** Format: yyyy-MM-dd */
             end: string;
         };
-        DwSingle_Fact: {
+        WarehouseDwSingle_Fact: {
             fact: string;
             value: string;
             integerValue: number;
             decimalValue: number;
         };
-        DwSingle_TaxonCensus: {
+        WarehouseDwSingle_TaxonCensus: {
             /** Format: URI */
             taxonId: string;
             /** Format: URI */
             type: string;
         };
-        DwSingle_DocumentQuality: {
-            issue: components["schemas"]["DwSingle_Quality"];
+        WarehouseDwSingle_DocumentQuality: {
+            issue: components["schemas"]["WarehouseDwSingle_Quality"];
         };
-        DwSingle_GatheringQuality: {
-            issue: components["schemas"]["DwSingle_Quality"];
-            locationIssue: components["schemas"]["DwSingle_Quality"];
-            timeIssue: components["schemas"]["DwSingle_Quality"];
+        WarehouseDwSingle_GatheringQuality: {
+            issue: components["schemas"]["WarehouseDwSingle_Quality"];
+            locationIssue: components["schemas"]["WarehouseDwSingle_Quality"];
+            timeIssue: components["schemas"]["WarehouseDwSingle_Quality"];
         };
-        DwSingle_UnitQuality: {
+        WarehouseDwSingle_UnitQuality: {
             documentGatheringUnitQualityIssues: boolean;
-            issue: components["schemas"]["DwSingle_Quality"];
+            issue: components["schemas"]["WarehouseDwSingle_Quality"];
         };
-        DwSingle_Quality: {
+        WarehouseDwSingle_Quality: {
             /** @enum {string} */
             issue: "REPORTED_UNRELIABLE" | "MEDIA_ISSUE" | "INVALID_CREATED_DATE" | "INVALID_MODIFIED_DATE" | "COORDINATES_COUNTRY_MISMATCH" | "COORDINATES_MUNICIPALITY_MISMATCH" | "TOO_LARGE_AREA" | "INVALID_GEO" | "INVALID_YKJ_COORDINATES" | "INVALID_EUREF_COORDINATES" | "INVALID_WGS84_COORDINATES" | "DATE_END_BEFORE_BEGIN" | "DATE_END_GIVEN_WITHOUT_BEGIN" | "DATE_IN_FUTURE" | "DATE_TOO_FAR_IN_THE_PAST" | "INVALID_DATE" | "RECORD_BASIS_MISSING" | "INVALID_HOUR" | "INVALID_MINUTE" | "TIME_END_BEFORE_BEGIN" | "INVALID_COORDINATES" | "ETL_ISSUE";
             message: string;
             /** @enum {string} */
             source: "AUTOMATED_FINBIF_VALIDATION" | "ORIGINAL_DOCUMENT" | "QUALITY_CONTROL";
         };
-        DwSingle_IdentificationEvent: {
+        WarehouseDwSingle_IdentificationEvent: {
             notes: string;
             author: string;
             det: string;
             detDate: string;
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwSingle_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwSingle_IdentificationDwLinkings"];
             preferred: boolean;
             taxon: string;
             /** Format: URI */
@@ -10004,14 +10214,14 @@ export interface components {
             taxonSpecifier: string;
             taxonSpecifierAuthor: string;
         };
-        DwSingle_TypeSpecimen: {
+        WarehouseDwSingle_TypeSpecimen: {
             notes: string;
             author: string;
             basionymePublication: string;
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwSingle_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwSingle_IdentificationDwLinkings"];
             publication: string;
             /** Format: URI */
             status: string;
@@ -10025,12 +10235,12 @@ export interface components {
             /** Format: URI */
             verification: string;
         };
-        DwSingle_DocumentDWLinkings: {
+        WarehouseDwSingle_DocumentDWLinkings: {
             /** @enum {string} */
             collectionQuality: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
-            editors: components["schemas"]["DwSingle_Person"][];
+            editors: components["schemas"]["WarehouseDwSingle_Person"][];
         };
-        DwSingle_GatheringInterpretations: {
+        WarehouseDwSingle_GatheringInterpretations: {
             /** Format: URI */
             biogeographicalProvince: string;
             biogeographicalProvinceDisplayname: string;
@@ -10052,7 +10262,7 @@ export interface components {
             /** @enum {string} */
             sourceOfFinnishMunicipality: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
         };
-        DwSingle_GatheringConversions: {
+        WarehouseDwSingle_GatheringConversions: {
             /** Format: URI */
             birdAssociationArea: string;
             boundingBoxAreaInSquareMeters: number;
@@ -10061,8 +10271,8 @@ export interface components {
             dayOfYearBegin: number;
             dayOfYearEnd: number;
             decade: number;
-            euref: components["schemas"]["DwSingle_Coordinates"];
-            eurefCenterPoint: components["schemas"]["DwSingle_SingleCoordinates"];
+            euref: components["schemas"]["WarehouseDwSingle_Coordinates"];
+            eurefCenterPoint: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             eurefGeo: Record<string, never>;
             eurefWKT: string;
@@ -10070,37 +10280,37 @@ export interface components {
             month: number;
             seasonBegin: number;
             seasonEnd: number;
-            wgs84: components["schemas"]["DwSingle_Coordinates"];
-            wgs84CenterPoint: components["schemas"]["DwSingle_SingleCoordinates"];
+            wgs84: components["schemas"]["WarehouseDwSingle_Coordinates"];
+            wgs84CenterPoint: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             wgs84Geo: Record<string, never>;
-            wgs84Grid005: components["schemas"]["DwSingle_SingleCoordinates"];
-            wgs84Grid01: components["schemas"]["DwSingle_SingleCoordinates"];
-            wgs84Grid05: components["schemas"]["DwSingle_SingleCoordinates"];
-            wgs84Grid1: components["schemas"]["DwSingle_SingleCoordinates"];
+            wgs84Grid005: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            wgs84Grid01: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            wgs84Grid05: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            wgs84Grid1: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
             wgs84WKT: string;
             year: number;
-            ykj: components["schemas"]["DwSingle_Coordinates"];
-            ykj100km: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj100kmCenter: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj10km: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj10kmCenter: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj1km: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj1kmCenter: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj50km: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj50kmCenter: components["schemas"]["DwSingle_SingleCoordinates"];
+            ykj: components["schemas"]["WarehouseDwSingle_Coordinates"];
+            ykj100km: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj100kmCenter: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj10km: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj10kmCenter: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj1km: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj1kmCenter: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj50km: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj50kmCenter: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
             /** @description GeoJSON object with custom "crs" required property that takes in values WGS84,EUREF,YKJ (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
             ykjGeo: Record<string, never>;
             ykjWKT: string;
         };
-        DwSingle_GatheringDWLinkings: {
-            observers: components["schemas"]["DwSingle_Person"][];
+        WarehouseDwSingle_GatheringDWLinkings: {
+            observers: components["schemas"]["WarehouseDwSingle_Person"][];
         };
-        DwSingle_UnitDWLinkings: {
-            taxon: components["schemas"]["DwSingle_Taxon"];
-            originalTaxon: components["schemas"]["DwSingle_Taxon"];
+        WarehouseDwSingle_UnitDWLinkings: {
+            taxon: components["schemas"]["WarehouseDwSingle_Taxon"];
+            originalTaxon: components["schemas"]["WarehouseDwSingle_Taxon"];
         };
-        DwSingle_UnitInterpretations: {
+        WarehouseDwSingle_UnitInterpretations: {
             /** Format: URI */
             annotatedTaxonId: string;
             collectionAndRecordQuality: string;
@@ -10119,17 +10329,17 @@ export interface components {
             /** @enum {string} */
             reliability: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
         };
-        DwSingle_SingleCoordinates: {
+        WarehouseDwSingle_SingleCoordinates: {
             lat: number;
             lon: number;
         };
-        DwSingle_Person: {
+        WarehouseDwSingle_Person: {
             fullName: string;
             /** Format: URI */
             id: string;
             userId: string;
         };
-        DwSingle_Annotation: {
+        WarehouseDwSingle_Annotation: {
             addedTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
             /** Format: URI */
             annotationByPerson: string;
@@ -10149,32 +10359,32 @@ export interface components {
             deletedDateTime: string;
             /** Format: URI */
             id: string;
-            identification: components["schemas"]["DwSingle_Identification"];
+            identification: components["schemas"]["WarehouseDwSingle_Identification"];
             notes: string;
-            occurrenceAtTimeOfAnnotation: components["schemas"]["DwSingle_OccurrenceAtTimeOfAnnotation"];
+            occurrenceAtTimeOfAnnotation: components["schemas"]["WarehouseDwSingle_OccurrenceAtTimeOfAnnotation"];
             removedTags: ("ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND")[];
             valid: boolean;
         };
-        DwSingle_Identification: {
+        WarehouseDwSingle_Identification: {
             notes: string;
             author: string;
-            facts: components["schemas"]["DwSingle_Fact"][];
+            facts: components["schemas"]["WarehouseDwSingle_Fact"][];
             /** Format: URI */
             id: string;
-            linkings: components["schemas"]["DwSingle_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwSingle_IdentificationDwLinkings"];
             taxon: string;
             /** Format: URI */
             taxonID: string;
             taxonSpecifier: string;
             taxonSpecifierAuthor: string;
         };
-        DwSingle_OccurrenceAtTimeOfAnnotation: {
+        WarehouseDwSingle_OccurrenceAtTimeOfAnnotation: {
             countryVerbatim: string;
             /** Format: yyyy-MM-dd */
             dateBegin: string;
             /** Format: yyyy-MM-dd */
             dateEnd: string;
-            linkings: components["schemas"]["DwSingle_IdentificationDwLinkings"];
+            linkings: components["schemas"]["WarehouseDwSingle_IdentificationDwLinkings"];
             locality: string;
             municipalityVerbatim: string;
             /** Format: URI */
@@ -10183,15 +10393,15 @@ export interface components {
             wgs84centerPointLat: number;
             wgs84centerPointLon: number;
         };
-        DwSingle_IdentificationDwLinkings: {
-            taxon: components["schemas"]["DwSingle_Taxon"];
+        WarehouseDwSingle_IdentificationDwLinkings: {
+            taxon: components["schemas"]["WarehouseDwSingle_Taxon"];
         };
-        DwSingle_RedListStatus: {
+        WarehouseDwSingle_RedListStatus: {
             /** Format: URI */
             status: string;
             year: number;
         };
-        DwSingle_HabitatObject: {
+        WarehouseDwSingle_HabitatObject: {
             /** Format: URI */
             habitat: string;
             habitatSpecificTypes: string[];
@@ -10199,7 +10409,7 @@ export interface components {
             id: string;
             order: number;
         };
-        DwSingle_NamedPlaceEntity: {
+        WarehouseDwSingle_NamedPlaceEntity: {
             alternativeId: string;
             alternativeIds: string;
             birdAssociationAreaDisplayName: string;
@@ -10210,10 +10420,10 @@ export interface components {
             municipalityId: string;
             name: string;
             tags: string[];
-            wgs84CenterPoint: components["schemas"]["DwSingle_SingleCoordinates"];
-            ykj10km: components["schemas"]["DwSingle_SingleCoordinates"];
+            wgs84CenterPoint: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
+            ykj10km: components["schemas"]["WarehouseDwSingle_SingleCoordinates"];
         };
-        DwQuery_Taxon: {
+        WarehouseDwQuery_Taxon: {
             /** Format: URI */
             id: string;
             qname: string;
@@ -10232,17 +10442,17 @@ export interface components {
             nameEnglish: string;
             informalTaxonGroups: string[];
             taxonomicOrder: number;
-            latestRedListStatusFinland: components["schemas"]["DwQuery_RedListStatus"];
+            latestRedListStatusFinland: components["schemas"]["WarehouseDwQuery_RedListStatus"];
             sensitive: boolean;
             kingdomScientificName: string;
             occurrenceCountFinland: number;
-            primaryHabitat: components["schemas"]["DwQuery_HabitatObject"];
+            primaryHabitat: components["schemas"]["WarehouseDwQuery_HabitatObject"];
             administrativeStatuses: string[];
             /** Format: URI */
             threatenedStatus: string;
             taxonConceptIds: string[];
         };
-        DwSingle_Taxon: {
+        WarehouseDwSingle_Taxon: {
             /** Format: URI */
             id: string;
             qname: string;
@@ -10261,21 +10471,21 @@ export interface components {
             nameEnglish: string;
             informalTaxonGroups: string[];
             taxonomicOrder: number;
-            latestRedListStatusFinland: components["schemas"]["DwSingle_RedListStatus"];
+            latestRedListStatusFinland: components["schemas"]["WarehouseDwSingle_RedListStatus"];
             sensitive: boolean;
             kingdomScientificName: string;
             occurrenceCountFinland: number;
-            primaryHabitat: components["schemas"]["DwSingle_HabitatObject"];
+            primaryHabitat: components["schemas"]["WarehouseDwSingle_HabitatObject"];
             administrativeStatuses: string[];
             /** Format: URI */
             threatenedStatus: string;
             taxonConceptIds: string[];
         };
-        DwError: {
+        WarehouseDwError: {
             status: number;
             message: string;
         };
-        TaxonSearchResponse: {
+        TraitTaxonSearchResponse: {
             /** @description Name that matched the search word */
             matchingName: string;
             /**
@@ -10299,11 +10509,11 @@ export interface components {
             finnish: boolean;
             /** @description Is the taxon that has the mathing name species level or lower, or a higher taxon */
             species: boolean;
-            vernacularName: components["schemas"]["LocalizedText"];
+            vernacularName: components["schemas"]["TraitLocalizedText"];
             informalGroups: {
                 /** @description Identifier of the informal taxon group that the matching taxon belongs to); in the short Qname format, for example 'MVL.1' */
                 id: string;
-                name: components["schemas"]["LocalizedText"];
+                name: components["schemas"]["TraitLocalizedText"];
             }[];
             /** @description Scientific name of the kingdom that the matching taxon belongs to */
             kingdomScientificName: string;
@@ -10313,7 +10523,7 @@ export interface components {
              */
             type: "exactMatches" | "partialMatches" | "likelyMatches";
         }[];
-        TaxonSearchError: {
+        TraitTaxonSearchError: {
             error: {
                 /** @description HTTP Status Code */
                 statusCode: number;
@@ -10321,7 +10531,7 @@ export interface components {
                 message: string;
             };
         };
-        Taxon: {
+        TraitTaxon: {
             /** @description Qname identifier */
             qname: string;
             /** @description Qname identifier */
@@ -10348,22 +10558,22 @@ export interface components {
             cursiveName: boolean;
             typeSpecimenURI: string;
             synonymNames: string;
-            basionyms: components["schemas"]["SimpleTaxon"][];
-            objectiveSynonyms: components["schemas"]["SimpleTaxon"][];
-            subjectiveSynonyms: components["schemas"]["SimpleTaxon"][];
-            homotypicSynonyms: components["schemas"]["SimpleTaxon"][];
-            heterotypicSynonyms: components["schemas"]["SimpleTaxon"][];
-            synonyms: components["schemas"]["SimpleTaxon"][];
-            misspelledNames: components["schemas"]["SimpleTaxon"][];
-            orthographicVariants: components["schemas"]["SimpleTaxon"][];
-            uncertainSynonyms: components["schemas"]["SimpleTaxon"][];
-            misappliedNames: components["schemas"]["SimpleTaxon"][];
-            alternativeNames: components["schemas"]["SimpleTaxon"][];
-            vernacularName: components["schemas"]["LocalizedText"];
-            alternativeVernacularName: components["schemas"]["LocalizedText"][];
-            obsoleteVernacularName: components["schemas"]["LocalizedText"][];
-            colloquialVernacularName: components["schemas"]["LocalizedText"][];
-            tradeName: components["schemas"]["LocalizedText"][];
+            basionyms: components["schemas"]["TraitSimpleTaxon"][];
+            objectiveSynonyms: components["schemas"]["TraitSimpleTaxon"][];
+            subjectiveSynonyms: components["schemas"]["TraitSimpleTaxon"][];
+            homotypicSynonyms: components["schemas"]["TraitSimpleTaxon"][];
+            heterotypicSynonyms: components["schemas"]["TraitSimpleTaxon"][];
+            synonyms: components["schemas"]["TraitSimpleTaxon"][];
+            misspelledNames: components["schemas"]["TraitSimpleTaxon"][];
+            orthographicVariants: components["schemas"]["TraitSimpleTaxon"][];
+            uncertainSynonyms: components["schemas"]["TraitSimpleTaxon"][];
+            misappliedNames: components["schemas"]["TraitSimpleTaxon"][];
+            alternativeNames: components["schemas"]["TraitSimpleTaxon"][];
+            vernacularName: components["schemas"]["TraitLocalizedText"];
+            alternativeVernacularName: components["schemas"]["TraitLocalizedText"][];
+            obsoleteVernacularName: components["schemas"]["TraitLocalizedText"][];
+            colloquialVernacularName: components["schemas"]["TraitLocalizedText"][];
+            tradeName: components["schemas"]["TraitLocalizedText"][];
             informalTaxonGroups: string[];
             /** @description Qname identifier */
             threatenedStatus: string;
@@ -10381,16 +10591,16 @@ export interface components {
             nameDecidedBy: string;
             nameDecidedDate: string;
             administrativeStatuses: string[];
-            primaryHabitat: components["schemas"]["HabitatObject"];
-            secondaryHabitats: components["schemas"]["HabitatObject"][];
-            latestRedListStatusFinland: components["schemas"]["RedListStatus"];
-            redListStatusesInFinland: components["schemas"]["RedListStatus"][];
+            primaryHabitat: components["schemas"]["TraitHabitatObject"];
+            secondaryHabitats: components["schemas"]["TraitHabitatObject"][];
+            latestRedListStatusFinland: components["schemas"]["TraitRedListStatus"];
+            redListStatusesInFinland: components["schemas"]["TraitRedListStatus"][];
             taxonExpert: string[];
             taxonEditor: string[];
             /** @description Qname identifier */
             invasiveSpeciesEstablishment: string;
-            multimedia: components["schemas"]["Image"][];
-            descriptions: components["schemas"]["Content"];
+            multimedia: components["schemas"]["TraitImage"][];
+            descriptions: components["schemas"]["TraitContent"];
             /** @description Qname identifier */
             secureLevel: string;
             /** @description Qname identifier */
@@ -10403,15 +10613,15 @@ export interface components {
             naturaAreaSecureLevel: string;
             sensitive: boolean;
             autoNonWild: boolean;
-            occurrences: components["schemas"]["Occurrence"][];
-            habitatOccurrenceCounts: components["schemas"]["HabitatOccurrenceCount"][];
+            occurrences: components["schemas"]["TraitOccurrence"][];
+            habitatOccurrenceCounts: components["schemas"]["TraitHabitatOccurrenceCount"][];
             birdlifeCode: string;
             euringCode: string;
             euringNumber: number;
             customReportFormLink: string;
             taxonConceptIds: string[];
             additionalIds: string[];
-            externalLinks: components["schemas"]["LocalizedURL"][];
+            externalLinks: components["schemas"]["TraitLocalizedURL"][];
             finnish: boolean;
             species: boolean;
             finnishSpecies: boolean;
@@ -10425,7 +10635,7 @@ export interface components {
             occurrenceCountFinland: number;
             observationCountInvasiveFinland: number;
             occurrenceCountInvasiveFinland: number;
-            bold: components["schemas"]["BoldRecords"];
+            bold: components["schemas"]["TraitBoldRecords"];
             hasBold: boolean;
             /** @description Qname identifier */
             isPartOfSynonym: string;
@@ -10438,78 +10648,53 @@ export interface components {
             notes: string;
             taxonomicOrder: number;
             parent: {
-                domain: components["schemas"]["SimpleTaxon"];
-                kingdom: components["schemas"]["SimpleTaxon"];
-                phylum: components["schemas"]["SimpleTaxon"];
-                subphylum: components["schemas"]["SimpleTaxon"];
-                division: components["schemas"]["SimpleTaxon"];
-                class: components["schemas"]["SimpleTaxon"];
-                subclass: components["schemas"]["SimpleTaxon"];
-                order: components["schemas"]["SimpleTaxon"];
-                suborder: components["schemas"]["SimpleTaxon"];
-                superfamily: components["schemas"]["SimpleTaxon"];
-                family: components["schemas"]["SimpleTaxon"];
-                subfamily: components["schemas"]["SimpleTaxon"];
-                tribe: components["schemas"]["SimpleTaxon"];
-                subtribe: components["schemas"]["SimpleTaxon"];
-                genus: components["schemas"]["SimpleTaxon"];
-                subgenus: components["schemas"]["SimpleTaxon"];
-                aggregate: components["schemas"]["SimpleTaxon"];
-                species: components["schemas"]["SimpleTaxon"];
+                domain: components["schemas"]["TraitSimpleTaxon"];
+                kingdom: components["schemas"]["TraitSimpleTaxon"];
+                phylum: components["schemas"]["TraitSimpleTaxon"];
+                subphylum: components["schemas"]["TraitSimpleTaxon"];
+                division: components["schemas"]["TraitSimpleTaxon"];
+                class: components["schemas"]["TraitSimpleTaxon"];
+                subclass: components["schemas"]["TraitSimpleTaxon"];
+                order: components["schemas"]["TraitSimpleTaxon"];
+                suborder: components["schemas"]["TraitSimpleTaxon"];
+                superfamily: components["schemas"]["TraitSimpleTaxon"];
+                family: components["schemas"]["TraitSimpleTaxon"];
+                subfamily: components["schemas"]["TraitSimpleTaxon"];
+                tribe: components["schemas"]["TraitSimpleTaxon"];
+                subtribe: components["schemas"]["TraitSimpleTaxon"];
+                genus: components["schemas"]["TraitSimpleTaxon"];
+                subgenus: components["schemas"]["TraitSimpleTaxon"];
+                aggregate: components["schemas"]["TraitSimpleTaxon"];
+                species: components["schemas"]["TraitSimpleTaxon"];
             };
-            synonymOf: components["schemas"]["SimpleTaxon"];
-            latestRedListEvaluation: components["schemas"]["Evaluation"];
+            synonymOf: components["schemas"]["TraitSimpleTaxon"];
+            latestRedListEvaluation: components["schemas"]["TraitEvaluation"];
             hasLatestRedListEvaluation: boolean;
             primaryHabitatSearchStrings: string[];
             anyHabitatSearchStrings: string[];
-            vernacularNameMultiLang: {
-                fi: components["schemas"]["LocalizedText"];
-                sv: components["schemas"]["LocalizedText"];
-                en: components["schemas"]["LocalizedText"];
-            };
-            alternativeVernacularNameMultiLang: {
-                fi: components["schemas"]["LocalizedText"][];
-                sv: components["schemas"]["LocalizedText"][];
-                en: components["schemas"]["LocalizedText"][];
-            };
-            colloquialVernacularNameMultiLang: {
-                fi: components["schemas"]["LocalizedText"][];
-                sv: components["schemas"]["LocalizedText"][];
-                en: components["schemas"]["LocalizedText"][];
-            };
-            obsoleteVernacularNameMultiLang: {
-                fi: components["schemas"]["LocalizedText"][];
-                sv: components["schemas"]["LocalizedText"][];
-                en: components["schemas"]["LocalizedText"][];
-            };
-            tradeNameMultiLang: {
-                fi: components["schemas"]["LocalizedText"][];
-                sv: components["schemas"]["LocalizedText"][];
-                en: components["schemas"]["LocalizedText"][];
-            };
         };
-        SimpleTaxon: {
+        TraitSimpleTaxon: {
             id: string;
             scientificName: string;
             scientificNameAuthorship: string;
-            vernacularName: components["schemas"]["LocalizedText"];
+            vernacularName: components["schemas"]["TraitLocalizedText"];
             taxonRank: string;
             cursiveName: boolean;
             notes: string;
-            bold: components["schemas"]["BoldRecords"];
+            bold: components["schemas"]["TraitBoldRecords"];
             hasBold: boolean;
         };
-        LocalizedText: string;
-        LocalizedURL: {
+        TraitLocalizedText: string;
+        TraitLocalizedURL: {
             locale: string;
             uri: string;
         };
-        RedListStatus: {
+        TraitRedListStatus: {
             /** @description Qname identifier */
             status: string;
             year: number;
         };
-        HabitatObject: {
+        TraitHabitatObject: {
             /** @description Qname identifier */
             habitat: string;
             habitatSpecificTypes: string[];
@@ -10517,7 +10702,7 @@ export interface components {
             id: string;
             order: number;
         };
-        Occurrence: {
+        TraitOccurrence: {
             /** @description Qname identifier */
             area: string;
             /** @description Qname identifier */
@@ -10530,19 +10715,50 @@ export interface components {
             threatened: boolean;
             year: number;
         };
-        HabitatOccurrenceCount: {
-            habitat: components["schemas"]["LocalizedText"];
+        TraitHabitatOccurrenceCount: {
+            habitat: components["schemas"]["TraitLocalizedText"];
             id: string;
             occurrenceCount: number;
         };
-        BoldRecords: {
+        TraitImage: {
+            author: string;
+            caption: string;
+            captureDateTime: string;
+            copyrightOwner: string;
+            fullURL: string;
+            /** @description Qname identifier */
+            id: string;
+            keywords: string[];
+            largeURL: string;
+            licenseAbbreviation: string;
+            licenseFullname: components["schemas"]["TraitLocalizedText"];
+            /** @description Qname identifier */
+            licenseId: string;
+            lifeStage: string[];
+            plantLifeStage: string[];
+            sex: string[];
+            /** @description Qname identifier */
+            side: string;
+            sortOrder: number;
+            /** @description Qname identifier */
+            source: string;
+            squareThumbnailURL: string;
+            taxon: components["schemas"]["TraitSimpleTaxon"];
+            taxonDescriptionCaption: components["schemas"]["TraitLocalizedText"];
+            thumbnailURL: string;
+            /** @description Qname identifier */
+            type: string;
+            uploadDateTime: string;
+            primaryForTaxon: boolean;
+        };
+        TraitBoldRecords: {
             barcodes: number;
             binCount: number;
             bins: string[];
             publicRecords: number;
             specimens: number;
         };
-        Evaluation: {
+        TraitEvaluation: {
             evaluationYear: number;
             /** @enum {string} */
             redListStatus: "MX.iucnEX" | "MX.iucnEW" | "MX.iucnRE" | "MX.iucnCR" | "MX.iucnEN" | "MX.iucnVU" | "MX.iucnNT" | "MX.iucnLC" | "MX.iucnDD" | "MX.iucnNA" | "MX.iucnNE";
@@ -10553,40 +10769,40 @@ export interface components {
             possiblyRE: "MX.iucnRE" | "MX.iucnEW" | "MX.iucnEX";
             reasonForStatusChange: ("MKV.reasonForStatusChangeGenuine" | "MKV.reasonForStatusChangeGenuineBeforePreviousEvaluation" | "MKV.reasonForStatusChangeChangesInCriteria" | "MKV.reasonForStatusChangeMoreInformation" | "MKV.reasonForStatusChangeChangesInTaxonomy" | "MKV.reasonForStatusChangeError" | "MKV.reasonForStatusChangeErroneousInformation" | "MKV.reasonForStatusChangeOther")[];
             lastSightingNotes: string;
-            primaryHabitat: components["schemas"]["HabitatObject"];
-            secondaryHabitats: components["schemas"]["HabitatObject"][];
+            primaryHabitat: components["schemas"]["TraitHabitatObject"];
+            secondaryHabitats: components["schemas"]["TraitHabitatObject"][];
             primaryHabitatSearchStrings: string[];
             anyHabitatSearchStrings: string[];
             endangermentReasons: string[];
             primaryEndangermentReason: string;
             threats: string[];
             primaryThreat: string;
-            occurrences: components["schemas"]["Occurrence"][];
+            occurrences: components["schemas"]["TraitOccurrence"][];
             threatenedAtArea: string[];
             calculatedRedListIndex: number;
             calculatedCorrectedRedListIndex: number;
             correctedStatusForRedListIndex: string;
         };
-        Content: components["schemas"]["Context"][];
-        Context: {
+        TraitContent: components["schemas"]["TraitContext"][];
+        TraitContext: {
             id: string;
-            title: components["schemas"]["LocalizedText"];
+            title: components["schemas"]["TraitLocalizedText"];
             groups: {
                 group: string;
-                title: components["schemas"]["LocalizedText"];
+                title: components["schemas"]["TraitLocalizedText"];
                 variables: {
                     variable: string;
-                    title: components["schemas"]["LocalizedText"];
-                    content: components["schemas"]["LocalizedText"];
+                    title: components["schemas"]["TraitLocalizedText"];
+                    content: components["schemas"]["TraitLocalizedText"];
                 }[];
             }[];
             speciesCardAuthors: {
                 variable: string;
-                title: components["schemas"]["LocalizedText"];
-                content: components["schemas"]["LocalizedText"];
+                title: components["schemas"]["TraitLocalizedText"];
+                content: components["schemas"]["TraitLocalizedText"];
             };
         };
-        TraitAPIError: {
+        TraitTraitAPIError: {
             /** @description HTTP Status Code */
             status: number;
             /** @description Error message */
@@ -10594,43 +10810,43 @@ export interface components {
             /** @description Stacktrace */
             stacktrace: string;
         };
-        TraitAPIOKResponse: {
+        TraitTraitAPIOKResponse: {
             /** @description ok */
             ok: string;
         };
-        TraitAPISearchResponse: {
+        TraitTraitAPISearchResponse: {
             currentPage: number;
             nextPage: number;
             lastPage: number;
             pageSize: number;
             total: number;
-            results: components["schemas"]["TraitSearchRow"][];
+            results: components["schemas"]["TraitTraitSearchRow"][];
             errors: {
                 [key: string]: string;
             };
         };
-        ValidationResponse: {
+        TraitValidationResponse: {
             pass: boolean;
             errors: {
                 [key: string]: string;
             };
         };
-        TraitTSVValidationResponse: {
+        TraitTraitTSVValidationResponse: {
             pass: boolean;
-            header: components["schemas"]["ValidationResponse"];
-            rows: components["schemas"]["ValidationResponse"][];
+            header: components["schemas"]["TraitValidationResponse"];
+            rows: components["schemas"]["TraitValidationResponse"][];
         };
-        TraitMultiValidationResponse: {
+        TraitTraitMultiValidationResponse: {
             pass: boolean;
-            rows: components["schemas"]["ValidationResponse"][];
+            rows: components["schemas"]["TraitValidationResponse"][];
         };
-        TraitGroup: {
+        TraitTraitGroup: {
             /** @description Qname identifier */
             id: string;
             name: string;
             description: string;
         };
-        Trait: {
+        TraitTrait: {
             /** @description Qname identifier */
             id: string;
             /** @description Qname identifier */
@@ -10649,18 +10865,18 @@ export interface components {
              * @enum {string}
              */
             range: "xsd:string" | "xsd:decimal" | "xsd:integer" | "xsd:positiveInteger" | "xsd:nonNegativeInteger" | "xsd:boolean" | "MX.taxon";
-            enumerations?: components["schemas"]["TraitEnumerationValue"][];
+            enumerations?: components["schemas"]["TraitTraitEnumerationValue"][];
             reference?: string;
             identifiers?: string[];
         };
-        TraitEnumerationValue: {
+        TraitTraitEnumerationValue: {
             /** @description Qname identifier */
             id: string;
             dataEntryName: string;
             name: string;
             description: string;
         };
-        UnitOfMeasurement: {
+        TraitUnitOfMeasurement: {
             /** @description Qname identifier */
             id: string;
             unit: string;
@@ -10672,7 +10888,7 @@ export interface components {
             conversionFactor: number;
             isBaseUnit: boolean;
         };
-        Dataset: {
+        TraitDataset: {
             /** @description Qname identifier */
             id: string;
             name: string;
@@ -10694,16 +10910,16 @@ export interface components {
             shareToFinBIF: boolean;
             shareToGBIF: boolean;
         };
-        DatasetPermissions: {
+        TraitDatasetPermissions: {
             /** @description Qname identifier */
             datasetId: string;
             userIds?: string[];
         };
-        InputRow: {
-            subject: components["schemas"]["Subject"];
-            traits?: components["schemas"]["TraitValue"][];
+        TraitInputRow: {
+            subject: components["schemas"]["TraitSubject"];
+            traits?: components["schemas"]["TraitTraitValue"][];
         };
-        Subject: {
+        TraitSubject: {
             /** @description Qname identifier */
             id: string;
             /** @description Qname identifier */
@@ -10794,7 +11010,7 @@ export interface components {
             createdBy: string;
             modifiedBy?: string;
         };
-        TraitValue: {
+        TraitTraitValue: {
             /** @description Qname identifier */
             id: string;
             /** @description Qname identifier */
@@ -10820,17 +11036,17 @@ export interface components {
             measurementRemarks?: string;
             reference?: string;
         };
-        TraitSearchRow: {
+        TraitTraitSearchRow: {
             /** @description Qname identifier */
             id: string;
-            subject: components["schemas"]["TraitSearchSubject"];
+            subject: components["schemas"]["TraitTraitSearchSubject"];
             year: number;
             month: number;
             day: number;
             eventDate: string;
             geodeticDatum: string;
-            trait: components["schemas"]["TraitSearchTrait"];
-            traitGroup: components["schemas"]["TraitSearchTraitGroup"];
+            trait: components["schemas"]["TraitTraitSearchTrait"];
+            traitGroup: components["schemas"]["TraitTraitSearchTraitGroup"];
             /**
              * @description Qname identifier
              * @enum {string}
@@ -10852,34 +11068,34 @@ export interface components {
              */
             originalUnit: "TDF.umNM" | "TDF.umUM" | "TDF.umMM" | "TDF.umCM" | "TDF.umM" | "TDF.umKM" | "TDF.umG" | "TDF.umKG" | "TDF.umA" | "TDF.umS" | "TDF.umML" | "TDF.umL" | "TDF.umMOL" | "TDF.umMMOL" | "TDF.umUMOL" | "TDF.umHZ" | "TDF.umP" | "TDF.umPPT" | "TDF.umPPM" | "TDF.umC" | "TDF.umMM2" | "TDF.umCM2" | "TDF.umM2" | "TDF.umARE" | "TDF.umHA" | "TDF.umKM2" | "TDF.umMM3" | "TDF.umCM3" | "TDF.umM3" | "TDF.umGMOL" | "TDF.umMOLL" | "TDF.umCM2H";
             originalMeasurementAccuracy: number;
-            subjectFinBIFTaxon: components["schemas"]["TraitTaxon"];
-            subjectGBIFTaxon: components["schemas"]["TraitTaxon"];
+            subjectFinBIFTaxon: components["schemas"]["TraitTraitTaxon"];
+            subjectGBIFTaxon: components["schemas"]["TraitTraitTaxon"];
             /**
              * @description Qname identifier
              * @enum {string}
              */
             objectTaxonLifeStage: "MY.lifeStageAdult" | "MY.lifeStageNymph" | "MY.lifeStageLarva" | "MY.lifeStageEgg" | "MY.lifeStagePupa" | "MY.lifeStageJuvenile" | "MY.lifeStageSubimago" | "MY.lifeStageImmature" | "MY.lifeStageFertile" | "MY.lifeStageSterile" | "MY.lifeStageTadpole" | "MY.lifeStageEmbryo" | "MY.lifeStageSubadult" | "MY.lifeStageMature" | "MY.lifeStagePullus" | "MY.lifeStageHatchedEgg" | "MY.lifeStageHatchedPupa" | "MY.lifeStageGall" | "MY.lifeStageMarks" | "MY.lifeStageTriungulin" | "MY.lifeStageExuvia";
             objectTaxonVerbatim: string;
-            objectFinBIFTaxon: components["schemas"]["TraitTaxon"];
-            objectGBIFTaxon: components["schemas"]["TraitTaxon"];
+            objectFinBIFTaxon: components["schemas"]["TraitTraitTaxon"];
+            objectGBIFTaxon: components["schemas"]["TraitTraitTaxon"];
             warnings: boolean;
             measurementRemarks: string;
             reference: string;
-            dataset: components["schemas"]["TraitSearchDataset"];
+            dataset: components["schemas"]["TraitTraitSearchDataset"];
             /**
              * @description Qname identifier
              * @enum {string}
              */
             license: "MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0" | "MY.intellectualRightsCC-BY" | "MY.intellectualRightsCC0";
         };
-        TraitTaxon: {
+        TraitTraitTaxon: {
             id: string;
             taxonomicOrder: number;
             taxonRank: string;
             scientificName: string;
             cursiveName: boolean;
             author: string;
-            higherTaxa: components["schemas"]["HigherTaxa"];
+            higherTaxa: components["schemas"]["TraitHigherTaxa"];
             /**
              * @description Qname identifier
              * @enum {string}
@@ -10893,7 +11109,7 @@ export interface components {
             habitatSpecifiers: ("MKV.habitatSpecificTypeV" | "MKV.habitatSpecificTypeH" | "MKV.habitatSpecificTypeP" | "MKV.habitatSpecificTypeJ" | "MKV.habitatSpecificTypePAK" | "MKV.habitatSpecificTypeVAK" | "MKV.habitatSpecificTypeRA" | "MKV.habitatSpecificTypeKA" | "MKV.habitatSpecificTypeKE" | "MKV.habitatSpecificTypeCA")[];
             sensitive: boolean;
         };
-        TraitSearchSubject: {
+        TraitTraitSearchSubject: {
             /** @description Qname identifier */
             id: string;
             /**
@@ -10977,7 +11193,7 @@ export interface components {
              */
             modified: string;
         };
-        TraitSearchTrait: {
+        TraitTraitSearchTrait: {
             /** @description Qname identifier */
             id: string;
             dataEntryName: string;
@@ -10996,10 +11212,10 @@ export interface components {
             reference: string;
             identifiers: string[];
         };
-        TraitSearchTraitGroup: {
+        TraitTraitSearchTraitGroup: {
             name: string;
         };
-        TraitSearchDataset: {
+        TraitTraitSearchDataset: {
             /** @description Qname identifier */
             id: string;
             name: string;
@@ -11014,7 +11230,7 @@ export interface components {
             gbifDoi: string;
             additionalIdentifier: string[];
         };
-        HigherTaxa: {
+        TraitHigherTaxa: {
             domain: string;
             kingdom: string;
             phylum: string;
@@ -11030,6 +11246,84 @@ export interface components {
             tribe: string;
             subtribe: string;
             genus: string;
+        };
+        /** Body_convert_gis_to_table_convert_to_table_post */
+        GeoConvertBody_convert_gis_to_table_convert_to_table_post: {
+            /**
+             * File
+             * Format: binary
+             * @description GIS file to convert (SHP, GeoJSON, GPKG, KML, GML, ZIP)
+             */
+            file: string;
+        };
+        /** Body_convert_with_file__post */
+        GeoConvertBody_convert_with_file__post: {
+            /**
+             * File
+             * Format: binary
+             * @description ZIP file containing TSV data
+             */
+            file: string;
+        };
+        /** ErrorResponse */
+        GeoConvertErrorResponse: {
+            /**
+             * Detail
+             * @description Error message
+             * @example Conversion ID not found
+             */
+            detail: string;
+        };
+        /** HTTPValidationError */
+        GeoConvertHTTPValidationError: {
+            /** Detail */
+            detail: components["schemas"]["GeoConvertValidationError"][];
+        };
+        /** HealthResponse */
+        GeoConvertHealthResponse: {
+            /**
+             * Status
+             * @description Service health status
+             * @example ok
+             */
+            status: string;
+            /**
+             * Processing
+             * @description Number of active conversions
+             * @example 2 conversions right now
+             */
+            processing: string;
+        };
+        /** StatusResponse */
+        GeoConvertStatusResponse: {
+            /**
+             * Id
+             * @description Unique conversion identifier
+             * @example dataset123_tech_point_wgs84
+             */
+            id: string;
+            /**
+             * Status
+             * @description Current conversion status
+             * @example processing
+             * @enum {string}
+             */
+            status: "processing" | "complete" | "failed";
+            /**
+             * Progress Percent
+             * @description Completion percentage (0-100)
+             * @example 45
+             */
+            progress_percent: number;
+        };
+        /** ValidationError */
+        GeoConvertValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
         };
         form: {
             /** Context for the MHL.form */
@@ -13138,6 +13432,11 @@ export interface components {
              */
             seedMorphology: "" | "MY.seedMorphologyBent" | "MY.seedMorphologyBroad" | "MY.seedMorphologyCapitate" | "MY.seedMorphologyFolded" | "MY.seedMorphologyLateral" | "MY.seedMorphologyLinearFullyDeveloped" | "MY.seedMorphologyLinearUnderdeveloped" | "MY.seedMorphologyPeripheral" | "MY.seedMorphologyRudimentary" | "MY.seedMorphologySpatulateFullyDeveloped" | "MY.seedMorphologySpatulateUnderdeveloped" | "MY.seedMorphologyUndifferentiated" | "MY.seedMorphologyInvesting";
             /**
+             * DNA sequence (FASTA)
+             * @description DNA sequence associated with the occurrence, stored in FASTA format.
+             */
+            sequenceText: string[];
+            /**
              * Sex
              * @description Sex of the individual(s)
              * @enum {string}
@@ -13292,6 +13591,10 @@ export interface components {
             adultIndividualCount: number;
             /** Taxon ID selected from autocomplete */
             autocompleteSelectedTaxonID: string;
+            /** Brood count */
+            broodCount: number;
+            /** Destroyed nests count */
+            destroyedNestCount: number;
             /**
              * Determination on site
              * @description Tehtiinkö lajin määritys havaintotilanteessa vai myöhemmin esimerkiksi internetin tai muiden kanssa keskustelun perusteella?
@@ -13300,6 +13603,8 @@ export interface components {
             detOnSite: "" | "MY.duringObservation" | "MY.afterObservation";
             /** Observation distance (m) */
             distanceMeters: number;
+            /** Females with broods count */
+            femalesWithBroodsCount: number;
             /**
              * Micro habitat
              * @enum {string}
@@ -14397,6 +14702,309 @@ export interface components {
             /** ringingDepartmentMunicipalityCode */
             ringingDepartmentMunicipalityCode?: string;
         };
+        TaxonSearchResponse: {
+            /** @description Name that matched the search word */
+            matchingName: string;
+            /**
+             * @description Type of the name.
+             * @enum {string}
+             */
+            nameType: "MX.scientificName" | "MX.vernacularName" | "MX.hasSynonym" | "MX.hasBasionym" | "MX.alternativeVernacularName" | "MX.hasMisappliedName" | "MX.birdlifeCode" | "MX.obsoleteVernacularName" | "MX.euringCode" | "MX.hasSubjectiveSynonym" | "MX.hasAlternativeName" | "MX.hasOrthographicVariant" | "MX.hasObjectiveSynonym" | "MX.hasMisspelledName" | "MX.colloquialVernacularName" | "MX.hasUncertainSynonym" | "MX.hasHomotypicSynonym" | "MX.tradeName" | "MX.hasHeterotypicSynonym";
+            /** @description Taxon identifier of the taxon that has the matching name; in the short Qname format, for example 'MX.123' */
+            id: string;
+            /** @description Checklist identifier of the matching taxon; in the short Qname format, for example 'MR.1'. For taxa not part of any checklist the value is 'undefined'. */
+            checklist: string;
+            /** @description Accepted scientific name of the taxon that has the matching name */
+            scientificName: string;
+            /** @description Author of the above mentioned scientific name */
+            scientificNameAuthorship: string;
+            /** @description Taxonomic rank of the taxon that has the matching name; in the short Qname format, for example 'MX.genus' */
+            taxonRank: string;
+            /** @description Should the matching name be cursived */
+            cursiveName: boolean;
+            /** @description Is the taxon that has the mathing name marked as a Finnish taxon */
+            finnish: boolean;
+            /** @description Is the taxon that has the mathing name species level or lower, or a higher taxon */
+            species: boolean;
+            vernacularName: components["schemas"]["LocalizedText"];
+            informalGroups: {
+                /** @description Identifier of the informal taxon group that the matching taxon belongs to); in the short Qname format, for example 'MVL.1' */
+                id: string;
+                name: components["schemas"]["LocalizedText"];
+            }[];
+            /** @description Scientific name of the kingdom that the matching taxon belongs to */
+            kingdomScientificName: string;
+            /**
+             * @description Type of the matching name
+             * @enum {string}
+             */
+            type: "exactMatches" | "partialMatches" | "likelyMatches";
+        }[];
+        LocalizedText: string;
+        Taxon: {
+            /** @description Qname identifier */
+            qname: string;
+            /** @description Qname identifier */
+            id: string;
+            uri: string;
+            /** @description Qname identifier */
+            isPartOf: string;
+            /** @description Qname identifier */
+            isPartOfNonHidden: string;
+            parents: string[];
+            nonHiddenParents: string[];
+            depth: number;
+            nonHiddenDepth: number;
+            parentsIncludeSelf: string[];
+            nonHiddenParentsIncludeSelf: string[];
+            hiddenTaxon: boolean;
+            /** @description Qname identifier */
+            nameAccordingTo: string;
+            /** @description Qname identifier */
+            taxonRank: string;
+            scientificName: string;
+            scientificNameAuthorship: string;
+            scientificNameDisplayName: string;
+            cursiveName: boolean;
+            typeSpecimenURI: string;
+            synonymNames: string;
+            basionyms: components["schemas"]["SimpleTaxon"][];
+            objectiveSynonyms: components["schemas"]["SimpleTaxon"][];
+            subjectiveSynonyms: components["schemas"]["SimpleTaxon"][];
+            homotypicSynonyms: components["schemas"]["SimpleTaxon"][];
+            heterotypicSynonyms: components["schemas"]["SimpleTaxon"][];
+            synonyms: components["schemas"]["SimpleTaxon"][];
+            misspelledNames: components["schemas"]["SimpleTaxon"][];
+            orthographicVariants: components["schemas"]["SimpleTaxon"][];
+            uncertainSynonyms: components["schemas"]["SimpleTaxon"][];
+            misappliedNames: components["schemas"]["SimpleTaxon"][];
+            alternativeNames: components["schemas"]["SimpleTaxon"][];
+            vernacularName: components["schemas"]["LocalizedText"];
+            alternativeVernacularName: components["schemas"]["LocalizedText"][];
+            obsoleteVernacularName: components["schemas"]["LocalizedText"][];
+            colloquialVernacularName: components["schemas"]["LocalizedText"][];
+            tradeName: components["schemas"]["LocalizedText"][];
+            informalTaxonGroups: string[];
+            /** @description Qname identifier */
+            threatenedStatus: string;
+            redListEvaluationGroups: string[];
+            /** @description Qname identifier */
+            occurrenceInFinland: string;
+            occurrenceInFinlandSpecimenURI: string;
+            typeOfOccurrenceInFinland: string[];
+            occurrenceInFinlandPublications: string[];
+            typeOfOccurrenceInFinlandNotes: string;
+            originalPublications: string[];
+            /** @description Qname identifier */
+            originalDescription: string;
+            /** @description Qname identifier */
+            nameDecidedBy: string;
+            nameDecidedDate: string;
+            administrativeStatuses: string[];
+            primaryHabitat: components["schemas"]["HabitatObject"];
+            secondaryHabitats: components["schemas"]["HabitatObject"][];
+            latestRedListStatusFinland: components["schemas"]["RedListStatus"];
+            redListStatusesInFinland: components["schemas"]["RedListStatus"][];
+            taxonExpert: string[];
+            taxonEditor: string[];
+            /** @description Qname identifier */
+            invasiveSpeciesEstablishment: string;
+            multimedia: components["schemas"]["Image"][];
+            descriptions: components["schemas"]["Content"];
+            /** @description Qname identifier */
+            secureLevel: string;
+            /** @description Qname identifier */
+            breedingSecureLevel: string;
+            /** @description Qname identifier */
+            winteringSecureLevel: string;
+            /** @description Qname identifier */
+            nestSiteSecureLevel: string;
+            /** @description Qname identifier */
+            naturaAreaSecureLevel: string;
+            sensitive: boolean;
+            autoNonWild: boolean;
+            occurrences: components["schemas"]["Occurrence"][];
+            habitatOccurrenceCounts: components["schemas"]["HabitatOccurrenceCount"][];
+            birdlifeCode: string;
+            euringCode: string;
+            euringNumber: number;
+            customReportFormLink: string;
+            taxonConceptIds: string[];
+            additionalIds: string[];
+            externalLinks: components["schemas"]["LocalizedURL"][];
+            finnish: boolean;
+            species: boolean;
+            finnishSpecies: boolean;
+            invasiveSpecies: boolean;
+            stableInFinland: boolean;
+            countOfSpecies: number;
+            countOfFinnishSpecies: number;
+            observationCount: number;
+            occurrenceCount: number;
+            observationCountFinland: number;
+            occurrenceCountFinland: number;
+            observationCountInvasiveFinland: number;
+            occurrenceCountInvasiveFinland: number;
+            bold: components["schemas"]["BoldRecords"];
+            hasBold: boolean;
+            /** @description Qname identifier */
+            isPartOfSynonym: string;
+            hasParent: boolean;
+            hasChildren: boolean;
+            hasMultimedia: boolean;
+            hasDescriptions: boolean;
+            invasiveSpeciesMainGroups: string[];
+            taxonSets: string[];
+            notes: string;
+            taxonomicOrder: number;
+            parent: {
+                domain: components["schemas"]["SimpleTaxon"];
+                kingdom: components["schemas"]["SimpleTaxon"];
+                phylum: components["schemas"]["SimpleTaxon"];
+                subphylum: components["schemas"]["SimpleTaxon"];
+                division: components["schemas"]["SimpleTaxon"];
+                class: components["schemas"]["SimpleTaxon"];
+                subclass: components["schemas"]["SimpleTaxon"];
+                order: components["schemas"]["SimpleTaxon"];
+                suborder: components["schemas"]["SimpleTaxon"];
+                superfamily: components["schemas"]["SimpleTaxon"];
+                family: components["schemas"]["SimpleTaxon"];
+                subfamily: components["schemas"]["SimpleTaxon"];
+                tribe: components["schemas"]["SimpleTaxon"];
+                subtribe: components["schemas"]["SimpleTaxon"];
+                genus: components["schemas"]["SimpleTaxon"];
+                subgenus: components["schemas"]["SimpleTaxon"];
+                aggregate: components["schemas"]["SimpleTaxon"];
+                species: components["schemas"]["SimpleTaxon"];
+            };
+            synonymOf: components["schemas"]["SimpleTaxon"];
+            latestRedListEvaluation: components["schemas"]["Evaluation"];
+            hasLatestRedListEvaluation: boolean;
+            primaryHabitatSearchStrings: string[];
+            anyHabitatSearchStrings: string[];
+            vernacularNameMultiLang: {
+                fi: components["schemas"]["LocalizedText"];
+                sv: components["schemas"]["LocalizedText"];
+                en: components["schemas"]["LocalizedText"];
+            };
+            alternativeVernacularNameMultiLang: {
+                fi: components["schemas"]["LocalizedText"][];
+                sv: components["schemas"]["LocalizedText"][];
+                en: components["schemas"]["LocalizedText"][];
+            };
+            colloquialVernacularNameMultiLang: {
+                fi: components["schemas"]["LocalizedText"][];
+                sv: components["schemas"]["LocalizedText"][];
+                en: components["schemas"]["LocalizedText"][];
+            };
+            obsoleteVernacularNameMultiLang: {
+                fi: components["schemas"]["LocalizedText"][];
+                sv: components["schemas"]["LocalizedText"][];
+                en: components["schemas"]["LocalizedText"][];
+            };
+            tradeNameMultiLang: {
+                fi: components["schemas"]["LocalizedText"][];
+                sv: components["schemas"]["LocalizedText"][];
+                en: components["schemas"]["LocalizedText"][];
+            };
+        };
+        SimpleTaxon: {
+            id: string;
+            scientificName: string;
+            scientificNameAuthorship: string;
+            vernacularName: components["schemas"]["LocalizedText"];
+            taxonRank: string;
+            cursiveName: boolean;
+            notes: string;
+            bold: components["schemas"]["BoldRecords"];
+            hasBold: boolean;
+        };
+        BoldRecords: {
+            barcodes: number;
+            binCount: number;
+            bins: string[];
+            publicRecords: number;
+            specimens: number;
+        };
+        HabitatObject: {
+            /** @description Qname identifier */
+            habitat: string;
+            habitatSpecificTypes: string[];
+            /** @description Qname identifier */
+            id: string;
+            order: number;
+        };
+        RedListStatus: {
+            /** @description Qname identifier */
+            status: string;
+            year: number;
+        };
+        Content: components["schemas"]["Context"][];
+        Context: {
+            id: string;
+            title: components["schemas"]["LocalizedText"];
+            groups: {
+                group: string;
+                title: components["schemas"]["LocalizedText"];
+                variables: {
+                    variable: string;
+                    title: components["schemas"]["LocalizedText"];
+                    content: components["schemas"]["LocalizedText"];
+                }[];
+            }[];
+            speciesCardAuthors: {
+                variable: string;
+                title: components["schemas"]["LocalizedText"];
+                content: components["schemas"]["LocalizedText"];
+            };
+        };
+        Occurrence: {
+            /** @description Qname identifier */
+            area: string;
+            /** @description Qname identifier */
+            id: string;
+            notes: string;
+            occurrenceCount: number;
+            specimenURI: string;
+            /** @description Qname identifier */
+            status: string;
+            threatened: boolean;
+            year: number;
+        };
+        HabitatOccurrenceCount: {
+            habitat: components["schemas"]["LocalizedText"];
+            id: string;
+            occurrenceCount: number;
+        };
+        LocalizedURL: {
+            locale: string;
+            uri: string;
+        };
+        Evaluation: {
+            evaluationYear: number;
+            /** @enum {string} */
+            redListStatus: "MX.iucnEX" | "MX.iucnEW" | "MX.iucnRE" | "MX.iucnCR" | "MX.iucnEN" | "MX.iucnVU" | "MX.iucnNT" | "MX.iucnLC" | "MX.iucnDD" | "MX.iucnNA" | "MX.iucnNE";
+            /** @enum {string} */
+            externalPopulationImpactOnRedListStatus: "MKV.externalPopulationImpactOnRedListStatusEnumMinus1" | "MKV.externalPopulationImpactOnRedListStatusEnumMinus2" | "MKV.externalPopulationImpactOnRedListStatusEnumPlus1" | "MKV.externalPopulationImpactOnRedListStatusEnumPlus2";
+            criteriaForStatus: string;
+            /** @enum {string} */
+            possiblyRE: "MX.iucnRE" | "MX.iucnEW" | "MX.iucnEX";
+            reasonForStatusChange: ("MKV.reasonForStatusChangeGenuine" | "MKV.reasonForStatusChangeGenuineBeforePreviousEvaluation" | "MKV.reasonForStatusChangeChangesInCriteria" | "MKV.reasonForStatusChangeMoreInformation" | "MKV.reasonForStatusChangeChangesInTaxonomy" | "MKV.reasonForStatusChangeError" | "MKV.reasonForStatusChangeErroneousInformation" | "MKV.reasonForStatusChangeOther")[];
+            lastSightingNotes: string;
+            primaryHabitat: components["schemas"]["HabitatObject"];
+            secondaryHabitats: components["schemas"]["HabitatObject"][];
+            primaryHabitatSearchStrings: string[];
+            anyHabitatSearchStrings: string[];
+            endangermentReasons: string[];
+            primaryEndangermentReason: string;
+            threats: string[];
+            primaryThreat: string;
+            occurrences: components["schemas"]["Occurrence"][];
+            threatenedAtArea: string[];
+            calculatedRedListIndex: number;
+            calculatedCorrectedRedListIndex: number;
+            correctedStatusForRedListIndex: string;
+        };
         tag: {
             /** Context for the MMAN.tagClass */
             "@context": string;
@@ -14432,6 +15040,23 @@ export interface components {
             rootTaxon: string;
             /** Notes */
             "rdfs:comment"?: string;
+        };
+        checklistVersion: {
+            /** Context for the Checklist version */
+            "@context": string;
+            /** Id for the Checklist version */
+            id: string;
+            /** Type for the Checklist version */
+            "@type": string;
+            /** Checklist id */
+            versionChecklist: string;
+            /**
+             * Frozen at
+             * Format: date
+             */
+            versionDate: string;
+            versionDescription: string;
+            versionName: string;
         };
         organization: {
             /** Context for the Organization */
@@ -14667,7 +15292,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -14693,6 +15318,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14704,6 +15330,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14715,6 +15342,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14726,6 +15354,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14737,6 +15366,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14748,6 +15378,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14759,6 +15390,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14792,6 +15424,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14803,6 +15436,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14814,6 +15448,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14825,6 +15460,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14836,6 +15472,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14847,6 +15484,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14858,6 +15496,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14892,6 +15531,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14903,6 +15543,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14914,6 +15555,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14925,6 +15567,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14936,6 +15579,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14947,6 +15591,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14958,6 +15603,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -14967,9 +15613,6 @@ export interface operations {
         parameters: {
             query?: {
                 format?: "schema" | "json";
-                /** @description Language of fields that have multiple languages. If multi is selected fields that can have multiple languages will
-                 *     contain language objects. Defaults to 'en' */
-                lang?: "fi" | "sv" | "en" | "multi";
                 /** @description Expand response */
                 expand?: boolean;
             };
@@ -14997,6 +15640,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15008,6 +15652,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15019,6 +15664,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15030,6 +15676,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15041,6 +15688,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15052,6 +15700,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15063,6 +15712,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15099,6 +15749,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15110,6 +15761,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15121,6 +15773,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15132,6 +15785,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15143,6 +15797,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15154,6 +15809,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15165,6 +15821,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15197,6 +15854,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15208,6 +15866,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15219,6 +15878,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15230,6 +15890,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15241,6 +15902,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15252,6 +15914,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15263,6 +15926,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15270,11 +15934,7 @@ export interface operations {
     };
     FormsController_transform: {
         parameters: {
-            query?: {
-                /** @description Language of fields that have multiple languages. If multi is selected fields that can have multiple languages will
-                 *     contain language objects. Defaults to 'en' */
-                lang?: "fi" | "sv" | "en" | "multi";
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -15301,6 +15961,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15312,6 +15973,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15323,6 +15985,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15334,6 +15997,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15345,6 +16009,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15356,6 +16021,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15367,6 +16033,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15376,7 +16043,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -15400,6 +16067,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15411,6 +16079,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15422,6 +16091,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15433,6 +16103,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15444,6 +16115,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15455,6 +16127,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15466,6 +16139,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15475,7 +16149,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -15503,6 +16177,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15514,6 +16189,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15525,6 +16201,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15536,6 +16213,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15547,6 +16225,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15558,6 +16237,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15569,6 +16249,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15578,7 +16259,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -15606,6 +16287,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15617,6 +16299,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15628,6 +16311,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15639,6 +16323,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15650,6 +16335,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15661,6 +16347,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15672,6 +16359,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15704,6 +16392,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15715,6 +16404,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15726,6 +16416,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15737,6 +16428,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15748,6 +16440,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15759,6 +16452,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15770,6 +16464,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15779,7 +16474,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -15803,6 +16498,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15814,6 +16510,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15825,6 +16522,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15836,6 +16534,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15847,6 +16546,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15858,6 +16558,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15869,6 +16570,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15901,6 +16603,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15912,6 +16615,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15923,6 +16627,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15934,6 +16639,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15945,6 +16651,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15956,6 +16663,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15967,6 +16675,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -15976,7 +16685,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -16002,6 +16711,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16013,6 +16723,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16024,6 +16735,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16035,6 +16747,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16046,6 +16759,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16057,6 +16771,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16068,6 +16783,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16077,7 +16793,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -16103,6 +16819,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16114,6 +16831,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16125,6 +16843,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16136,6 +16855,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16147,6 +16867,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16158,6 +16879,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16169,6 +16891,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16180,7 +16903,7 @@ export interface operations {
                 block: boolean;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -16206,6 +16929,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16217,6 +16941,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16228,6 +16953,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16239,6 +16965,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16250,6 +16977,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16261,6 +16989,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16272,6 +17001,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16302,6 +17032,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16313,6 +17044,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16324,6 +17056,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16335,6 +17068,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16346,6 +17080,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16357,6 +17092,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16368,6 +17104,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16389,7 +17126,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["PersonTokenInfo"];
                 };
             };
             400: {
@@ -16400,6 +17137,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16411,6 +17149,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16422,6 +17161,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16433,6 +17173,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16444,6 +17185,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16455,6 +17197,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16466,6 +17209,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16496,6 +17240,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16507,6 +17252,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16518,6 +17264,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16529,6 +17276,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16540,6 +17288,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16551,6 +17300,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16562,6 +17312,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16570,13 +17321,15 @@ export interface operations {
     NotificationsController_getAllV1: {
         parameters: {
             query?: {
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
                 /** @description Return only notifications that have not been marked as seen. */
                 onlyUnSeen?: boolean;
                 page?: number;
                 pageSize?: number;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -16608,6 +17361,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16619,6 +17373,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16630,6 +17385,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16641,6 +17397,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16652,6 +17409,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16663,6 +17421,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16674,6 +17433,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16683,7 +17443,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -16713,6 +17473,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16724,6 +17485,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16735,6 +17497,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16746,6 +17509,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16757,6 +17521,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16768,6 +17533,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16779,6 +17545,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16788,7 +17555,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -16814,6 +17581,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16825,6 +17593,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16836,6 +17605,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16847,6 +17617,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16858,6 +17629,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16869,6 +17641,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16880,6 +17653,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16913,6 +17687,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16924,6 +17699,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16935,6 +17711,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16946,6 +17723,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16957,6 +17735,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16968,6 +17747,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -16979,6 +17759,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17011,6 +17792,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17022,6 +17804,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17033,6 +17816,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17044,6 +17828,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17055,6 +17840,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17066,6 +17852,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17077,6 +17864,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17109,6 +17897,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17120,6 +17909,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17131,6 +17921,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17142,6 +17933,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17153,6 +17945,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17164,6 +17957,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17175,6 +17969,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17208,6 +18003,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17219,6 +18015,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17230,6 +18027,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17241,6 +18039,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17252,6 +18051,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17263,6 +18063,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17274,6 +18075,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17306,6 +18108,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17317,6 +18120,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17328,6 +18132,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17339,6 +18144,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17350,6 +18156,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17361,6 +18168,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17372,6 +18180,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17407,6 +18216,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17418,6 +18228,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17429,6 +18240,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17440,6 +18252,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17451,6 +18264,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17462,6 +18276,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17473,6 +18288,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17505,6 +18321,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17516,6 +18333,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17527,6 +18345,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17538,6 +18357,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17549,6 +18369,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17560,6 +18381,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17571,6 +18393,115 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    MetadataController_getAlt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                alt: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["Alt"][];
+                        "@context": string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17614,6 +18545,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17625,6 +18557,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17636,6 +18569,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17647,6 +18581,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17658,6 +18593,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17669,6 +18605,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17680,6 +18617,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17721,6 +18659,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17732,6 +18671,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17743,6 +18683,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17754,6 +18695,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17765,6 +18707,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17776,6 +18719,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17787,6 +18731,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17819,6 +18764,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17830,6 +18776,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17841,6 +18788,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17852,6 +18800,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17863,6 +18812,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17874,6 +18824,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17885,6 +18836,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17928,6 +18880,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17939,6 +18892,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17950,6 +18904,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17961,6 +18916,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17972,6 +18928,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17983,6 +18940,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -17994,6 +18952,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18024,6 +18983,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18035,6 +18995,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18046,6 +19007,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18057,6 +19019,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18068,6 +19031,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18079,6 +19043,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18090,6 +19055,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18099,7 +19065,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -18123,6 +19089,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18134,6 +19101,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18145,6 +19113,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18156,6 +19125,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18167,6 +19137,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18178,6 +19149,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18189,6 +19161,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18198,7 +19171,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -18224,6 +19197,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18235,6 +19209,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18246,6 +19221,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18257,6 +19233,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18268,6 +19245,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18279,6 +19257,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18290,6 +19269,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18299,7 +19279,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -18325,6 +19305,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18336,6 +19317,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18347,6 +19329,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18358,6 +19341,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18369,6 +19353,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18380,6 +19365,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18391,6 +19377,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18430,6 +19417,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18441,6 +19429,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18452,6 +19441,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18463,6 +19453,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18474,6 +19465,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18485,6 +19477,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18496,6 +19489,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18532,6 +19526,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18543,6 +19538,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18554,6 +19550,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18565,6 +19562,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18576,6 +19574,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18587,6 +19586,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18598,6 +19598,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18607,7 +19608,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -18635,6 +19636,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18646,6 +19648,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18657,6 +19660,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18668,6 +19672,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18679,6 +19684,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18690,6 +19696,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18701,6 +19708,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18708,13 +19716,9 @@ export interface operations {
     };
     DocumentsController_getBatchJobStatus: {
         parameters: {
-            query?: {
-                validationErrorFormat?: "remote" | "object" | "jsonPointer" | "jsonPath" | "dotNotation";
-                publicityRestrictions?: "MZ.publicityRestrictionsPublic" | "MZ.publicityRestrictionsProtected" | "MZ.publicityRestrictionsPrivate";
-                dataOrigin?: "MY.dataOriginPaperForm" | "MY.dataOriginWebForm" | "MY.dataOriginSpreadsheetFile";
-            };
+            query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -18749,6 +19753,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18760,6 +19765,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18771,6 +19777,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18782,6 +19789,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18793,6 +19801,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18804,6 +19813,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18815,6 +19825,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18823,12 +19834,11 @@ export interface operations {
     DocumentsController_completeBatchJob: {
         parameters: {
             query?: {
-                validationErrorFormat?: "remote" | "object" | "jsonPointer" | "jsonPath" | "dotNotation";
                 publicityRestrictions?: "MZ.publicityRestrictionsPublic" | "MZ.publicityRestrictionsProtected" | "MZ.publicityRestrictionsPrivate";
                 dataOrigin?: "MY.dataOriginPaperForm" | "MY.dataOriginWebForm" | "MY.dataOriginSpreadsheetFile";
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -18854,6 +19864,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18865,6 +19876,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18876,6 +19888,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18887,6 +19900,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18898,6 +19912,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18909,6 +19924,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18920,6 +19936,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18930,14 +19947,12 @@ export interface operations {
             query?: {
                 /** @description Taxon belongs to informal taxon group only: Validate that taxon belongs to informal taxon group(s). Multiple values are separated by a comma (,). */
                 informalTaxonGroup?: string;
-                /** @description Json path of the field being validated (defaults to the whole document). */
+                /** @description JSON pointer to the field being validated (defaults to the whole document). */
                 field?: string;
                 /** @description Name of the validator to run (default all specified in the form). */
                 validator?: "noExistingGatheringsInNamedPlace" | "wbcNamedPlaceExists" | "uniqueNamedPlaceAlternativeIDs" | "namedPlaceNotTooNearOtherPlaces" | "waterbirdPairCount" | "taxonBelongsToInformalTaxonGroup";
                 /** @description Run validators of this type */
                 type?: "error" | "warning";
-                /** @description Format of validation error details */
-                validationErrorFormat?: "remote" | "object" | "jsonPointer" | "jsonPath" | "dotNotation";
             };
             header?: {
                 /** @description Person's authentication token. It is required. */
@@ -18948,13 +19963,20 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Validation raised no errors */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             400: {
                 headers: {
@@ -18964,6 +19986,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18975,6 +19998,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18986,6 +20010,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -18997,6 +20022,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19008,15 +20034,32 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
+            /** @description Validation raised errors */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /** @example {
+                     *       "errorCode": "VALIDATION_EXCEPTION",
+                     *       "details": {
+                     *         "/json/pointer/to/field": [
+                     *           "error message",
+                     *           "another error message"
+                     *         ]
+                     *       }
+                     *     } */
                     "application/json": {
+                        /** @enum {unknown} */
+                        errorCode: "VALIDATION_EXCEPTION";
+                        details: {
+                            [key: string]: string[];
+                        };
+                    } | {
                         errorCode: string;
                         message: string;
                     };
@@ -19030,6 +20073,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19046,7 +20090,7 @@ export interface operations {
                 namedPlace?: string;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -19070,6 +20114,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19081,6 +20126,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19092,6 +20138,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19103,6 +20150,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19114,6 +20162,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19125,6 +20174,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19136,6 +20186,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19169,6 +20220,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19180,6 +20232,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19191,6 +20244,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19202,6 +20256,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19213,6 +20268,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19224,6 +20280,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19235,6 +20292,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19260,7 +20318,7 @@ export interface operations {
                 pageSize?: number;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -19292,6 +20350,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19303,6 +20362,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19314,6 +20374,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19325,6 +20386,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19336,6 +20398,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19347,6 +20410,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19358,6 +20422,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19365,12 +20430,9 @@ export interface operations {
     };
     DocumentsController_create: {
         parameters: {
-            query?: {
-                /** @description Format of validation error details */
-                validationErrorFormat?: "remote" | "object" | "jsonPointer" | "jsonPath" | "dotNotation";
-            };
+            query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -19398,6 +20460,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19409,6 +20472,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19420,6 +20484,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19431,6 +20496,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19442,6 +20508,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19453,6 +20520,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19464,6 +20532,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19473,7 +20542,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -19499,6 +20568,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19510,6 +20580,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19521,6 +20592,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19532,6 +20604,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19543,6 +20616,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19554,6 +20628,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19565,6 +20640,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19575,11 +20651,9 @@ export interface operations {
             query?: {
                 /** @description Skip validations. Only available for the importer token */
                 skipValidations?: boolean;
-                /** @description Format of validation error details */
-                validationErrorFormat?: "remote" | "object" | "jsonPointer" | "jsonPath" | "dotNotation";
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -19609,6 +20683,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19620,6 +20695,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19631,6 +20707,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19642,6 +20719,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19653,6 +20731,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19664,6 +20743,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19675,6 +20755,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19684,7 +20765,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -19710,6 +20791,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19721,6 +20803,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19732,6 +20815,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19743,6 +20827,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19754,6 +20839,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19765,6 +20851,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19776,6 +20863,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19790,7 +20878,7 @@ export interface operations {
                 until?: string;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -19816,6 +20904,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19827,6 +20916,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19838,6 +20928,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19849,6 +20940,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19860,6 +20952,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19871,6 +20964,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19882,6 +20976,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19891,7 +20986,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -19917,6 +21012,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19928,6 +21024,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19939,6 +21036,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19950,6 +21048,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19961,6 +21060,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19972,6 +21072,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -19983,6 +21084,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20006,7 +21108,7 @@ export interface operations {
                 tags?: string;
                 /** @description Collection id. Child collections are also fetched. */
                 collectionID: string;
-                /** @description Include public named places (used only when personToken is given). Defaults to true. */
+                /** @description Include public named places (used only when Person-Token is given). Defaults to true. */
                 includePublic?: boolean;
                 /** @description Include units in prepopulated and accepted documents (only form forms with 'MHL.includeUnits' true). Defaults to false. */
                 includeUnits?: boolean;
@@ -20046,6 +21148,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20057,6 +21160,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20068,6 +21172,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20079,6 +21184,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20090,6 +21196,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20101,6 +21208,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20112,6 +21220,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20121,7 +21230,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -20149,6 +21258,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20160,6 +21270,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20171,6 +21282,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20182,6 +21294,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20193,6 +21306,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20204,6 +21318,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20215,6 +21330,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20222,10 +21338,7 @@ export interface operations {
     };
     NamedPlacesController_get: {
         parameters: {
-            query?: {
-                /** @description Include units in prepopulated and accepted documents (only for forms with 'MHL.includeUnits' true). */
-                includeUnits?: boolean;
-            };
+            query?: never;
             header?: {
                 /** @description Person's authentication token. Necessary for fetching private places */
                 "Person-Token"?: string;
@@ -20253,6 +21366,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20264,6 +21378,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20275,6 +21390,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20286,6 +21402,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20297,6 +21414,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20308,6 +21426,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20319,6 +21438,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20328,7 +21448,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -20358,6 +21478,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20369,6 +21490,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20380,6 +21502,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20391,6 +21514,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20402,6 +21526,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20413,6 +21538,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20424,6 +21550,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20433,7 +21560,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -20459,6 +21586,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20470,6 +21598,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20481,6 +21610,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20492,6 +21622,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20503,6 +21634,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20514,6 +21646,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20525,6 +21658,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20534,32 +21668,30 @@ export interface operations {
         parameters: {
             query: {
                 query: string;
-                /** @description Limit the size of results */
+                /** @description Limit the number of results */
                 limit?: number;
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on taxon set(s). Multiple values are separated by a comma (,) */
-                taxonSet?: string;
-                /** @description Search taxa from specified informal taxon group(s). Multiple values are separated by a comma (,) */
-                informalTaxonGroup?: string;
+                taxonSets?: string;
+                /** @description Search taxa from specified informal taxon group(s). Multiple values are separated by a comma (,). An exclamation mark in the beginning of a matches exclusively. */
+                informalTaxonGroups?: string;
                 /** @description Include hidden taxa in the response */
                 includeHidden?: boolean;
-                /** @description Matching names have a type (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,) */
-                includeNameTypes?: string;
-                /** @description Filter based on language of the matching name. Multiple values are separated by a comma (,) */
-                includeLanguages?: string;
-                /** @description Exclude taxa from specified informal taxon group(s). Multiple values are separated by a comma (,) */
-                excludedInformalTaxonGroup?: string;
+                /** @description Filter by type of the matching name (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,). An exclamation mark in the beginning of a matches exclusively. */
+                nameTypes?: string;
+                /** @description Filters by the language of the matching name. Multiple values can be specified, separated by commas (,). This applies only to name types that are available in multiple languages (e.g., MX.vernacularName) and does not apply to scientific names. */
+                languages?: string;
                 /** @description Default: All match types; exact = exact matches, partial = partially matching, likely = fuzzy matching. Multiple values are separated by a comma (,) */
                 matchType?: string;
-                /** @description Matching names have a type (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,) */
-                excludeNameTypes?: string;
-                /** @description Filter to include only species (and subspecies) */
-                onlySpecies?: boolean;
-                /** @description Filter to include only Finnish taxa */
-                onlyFinnish?: boolean;
+                /** @description true: Will include only "lower taxa" (species, subspecies, aggregates, ...)
+                 *     false: Will only include "higher taxa" (genus and above) */
+                species?: boolean;
+                /** @description true: Will include only finnish taxa.
+                 *     false: Will exclude finnish taxa. */
+                finnish?: boolean;
                 /** @description Filter to include only invasive species */
-                onlyInvasive?: boolean;
+                invasiveSpecies?: boolean;
                 /** @description Multiple values are separated by a comma (,) */
                 selectedFields?: string;
             };
@@ -20588,6 +21720,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20599,6 +21732,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20610,6 +21744,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20621,6 +21756,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20632,6 +21768,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20643,6 +21780,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20654,6 +21792,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20662,7 +21801,7 @@ export interface operations {
     TaxaController_getPage: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -20727,6 +21866,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20738,6 +21878,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20749,6 +21890,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20760,6 +21902,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20771,6 +21914,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20782,6 +21926,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20793,6 +21938,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -20801,7 +21947,7 @@ export interface operations {
     TaxaController_getPageWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
                 selectedFields?: string;
@@ -20851,7 +21997,6 @@ export interface operations {
          *       "informalTaxonGroups": "MVL.1",                // Matches taxa with informalTaxonGoup MVL.1
          *       "multimedia.author": "somebody",               // Matches taxa with any multimedia item having author "somebody"
          *       "taxonRank": ["MX.genus", "MX.subGenus"]       // Matches taxa that are of rank genus or sub-genus
-         *       "scientificName": "!MX.genus", "MX.subGenus"]  // Matches taxa that are of rank genus or sub-genus
          *       "secureLevel": "!MX.secureLevelNoShow"         // Matches everything but taxa with MX.secureLevelNoShow
          *     }
          *     ```
@@ -21037,43 +22182,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -21401,6 +22522,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21412,6 +22534,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21423,6 +22546,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21434,6 +22558,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21445,6 +22570,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21456,6 +22582,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21467,6 +22594,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21475,7 +22603,7 @@ export interface operations {
     TaxaController_getAggregate: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -21525,6 +22653,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21536,6 +22665,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21547,6 +22677,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21558,6 +22689,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21569,6 +22701,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21580,6 +22713,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21591,6 +22725,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -21599,7 +22734,7 @@ export interface operations {
     TaxaController_getAggregateWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Aggregate by these fields. Multiple values are separated by a comma (,). Different aggregations can be made at the
                  *     same time using semicolon as separator (;) and aggregates can be named giving "=name" at the end of each
@@ -21642,7 +22777,6 @@ export interface operations {
          *       "informalTaxonGroups": "MVL.1",                // Matches taxa with informalTaxonGoup MVL.1
          *       "multimedia.author": "somebody",               // Matches taxa with any multimedia item having author "somebody"
          *       "taxonRank": ["MX.genus", "MX.subGenus"]       // Matches taxa that are of rank genus or sub-genus
-         *       "scientificName": "!MX.genus", "MX.subGenus"]  // Matches taxa that are of rank genus or sub-genus
          *       "secureLevel": "!MX.secureLevelNoShow"         // Matches everything but taxa with MX.secureLevelNoShow
          *     }
          *     ```
@@ -21828,43 +22962,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -22184,6 +23294,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22195,6 +23306,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22206,6 +23318,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22217,6 +23330,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22228,6 +23342,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22239,6 +23354,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22250,6 +23366,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22258,7 +23375,7 @@ export interface operations {
     TaxaController_getSpeciesPage: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -22323,6 +23440,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22334,6 +23452,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22345,6 +23464,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22356,6 +23476,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22367,6 +23488,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22378,6 +23500,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22389,6 +23512,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -22397,7 +23521,7 @@ export interface operations {
     TaxaController_getSpeciesPageWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
                 selectedFields?: string;
@@ -22447,7 +23571,6 @@ export interface operations {
          *       "informalTaxonGroups": "MVL.1",                // Matches taxa with informalTaxonGoup MVL.1
          *       "multimedia.author": "somebody",               // Matches taxa with any multimedia item having author "somebody"
          *       "taxonRank": ["MX.genus", "MX.subGenus"]       // Matches taxa that are of rank genus or sub-genus
-         *       "scientificName": "!MX.genus", "MX.subGenus"]  // Matches taxa that are of rank genus or sub-genus
          *       "secureLevel": "!MX.secureLevelNoShow"         // Matches everything but taxa with MX.secureLevelNoShow
          *     }
          *     ```
@@ -22633,43 +23756,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -22997,6 +24096,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23008,6 +24108,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23019,6 +24120,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23030,6 +24132,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23041,6 +24144,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23052,6 +24156,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23063,6 +24168,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23071,7 +24177,7 @@ export interface operations {
     TaxaController_getSpeciesAggregate: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -23121,6 +24227,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23132,6 +24239,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23143,6 +24251,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23154,6 +24263,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23165,6 +24275,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23176,6 +24287,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23187,6 +24299,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23195,7 +24308,7 @@ export interface operations {
     TaxaController_getSpeciesAggregateWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -23408,43 +24521,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -23764,6 +24853,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23775,6 +24865,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23786,6 +24877,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23797,6 +24889,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23808,6 +24901,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23819,6 +24913,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -23830,6 +24925,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24039,6 +25135,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24050,6 +25147,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24061,6 +25159,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24072,6 +25171,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24083,6 +25183,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24094,6 +25195,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24105,6 +25207,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24113,7 +25216,7 @@ export interface operations {
     TaxaController_getTaxonChildren: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -24173,6 +25276,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24184,6 +25288,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24195,6 +25300,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24206,6 +25312,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24217,6 +25324,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24228,6 +25336,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24239,6 +25348,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24247,7 +25357,7 @@ export interface operations {
     TaxaController_getTaxonChildrenWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -24311,6 +25421,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24322,6 +25433,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24333,6 +25445,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24344,6 +25457,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24355,6 +25469,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24366,6 +25481,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24377,6 +25493,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24385,7 +25502,7 @@ export interface operations {
     TaxaController_getTaxonParents: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -24445,6 +25562,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24456,6 +25574,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24467,6 +25586,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24478,6 +25598,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24489,6 +25610,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24500,6 +25622,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24511,6 +25634,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -24519,7 +25643,7 @@ export interface operations {
     TaxaController_getTaxonParentsWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -24739,43 +25863,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -25143,6 +26243,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25154,6 +26255,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25165,6 +26267,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25176,6 +26279,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25187,6 +26291,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25198,6 +26303,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25209,6 +26315,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25217,7 +26324,7 @@ export interface operations {
     TaxaController_getTaxonSpeciesPage: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -25284,6 +26391,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25295,6 +26403,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25306,6 +26415,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25317,6 +26427,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25328,6 +26439,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25339,6 +26451,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25350,6 +26463,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -25358,7 +26472,7 @@ export interface operations {
     TaxaController_getTaxonSpeciesPageWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -25420,7 +26534,6 @@ export interface operations {
          *       "informalTaxonGroups": "MVL.1",                // Matches taxa with informalTaxonGoup MVL.1
          *       "multimedia.author": "somebody",               // Matches taxa with any multimedia item having author "somebody"
          *       "taxonRank": ["MX.genus", "MX.subGenus"]       // Matches taxa that are of rank genus or sub-genus
-         *       "scientificName": "!MX.genus", "MX.subGenus"]  // Matches taxa that are of rank genus or sub-genus
          *       "secureLevel": "!MX.secureLevelNoShow"         // Matches everything but taxa with MX.secureLevelNoShow
          *     }
          *     ```
@@ -25606,43 +26719,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -26015,6 +27104,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26026,6 +27116,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26037,6 +27128,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26048,6 +27140,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26059,6 +27152,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26070,6 +27164,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26081,6 +27176,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26089,7 +27185,7 @@ export interface operations {
     TaxaController_getTaxonSpeciesAggregate: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -26141,6 +27237,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26152,6 +27249,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26163,6 +27261,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26174,6 +27273,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26185,6 +27285,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26196,6 +27297,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26207,6 +27309,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26215,7 +27318,7 @@ export interface operations {
     TaxaController_getTaxonSpeciesAggregateWithFilters: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
@@ -26430,43 +27533,19 @@ export interface operations {
                     taxonExpert?: string | string[];
                     taxonEditor?: string | string[];
                     invasiveSpeciesEstablishment?: string | string[];
-                    "multimedia.author"?: string | string[];
+                    "multimedia.intellectualRights"?: ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0") | ("MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0")[];
                     "multimedia.caption"?: string | string[];
                     "multimedia.captureDateTime"?: string | string[];
-                    "multimedia.copyrightOwner"?: string | string[];
+                    "multimedia.capturerVerbatim"?: string | string[];
                     "multimedia.fullURL"?: string | string[];
                     "multimedia.id"?: string | string[];
-                    "multimedia.keywords"?: string | string[];
+                    "multimedia.intellectualOwner"?: string | string[];
+                    "multimedia.keyword"?: string | string[];
                     "multimedia.largeURL"?: string | string[];
-                    "multimedia.licenseAbbreviation"?: string | string[];
-                    "multimedia.licenseFullname.fi"?: string | string[];
-                    "multimedia.licenseFullname.sv"?: string | string[];
-                    "multimedia.licenseFullname.en"?: string | string[];
-                    "multimedia.licenseId"?: string | string[];
-                    "multimedia.lifeStage"?: string | string[];
-                    "multimedia.plantLifeStage"?: string | string[];
-                    "multimedia.sex"?: string | string[];
-                    "multimedia.side"?: string | string[];
-                    "multimedia.source"?: string | string[];
+                    "multimedia.originalURL"?: string | string[];
                     "multimedia.squareThumbnailURL"?: string | string[];
-                    "multimedia.taxon.id"?: string | string[];
-                    "multimedia.taxon.scientificName"?: string | string[];
-                    "multimedia.taxon.scientificNameAuthorship"?: string | string[];
-                    "multimedia.taxon.vernacularName.fi"?: string | string[];
-                    "multimedia.taxon.vernacularName.sv"?: string | string[];
-                    "multimedia.taxon.vernacularName.en"?: string | string[];
-                    "multimedia.taxon.taxonRank"?: string | string[];
-                    "multimedia.taxon.cursiveName"?: boolean;
-                    "multimedia.taxon.notes"?: string | string[];
-                    "multimedia.taxon.bold.bins"?: string | string[];
-                    "multimedia.taxon.hasBold"?: boolean;
-                    "multimedia.taxonDescriptionCaption.fi"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.sv"?: string | string[];
-                    "multimedia.taxonDescriptionCaption.en"?: string | string[];
                     "multimedia.thumbnailURL"?: string | string[];
-                    "multimedia.type"?: string | string[];
-                    "multimedia.uploadDateTime"?: string | string[];
-                    "multimedia.primaryForTaxon"?: boolean;
+                    "multimedia.uploadedBy"?: string | string[];
                     "descriptions.id"?: string | string[];
                     "descriptions.title.fi"?: string | string[];
                     "descriptions.title.sv"?: string | string[];
@@ -26831,6 +27910,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26842,6 +27922,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26853,6 +27934,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26864,6 +27946,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26875,6 +27958,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26886,6 +27970,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26897,6 +27982,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26905,7 +27991,7 @@ export interface operations {
     TaxaController_getTaxonDescriptions: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
@@ -26937,6 +28023,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26948,6 +28035,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26959,6 +28047,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26970,6 +28059,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26981,6 +28071,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -26992,6 +28083,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27003,6 +28095,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27011,7 +28104,7 @@ export interface operations {
     TaxaController_getTaxonMedia: {
         parameters: {
             query?: {
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
@@ -27043,6 +28136,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27054,6 +28148,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27065,6 +28160,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27076,6 +28172,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27087,6 +28184,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27098,6 +28196,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27109,6 +28208,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27141,6 +28241,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27152,6 +28253,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27163,6 +28265,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27174,6 +28277,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27185,6 +28289,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27196,6 +28301,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27207,6 +28313,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27217,7 +28324,6 @@ export interface operations {
             query?: {
                 /** @description Include only items with the given ids. Multiple values are separated by a comma (,). */
                 idIn?: string;
-                type?: components["schemas"]["Object"];
                 /** @description Area type */
                 areaType?: "ML.country" | "ML.biogeographicalProvince" | "ML.municipality" | "ML.oldMunicipality" | "ML.birdAssociationArea" | "ML.iucnEvaluationArea";
                 page?: number;
@@ -27253,6 +28359,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27264,6 +28371,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27275,6 +28383,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27286,6 +28395,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27297,6 +28407,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27308,6 +28419,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27319,6 +28431,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27326,9 +28439,9 @@ export interface operations {
     };
     ApiUsersController_getInfo: {
         parameters: {
-            query?: {
-                /** @description access token which to return information from */
-                accessToken?: string;
+            query: {
+                /** @description Access token whose metadata is being queried (i.e. a token issued to another system or user, not the caller’s own authorization token). */
+                accessToken: string;
             };
             header?: never;
             path?: never;
@@ -27352,6 +28465,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27363,6 +28477,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27374,6 +28489,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27385,6 +28501,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27396,6 +28513,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27407,6 +28525,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27418,6 +28537,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27450,6 +28570,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27461,6 +28582,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27472,6 +28594,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27483,6 +28606,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27494,6 +28618,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27505,6 +28630,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27516,25 +28642,31 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
         };
     };
-    ApiUsersController_renew: {
+    ApiUsersController_update: {
         parameters: {
             query?: never;
-            header?: never;
-            path?: never;
+            header?: {
+                /** @description Person's authentication token. It is required. */
+                "Person-Token"?: string;
+            };
+            path: {
+                email: string;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ApiUserCreateDto"];
+                "application/json": components["schemas"]["ApiUserUpdateDto"];
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -27548,6 +28680,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27559,6 +28692,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27570,6 +28704,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27581,6 +28716,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27592,6 +28728,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27603,6 +28740,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27614,6 +28752,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27623,13 +28762,23 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Audio file
+                     */
+                    file: string;
+                };
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -27647,6 +28796,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27658,6 +28808,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27669,6 +28820,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27680,6 +28832,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27691,6 +28844,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27702,6 +28856,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27713,6 +28868,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27722,7 +28878,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -27748,6 +28904,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27759,6 +28916,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27770,6 +28928,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27781,6 +28940,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27792,6 +28952,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27803,6 +28964,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27814,6 +28976,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27823,7 +28986,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -27853,6 +29016,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27864,6 +29028,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27875,6 +29040,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27886,6 +29052,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27897,6 +29064,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27908,6 +29076,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27919,6 +29088,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27928,7 +29098,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -27952,6 +29122,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27963,6 +29134,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27974,6 +29146,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27985,6 +29158,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -27996,6 +29170,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28007,6 +29182,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28018,6 +29194,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28027,7 +29204,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28051,6 +29228,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28062,6 +29240,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28073,6 +29252,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28084,6 +29264,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28095,6 +29276,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28106,6 +29288,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28117,6 +29300,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28126,7 +29310,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28150,6 +29334,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28161,6 +29346,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28172,6 +29358,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28183,6 +29370,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28194,6 +29382,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28205,6 +29394,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28216,6 +29406,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28225,7 +29416,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28249,6 +29440,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28260,6 +29452,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28271,6 +29464,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28282,6 +29476,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28293,6 +29488,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28304,6 +29500,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28315,6 +29512,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28324,7 +29522,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -28354,6 +29552,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28365,6 +29564,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28376,6 +29576,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28387,6 +29588,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28398,6 +29600,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28409,6 +29612,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28420,6 +29624,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28429,13 +29634,23 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Audio file
+                     */
+                    file: string;
+                };
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -28453,6 +29668,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28464,6 +29680,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28475,6 +29692,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28486,6 +29704,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28497,6 +29716,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28508,6 +29728,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28519,6 +29740,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28528,7 +29750,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28554,6 +29776,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28565,6 +29788,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28576,6 +29800,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28587,6 +29812,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28598,6 +29824,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28609,6 +29836,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28620,6 +29848,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28629,7 +29858,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -28659,6 +29888,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28670,6 +29900,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28681,6 +29912,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28692,6 +29924,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28703,6 +29936,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28714,6 +29948,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28725,6 +29960,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28734,7 +29970,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -28758,6 +29994,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28769,6 +30006,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28780,6 +30018,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28791,6 +30030,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28802,6 +30042,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28813,6 +30054,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28824,6 +30066,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28833,7 +30076,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28857,6 +30100,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28868,6 +30112,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28879,6 +30124,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28890,6 +30136,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28901,6 +30148,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28912,6 +30160,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28923,6 +30172,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28932,7 +30182,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -28956,6 +30206,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28967,6 +30218,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28978,6 +30230,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -28989,6 +30242,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29000,6 +30254,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29011,6 +30266,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29022,6 +30278,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29031,7 +30288,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -29055,6 +30312,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29066,6 +30324,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29077,6 +30336,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29088,6 +30348,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29099,6 +30360,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29110,6 +30372,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29121,6 +30384,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29130,7 +30394,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path: {
@@ -29154,6 +30418,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29165,6 +30430,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29176,6 +30442,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29187,6 +30454,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29198,6 +30466,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29209,6 +30478,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29220,6 +30490,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29229,7 +30500,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -29259,6 +30530,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29270,6 +30542,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29281,6 +30554,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29292,6 +30566,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29303,6 +30578,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29314,6 +30590,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29325,6 +30602,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29358,6 +30636,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29369,6 +30648,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29380,6 +30660,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29391,6 +30672,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29402,6 +30684,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29413,6 +30696,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29424,6 +30708,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29438,7 +30723,7 @@ export interface operations {
                 pageSize?: number;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -29470,6 +30755,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29481,6 +30767,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29492,6 +30779,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29503,6 +30791,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29514,6 +30803,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29525,6 +30815,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29536,6 +30827,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29545,7 +30837,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -29573,6 +30865,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29584,6 +30877,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29595,6 +30889,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29606,6 +30901,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29617,6 +30913,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29628,6 +30925,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29639,6 +30937,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29648,7 +30947,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path: {
@@ -29674,6 +30973,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29685,6 +30985,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29696,6 +30997,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29707,6 +31009,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29718,6 +31021,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29729,6 +31033,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29740,6 +31045,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29747,9 +31053,7 @@ export interface operations {
     };
     InformationController_getIndex: {
         parameters: {
-            query?: {
-                lang?: "fi" | "sv" | "en";
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -29772,6 +31076,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29783,6 +31088,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29794,6 +31100,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29805,6 +31112,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29816,6 +31124,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29827,6 +31136,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29838,6 +31148,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29870,6 +31181,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29881,6 +31193,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29892,6 +31205,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29903,6 +31217,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29914,6 +31229,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29925,6 +31241,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29936,6 +31253,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29943,9 +31261,7 @@ export interface operations {
     };
     InformationController_getAll: {
         parameters: {
-            query?: {
-                lang?: "fi" | "sv" | "en";
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -29968,6 +31284,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29979,6 +31296,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -29990,6 +31308,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30001,6 +31320,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30012,6 +31332,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30023,6 +31344,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30034,6 +31356,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30066,6 +31389,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30077,6 +31401,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30088,6 +31413,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30099,6 +31425,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30110,6 +31437,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30121,6 +31449,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30132,6 +31461,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30175,6 +31505,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30186,6 +31517,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30197,6 +31529,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30208,6 +31541,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30219,6 +31553,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30230,6 +31565,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30241,6 +31577,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30262,7 +31599,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["checklist"];
+                    "application/json": components["schemas"]["checklistVersion"];
                 };
             };
             400: {
@@ -30273,6 +31610,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30284,6 +31622,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30295,6 +31634,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30306,6 +31646,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30317,6 +31658,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30328,6 +31670,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30339,6 +31682,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30370,7 +31714,7 @@ export interface operations {
                         lastPage: number;
                         prevPage?: number;
                         nextPage?: number;
-                        results: components["schemas"]["checklist"][];
+                        results: components["schemas"]["checklistVersion"][];
                     };
                 };
             };
@@ -30382,6 +31726,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30393,6 +31738,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30404,6 +31750,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30415,6 +31762,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30426,6 +31774,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30437,6 +31786,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30448,6 +31798,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30491,6 +31842,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30502,6 +31854,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30513,6 +31866,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30524,6 +31878,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30535,6 +31890,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30546,6 +31902,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30557,6 +31914,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30589,6 +31947,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30600,6 +31959,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30611,6 +31971,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30622,6 +31983,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30633,6 +31995,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30644,6 +32007,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30655,6 +32019,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30698,6 +32063,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30709,6 +32075,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30720,6 +32087,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30731,6 +32099,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30742,6 +32111,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30753,6 +32123,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30764,6 +32135,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30797,6 +32169,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30808,6 +32181,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30819,6 +32193,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30830,6 +32205,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30841,6 +32217,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30852,6 +32229,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30863,6 +32241,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30896,6 +32275,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30907,6 +32287,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30918,6 +32299,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30929,6 +32311,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30940,6 +32323,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30951,6 +32335,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30962,6 +32347,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -30994,6 +32380,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31005,6 +32392,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31016,6 +32404,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31027,6 +32416,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31038,6 +32428,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31049,6 +32440,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31060,6 +32452,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31095,6 +32488,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31106,6 +32500,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31117,6 +32512,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31128,6 +32524,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31139,6 +32536,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31150,6 +32548,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31161,6 +32560,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31193,6 +32593,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31204,6 +32605,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31215,6 +32617,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31226,6 +32629,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31237,6 +32641,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31248,6 +32653,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31259,6 +32665,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31294,6 +32701,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31305,6 +32713,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31316,6 +32725,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31327,6 +32737,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31338,6 +32749,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31349,6 +32761,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31360,6 +32773,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31388,6 +32802,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31399,6 +32814,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31410,6 +32826,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31421,6 +32838,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31432,6 +32850,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31443,6 +32862,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31454,6 +32874,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31492,6 +32913,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31503,6 +32925,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31514,6 +32937,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31525,6 +32949,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31536,6 +32961,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31547,6 +32973,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31558,6 +32985,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31572,7 +33000,7 @@ export interface operations {
                 limit?: number;
             };
             header?: {
-                /** @description Person's authentication token */
+                /** @description Person's authentication token. It is required. */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -31599,6 +33027,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31610,6 +33039,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31621,6 +33051,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31632,6 +33063,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31643,6 +33075,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31654,6 +33087,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31665,6 +33099,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31674,32 +33109,30 @@ export interface operations {
         parameters: {
             query: {
                 query: string;
-                /** @description Limit the size of results */
+                /** @description Limit the number of results */
                 limit?: number;
-                /** @description Search taxon from specified checklist (defaults to FinBIF master checklist) */
+                /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
                 /** @description Filter based on taxon set(s). Multiple values are separated by a comma (,) */
-                taxonSet?: string;
-                /** @description Search taxa from specified informal taxon group(s). Multiple values are separated by a comma (,) */
-                informalTaxonGroup?: string;
+                taxonSets?: string;
+                /** @description Search taxa from specified informal taxon group(s). Multiple values are separated by a comma (,). An exclamation mark in the beginning of a matches exclusively. */
+                informalTaxonGroups?: string;
                 /** @description Include hidden taxa in the response */
                 includeHidden?: boolean;
-                /** @description Matching names have a type (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,) */
-                includeNameTypes?: string;
-                /** @description Filter based on language of the matching name. Multiple values are separated by a comma (,) */
-                includeLanguages?: string;
-                /** @description Exclude taxa from specified informal taxon group(s). Multiple values are separated by a comma (,) */
-                excludedInformalTaxonGroup?: string;
+                /** @description Filter by type of the matching name (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,). An exclamation mark in the beginning of a matches exclusively. */
+                nameTypes?: string;
+                /** @description Filters by the language of the matching name. Multiple values can be specified, separated by commas (,). This applies only to name types that are available in multiple languages (e.g., MX.vernacularName) and does not apply to scientific names. */
+                languages?: string;
                 /** @description Default: All match types; exact = exact matches, partial = partially matching, likely = fuzzy matching. Multiple values are separated by a comma (,) */
                 matchType?: string;
-                /** @description Matching names have a type (e.g., MX.vernacularName, MX.hasMisappliedName). Multiple values are separated by a comma (,) */
-                excludeNameTypes?: string;
-                /** @description Filter to include only species (and subspecies) */
-                onlySpecies?: boolean;
-                /** @description Filter to include only Finnish taxa */
-                onlyFinnish?: boolean;
+                /** @description true: Will include only "lower taxa" (species, subspecies, aggregates, ...)
+                 *     false: Will only include "higher taxa" (genus and above) */
+                species?: boolean;
+                /** @description true: Will include only finnish taxa.
+                 *     false: Will exclude finnish taxa. */
+                finnish?: boolean;
                 /** @description Filter to include only invasive species */
-                onlyInvasive?: boolean;
+                invasiveSpecies?: boolean;
                 /** @description Multiple values are separated by a comma (,) */
                 selectedFields?: string;
             };
@@ -31728,6 +33161,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31739,6 +33173,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31750,6 +33185,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31761,6 +33197,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31772,6 +33209,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31783,6 +33221,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31794,6 +33233,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31829,6 +33269,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31840,6 +33281,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31851,6 +33293,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31862,6 +33305,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31873,6 +33317,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31884,6 +33329,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31895,6 +33341,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31928,6 +33375,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31939,6 +33387,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31950,6 +33399,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31961,6 +33411,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31972,6 +33423,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31983,6 +33435,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -31994,6 +33447,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32027,6 +33481,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32038,6 +33493,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32049,6 +33505,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32060,6 +33517,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32071,6 +33529,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32082,6 +33541,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32093,6 +33553,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32127,6 +33588,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32138,6 +33600,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32149,6 +33612,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32160,6 +33624,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32171,6 +33636,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32182,6 +33648,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32193,6 +33660,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32230,6 +33698,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32241,6 +33710,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32252,6 +33722,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32263,6 +33734,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32274,6 +33746,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32285,6 +33758,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32296,6 +33770,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32305,7 +33780,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Person's authentication token. It is required. */
+                /** @description Person's authentication token */
                 "Person-Token"?: string;
             };
             path?: never;
@@ -32317,118 +33792,11 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Feedback succesfully sent */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-        };
-    };
-    GeoConvertController_get: {
-        parameters: {
-            query: {
-                /** @description The output file format (in the form of a file extension) for the geographic data */
-                lang: "fi" | "en" | "tech";
-                /** @description The geometry type of the output */
-                geometryType: "point" | "bbox" | "footprint";
-                /** @description The coordinate reference system for the output. One of "kkj", "euref", "wgs84" or any valid numeric EPSG code */
-                crs: string;
-            };
-            header?: {
-                /** @description For use with restricted data downloads */
-                "Person-Token"?: string;
-            };
-            path: {
-                fileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content?: never;
             };
             400: {
@@ -32439,6 +33807,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32450,6 +33819,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32461,6 +33831,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32472,6 +33843,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32483,6 +33855,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32494,6 +33867,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32505,301 +33879,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
-                    };
-                };
-            };
-        };
-    };
-    GeoConvertController_post: {
-        parameters: {
-            query: {
-                /** @description The output file format (in the form of a file extension) for the geographic data */
-                lang: "fi" | "en" | "tech";
-                /** @description The geometry type of the output */
-                geometryType: "point" | "bbox" | "footprint";
-                /** @description The coordinate reference system for the output. One of "kkj", "euref", "wgs84" or any valid numeric EPSG code */
-                crs: string;
-            };
-            header?: never;
-            path: {
-                fileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-        };
-    };
-    GeoConvertController_status: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                conversionId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-        };
-    };
-    GeoConvertController_output: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                conversionId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32832,6 +33912,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32843,6 +33924,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32854,6 +33936,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32865,6 +33948,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32876,6 +33960,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32887,6 +33972,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32898,6 +33984,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32915,7 +34002,9 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": Record<string, never>;
+                "application/json": {
+                    [key: string]: unknown;
+                };
             };
         };
         responses: {
@@ -32933,6 +34022,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32944,6 +34034,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32955,6 +34046,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32966,6 +34058,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32977,6 +34070,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32988,6 +34082,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -32999,6 +34094,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33029,6 +34125,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33040,6 +34137,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33051,6 +34149,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33062,6 +34161,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33073,6 +34173,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33084,6 +34185,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33095,6 +34197,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33127,6 +34230,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33138,6 +34242,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33149,6 +34254,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33160,6 +34266,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33171,6 +34278,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33182,6 +34290,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33193,6 +34302,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33236,6 +34346,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33247,6 +34358,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33258,6 +34370,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33269,6 +34382,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33280,6 +34394,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33291,6 +34406,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33302,6 +34418,335 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getPage: {
+        parameters: {
+            query?: {
+                /** @description Comma separated ids */
+                idIn?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        currentPage: number;
+                        pageSize: number;
+                        total: number;
+                        lastPage: number;
+                        prevPage?: number;
+                        nextPage?: number;
+                        results: components["schemas"]["iucnRedListTaxonGroup"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["iucnRedListTaxonGroup"][];
+                        "@context": string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getRoots: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["iucnRedListTaxonGroup"][];
+                        "@context": string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33334,6 +34779,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33345,6 +34791,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33356,6 +34803,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33367,6 +34815,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33378,6 +34827,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33389,6 +34839,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33400,6 +34851,328 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getChildren: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["iucnRedListTaxonGroup"][];
+                        "@context": string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getParent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["iucnRedListTaxonGroup"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    RedListEvaluationGroupsController_getSiblings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["iucnRedListTaxonGroup"][];
+                        "@context": string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33421,7 +35194,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["GetTmpTokenDto"];
                 };
             };
             400: {
@@ -33432,6 +35205,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33443,6 +35217,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33454,6 +35229,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33465,6 +35241,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33476,6 +35253,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33487,6 +35265,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33498,6 +35277,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33519,7 +35299,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["CheckTmpTokenDto"];
                 };
             };
             400: {
@@ -33530,6 +35310,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33541,6 +35322,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33552,6 +35334,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33563,6 +35346,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33574,6 +35358,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33585,6 +35370,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33596,6 +35382,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33628,6 +35415,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33639,6 +35427,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33650,6 +35439,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33661,6 +35451,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33672,6 +35463,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33683,6 +35475,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33694,6 +35487,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33718,7 +35512,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["NewsPagedDto"];
                 };
             };
             400: {
@@ -33729,6 +35523,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33740,6 +35535,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33751,6 +35547,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33762,6 +35559,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33773,6 +35571,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33784,6 +35583,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33795,6 +35595,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33816,7 +35617,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["NewsDto"];
                 };
             };
             400: {
@@ -33827,6 +35628,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33838,6 +35640,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33849,6 +35652,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33860,6 +35664,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33871,6 +35676,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33882,6 +35688,7 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
                 };
             };
@@ -33893,7 +35700,322 @@ export interface operations {
                     "application/json": {
                         errorCode: string;
                         message: string;
+                        localized: boolean;
                     };
+                };
+            };
+        };
+    };
+    convert_gis_to_table_convert_to_table_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_convert_gis_to_table_convert_to_table_post"];
+            };
+        };
+        responses: {
+            /** @description CSV file with converted data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Unsupported file type */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHTTPValidationError"];
+                };
+            };
+            /** @description Conversion failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+        };
+    };
+    convert_with_file__post: {
+        parameters: {
+            query: {
+                /** @description Language for field names (fi=Finnish, en=English, tech=technical) */
+                lang?: "fi" | "en" | "tech";
+                /** @description Geometry type to use */
+                geometryType: "bbox" | "point" | "footprint";
+                /** @description Coordinate reference system */
+                crs: "euref" | "wgs84";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_convert_with_file__post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertStatusResponse"];
+                };
+            };
+            /** @description Invalid file or parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHTTPValidationError"];
+                };
+            };
+            /** @description Conversion failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+        };
+    };
+    get_status_status__id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Conversion ID to check */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertStatusResponse"];
+                };
+            };
+            /** @description Conversion ID not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHTTPValidationError"];
+                };
+            };
+            /** @description Conversion failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+        };
+    };
+    health_check_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHealthResponse"];
+                };
+            };
+        };
+    };
+    get_output_output__id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Authentication token for private data */
+                "Person-Token"?: string | null;
+            };
+            path: {
+                /** @description Conversion ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Output file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                    "application/zip": unknown;
+                };
+            };
+            /** @description Conversion not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Permission denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Conversion ID or output file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHTTPValidationError"];
+                };
+            };
+        };
+    };
+    convert_with_id__id__get: {
+        parameters: {
+            query: {
+                /** @description Language for field names (fi=Finnish, en=English, tech=technical) */
+                lang?: "fi" | "en" | "tech";
+                /** @description Geometry type to use */
+                geometryType: "bbox" | "point" | "footprint";
+                /** @description Coordinate reference system */
+                crs: "euref" | "wgs84";
+            };
+            header?: {
+                /** @description Authentication token for private data */
+                "Person-Token"?: string | null;
+            };
+            path: {
+                /** @description ID of the file in the data warehouse */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Conversion started successfully. Returns the conversion ID string. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                    /** @example dataset123_tech_point_wgs84 */
+                    "text/plain": unknown;
+                };
+            };
+            /** @description Permission denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description File not found in data warehouse */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertHTTPValidationError"];
+                };
+            };
+            /** @description Conversion failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoConvertErrorResponse"];
                 };
             };
         };

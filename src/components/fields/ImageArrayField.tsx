@@ -360,7 +360,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			if (typeof metadataModalOpen === "number" && !this.state.metadataForm) {
 				const {metadataFormId = this.METADATA_FORM_ID} = getUiOptions(this.props.uiSchema);
-				this.apiClient.get("/forms/{id}", { path: { id: metadataFormId }, query: {lang, format: "schema"} })
+				this.apiClient.get("/forms/{id}", { path: { id: metadataFormId }, query: { format: "schema" } })
 					.then(metadataForm => {
 						if (this.mounted) {
 							this.setState({metadataForm});
