@@ -78,8 +78,10 @@ body .laji-form {
 	margin-bottom: 0px;
 }
 .laji-form .autosuggest-wrapper .rw-list-option img {
-	border: 1px solid;
 	float: right;
+}
+.laji-form .autosuggest-wrapper .rw-list-option img.flag-img {
+	border: 1px solid;
 	margin-top: 4px;
 }
 
