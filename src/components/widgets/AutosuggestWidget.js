@@ -544,10 +544,11 @@ export class Autosuggest extends React.Component {
 			});
 		} else if (valueContextChanged) {
 			this.setState({isLoading: true});
-			if (this.timeout) {
-				clearTimeout(this.timeout);
+			if (this.triggerConvertTimeout) {
+				clearTimeout(this.triggerConvertTimeout);
 			}
-			this.timeout = this.props.formContext.setTimeout(() => {
+			// debounce trigger convert function so that it's not called too frequently
+			this.triggerConvertTimeout = this.props.formContext.setTimeout(() => {
 				if (!this.mounted) return;
 				this.triggerConvert(this.props);
 			}, 100);
