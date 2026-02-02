@@ -6,10 +6,16 @@ import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent,
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
 import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
+import { deepEquals } from  "@rjsf/utils";
 
-function renderFlag(suggestion, prepend) {
-	return (suggestion || {}).finnish
-		? <React.Fragment>{prepend || null}<img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16"/></React.Fragment>
+export function renderTaxonIcons(suggestion, prepend) {
+	const { finnish, checklist } = suggestion || {};
+
+	const flagIcon = finnish ? <img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16" className="flag-img"/> : null;
+	const gbifIcon = checklist === "MR.2" ? <img src="https://cdn.laji.fi/images/icons/gbif.svg" width="18"/> : null;
+
+	return flagIcon || gbifIcon
+		? <>{prepend || null}{flagIcon}{gbifIcon}</>
 		: null;
 }
 
@@ -166,7 +172,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuggestion(suggestion) {
 			const renderedSuggestion = "autocompleteDisplayName" in suggestion
 				&& <span dangerouslySetInnerHTML={{__html: suggestion.autocompleteDisplayName}} />
-				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
+				|| <React.Fragment>{suggestion.value}{renderTaxonIcons(suggestion)}</React.Fragment>;
 			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
 
@@ -262,7 +268,7 @@ class UnitAutosuggestWidget extends React.Component {
 		const name = suggestion.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
-		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag(suggestion)}</span>;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderTaxonIcons(suggestion)}</span>;
 	}
 }
 
@@ -476,7 +482,8 @@ export class Autosuggest extends React.Component {
 		uiSchema: PropTypes.object,
 		informalTaxonGroups: PropTypes.string,
 		onInformalTaxonGroupSelected: PropTypes.func,
-		cache: PropTypes.bool
+		cache: PropTypes.bool,
+		valueContext: PropTypes.object
 	};
 
 	static defaultProps = {
@@ -488,7 +495,7 @@ export class Autosuggest extends React.Component {
 	isValueSuggested = (props) => {
 		const {isValueSuggested, suggestionReceive, onSuggestionSelected} = props;
 		if (!onSuggestionSelected && suggestionReceive !== "key") return undefined;
-		return isValueSuggested ? isValueSuggested(props.value) : undefined;
+		return isValueSuggested ? isValueSuggested(props.value, props.valueContext) : undefined;
 	};
 
 	wrapperRef = React.createRef();
@@ -518,12 +525,33 @@ export class Autosuggest extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (!this.props.controlledValue && this.state.suggestion && this.props && prevProps.value !== this.props.value && this.props.value !== this.state.suggestionForValue) {
-			this.props.getSuggestionFromValue(this.props.value).then(suggestion => {
+		if (this.props.controlledValue) {
+			return;
+		}
+
+		const valueChanged = this.state.suggestion && this.props && prevProps.value !== this.props.value && this.props.value !== this.state.suggestionForValue;
+		const valueContextChanged = !deepEquals(prevProps.valueContext, this.props.valueContext);
+
+		if (valueChanged) {
+			this.props.getSuggestionFromValue(this.props.value, this.props.valueContext).then(suggestion => {
 				this.setState({inputValue: this.getSuggestionValue(suggestion), suggestion});
 			}, () => {
-				this.setState({inputValue: "", suggestion: undefined});
+				const state = {suggestion: undefined};
+				if (!this.props.allowNonsuggestedValue) {
+					state.inputValue = "";
+				}
+				this.setState(state);
 			});
+		} else if (valueContextChanged) {
+			this.setState({isLoading: true});
+			if (this.triggerConvertTimeout) {
+				clearTimeout(this.triggerConvertTimeout);
+			}
+			// debounce trigger convert function so that it's not called too frequently
+			this.triggerConvertTimeout = this.props.formContext.setTimeout(() => {
+				if (!this.mounted) return;
+				this.triggerConvert(this.props);
+			}, 100);
 		}
 	}
 
@@ -538,7 +566,7 @@ export class Autosuggest extends React.Component {
 	};
 
 	triggerConvert = (props) => {
-		const {value, getSuggestionFromValue} = props;
+		const {value, getSuggestionFromValue, valueContext} = props;
 		if (isEmptyString(value) || !getSuggestionFromValue) {
 			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
 				this.setState({suggestion: undefined, inputValue: value, suggestionForValue: value});
@@ -547,7 +575,7 @@ export class Autosuggest extends React.Component {
 		}
 
 		this.setState({isLoading: true});
-		getSuggestionFromValue(value).then(suggestion => {
+		getSuggestionFromValue(value, valueContext).then(suggestion => {
 			if (!this.mounted) return;
 			this.setState({suggestion, inputValue: this.getSuggestionValue(suggestion), isLoading: false, suggestionForValue: value});
 		}).catch(() => {
@@ -564,10 +592,10 @@ export class Autosuggest extends React.Component {
 			: def;
 	};
 
-	renderSuggestion = (suggestion) => {
+	renderSuggestion = (suggestion, inputValue) => {
 		let {renderSuggestion} = this.props;
 		if (!renderSuggestion) renderSuggestion = suggestion => suggestion.value;
-		return (<span>{renderSuggestion(suggestion)}</span>);
+		return (<span>{renderSuggestion(suggestion, inputValue)}</span>);
 	};
 
 	selectSuggestion = (suggestion) => {
@@ -962,7 +990,7 @@ export class Autosuggest extends React.Component {
 			component = (
 				<Wrapper isSuggested={isSuggested}
 					suggestion={suggestion}
-					options={getUiOptions(this.props)}
+					options={getUiOptions(this.props.uiSchema)}
 					id={this.props.id}
 					value={suggestion && suggestion.key}
 					inputValue={value}
@@ -1009,9 +1037,9 @@ class _TaxonWrapper extends React.Component {
 		if (!value) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			this.props.formContext.apiClient.get(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalGroups, finnish}) => {
+			this.props.formContext.apiClient.get(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalGroups, finnish, checklist}) => {
 				if (!this.mounted) return;
-				this.setState({value, taxonRank, informalTaxonGroups: informalGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
+				this.setState({value, taxonRank, informalTaxonGroups: informalGroups, taxon: {scientificName, vernacularName, cursiveName, finnish, checklist}});
 
 				getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
@@ -1254,15 +1282,15 @@ class TaxonImgChooser extends React.Component {
 	}
 }
 
-const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) => {
+const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish, checklist}) => {
 	const _scientificName = vernacularName && scientificName
-		?  `(${scientificName})`
+		? `(${scientificName})`
 		: (scientificName || "");
 	return (
 		<React.Fragment>
 			{`${vernacularName}${vernacularName ? " " : ""}`}
 			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-			{renderFlag({finnish}, " ")}
+			{renderTaxonIcons({finnish, checklist}, " ")}
 		</React.Fragment>
 	);
 };

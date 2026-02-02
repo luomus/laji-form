@@ -6,7 +6,7 @@ import {
 	getFocusedElement,
 	getRemoveUnit,
 	updateValue,
-	DateWidgetPO, ImageArrayFieldPOI
+	DateWidgetPO, ImageArrayFieldPOI, TaxonAutosuggestWidgetPOI
 } from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
@@ -135,6 +135,81 @@ test.describe("specimen form (MHL.1158)", () => {
 			await form.e("focusField('/gatherings/0/units/0')");
 			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).toBeVisible();
 			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
+		});
+
+		test.describe("identifications", () => {
+			let $identificationAdd: Locator;
+
+			test.beforeAll(async () => {
+				$identificationAdd = form.$locateButton("gatherings.0.units.0.identifications", "add");
+			});
+
+			test("can be added", async () => {
+				await $identificationAdd.click();
+				await expect(form.$locate("gatherings.0.units.0.identifications.0")).toBeVisible();
+			});
+
+			test.describe("taxon autosuggest", () => {
+				let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
+				let taxonRankEnum$: EnumWidgetPOI;
+
+				test.beforeAll(async () => {
+					taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.0.identifications.0.taxon");
+					taxonRankEnum$ = form.$getEnumWidget("gatherings.0.units.0.identifications.0.taxonRank");
+				});
+
+				test("selecting a value from suggestions works", async () => {
+					await taxonAutosuggest.$input.fill("susi");
+					await taxonAutosuggest.$suggestions.first().click();
+
+					await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
+					await expect(taxonAutosuggest.$input).toHaveValue("Canis lupus");
+
+					const formData = await form.getChangedData();
+					expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Canis lupus");
+					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.species");
+					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("Linnaeus, 1758");
+				});
+
+				test("typing a value with no suggestion works", async () => {
+					await taxonAutosuggest.$input.fill("susikoira");
+					await taxonAutosuggest.$input.press("Tab");
+
+					await expect(taxonAutosuggest.$nonsuggestedGlyph).toBeVisible();
+					await expect(taxonAutosuggest.$input).toHaveValue("susikoira");
+
+					const formData = await form.getChangedData();
+					expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("susikoira");
+					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.species");
+					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("Linnaeus, 1758");
+				});
+
+				test("typing a value with suggestion works", async () => {
+					await taxonAutosuggest.$input.fill("zootoca vivipara");
+					await taxonAutosuggest.$input.press("Tab");
+
+					await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
+					await expect(taxonAutosuggest.$input).toHaveValue("Zootoca vivipara");
+
+					const formData = await form.getChangedData();
+					expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Zootoca vivipara");
+					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.species");
+					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("(Lichtenstein, 1823)");
+				});
+
+				test("changing a wrong taxon rank shows the warning sign", async () => {
+					await taxonRankEnum$.openEnums();
+					await taxonRankEnum$.$$enums.nth(3).click();
+
+					await expect(taxonAutosuggest.$nonsuggestedGlyph).toBeVisible();
+					await expect(taxonAutosuggest.$input).toHaveValue("Zootoca vivipara");
+
+					const formData = await form.getChangedData();
+					expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Zootoca vivipara");
+					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.kingdom");
+					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("(Lichtenstein, 1823)");
+				});
+			});
 		});
 
 		test.describe("samples", () => {
