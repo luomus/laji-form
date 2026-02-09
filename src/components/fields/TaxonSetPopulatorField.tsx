@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { parseJSONPointer} from "../../utils";
+import { parseJSONPointer } from "../../utils";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -48,8 +48,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 	}
 
 	async componentDidUpdate(prevProps: Readonly<FieldProps>): Promise<void> {
-		const previousTaxonSets = await this.extractTaxonSets(this.props.uiSchema, prevProps);
-		const currentTaxonSets = await this.extractTaxonSets(this.props.uiSchema, this.props);
+		const previousTaxonSets = this.extractTaxonSets(this.props.uiSchema, prevProps);
+		const currentTaxonSets = this.extractTaxonSets(this.props.uiSchema, this.props);
 
 		const deletedTaxonSets = previousTaxonSets.filter(item => !currentTaxonSets.includes(item));
 		const addedTaxonSets = currentTaxonSets.filter(item => !previousTaxonSets.includes(item));
@@ -57,6 +57,41 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		if (deletedTaxonSets.length > 0) {
 			deletedTaxonSets.map((deletedTaxonSetId: any) => {
 				const currentUnits = Array.isArray(this.props.formData?.units) ? this.props.formData.units : [];
+				let observationsExist = false;
+
+				const deletedTaxonSetUnits = currentUnits.filter((unit: any) => {
+					return unit.taxonSets && unit.taxonSets.includes(deletedTaxonSetId);
+				});
+				deletedTaxonSetUnits.map((unit: any) => {
+					if (
+						unit.maleIndividualCount ||
+						unit.femaleIndividualCount ||
+						unit.nestCount ||
+						unit.unitFact?.destroyedNestCount ||
+						unit.unitFact?.broodCount ||
+						unit.unitFact?.femalesWithBroodsCount ||
+						unit.unitFact?.juvenileCount
+					) {
+						window.alert(`Warning: Can't delete taxon set "${deletedTaxonSetId}" because it has observations.`);
+						observationsExist = true;
+						const updatedFormData = {
+							...this.props.formData,
+							taxonCensus: [
+								...(this.props.formData?.taxonCensus || []),
+								{
+									censusTaxonSetID: deletedTaxonSetId,
+									taxonCensusType: "MY.taxonCensusTypeCounted"
+								}
+							]
+						};
+						this.props.onChange(updatedFormData);
+						return;
+					}
+				});
+				if (observationsExist) {
+					return;
+				}
+
 				const updatedUnits = currentUnits.filter((unit: any) => {
 					return !unit.taxonSets || !unit.taxonSets.includes(deletedTaxonSetId);
 				});
@@ -69,6 +104,16 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		}
 
 		if (addedTaxonSets.length > 0) {
+			const currentUnits = Array.isArray(this.props.formData?.units) ? this.props.formData.units : [];
+
+			// if current units include any units with taxon sets that are being added, return to avoid duplicates
+			const duplicateUnits = currentUnits.filter((unit: any) => {
+				return unit.taxonSets && unit.taxonSets.some((taxonSetId: any) => addedTaxonSets.includes(taxonSetId));
+			});
+			if (duplicateUnits.length > 0) {
+				return;
+			}
+
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
 
 			const newUnits = results.map((result: any) => {
@@ -83,7 +128,6 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 				};
 			});
 
-			const currentUnits = Array.isArray(this.props.formData?.units) ? this.props.formData.units : [];
 			const updatedFormData = {
 				...this.props.formData,
 				units: [...currentUnits, ...newUnits]
@@ -93,10 +137,10 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		}
 	}
 
-	private async extractTaxonSets(uiSchema: any, initialProps: any): Promise<any[]> {
+	private extractTaxonSets(uiSchema: any, initialProps: any): any[] {
 		const { props: _props = [] } = (this as any).getUiOptions(uiSchema);
 
-		const taxonSets = await (Array.isArray(_props) ? _props : [_props]).reduce(async (props, strOrObjProp) => {
+		const taxonSets = (Array.isArray(_props) ? _props : [_props]).reduce((props, strOrObjProp) => {
 			const [fromPath, fromArrayKey, joinArray] = ["from", "fromArrayKey", "joinArray"]
 				.map(p => strOrObjProp[p]);
 			let from = fromPath[0] === "/"

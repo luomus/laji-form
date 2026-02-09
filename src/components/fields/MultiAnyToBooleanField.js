@@ -17,7 +17,8 @@ export default class MultiAnyToBooleanField extends React.Component {
 						falseValue: PropTypes.any,
 						allowUndefined: PropTypes.bool
 					})
-				)
+				),
+				usePopulator: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -30,6 +31,50 @@ export default class MultiAnyToBooleanField extends React.Component {
 		super(props);
 		this.state = this.getInitialState(props);
 	}
+
+	componentDidUpdate(prevProps) {
+		if (!getUiOptions(this.props.uiSchema)?.usePopulator) {
+			return;
+		}
+
+		const previousTaxonSets = prevProps.formData?.map(t => t.censusTaxonSetID);
+		const currentTaxonSets = this.props.formData?.map(t => t.censusTaxonSetID);
+
+		if (!previousTaxonSets || !currentTaxonSets) {
+			return;
+		}
+
+		let addedTaxonSets = [];
+		let deletedTaxonSets = [];
+		if (previousTaxonSets.length === 0) {
+			addedTaxonSets = currentTaxonSets;
+		} else {
+			addedTaxonSets = currentTaxonSets?.filter(item => !previousTaxonSets.includes(item));
+			deletedTaxonSets = previousTaxonSets?.filter(item => !currentTaxonSets.includes(item));
+		}
+
+		// if user tried to delete a set with observations, switch it back on
+		if (addedTaxonSets.length > 0) {
+			const {groups} = getUiOptions(this.props.uiSchema) || [];
+			const groupIndex = groups.findIndex(group => group.trueValue.censusTaxonSetID === addedTaxonSets[0]);
+			if (groupIndex !== -1) {
+				this.switchBack(groupIndex, groups[groupIndex].trueValue);
+			}
+		}
+	}
+
+	switchBack = (index, value) => {
+		const groupsFormData = this.state.groupsFormData;
+		groupsFormData[index] = value;
+		this.setState({groupsFormData: groupsFormData});
+		const formData = groupsFormData.reduce((arr, val) => {
+			if (val !== undefined) {
+				arr.push(val);
+			}
+			return arr;
+		}, []);
+		this.props.onChange(formData);
+	};
 
 	getInitialState(props) {
 		let {groups} = getUiOptions(props.uiSchema) || [];
