@@ -115,6 +115,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"PrefixArrayField",
 	"FillDateRangeField",
 	"TaxonSetPopulatorField",
+	"ScientificNameTaxonAutosuggestField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -212,7 +213,7 @@ export interface LajiFormProps extends HasMaybeChildren {
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
 	lajiGeoServerAddress?: string;
-	extraErrors: ErrorSchema;
+	extraErrors?: ErrorSchema;
 }
 
 export interface LajiFormState {
