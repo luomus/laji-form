@@ -10,7 +10,7 @@ import type { DataOptions as LajiMapData } from "@luomus/laji-map/lib/defs";
 import { Popup } from "./Popup";
 import memoize from "memoizee";
 import type { components } from "generated/api.d";
-type NamedPlace = components["schemas"]["namedPlace"];
+type NamedPlace = components["schemas"]["store-namedPlace"];
 
 type Props = {
 	places: NamedPlace[];

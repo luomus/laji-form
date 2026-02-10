@@ -5,7 +5,7 @@ import { addLajiFormIds, getDefaultFormState, getInnerUiSchema, getUiOptions } f
 import getContext from "../../../Context";
 import { NamedPlaceChooser } from "./NamedPlaceChooser";
 import type { components } from "generated/api.d";
-type NamedPlace = components["schemas"]["namedPlace"];
+type NamedPlace = components["schemas"]["store-namedPlace"];
 
 type Props = FieldProps<NamedPlace, JSONSchemaObject | JSONSchemaArray<JSONSchemaObject>>
 type State = { 
