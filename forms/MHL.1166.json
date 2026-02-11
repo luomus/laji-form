@@ -3278,8 +3278,7 @@
                 },
                 "allowUndefined": false
               }
-            ],
-            "usePopulator": true
+            ]
           },
           "ui:help": "@taxonCensusHelp"
         },

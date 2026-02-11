@@ -17,8 +17,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 						falseValue: PropTypes.any,
 						allowUndefined: PropTypes.bool
 					})
-				),
-				usePopulator: PropTypes.bool
+				)
 			})
 		}),
 		schema: PropTypes.shape({
