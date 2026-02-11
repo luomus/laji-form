@@ -47,15 +47,23 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		return "TaxonSetPopulatorField";
 	}
 
-	async componentDidUpdate(prevProps: Readonly<FieldProps>): Promise<void> {
-		const previousTaxonSets = this.extractTaxonSets(this.props.uiSchema, prevProps);
-		const currentTaxonSets = this.extractTaxonSets(this.props.uiSchema, this.props);
+	taxonSets: any[] = [];
 
-		const deletedTaxonSets = previousTaxonSets.filter(item => !currentTaxonSets.includes(item));
-		const addedTaxonSets = currentTaxonSets.filter(item => !previousTaxonSets.includes(item));
+	getStateFromProps() {
+		return { onChange: this.onChange };
+	}
+
+	onChange = async (formData: any) => {
+		const previousTaxonSets = this.taxonSets;
+		const currentTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
+
+		const deletedTaxonSets = previousTaxonSets.filter((item: string) => !currentTaxonSets.includes(item));
+		const addedTaxonSets = currentTaxonSets.filter((item: string) => !previousTaxonSets.includes(item));
+
+		this.taxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
 		if (deletedTaxonSets.length > 0) {
-			deletedTaxonSets.map((deletedTaxonSetId: any) => {
+			deletedTaxonSets.map((deletedTaxonSetId: string) => {
 				const currentUnits = Array.isArray(this.props.formData?.units) ? this.props.formData.units : [];
 				let observationsExist = false;
 
@@ -75,15 +83,16 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 						window.alert(`Warning: Can't delete taxon set "${deletedTaxonSetId}" because it has observations.`);
 						observationsExist = true;
 						const updatedFormData = {
-							...this.props.formData,
+							...formData,
 							taxonCensus: [
-								...(this.props.formData?.taxonCensus || []),
+								...formData.taxonCensus,
 								{
 									censusTaxonSetID: deletedTaxonSetId,
 									taxonCensusType: "MY.taxonCensusTypeCounted"
 								}
 							]
 						};
+						this.taxonSets = [...this.taxonSets, deletedTaxonSetId];
 						this.props.onChange(updatedFormData);
 						return;
 					}
@@ -96,7 +105,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 					return !unit.taxonSets || !unit.taxonSets.includes(deletedTaxonSetId);
 				});
 				const updatedFormData = {
-					...this.props.formData,
+					...formData,
 					units: updatedUnits
 				};
 				this.props.onChange(updatedFormData);
@@ -108,7 +117,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 			// if current units include any units with taxon sets that are being added, return to avoid duplicates
 			const duplicateUnits = currentUnits.filter((unit: any) => {
-				return unit.taxonSets && unit.taxonSets.some((taxonSetId: any) => addedTaxonSets.includes(taxonSetId));
+				return unit.taxonSets && unit.taxonSets.some((taxonSetId: string) => addedTaxonSets.includes(taxonSetId));
 			});
 			if (duplicateUnits.length > 0) {
 				return;
@@ -129,36 +138,13 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 			});
 
 			const updatedFormData = {
-				...this.props.formData,
+				...formData,
 				units: [...currentUnits, ...newUnits]
 			};
 
 			this.props.onChange(updatedFormData);
 		}
-	}
-
-	private extractTaxonSets(uiSchema: any, initialProps: any): any[] {
-		const { props: _props = [] } = (this as any).getUiOptions(uiSchema);
-
-		const taxonSets = (Array.isArray(_props) ? _props : [_props]).reduce((props, strOrObjProp) => {
-			const [fromPath, fromArrayKey, joinArray] = ["from", "fromArrayKey", "joinArray"]
-				.map(p => strOrObjProp[p]);
-			let from = fromPath[0] === "/"
-				? parseJSONPointer(props, fromPath)
-				: parseJSONPointer(props.formData, fromPath);
-
-			if (fromArrayKey) {
-				from = (from || []).map((obj: any) => obj[fromArrayKey]);
-			}
-			if (joinArray && Array.isArray(from)) {
-				from = from.join(",");
-			}
-
-			return from;
-		}, initialProps);
-
-		return Array.isArray(taxonSets) ? taxonSets : [];
-	}
+	};
 
 	private async fetchTaxaFromSet(props: any, taxonSets: any): Promise<any[]> {
 		const apiClient = props.formContext?.apiClient;
