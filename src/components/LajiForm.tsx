@@ -114,6 +114,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"MultiActiveArrayField",
 	"PrefixArrayField",
 	"FillDateRangeField",
+	"TaxonSetPopulatorField",
 	"ScientificNameTaxonAutosuggestField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.

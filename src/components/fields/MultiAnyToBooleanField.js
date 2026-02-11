@@ -32,6 +32,14 @@ export default class MultiAnyToBooleanField extends React.Component {
 	}
 
 	getInitialState(props) {
+		return this.initializeGroups(props);
+	}
+
+	getStateFromProps(props) {
+		return this.initializeGroups(props);
+	}
+
+	initializeGroups = (props) => {
 		let {groups} = getUiOptions(props.uiSchema) || [];
 		const {formData} = props;
 
@@ -57,7 +65,7 @@ export default class MultiAnyToBooleanField extends React.Component {
 		}
 
 		return {groupsFormData: groupsFormData};
-	}
+	};
 
 	onChange = (index) => (value) => {
 		const groupsFormData = this.state.groupsFormData;
