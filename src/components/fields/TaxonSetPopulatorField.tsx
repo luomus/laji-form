@@ -80,7 +80,11 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 						unit.unitFact?.femalesWithBroodsCount ||
 						unit.unitFact?.juvenileCount
 					) {
-						window.alert(`Warning: Can't delete taxon set "${deletedTaxonSetId}" because it has observations.`);
+						window.alert(
+							"Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.\n\n" +
+							"This taxon set cannot be removed because it contains observations.\n\n" +
+							"Den här artgruppen kan inte tas bort eftersom det finns observationer i den."
+						);
 						observationsExist = true;
 						const updatedFormData = {
 							...formData,
