@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import BaseComponent from "../BaseComponent";
 import { classNames, getUiOptions } from "../../utils";
 import ReactContext from "../../ReactContext";
 import { Affix, Button } from "../components";
@@ -36,7 +35,6 @@ interface State {
 	activeButtonIdx?: number;
 }
 
-@BaseComponent
 export default class MultiTagArrayField extends React.Component<FieldProps<JSONSchemaObject>, State> {
 	static contextType = ReactContext;
 	static propTypes = {
