@@ -1,4 +1,3 @@
-import BaseComponent from "../BaseComponent";
 import * as React from "react";
 import { FieldProps, JSONSchemaObject } from "src/types";
 import ReactContext from "../../ReactContext";
@@ -13,7 +12,6 @@ interface State {
 	activeIdx: number[];
 }
 
-@BaseComponent
 export default class MultiActiveArrayField extends React.Component<FieldProps<JSONSchemaObject>, State> {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -41,6 +39,10 @@ export default class MultiActiveArrayField extends React.Component<FieldProps<JS
 			activeIdx: this.getInitialActiveIdx(props),
 			...this.getStateFromProps(props)
 		};
+	}
+
+	UNSAFE_componentWillReceiveProps(props: FieldProps<JSONSchemaObject>) {
+		this.setState(this.getStateFromProps(props));
 	}
 
 	getInitialActiveIdx = (props: FieldProps<JSONSchemaObject>): number[] => {
