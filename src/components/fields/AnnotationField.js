@@ -2,14 +2,12 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons, getDefaultFormState } from "../../utils";
 import LajiForm from "../LajiForm";
-import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import { isObject } from "@luomus/laji-map/lib/utils";
 
-@BaseComponent
 export default class AnnotationField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
