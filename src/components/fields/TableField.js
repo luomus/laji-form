@@ -4,7 +4,6 @@ import { getUiOptions, updateTailUiSchema, isHidden, getUUID } from "../../utils
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys } from "../templates/ArrayFieldTemplate";
-import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
 const specialRules = {
@@ -25,7 +24,6 @@ const specialRules = {
 
 const specialRulesPropTypes = PropTypes.oneOf(["legEditors"]);
 
-@BaseComponent
 export default class TableField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
