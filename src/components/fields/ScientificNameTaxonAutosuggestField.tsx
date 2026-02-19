@@ -14,11 +14,10 @@ import {
 import { FieldProps, JSONSchemaObject, JSONSchemaEnumOneOf } from "../../types";
 import ReactContext from "../../ReactContext";
 import { renderTaxonIcons } from "../widgets/AutosuggestWidget";
-import BaseComponent from "../BaseComponent";
 import { OverlayTrigger } from "../components";
 import { FormContext } from "../LajiForm";
 
-interface State extends Pick<FieldProps<JSONSchemaObject>, "schema" | "uiSchema"> {
+interface State {
 	suggestion?: any;
 }
 
@@ -48,7 +47,6 @@ function addBold(original: string, substring: string) {
 		: original;
 }
 
-@BaseComponent
 export default class ScientificNameTaxonAutosuggestField extends React.Component<FieldProps<JSONSchemaObject>, State> {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -67,7 +65,9 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 		formData: PropTypes.object.isRequired
 	};
 
-	getStateFromProps = (props: FieldProps<JSONSchemaObject>): State => {
+	state: State = {}
+
+	getUiSchema = (props: FieldProps<JSONSchemaObject>): any => {
 		let {schema, uiSchema, formData = {}} = props;
 		const uiOptions = getUiOptions(uiSchema);
 		const {taxonField, taxonRankField, authorField} = uiOptions;
@@ -109,7 +109,7 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 		const taxonExistingUiSchema = parseJSONPointer(innerUiSchema, _uiSchemaJSONPointer);
 		let widgetProps = taxonExistingUiSchema || {};
 
-		let _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
+		return updateSafelyWithJSONPointer(innerUiSchema, {
 			"ui:widget": "AutosuggestWidget",
 			...widgetProps,
 			"ui:options": {
@@ -117,8 +117,6 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 				...options
 			},
 		}, _uiSchemaJSONPointer);
-
-		return {schema, uiSchema: _uiSchema};
 	};
 
 	getSuggestionValue = (suggestion: any): string => {
@@ -252,7 +250,7 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 
 	render() {
 		const {SchemaField} = this.props.registry.fields as any;
-		return <SchemaField {...this.props} uiSchema={this.state.uiSchema}/>;
+		return <SchemaField {...this.props} uiSchema={this.getUiSchema(this.props)}/>;
 	}
 }
 
