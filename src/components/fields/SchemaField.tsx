@@ -26,7 +26,6 @@ export default class _SchemaField extends React.Component<FieldProps> {
 		}
 
 		if (annotations) {
-			console.log('anno');
 			functions = [
 				{"ui:field": "AnnotationField", "ui:options": (isObject(annotations) ? annotations : {})},
 				...functions

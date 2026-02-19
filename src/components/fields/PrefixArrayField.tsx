@@ -6,7 +6,6 @@ import { getUiOptions } from "../../utils";
 import { DeleteButton } from "../components";
 import memoize from "memoizee";
 import update from "immutability-helper";
-import BaseComponent from "../BaseComponent";
 
 interface FieldValue {
 	prefix: string;
@@ -17,7 +16,6 @@ interface State {
 	fieldValues: FieldValue[];
 }
 
-@BaseComponent
 export default class PrefixArrayField extends React.Component<FieldProps<JSONSchemaArray>, State> {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -36,6 +34,15 @@ export default class PrefixArrayField extends React.Component<FieldProps<JSONSch
 
 	static getName() {return "PrefixArrayField";}
     
+	constructor(props: FieldProps<JSONSchemaArray>) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+	}
+
+	UNSAFE_componentWillReceiveProps(props: FieldProps<JSONSchemaArray>) {
+		this.setState(this.getStateFromProps(props));
+	}
+
 	getSeparator(uiSchema: UiSchema): string {
 		const {separator = ":"} = getUiOptions(uiSchema);
 		return separator;
