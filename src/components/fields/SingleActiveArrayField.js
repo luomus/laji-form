@@ -33,7 +33,6 @@ import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition,
 import { copyItemFunction } from "./ArrayField";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
-import BaseComponent from "../BaseComponent";
 import { getTemplate } from "@rjsf/utils";
 import memoize from "memoizee";
 import { ArrayFieldPatched } from "./ArrayField";
@@ -86,7 +85,6 @@ const isActive = (idx, activeIdx) => {
 	return idx === activeIdx || (Array.isArray(activeIdx) && activeIdx.includes(idx));
 };
 
-@BaseComponent
 export default class SingleActiveArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
