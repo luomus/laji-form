@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 const equals = require("deep-equal");
 import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState, getFieldUUID } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -12,7 +11,6 @@ import Spinner from "react-spinner";
 
 const cache = {};
 
-@BaseComponent
 export default class GeocoderField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
