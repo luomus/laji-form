@@ -8,10 +8,8 @@ import {
 	parseJSONPointer,
 	parseSchemaFromFormDataPointer
 } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
 
-@BaseComponent
 export default class ToggleAdditionalArrayFieldsField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -31,7 +29,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {visible: this.getInitialVisible(props), ...this.getStateFromProps(props)};
+		this.state = {visible: this.getInitialVisible(props)};
 	}
 
 	getTogglePersistenceContextKey = (props) => `$additional_toggle_persistence_${props.idSchema.$id}`;
@@ -59,11 +57,6 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 		return visible;
 	}
 
-	getStateFromProps(props) {
-		const innerUiSchema = getInnerUiSchema(props.uiSchema);
-		return {uiSchema: innerUiSchema};
-	}
-
 	toggleVisibility = () => {
 		const visible = !this.state.visible;
 		const context = getContext(this.props.formContext.contextId);
@@ -82,7 +75,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 			additionalFields.some(field => parseJSONPointer(error, field))
 		) || this.state.visible;
 
-		let _uiSchema = this.state.uiSchema;
+		let _uiSchema = getInnerUiSchema(this.props.uiSchema);
 		if (!shouldShow) {
 			additionalFields.forEach(field => {
 				_uiSchema = updateSafelyWithJSONPointer(_uiSchema, {"ui:field": "HiddenField"}, "items/" + field);
