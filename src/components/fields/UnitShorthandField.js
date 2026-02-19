@@ -1,14 +1,12 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, bringRemoteFormData,  getDefaultFormState  } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { FetcherInput } from "../components";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { getButton } from "../templates/ArrayFieldTemplate";
 
-@BaseComponent
 export default class UnitShorthandField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -143,15 +141,19 @@ export default class UnitShorthandField extends React.Component {
 	}
 }
 
-@BaseComponent
 class CodeReader extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
 		this.state = this.getStateFromProps(props);
 		this.apiClient = props.formContext.apiClient;
 	}
+
+	UNSAFE_componentWillReceiveProps = (props) => {
+		this.setState(this.getStateFromProps(props));
+	};
 
 	getStateFromProps = (props) => {
 		let state = this.state;
