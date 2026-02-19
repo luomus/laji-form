@@ -1,9 +1,7 @@
 import * as React from "react";
-import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 
-@BaseComponent
 export default class MultiLanguageField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.any,
