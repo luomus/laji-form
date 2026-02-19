@@ -2,7 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import { rulePropType } from "./ConditionalUiSchemaField";
-import BaseComponent from "../BaseComponent";
 
 const arrayRulePropType = PropTypes.shape({
 	idx: PropTypes.number,
@@ -16,7 +15,6 @@ export const arrayRulesPropType = PropTypes.oneOfType([
 	PropTypes.arrayOf(PropTypes.oneOfType([rulePropType, arrayRulePropType]))
 ]);
 
-@BaseComponent
 export default class FilterArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -30,7 +28,8 @@ export default class FilterArrayField extends React.Component {
 		}).isRequired,
 		formData: PropTypes.array
 	};
-	getStateFromProps(props) {
+
+	getNextProps(props) {
 		if (props.schema.items.type !== "object") {
 			throw new Error("Can't use FilterArrayField if items aren't objects");
 		}
@@ -129,6 +128,6 @@ export default class FilterArrayField extends React.Component {
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return <SchemaField {...this.props} {...this.state} />;
+		return <SchemaField {...this.props} {...this.getNextProps(this.props)} />;
 	}
 }
