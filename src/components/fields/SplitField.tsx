@@ -1,13 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
 import { FieldProps } from "../../types";
 
-@BaseComponent
 export default class SplitField extends React.Component<FieldProps> {
 	static contextType = ReactContext;
 	static propTypes = {
