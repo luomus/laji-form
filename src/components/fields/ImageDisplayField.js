@@ -1,11 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import BaseComponent from "../BaseComponent";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import update from "immutability-helper";
 
 // TODO should work as widget also
-@BaseComponent
 export default class ImageDisplayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
