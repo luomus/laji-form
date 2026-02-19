@@ -1,14 +1,12 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import BaseComponent from "../BaseComponent";
 import { GlyphButton, OverlayTrigger } from "../components";
 import getContext from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
 import ReactContext from "../../ReactContext";
 
-@BaseComponent
 export default class LocationChooserField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -29,23 +27,21 @@ export default class LocationChooserField extends React.Component {
 		formData: PropTypes.object.isRequired
 	};
 
-	getStateFromProps(props) {
+	getUiSchema(props) {
 		let uiSchema = getInnerUiSchema(props.uiSchema);
 
-		uiSchema = {
+		return {
 			...uiSchema,
 			"ui:buttons": [
 				...(uiSchema["ui:buttons"] || []),
 				<LocationButton key={`$${this.props.idSchema.$id}-location`} that={this} />
 			]
 		};
-
-		return {uiSchema};
 	}
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return <SchemaField {...this.props} {...this.state} />;
+		return <SchemaField {...this.props} uiSchema={this.getUiSchema(this.props)} />;
 	}
 }
 
