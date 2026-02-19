@@ -72,19 +72,6 @@ export type WidgetProps<T = any, S extends JSONSchema = JSONSchema> =
 		registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
 	}
 
-// export type FieldProps<S extends JSONSchema = JSONSchema> = Omit<RJSFFieldProps<any, S, FormContext>, "uiSchema" | "errorSchema" | "formContext" | "registry"> & {
-// 	uiSchema: UiSchema<S>;
-// 	errorSchema: NonNullable<RJSFFieldProps<any, S, FormContext>["errorSchema"]>; // It's always defined
-// 	formContext: FormContext; // It's always defined
-// 	registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
-// };
-// export type WidgetProps<S extends JSONSchema = JSONSchema> = Omit<RJSFWidgetProps<any, S, FormContext>, "uiSchema" | "errorSchema" | "formContext" | "registry"> & {
-// 	uiSchema: UiSchema;
-// 	errorSchema: NonNullable<RJSFFieldProps<any, JSONSchema, FormContext>["errorSchema"]>; // It's always defined
-// 	formContext: FormContext; // It's always defined
-// 	registry: RJSFWidgetProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
-// };
-
 export type UiSchema<S extends JSONSchema = JSONSchemaObject> = RJSFUiSchema<any, S, FormContext>;
 
 export interface HasMaybeChildren {

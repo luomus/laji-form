@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import BaseComponent from "../BaseComponent";
 import { getInnerUiSchema, getUiOptions } from "../../utils";
 import { FieldProps, JSONSchemaObject } from "../../types";
 
@@ -8,7 +7,6 @@ interface State {
 	sum: number;
 }
 
-@BaseComponent
 export default class ArrayPropertySumField extends React.Component<FieldProps<JSONSchemaObject[], JSONSchemaObject>, State>{
 
 	static propTypes = {
@@ -24,19 +22,10 @@ export default class ArrayPropertySumField extends React.Component<FieldProps<JS
 
 	static getName() { return "ArrayPropertySumField"; }
 
-	getStateFromProps(props: FieldProps) {
-		const { formData = [] } = props;
-		const state: State = { sum: 0 };
-		const propertyField = getUiOptions(this.props.uiSchema).propertyField;
-
-		state.sum = formData.reduce((acc: number, item: any) => acc + (Number(item[propertyField]) || 0), 0);
-
-		return state;
-	}
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField as any;
-		const { sum } = this.state;
+		const sum = getSum(this.props);
 
 		return (
 			<>
@@ -50,4 +39,10 @@ export default class ArrayPropertySumField extends React.Component<FieldProps<JS
 			</>
 		);
 	}
+}
+
+const getSum = (props: FieldProps<JSONSchemaObject[], JSONSchemaObject>): number => {
+	const formData: any[] = props.formData || [];
+	const propertyField = getUiOptions(props.uiSchema).propertyField as string;
+	return formData.reduce<number>((acc: number, item: any) => acc + (Number(item[propertyField]) || 0), 0);
 }
