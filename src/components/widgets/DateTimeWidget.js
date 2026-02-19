@@ -70,7 +70,6 @@ export default class DateTimeWidget extends React.Component {
 		this.state = this.getStateFromProps(props);
 	}
 
-
 	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
 	}
