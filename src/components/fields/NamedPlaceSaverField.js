@@ -5,7 +5,6 @@ import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Button } from "../components";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
-import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
 import memoize from "memoizee";
@@ -15,7 +14,6 @@ const SAVE = "SAVE", FETCH = "FETCH";
 /**
  * Compatible only with gathering field.
  */
-@BaseComponent
 export default class NamedPlaceSaverField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -25,7 +23,9 @@ export default class NamedPlaceSaverField extends React.Component {
 		formData: PropTypes.object
 	};
 
-	getStateFromProps(props) {
+	state = { show: false };
+
+	getUiSchema(props) {
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const uiSchema = {
 			...innerUiSchema,
@@ -38,7 +38,7 @@ export default class NamedPlaceSaverField extends React.Component {
 			}
 		};
 
-		return {uiSchema};
+		return uiSchema;
 	}
 
 	getButton(props) {
@@ -61,16 +61,12 @@ export default class NamedPlaceSaverField extends React.Component {
 		});
 	};
 
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.show !== this.state.show) this.setState(this.getStateFromProps(this.props));
-	}
-
 	onHide = () => this.setState({show: false});
 
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
-		const {uiSchema} = this.state;
 		const {Modal} = this.context.theme;
+		const uiSchema = this.getUiSchema(this.props)
 		return (
 			<div>
 				<SchemaField  {...this.props} uiSchema={uiSchema} />
