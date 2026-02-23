@@ -69,7 +69,7 @@ export type FieldProps<T = any, S extends JSONSchemaObject | JSONSchemaArray = J
 
 export type WidgetProps<T = any, S extends JSONSchema = JSONSchema> =
 	WithNonNullableKeys<RJSFWidgetProps<T, S, FormContext>, "errorSchema" | "formContext"> & {
-		registry: RJSFFieldProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
+		registry: RJSFWidgetProps<any, JSONSchema, FormContext>["registry"]; // Prevent `S` from being passed to registry. `S` should be the "this" components schema.
 	}
 
 export type UiSchema<S extends JSONSchema = JSONSchemaObject> = RJSFUiSchema<any, S, FormContext>;

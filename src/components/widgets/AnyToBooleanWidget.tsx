@@ -1,12 +1,16 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
+import { FieldProps, WidgetProps } from "src/types";
 
-export const AnyToBoolean = (props) => <_AnyToBoolean {...props} />;
+export const AnyToBoolean = (props: FieldProps | (WidgetProps & { widget: true })) => <_AnyToBoolean {...props} />;
 
-const _AnyToBoolean = (props) => {
+const isWidgetProps = (props: FieldProps | (WidgetProps & { widget: true })): props is (WidgetProps & { widget: true }) => props.widget;
+
+
+const _AnyToBoolean = (props: FieldProps | (WidgetProps & { widget: true })) => {
 	const {widget} = props;
-	const options = getUiOptions(widget ? props : props.uiSchema);
+	const options = getUiOptions(isWidgetProps(props) ? props : props.uiSchema);
 	const {trueValue, falseValue} = options;
 	const schema = {...props.schema, type: "boolean"};
 	const id = widget ? props.id : props.idSchema.$id;
@@ -30,10 +34,10 @@ const _AnyToBoolean = (props) => {
 	const { CheckboxWidget } = props.registry.widgets; 
 	const { SchemaField } = props.registry.fields; 
 
-	return widget
+	return isWidgetProps(props)
 		? (
 			<CheckboxWidget
-				{...props}
+				{...props as any}
 				id={props.id}
 				schema={schema}
 				value={value}
@@ -43,7 +47,7 @@ const _AnyToBoolean = (props) => {
 			/>
 		) : (
 			<SchemaField
-				{...props}
+				{...props as any}
 				schema={schema}
 				uiSchema={getInnerUiSchema(props.uiSchema)}
 				formData={value}
@@ -54,7 +58,7 @@ const _AnyToBoolean = (props) => {
 		);
 };
 
-const _anyToBoolean = (props) => <_AnyToBoolean widget={true} {...props} />;
+const _anyToBoolean = (props: WidgetProps) => <_AnyToBoolean widget={true} {...props} />;
 const valuePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
 _anyToBoolean.propTypes =  {
 	uiSchema: PropTypes.shape({
