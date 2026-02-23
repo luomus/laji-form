@@ -659,7 +659,7 @@ export function scrollIntoViewIfNeeded(elem: HTMLElement, topOffset = 0, bottomO
 	window.scrollTo(0, getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset, bottomOffset));
 }
 
-export function filter(properties: any[], filter: string[], filterType = "blacklist", getValue: (s: string) => any) {
+export function filter(properties: any[], filter: string[], filterType: "blacklist" | "whitelist" = "blacklist", getValue?: (s: string) => any) {
 	const filterDictionary = {} as any;
 	filter.forEach(_enum => { filterDictionary[_enum] = true; });
 	const filterFn = (item: any) => {

@@ -29,7 +29,7 @@
     "test:lightweight": "npx playwright test --project chromium",
     "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
     "test:docker:run": "docker run laji-form-test",
-    "generate:api-client": "openapi-typescript https://apitest.laji.fi/openapi-json -o ./generated/api.d.ts --properties-required-by-default"
+    "generate:api-client": "openapi-typescript http://apitest.laji.fi/openapi-json -o ./generated/api.d.ts --properties-required-by-default"
   },
   "keywords": [
     "react-jsonschema-form",

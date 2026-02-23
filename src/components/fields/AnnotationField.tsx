@@ -1,14 +1,23 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons, getDefaultFormState } from "../../utils";
-import LajiForm from "../LajiForm";
+import LajiForm, { FormContext } from "../LajiForm";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import { isObject } from "@luomus/laji-map/lib/utils";
+import { FieldProps, Lang, UiSchema } from "../../types";
+import memoize from "memoizee";
+// import { Annotation } from "@luomus/laji-schema";
+import type { components } from "generated/api.d";
 
-export default class AnnotationField extends React.Component {
+type Form = components["schemas"]["Form"];
+type Annotation = components["schemas"]["store-annotation"];
+
+type State = { show: boolean };
+
+export default class AnnotationField extends React.Component<FieldProps, State> {
 	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -29,10 +38,7 @@ export default class AnnotationField extends React.Component {
 		formData: PropTypes.object.isRequired
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {show: false};
-	}
+	state = {show: false};
 
 	getButton = () => {
 		const annotations = this.getAnnotations();
@@ -45,9 +51,9 @@ export default class AnnotationField extends React.Component {
 		};
 	};
 
-	onClick = () => () => {
+	onClick = memoize(() => () => {
 		this.setState({show: !this.state.show});
-	};
+	});
 
 	onHide = () => {
 		this.setState({show: false});
@@ -73,7 +79,7 @@ export default class AnnotationField extends React.Component {
 
 		switch (container) {
 		case "modal":
-			Container = ({children}) => {
+			Container = ({children}: {children: React.ReactNode}) => {
 				return (
 					<Modal show={true} dialogClassName="laji-form" onHide={this.onHide}>
 						<Modal.Header closeButton={true} />
@@ -85,10 +91,10 @@ export default class AnnotationField extends React.Component {
 			};
 			break;
 		default:
-			Container = ({children}) => <div>{children}</div>;
+			Container = ({children}: {children: React.ReactNode}) => <div>{children}</div>;
 		}
 
-		const {SchemaField} = this.props.registry.fields;
+		const {SchemaField} = this.props.registry.fields as any;
 		return (
 			<div>
 				<SchemaField {...this.props} uiSchema={uiSchema} />
@@ -113,28 +119,58 @@ export default class AnnotationField extends React.Component {
 
 getContext("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 
-class AnnotationBox extends React.Component {
-	static contextType = ReactContext;
-	constructor(props) {
-		super(props);
-		this.state = {annotations: props.annotations || []};
+type Filter = { filterType: "blacklist" | "whitelist", filter: string[] };
+
+type AnnotationBoxProps = {
+	id: string;
+	annotations?: Annotation[];
+	formContext: FormContext;
+	formId: string;
+	filter?: Filter;
+	add?: {
+		type?: Annotation["type"];
+		filter?: Filter;
+		uiSchema?: UiSchema
+		adminOnly?: boolean;
+		formData?: any;
 	}
+	lang?: Lang;
+	uiSchema: UiSchema;
+}
+
+type AnnotationBoxState = {
+	annotations: Annotation[];
+	addFormData?: Annotation;
+	fail?: boolean;
+	deleteFail?: boolean;
+	metadataForm?: Form;
+}
+
+class AnnotationBox extends React.Component<AnnotationBoxProps, AnnotationBoxState> {
+	static contextType = ReactContext;
 
 	static defaultProps = {
 		formId: "MHL.15"
 	};
 
+	mounted?: boolean;
+
+	constructor(props: AnnotationBoxProps) {
+		super(props);
+		this.state = {annotations: props.annotations || []}
+	}
+
 	componentDidMount() {
 		this.mounted = true;
-		this.props.formContext.apiClient.get(`/forms/${this.props.formId}`, { query: { format: "schema" } })
+		this.props.formContext.apiClient.get("/forms/{id}", { path: { id: this.props.formId }, query: { format: "schema" } })
 			.then(metadataForm => {
 				if (!this.mounted) return;
 				const {filter: _filter} = this.props;
-				let propArray = Object.keys(metadataForm.schema.properties);
+				let propArray = Object.keys(metadataForm.schema.properties as any);
 				if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
 
 				const schemaProperties = propArray.reduce((properties, prop) => {
-					properties[prop] = metadataForm.schema.properties[prop];
+					(properties as any)[prop] = (metadataForm.schema.properties as any)[prop];
 					return properties;
 				}, {});
 				const schema = {...metadataForm.schema, properties: schemaProperties};
@@ -146,11 +182,11 @@ class AnnotationBox extends React.Component {
 		this.mounted = false;
 	}
 
-	onAnnotationSubmit = async ({formData}) => {
+	onAnnotationSubmit = async ({ formData }: { formData: Annotation }) => {
 		const {type} = this.getAddOptions();
 		const rootID = this.props.formContext.services.rootInstance.getFormData().id;
 		this.props.formContext.services.blocker.push();
-		const body = {...formData, targetID: this.props.id, rootID, type, byRole: "MMAN.formAdmin"};
+		const body: Annotation = {...formData, targetID: this.props.id, rootID, type, byRole: "MMAN.formAdmin"};
 		try {
 			const annotation = await this.props.formContext.apiClient.post("/annotations", undefined, body);
 			this.props.formContext.services.blocker.pop();
@@ -164,8 +200,8 @@ class AnnotationBox extends React.Component {
 		}
 	};
 
-	onAnnotationChange = (formData) => {
-		let state = {};
+	onAnnotationChange = (formData: Annotation) => {
+		let state: Pick<AnnotationBoxState, "fail" | "addFormData"> = {};
 		if (this.state.fail !== undefined) {
 			state.fail = undefined;
 		}
@@ -177,9 +213,13 @@ class AnnotationBox extends React.Component {
 		this.setState(state);
 	};
 
+	onAnnotationSubmitClick = () => {
+		this.onAnnotationSubmit({ formData: this.state.addFormData! });
+	}
+
 	getAddOptions = () => {
 		const {add, formContext: {uiSchemaContext: {isAdmin}}} = this.props;
-		let addOptions = isObject(add) ? add : {};
+		let addOptions = isObject(add) ? add : {} as NonNullable<AnnotationBoxProps["add"]>;
 		const submitOnChange = "submitOnChange" in addOptions ? addOptions.submitOnChange : false;
 		const type = isAdmin ? "MAN.typeAdmin" : addOptions.type;
 		return {...addOptions, submitOnChange, type};
@@ -201,18 +241,18 @@ class AnnotationBox extends React.Component {
 		let submitOnChange = undefined;
 		let addFormData = undefined;
 		if (add && metadataForm && metadataForm.schema) {
-			const {adminOnly, filter: _filter, uiSchema: _addUiSchema, _submitOnChange, formData} =  this.getAddOptions();
+			const {adminOnly, filter: _filter, uiSchema: _addUiSchema, submitOnChange: _submitOnChange, formData} =  this.getAddOptions();
 
 			if (adminOnly && !formContext.uiSchemaContext.isAdmin) {
 				return null;
 			}
 
-			let propArray = Object.keys(metadataForm.schema.properties);
+			let propArray = Object.keys(metadataForm.schema.properties!);
 			propArray = filter(propArray, ["created", "annotationByPerson"], "blacklist");
 			if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
 
 			const addSchemaProperties = propArray.reduce((properties, prop) => {
-				properties[prop] = metadataForm.schema.properties[prop];
+				(properties as any)[prop] = (metadataForm.schema.properties as any)[prop];
 				return properties;
 			}, {});
 			addSchema = {...metadataForm.schema, properties: addSchemaProperties};
@@ -220,7 +260,7 @@ class AnnotationBox extends React.Component {
 			submitOnChange = _submitOnChange;
 			addFormData = this.state.addFormData || (
 				formData
-					? getDefaultFormState(addSchema, formData)
+					? getDefaultFormState(addSchema as any, formData)
 					: undefined
 			);
 		}
@@ -246,7 +286,7 @@ class AnnotationBox extends React.Component {
 								{translations[this.state.fail ? "SaveFail" : "SaveSuccess"]}
 							</Alert>
 					}
-					{renderSubmit && <Button id="submit" type="submit" onClick={this.onAnnotationSubmit}>{translations.Submit}</Button>}
+					{renderSubmit && <Button id="submit" type="submit" onClick={this.onAnnotationSubmitClick}>{translations.Submit}</Button>}
 				</div>}
 			</LajiForm>
 		) : null;
@@ -254,9 +294,9 @@ class AnnotationBox extends React.Component {
 
 	getUiSchema = () => {
 		const {uiSchema} = this.props;
-		const {metadataForm = {}} = this.state;
+		const metadataForm: Form = this.state.metadataForm || {} as Form;
 		return uiSchema || {
-			...metadataForm.uiSchema, 
+			...(metadataForm.uiSchema || {}), 
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
 				...(this.props.formContext.services.keyHandler.shortcuts)
@@ -265,7 +305,7 @@ class AnnotationBox extends React.Component {
 		};
 	};
 
-	onDelete = (id) => async () => {
+	onDelete = (id: string) => async () => {
 		try {
 			await this.props.formContext.apiClient.delete("/annotations/{id}", { path: { id } });
 			const annotationContext = getContext(`${this.props.formContext.contextId}_ANNOTATIONS`);

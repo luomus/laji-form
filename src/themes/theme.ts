@@ -37,6 +37,7 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 	now?: number;
 }
 
+// React.ButtonHTMLAttributes<HTMLButtonElement>
 export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName, HasMaybeRef, HasMaybeStyle {
 	variant?: ButtonVariant;
 	active?: boolean;
@@ -46,6 +47,7 @@ export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, 
 	id?: string;
 	small?: boolean;
 	onKeyDown?: (e: React.KeyboardEvent<any>) => void;
+	type?: any;
 }
 
 export type ButtonGroupProps = JSX.IntrinsicAttributes & HasMaybeChildren;
