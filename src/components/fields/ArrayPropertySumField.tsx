@@ -45,4 +45,4 @@ const getSum = (props: FieldProps<JSONSchemaObject[], JSONSchemaObject>): number
 	const formData: any[] = props.formData || [];
 	const propertyField = getUiOptions(props.uiSchema).propertyField as string;
 	return formData.reduce<number>((acc: number, item: any) => acc + (Number(item[propertyField]) || 0), 0);
-}
+};

@@ -66,7 +66,7 @@ export default class NamedPlaceSaverField extends React.Component {
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {Modal} = this.context.theme;
-		const uiSchema = this.getUiSchema(this.props)
+		const uiSchema = this.getUiSchema(this.props);
 		return (
 			<div>
 				<SchemaField  {...this.props} uiSchema={uiSchema} />

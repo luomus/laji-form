@@ -38,7 +38,7 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 				const state = this.getStateFromProps(props);
 				if (state) this.setState(state);
 			}
-		}
+		};
 
 		static displayName = getReactComponentName(ComposedComponent as any);
 

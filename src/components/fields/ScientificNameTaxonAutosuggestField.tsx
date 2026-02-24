@@ -65,7 +65,7 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 		formData: PropTypes.object.isRequired
 	};
 
-	state: State = {}
+	state: State = {};
 
 	getUiSchema = (props: FieldProps<JSONSchemaObject>): any => {
 		let {schema, uiSchema, formData = {}} = props;

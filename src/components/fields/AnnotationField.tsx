@@ -157,7 +157,7 @@ class AnnotationBox extends React.Component<AnnotationBoxProps, AnnotationBoxSta
 
 	constructor(props: AnnotationBoxProps) {
 		super(props);
-		this.state = {annotations: props.annotations || []}
+		this.state = {annotations: props.annotations || []};
 	}
 
 	componentDidMount() {
@@ -215,7 +215,7 @@ class AnnotationBox extends React.Component<AnnotationBoxProps, AnnotationBoxSta
 
 	onAnnotationSubmitClick = () => {
 		this.onAnnotationSubmit({ formData: this.state.addFormData! });
-	}
+	};
 
 	getAddOptions = () => {
 		const {add, formContext: {uiSchemaContext: {isAdmin}}} = this.props;
