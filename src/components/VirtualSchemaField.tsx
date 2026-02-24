@@ -32,8 +32,12 @@ export default function VirtualSchemaField<LFC extends Constructor<LajiFormCompo
 		}
 
 		UNSAFE_componentWillReceiveProps = (props: any, nextContext: any) => {
-			const state = this.getStateFromProps(props);
-			if (state) this.setState(state);
+			if (super.UNSAFE_componentWillReceiveProps) {
+				super.UNSAFE_componentWillReceiveProps(props, nextContext);
+			} else if (this.getStateFromProps) {
+				const state = this.getStateFromProps(props);
+				if (state) this.setState(state);
+			}
 		}
 
 		static displayName = getReactComponentName(ComposedComponent as any);
