@@ -68,6 +68,16 @@ test.describe("Geocoder", () => {
 				"types": [
 					"municipality"
 				]
+			},
+			{
+				"address_components": [{
+					"long_name": "Suomi",
+					"short_name": "Suomi",
+					"types": ["country"]
+				}],
+				"formatted_address": "Suomi",
+				"types": ["country"],
+				"place_id": "ML.206"
 			}
 		]
 	};
