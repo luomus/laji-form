@@ -47,20 +47,21 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		return "TaxonSetPopulatorField";
 	}
 
-	taxonSets: any[] = [];
+	selectedTaxonSets: string[] = [];
+	unitTaxonSets: Record<string, string[]> = {};
 
 	getStateFromProps() {
 		return { onChange: this.onChange };
 	}
 
 	onChange = async (formData: any) => {
-		const previousTaxonSets = this.taxonSets;
+		const previousTaxonSets = this.selectedTaxonSets;
 		const currentTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
 		const deletedTaxonSets = previousTaxonSets.filter((item: string) => !currentTaxonSets.includes(item));
 		const addedTaxonSets = currentTaxonSets.filter((item: string) => !previousTaxonSets.includes(item));
 
-		this.taxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
+		this.selectedTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
 		if (deletedTaxonSets.length > 0) {
 			deletedTaxonSets.map((deletedTaxonSetId: string) => {
@@ -68,7 +69,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 				let observationsExist = false;
 
 				const deletedTaxonSetUnits = currentUnits.filter((unit: any) => {
-					return unit.taxonSets && unit.taxonSets.includes(deletedTaxonSetId);
+					return this.unitTaxonSets[unit.identifications[0].taxonID]
+					&& this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
 				deletedTaxonSetUnits.map((unit: any) => {
 					if (
@@ -96,7 +98,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 								}
 							]
 						};
-						this.taxonSets = [...this.taxonSets, deletedTaxonSetId];
+						this.selectedTaxonSets = [...this.selectedTaxonSets, deletedTaxonSetId];
 						this.props.onChange(updatedFormData);
 						return;
 					}
@@ -106,7 +108,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 				}
 
 				const updatedUnits = currentUnits.filter((unit: any) => {
-					return !unit.taxonSets || !unit.taxonSets.includes(deletedTaxonSetId);
+					return !this.unitTaxonSets[unit.identifications[0].taxonID]
+					|| !this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
 				const updatedFormData = {
 					...formData,
@@ -121,7 +124,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 			// if current units include any units with taxon sets that are being added, return to avoid duplicates
 			const duplicateUnits = currentUnits.filter((unit: any) => {
-				return unit.taxonSets && unit.taxonSets.some((taxonSetId: string) => addedTaxonSets.includes(taxonSetId));
+				return this.unitTaxonSets[unit.identifications[0].taxonID]
+				&& this.unitTaxonSets[unit.identifications[0].taxonID].some((taxonSetId: string) => addedTaxonSets.includes(taxonSetId));
 			});
 			if (duplicateUnits.length > 0) {
 				return;
@@ -130,14 +134,14 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
 
 			const newUnits = results.map((result: any) => {
+				this.unitTaxonSets[result.id] = result.taxonSets || [];
 				return {
 					identifications: [{
 						taxon: result.scientificName,
 						taxonID: result.id,
 						taxonVerbatim: result.vernacularName
 					}],
-					informalTaxonGroups: result.informalTaxonGroups || [],
-					taxonSets: result.taxonSets || []
+					informalTaxonGroups: result.informalTaxonGroups || []
 				};
 			});
 
