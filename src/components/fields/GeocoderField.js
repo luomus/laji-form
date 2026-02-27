@@ -3,17 +3,14 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 const equals = require("deep-equal");
 import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState, getFieldUUID } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import Spinner from "react-spinner";
-import { FINLAND_BOUNDS } from "@luomus/laji-map/lib/globals";
 
 const cache = {};
 
-@BaseComponent
 export default class GeocoderField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -209,15 +206,6 @@ export default class GeocoderField extends React.Component {
 			return;
 		}
 
-		const bounds = L.geoJson({  
-			type: "FeatureCollection",
-			features: geometry.geometries.map(geometry => {
-				return {type: "Feature", properties: {}, geometry};
-			})
-		}).getBounds();
-		const center = bounds.getCenter();
-		const {lat, lng} = center;
-
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
 		const lajiFormInstance = props.formContext.services.rootInstance;
@@ -241,7 +229,7 @@ export default class GeocoderField extends React.Component {
 					reject(e);
 				};
 
-				const handleResponse = (country, ...fields) => (response) => {
+				const handleResponse = (...fields) => (response) => {
 					fields = fields.reduce((_fields, field) => {
 						_fields[field] = true;
 						return _fields;
@@ -331,7 +319,6 @@ export default class GeocoderField extends React.Component {
 							changes[field] = getDefaultFormState(this.props.schema.properties[field]);
 						}
 					});
-					if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
 					success(() => {
 						if (timestamp !== this.promiseTimestamp) return;
 						if (this.mounted) {
@@ -342,19 +329,6 @@ export default class GeocoderField extends React.Component {
 							lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 						}
 						if (callback) callback();
-					});
-				};
-
-				const fetchForeign = () => {
-					if (!props.formContext.googleApiKey) return fail("No Google API key", callback);
-
-					this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
-					?latlng=${lat},${lng}\
-					&key=${props.formContext.googleApiKey}\
-					&language=en\
-					&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
-					).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch((e) => {
-						fail(e.message, callback, !!"failed");
 					});
 				};
 
@@ -370,14 +344,12 @@ export default class GeocoderField extends React.Component {
 					}
 				}, 30 * 1000);
 
-				!bounds.overlaps(FINLAND_BOUNDS)
-					? fetchForeign()
-					: this.props.formContext.apiClient.post("/coordinates/location", undefined, geometry).then(
-					).then(
-						handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")
-					).catch((e) => {
-						fail(typeof e === "string" ? e : e.message);
-					});
+				
+				this.props.formContext.apiClient.post("/coordinates/location", undefined, geometry).then(
+					handleResponse("country", "municipality", "administrativeProvince", "biologicalProvince", "biogeographicalProvince")
+				).catch(e => {
+					fail(typeof e === "string" ? e : e.message);
+				});
 			}));
 		};
 

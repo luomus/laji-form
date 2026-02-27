@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import BaseComponent from "../BaseComponent";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState, assignUUID } from "../../utils";
 import { Button } from "../components";
 import ReactContext from "../../ReactContext";
@@ -10,7 +9,6 @@ import { TagInputComponent } from "./TagArrayField";
 /**
  * Compatible only with unit array.
  */
-@BaseComponent
 export default class UnitListShorthandArrayField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -20,13 +18,15 @@ export default class UnitListShorthandArrayField extends React.Component {
 		formData: PropTypes.array.isRequired
 	};
 
-	getStateFromProps(props) {
+	state = { show: false };
+
+	getUiSchema(props) {
 		const buttonDefinition = {
 			fn: this.onButtonClick,
 			fnName: "addUnitList",
 			glyph: "align-justify",
-			label: this.props.formContext.translations.AddUnitList,
-			id: this.props.idSchema.$id,
+			label: props.formContext.translations.AddUnitList,
+			id: props.idSchema.$id,
 			changesFormData: true,
 			rules: {
 				canAdd: true
@@ -35,7 +35,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const options = getUiOptions(innerUiSchema);
-		const uiSchema = {
+		return {
 			...innerUiSchema,
 			"ui:options": {
 				...options,
@@ -45,8 +45,6 @@ export default class UnitListShorthandArrayField extends React.Component {
 				]
 			}
 		};
-
-		return {uiSchema};
 	}
 
 	onButtonClick = () => () => {
@@ -104,7 +102,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 
 		return (
 			<React.Fragment>
-				<SchemaField {...this.props} uiSchema={this.state.uiSchema} />
+				<SchemaField {...this.props} uiSchema={this.getUiSchema(this.props)} />
 				{this.state.show && (
 					<Modal show={true} onHide={this.onHide} dialogClassName="unit-list-shorthand-modal">
 						<Modal.Body>

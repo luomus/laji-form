@@ -6,14 +6,12 @@ import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { getUiOptions, isDescendant, parseJSONPointer } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
 const DATE_TIME_SEPARATOR = ", ";
 export const YEAR_MATCH = /^\d{4}$/;
 export const YEAR_MONTH_MATCH = /^\d{4}-\d{1,2}$/;
 
-@BaseComponent
 export default class DateTimeWidget extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -69,6 +67,11 @@ export default class DateTimeWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		momentLocalizer(moment);
+		this.state = this.getStateFromProps(props);
+	}
+
+	UNSAFE_componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 
 	componentDidMount() {

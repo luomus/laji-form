@@ -6,7 +6,6 @@ import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, isNullOrUndefined } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import exif from "exifreader";
 import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
@@ -84,7 +83,6 @@ export interface MediaArrayState {
 type Constructor<LFC> = new(...args: any[]) => LFC;
 export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps<any, JSONSchemaArray<JSONSchemaObject>>, MediaArrayState>>>(ComposedComponent: LFC) {
 
-	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
 		ALLOWED_FILE_TYPES: string[];
 		ACCEPT_FILE_TYPES: string[];

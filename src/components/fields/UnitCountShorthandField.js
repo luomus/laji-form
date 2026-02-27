@@ -6,7 +6,6 @@ import {
 	updateSafelyWithJSONPointer
 } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import BaseComponent from "../BaseComponent";
 import { FetcherInput } from "../components";
 import merge from "deepmerge";
 import ReactContext from "../../ReactContext";
@@ -89,7 +88,6 @@ export default class UnitCountShorthandField extends React.Component {
 	}
 }
 
-@BaseComponent
 class CodeReader extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {

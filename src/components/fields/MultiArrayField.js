@@ -3,11 +3,10 @@ import * as PropTypes from "prop-types";
 import { operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
 import { arrayRulesPropType } from "./FilterArrayField";
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import getContext from "../../Context";
 import { arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
+import memoize from "memoizee";
 
-@BaseComponent
 export default class MultiArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -168,7 +167,7 @@ export default class MultiArrayField extends React.Component {
 		});
 	}
 
-	onChange = (idx) => (formData) => {
+	onChange = memoize((idx) => (formData) => {
 		let offset = 0;
 		for (let i = 0; i < idx; i++) {
 			offset += Object.keys(this.groupedItems[i]).length;
@@ -208,7 +207,7 @@ export default class MultiArrayField extends React.Component {
 			return [...flat, ...groupItems];
 		}, []);
 		this.props.onChange(newFormData);
-	};
+	});
 }
 
 const getArrayKeyFunctions = (that) => {

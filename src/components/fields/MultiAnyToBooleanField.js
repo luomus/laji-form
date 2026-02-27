@@ -1,11 +1,9 @@
 import * as React from "react";
-import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import AnyToBoolean from "./AnyToBooleanField";
 import { getTemplate } from "@rjsf/utils";
 
-@BaseComponent
 export default class MultiAnyToBooleanField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -28,18 +26,14 @@ export default class MultiAnyToBooleanField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.getInitialState(props);
+		this.state = this.getStateFromProps(props);
 	}
 
-	getInitialState(props) {
-		return this.initializeGroups(props);
+	UNSAFE_componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 
-	getStateFromProps(props) {
-		return this.initializeGroups(props);
-	}
-
-	initializeGroups = (props) => {
+	getStateFromProps = (props) => {
 		let {groups} = getUiOptions(props.uiSchema) || [];
 		const {formData} = props;
 

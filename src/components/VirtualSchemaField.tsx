@@ -1,6 +1,5 @@
 import * as React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
-import BaseComponent from "./BaseComponent";
 import getContext from "../Context";
 import { FieldProps } from "../types";
 
@@ -24,13 +23,22 @@ interface LajiFormComponentForVirtualSchemaField extends Omit<React.Component<Fi
  */
  
 export default function VirtualSchemaField<LFC extends Constructor<LajiFormComponentForVirtualSchemaField>>(ComposedComponent: LFC) {
-	@BaseComponent
 	class VirtualSchemaField extends ComposedComponent {
 		constructor(...args: any[]) {
 			super(...args);
 			this.getStateFromProps = this.getStateFromProps.bind(this);
+			this.state = this.getStateFromProps(args[0]);
 			this.render = this.render.bind(this);
 		}
+
+		UNSAFE_componentWillReceiveProps = (props: any, nextContext: any) => {
+			if (super.UNSAFE_componentWillReceiveProps) {
+				super.UNSAFE_componentWillReceiveProps(props, nextContext);
+			} else if (this.getStateFromProps) {
+				const state = this.getStateFromProps(props);
+				if (state) this.setState(state);
+			}
+		};
 
 		static displayName = getReactComponentName(ComposedComponent as any);
 

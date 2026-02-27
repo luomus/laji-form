@@ -4,10 +4,8 @@ import { TooltipComponent } from "../components";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import Spinner from "react-spinner";
-import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
 
-@BaseComponent
 export default class InformalTaxonGroupChooserWidget extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {

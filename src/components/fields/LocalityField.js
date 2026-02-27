@@ -1,13 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 import ReactContext from "../../ReactContext";
 
-@BaseComponent
 export default class LocalityField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -18,10 +16,7 @@ export default class LocalityField extends React.Component {
 		formData: PropTypes.object.isRequired
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+	state = {};
 
 	render() {
 		const {radius: _radius, geometry} = getUiOptions(this.props.uiSchema);

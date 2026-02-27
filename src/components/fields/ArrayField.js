@@ -1,7 +1,6 @@
 import * as React from "react";
 import merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState, getFormDataIndex } from "../../utils";
-import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
 import { getDefaultRegistry } from "@rjsf/core";
@@ -93,7 +92,6 @@ export class ArrayFieldPatched extends ArrayField {
 	}
 }
 
-@BaseComponent
 export default class _ArrayField extends React.Component {
 	static contextType = ReactContext;
 

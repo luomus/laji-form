@@ -2,11 +2,9 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Affix } from "../components";
-import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
 
-@BaseComponent
 export default class ExtraLabelRowField extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -26,7 +24,7 @@ export default class ExtraLabelRowField extends React.Component {
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	};
 
-	getStateFromProps(props) {
+	getNextProps(props) {
 		return {
 			schema: {...props.schema, title: ""},
 			uiSchema: getInnerUiSchema(props.uiSchema),
@@ -70,7 +68,7 @@ export default class ExtraLabelRowField extends React.Component {
 					) : null
 				}
 				{labelRow}
-				<SchemaField {...this.props} {...this.state}/>
+				<SchemaField {...this.props} {...this.getNextProps(this.props)}/>
 			</div>
 		);
 	}

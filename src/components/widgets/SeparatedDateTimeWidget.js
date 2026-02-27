@@ -2,10 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
-import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
-@BaseComponent
 export default class SeparatedDateTimeWidget extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -14,6 +12,15 @@ export default class SeparatedDateTimeWidget extends React.Component {
 		}).isRequired,
 		value: PropTypes.string
 	};
+
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+	}
+
+	UNSAFE_componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
 
 	getStateFromProps(props) {
 		let {value} = props;

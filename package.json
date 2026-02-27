@@ -1,6 +1,6 @@
 {
   "name": "@luomus/laji-form",
-  "version": "15.1.93",
+  "version": "15.1.94",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,7 +29,7 @@
     "test:lightweight": "npx playwright test --project chromium",
     "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
     "test:docker:run": "docker run laji-form-test",
-    "generate:api-client": "openapi-typescript https://apitest.laji.fi/openapi-json -o ./generated/api.d.ts --properties-required-by-default"
+    "generate:api-client": "openapi-typescript http://apitest.laji.fi/openapi-json -o ./generated/api.d.ts --properties-required-by-default"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "@luomus/laji-map": "^5.1.19",
-    "@luomus/laji-validate": "^0.0.127",
+    "@luomus/laji-validate": "^0.0.128",
     "@rjsf/core": "~5.1.0",
     "@rjsf/utils": "~5.1.0",
     "@rjsf/validator-ajv6": "~5.1.0",
