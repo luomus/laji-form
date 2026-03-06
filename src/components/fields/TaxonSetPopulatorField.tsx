@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { parseJSONPointer } from "../../utils";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -54,7 +53,34 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		return { onChange: this.onChange };
 	}
 
+	async componentDidMount() {
+		const taxonCensus = this.props.formData?.taxonCensus || [];
+		this.selectedTaxonSets = taxonCensus.map((item: any) => item.censusTaxonSetID);
+
+		let resultTaxonSets: {id: string, taxonSets: string[]}[] = [];
+		if (this.selectedTaxonSets.length > 0) {
+			const allResults = await Promise.all(
+				this.selectedTaxonSets.map(taxonSetId => this.fetchTaxaFromSet(this.props, [taxonSetId]))
+			);
+			resultTaxonSets = allResults.flat().map((result: any) => ({
+				id: result.id,
+				taxonSets: result.taxonSets || []
+			}));
+		}
+
+		this.props.formData?.units?.forEach((unit: any) => {
+			const taxonID = unit?.identifications?.[0]?.taxonID;
+			if (!taxonID) {
+				return;
+			}
+			const taxonSets = resultTaxonSets?.find((result: any) => result.id === taxonID)?.taxonSets || [];
+			this.unitTaxonSets[taxonID] = taxonSets;
+		});
+	}
+
 	onChange = async (formData: any) => {
+		const { translations } = this.props.formContext;
+
 		const previousTaxonSets = this.selectedTaxonSets;
 		const currentTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
@@ -82,11 +108,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 						unit.unitFact?.femalesWithBroodsCount ||
 						unit.unitFact?.juvenileCount
 					) {
-						window.alert(
-							"Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.\n\n" +
-							"This taxon set cannot be removed because it contains observations.\n\n" +
-							"Den här artgruppen kan inte tas bort eftersom det finns observationer i den."
-						);
+						window.alert(translations?.TaxonSetDeletionFailed);
 						observationsExist = true;
 						const updatedFormData = {
 							...formData,
