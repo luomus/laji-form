@@ -98,34 +98,29 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 					return this.unitTaxonSets[unit.identifications[0].taxonID]
 					&& this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
-				deletedTaxonSetUnits.map((unit: any) => {
-					if (
-						unit.maleIndividualCount ||
-						unit.femaleIndividualCount ||
-						unit.nestCount ||
-						unit.unitFact?.destroyedNestCount ||
-						unit.unitFact?.broodCount ||
-						unit.unitFact?.femalesWithBroodsCount ||
-						unit.unitFact?.juvenileCount
-					) {
-						window.alert(translations?.TaxonSetDeletionFailed);
-						observationsExist = true;
-						const updatedFormData = {
-							...formData,
-							taxonCensus: [
-								...formData.taxonCensus,
-								{
-									censusTaxonSetID: deletedTaxonSetId,
-									taxonCensusType: "MY.taxonCensusTypeCounted"
-								}
-							]
-						};
-						this.selectedTaxonSets = [...this.selectedTaxonSets, deletedTaxonSetId];
-						this.props.onChange(updatedFormData);
-						return;
-					}
-				});
+				observationsExist = deletedTaxonSetUnits.some((unit: any) =>
+					unit.maleIndividualCount ||
+					unit.femaleIndividualCount ||
+					unit.nestCount ||
+					unit.unitFact?.destroyedNestCount ||
+					unit.unitFact?.broodCount ||
+					unit.unitFact?.femalesWithBroodsCount ||
+					unit.unitFact?.juvenileCount
+				);
 				if (observationsExist) {
+					window.alert(translations?.TaxonSetDeletionFailed);
+					const restoredFormData = {
+						...formData,
+						taxonCensus: [
+							...formData.taxonCensus,
+							{
+								censusTaxonSetID: deletedTaxonSetId,
+								taxonCensusType: "MY.taxonCensusTypeCounted"
+							}
+						]
+					};
+					this.selectedTaxonSets = [...this.selectedTaxonSets, deletedTaxonSetId];
+					this.props.onChange(restoredFormData);
 					return;
 				}
 
