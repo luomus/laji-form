@@ -137,11 +137,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue1",
-                    "title": "Metsät"
+                    "title": "Metsä"
                   },
                   {
                     "const": "MY.habitatEnumValue2",
-                    "title": "Kangasmetsät"
+                    "title": "Kangasmetsä"
                   },
                   {
                     "const": "MY.habitatEnumValue3",
@@ -157,11 +157,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue6",
-                    "title": "Karukkokangas"
+                    "title": "Kuiva ja karumpi kangas, jäkäläkangas"
                   },
                   {
                     "const": "MY.habitatEnumValue7",
-                    "title": "Lehdot"
+                    "title": "Lehto"
                   },
                   {
                     "const": "MY.habitatEnumValue8",
@@ -185,15 +185,15 @@
                   },
                   {
                     "const": "MY.habitatEnumValue13",
-                    "title": "Tunturikoivikko, ei lehto"
+                    "title": "Tunturikoivikko kangasmaalla"
                   },
                   {
                     "const": "MY.habitatEnumValue14",
-                    "title": "Suot"
+                    "title": "Suo"
                   },
                   {
                     "const": "MY.habitatEnumValue15",
-                    "title": "Avosuot"
+                    "title": "Avosuo"
                   },
                   {
                     "const": "MY.habitatEnumValue16",
@@ -209,7 +209,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue19",
-                    "title": "Puustoiset suot"
+                    "title": "Puustoinen suo"
                   },
                   {
                     "const": "MY.habitatEnumValue20",
@@ -229,7 +229,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue24",
-                    "title": "Vedet"
+                    "title": "Vesi"
                   },
                   {
                     "const": "MY.habitatEnumValue25",
@@ -237,11 +237,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue26",
-                    "title": "Puro tai noro (kausikuiva)"
+                    "title": "Puro"
                   },
                   {
                     "const": "MY.habitatEnumValue27",
-                    "title": "Rannat"
+                    "title": "Ranta"
                   },
                   {
                     "const": "MY.habitatEnumValue28",
@@ -253,11 +253,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue30",
-                    "title": "Luhtaranta"
+                    "title": "Avoluhta tai luhtaniitty"
                   },
                   {
                     "const": "MY.habitatEnumValue31",
-                    "title": "Niittyranta"
+                    "title": "Rantaniitty"
                   },
                   {
                     "const": "MY.habitatEnumValue32",
@@ -269,7 +269,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue34",
-                    "title": "Hietikkoranta"
+                    "title": "Hiekkaranta tai dyyni"
                   },
                   {
                     "const": "MY.habitatEnumValue35",
@@ -277,23 +277,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue36",
-                    "title": "Kalliot ja kivikot"
+                    "title": "Kallio tai kivikko"
                   },
                   {
                     "const": "MY.habitatEnumValue87",
-                    "title": "Karut tai keskiravinteinen kalliot (\"tavalliset kalliot\")"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue37",
-                    "title": "Jäkäläkallio tai -kivikko"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue38",
-                    "title": "Varpu–heinäkallio tai -kivikko"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue39",
-                    "title": "Niukkapuustoinen kallio tai kivikko"
+                    "title": "Keskiravinteinen kallio"
                   },
                   {
                     "const": "MY.habitatEnumValue40",
@@ -301,7 +289,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue41",
-                    "title": "Kalkkikallio tai -louhos, myös paljas kalkkimaa"
+                    "title": "Kalkkikallio tai -louhos (sis. paljas kalkkimaa)"
                   },
                   {
                     "const": "MY.habitatEnumValue42",
@@ -313,7 +301,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue44",
-                    "title": "Tunturipaljakat"
+                    "title": "Tunturipaljakka"
                   },
                   {
                     "const": "MY.habitatEnumValue45",
@@ -325,7 +313,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue47",
-                    "title": "Lumenviipymä"
+                    "title": "Lumenviipymä tai -pysymä"
                   },
                   {
                     "const": "MY.habitatEnumValue48",
@@ -353,19 +341,15 @@
                   },
                   {
                     "const": "MY.habitatEnumValue54",
-                    "title": "Jyrkänne tai pahta"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue55",
-                    "title": "Perinneympäristöt tai muut ihmisen muuttamat ympäristöt"
+                    "title": "Rotko tai kuru"
                   },
                   {
                     "const": "MY.habitatEnumValue56",
-                    "title": "Perinneympäristöt"
+                    "title": "Perinneympäristö"
                   },
                   {
                     "const": "MY.habitatEnumValue57",
-                    "title": "Kuiva niitty tai keto"
+                    "title": "Kuiva niitty eli keto"
                   },
                   {
                     "const": "MY.habitatEnumValue58",
@@ -381,27 +365,19 @@
                   },
                   {
                     "const": "MY.habitatEnumValue61",
-                    "title": "Kostea niitty (muu kuin rantaniitty)"
+                    "title": "Kostea niitty (pl. rantaniitty)"
                   },
                   {
                     "const": "MY.habitatEnumValue62",
                     "title": "Suoniitty"
                   },
                   {
-                    "const": "MY.habitatEnumValue63",
-                    "title": "Kallioketo"
-                  },
-                  {
                     "const": "MY.habitatEnumValue64",
-                    "title": "Oja tai muu kaivanto (sis. ojanpientareet, metsäojat)"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue65",
-                    "title": "Tienvieri (piennar, luiska) ja -pohja"
+                    "title": "Oja tai muu kaivanto (sis. metsäojat)"
                   },
                   {
                     "const": "MY.habitatEnumValue66",
-                    "title": "Viljelymaat"
+                    "title": "Viljelymaa"
                   },
                   {
                     "const": "MY.habitatEnumValue67",
@@ -421,7 +397,7 @@
                   },
                   {
                     "const": "MY.habitatEnumValue71",
-                    "title": "Puistot, pihamaat, puutarhat"
+                    "title": "Puisto, pihamaa tai puutarha"
                   },
                   {
                     "const": "MY.habitatEnumValue72",
@@ -434,10 +410,6 @@
                   {
                     "const": "MY.habitatEnumValue74",
                     "title": "Hautausmaa"
-                  },
-                  {
-                    "const": "MY.habitatEnumValue75",
-                    "title": "Pihamaa"
                   },
                   {
                     "const": "MY.habitatEnumValue76",
@@ -453,11 +425,11 @@
                   },
                   {
                     "const": "MY.habitatEnumValue79",
-                    "title": "Uuselinympäristöt"
+                    "title": "Uuselinympäristö tai muu ihmisen muuttama ympäristö"
                   },
                   {
                     "const": "MY.habitatEnumValue80",
-                    "title": "Tienvieri (piennar, luiska) ja -pohja"
+                    "title": "Tienvarsi"
                   },
                   {
                     "const": "MY.habitatEnumValue81",
@@ -481,15 +453,15 @@
                   },
                   {
                     "const": "MY.habitatEnumValue86",
-                    "title": "Joutomaa (sis. satamat, ratapihat)"
+                    "title": "Ruderaatti tai joutomaa"
                   },
                   {
                     "const": "MY.habitatEnumValue88",
-                    "title": "Meri"
+                    "title": "Valtameri"
                   },
                   {
                     "const": "MY.habitatEnumValue89",
-                    "title": "Murtovesi"
+                    "title": "Itämeri tai muu murtovesi"
                   },
                   {
                     "const": "MY.habitatEnumValue90",
@@ -510,6 +482,306 @@
                   {
                     "const": "MY.habitatEnumValue94",
                     "title": "Koski"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue95",
+                    "title": "Tervaleppämetsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue96",
+                    "title": "Tervaleppälehto"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue97",
+                    "title": "Tervaleppäkorpi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue98",
+                    "title": "Tervaleppäluhta"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue99",
+                    "title": "Tervaleppävaltainen tulvametsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue100",
+                    "title": "Jalopuumetsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue101",
+                    "title": "Jalopuustoinen kangasmetsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue102",
+                    "title": "Pähkinäpensaikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue103",
+                    "title": "Pähkinälehto"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue104",
+                    "title": "Pähkinäpensaikko kangasmetsässä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue105",
+                    "title": "Tulvametsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue106",
+                    "title": "Dyynimetsä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue107",
+                    "title": "Tunturikoivikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue108",
+                    "title": "Avoletto"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue109",
+                    "title": "Lettokorpi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue110",
+                    "title": "Lettoräme"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue111",
+                    "title": "Karu neva"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue112",
+                    "title": "Rehevä neva"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue113",
+                    "title": "Karu räme"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue114",
+                    "title": "Rehevä räme"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue115",
+                    "title": "Karu korpi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue116",
+                    "title": "Rehevä korpi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue117",
+                    "title": "Turvekangas"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue118",
+                    "title": "Hiekkaranta"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue119",
+                    "title": "Rantavehnädyyni"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue120",
+                    "title": "Harmaa dyyni"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue121",
+                    "title": "Variksenmarjadyyni"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue122",
+                    "title": "Dyynin kostea painanne"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue123",
+                    "title": "Kallioranta"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue124",
+                    "title": "Laidunnettu rantaniitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue125",
+                    "title": "Suolamaa"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue126",
+                    "title": "Tulvaniitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue127",
+                    "title": "Lieteranta"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue128",
+                    "title": "Kaislikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue129",
+                    "title": "Osmankäämikkö"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue130",
+                    "title": "Pajukko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue131",
+                    "title": "Katajikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue132",
+                    "title": "Tyrnipensaikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue133",
+                    "title": "Eroosiotörmä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue134",
+                    "title": "Kova pohja"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue135",
+                    "title": "Pehmeä pohja"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue136",
+                    "title": "Flada tai kluuvi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue137",
+                    "title": "Jokisuisto"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue138",
+                    "title": "Sisälahti"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue139",
+                    "title": "Järvi tai lampi"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue140",
+                    "title": "Huurresammallähteikkö"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue141",
+                    "title": "Muu avolähde"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue142",
+                    "title": "Muu tihkupinta"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue143",
+                    "title": "Putous tai köngäs"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue144",
+                    "title": "Noro (kausikuiva)"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue145",
+                    "title": "Karu kallio"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue147",
+                    "title": "Kalliorapauma tai rapakivikallio"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue148",
+                    "title": "Luola tai halkeama"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue149",
+                    "title": "Paljakan karu ja keskiravinteinen kallio tai kivikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue150",
+                    "title": "Paljakan kalkkikallio tai -kivikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue151",
+                    "title": "Paljakan serpentiinikallio tai -kivikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue152",
+                    "title": "Paljakan rotko tai kuru"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue153",
+                    "title": "Vyörysoraikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue154",
+                    "title": "Paljakan lampare tai allikko"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue155",
+                    "title": "Niitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue156",
+                    "title": "Hakamaa"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue157",
+                    "title": "Lehdesniitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue158",
+                    "title": "Metsälaidun"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue159",
+                    "title": "Piennarniitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue160",
+                    "title": "Kasvihuone"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue161",
+                    "title": "Pihaketo tai pihaniitty"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue162",
+                    "title": "Rakennus tai rakenne"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue163",
+                    "title": "Ratavarsi tai ratapiha"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue164",
+                    "title": "Satama"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue165",
+                    "title": "Lentokenttä"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue166",
+                    "title": "Voimalinja"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue167",
+                    "title": "Laskettelurinne"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue168",
+                    "title": "Ampuma-alue tai armeijan harjoitusalue"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue169",
+                    "title": "Urheilukenttä tai ravirata"
+                  },
+                  {
+                    "const": "MY.habitatEnumValue170",
+                    "title": "Läjitysalue tai kaatopaikka"
                   }
                 ]
               },
@@ -518,7 +790,7 @@
             },
             "habitatDescription": {
               "type": "string",
-              "title": "Biotoopin kuvaus"
+              "title": "Elinympäristön kuvaus"
             },
             "weather": {
               "type": "string",
@@ -552,8 +824,20 @@
                   "title": "Hara"
                 },
                 {
+                  "const": "MY.samplingMethodBrushing",
+                  "title": "harjaaminen"
+                },
+                {
+                  "const": "MY.samplingMethodAspirator",
+                  "title": "hyönteisimuri"
+                },
+                {
                   "const": "MY.samplingMethodWindowtrap",
                   "title": "Ikkunapyydys"
+                },
+                {
+                  "const": "MY.samplingMethodVacuum",
+                  "title": "imuri"
                 },
                 {
                   "const": "MY.samplingMethodDigging",
@@ -564,8 +848,8 @@
                   "title": "Kalaverkko"
                 },
                 {
-                  "const": "MY.samplingMethodHand",
-                  "title": "Käsinkeräys"
+                  "const": "MY.samplingMethodShaking",
+                  "title": "karistelu"
                 },
                 {
                   "const": "MY.samplingMethodReared",
@@ -606,6 +890,10 @@
                 {
                   "const": "MY.samplingMethodEclectortrap",
                   "title": "Kuoriutumispyydys, eklektori"
+                },
+                {
+                  "const": "MY.samplingMethodHand",
+                  "title": "Käsinkeräys"
                 },
                 {
                   "const": "MY.samplingMethodDungTrap",
@@ -694,6 +982,10 @@
                 {
                   "const": "MY.samplingMethodBaittrap",
                   "title": "Syöttipyydys"
+                },
+                {
+                  "const": "MY.samplingMethodFlooding",
+                  "title": "tulvittaminen"
                 },
                 {
                   "const": "MY.samplingMethodTrawling",
@@ -978,8 +1270,20 @@
                         "title": "Hara"
                       },
                       {
+                        "const": "MY.samplingMethodBrushing",
+                        "title": "harjaaminen"
+                      },
+                      {
+                        "const": "MY.samplingMethodAspirator",
+                        "title": "hyönteisimuri"
+                      },
+                      {
                         "const": "MY.samplingMethodWindowtrap",
                         "title": "Ikkunapyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodVacuum",
+                        "title": "imuri"
                       },
                       {
                         "const": "MY.samplingMethodDigging",
@@ -990,8 +1294,8 @@
                         "title": "Kalaverkko"
                       },
                       {
-                        "const": "MY.samplingMethodHand",
-                        "title": "Käsinkeräys"
+                        "const": "MY.samplingMethodShaking",
+                        "title": "karistelu"
                       },
                       {
                         "const": "MY.samplingMethodReared",
@@ -1032,6 +1336,10 @@
                       {
                         "const": "MY.samplingMethodEclectortrap",
                         "title": "Kuoriutumispyydys, eklektori"
+                      },
+                      {
+                        "const": "MY.samplingMethodHand",
+                        "title": "Käsinkeräys"
                       },
                       {
                         "const": "MY.samplingMethodDungTrap",
@@ -1120,6 +1428,10 @@
                       {
                         "const": "MY.samplingMethodBaittrap",
                         "title": "Syöttipyydys"
+                      },
+                      {
+                        "const": "MY.samplingMethodFlooding",
+                        "title": "tulvittaminen"
                       },
                       {
                         "const": "MY.samplingMethodTrawling",
@@ -1937,13 +2249,9 @@
                         "type": "string",
                         "title": "Loppu"
                       },
-                      "habitatIUCN": {
-                        "type": "string",
-                        "title": "Biotooppi"
-                      },
                       "habitatDescription": {
                         "type": "string",
-                        "title": "Biotoopin kuvaus"
+                        "title": "Elinympäristön kuvaus"
                       },
                       "substrate": {
                         "type": "string",
@@ -2281,6 +2589,8 @@
           },
           "required": []
         },
+        "minItems": 1,
+        "maxItems": 1,
         "title": ""
       },
       "documentIdentifications": {
@@ -2313,6 +2623,7 @@
     "$.gatherings[*].dateEnd",
     "$.gatherings[*].images",
     "$.gatherings[*].weather",
+    "$.gatherings[*].notes",
     "$.gatherings[*].units",
     "$.gatherings[*].units[*].unitGathering.dateEnd"
   ],
@@ -2947,6 +3258,13 @@
               "ui:options": {
                 "propertyField": "count"
               }
+            },
+            {
+              "ui:field": "ArrayPropertyCountField",
+              "ui:title": "Havintomäärä",
+              "ui:options": {
+                "propertyField": "identifications_0_taxon"
+              }
             }
           ],
           "ui:field": "SingleActiveArrayField",
@@ -2982,7 +3300,6 @@
                   "identifications_0_identificationBasis",
                   "samplingMethod",
                   "samplingMethodNotes",
-                  "unitGathering_habitatIUCN",
                   "unitGathering_habitatDescription",
                   "unitGathering_dateBegin",
                   "unitGathering_dateEnd",
@@ -3057,7 +3374,6 @@
                       "identifications_0_identificationBasis",
                       "samplingMethod",
                       "samplingMethodNotes",
-                      "unitGathering_habitatIUCN",
                       "unitGathering_habitatDescription",
                       "unitGathering_dateBegin",
                       "unitGathering_dateEnd"
@@ -3125,7 +3441,6 @@
                           "sex",
                           "unitGathering_dateBegin",
                           "unitGathering_dateEnd",
-                          "unitGathering_habitatIUCN",
                           "unitGathering_habitatDescription",
                           "preservation",
                           "samplingMethod",
@@ -3173,7 +3488,6 @@
               "sex",
               "unitGathering_dateBegin",
               "unitGathering_dateEnd",
-              "unitGathering_habitatIUCN",
               "unitGathering_habitatDescription",
               "preservation",
               "samplingMethod",
@@ -3388,9 +3702,9 @@
   },
   "options": {
     "instructions": {
-      "fi": "https://laji.fi/about/1107",
-      "en": "https://laji.fi/about/1107",
-      "sv": "https://laji.fi/about/1107"
+      "fi": "https://laji.fi/about/8794",
+      "en": "https://laji.fi/about/8794",
+      "sv": "https://laji.fi/about/8794"
     },
     "allowExcel": true,
     "allowExcelGeneration": false,
@@ -3405,8 +3719,7 @@
       "lastCensusLabel": "Edellinen seurantatapahtuma",
       "listColumns": [
         "$.municipality",
-        "$.name",
-        "$.notes"
+        "$.name"
       ],
       "createNewButtonLabel": "Luo uusi seurantapaikka",
       "createNewButtonPrependingTextLabel": "Valitse alta perustettu seurantapaikka",
@@ -3475,41 +3788,41 @@
           "MY.habitatEnumValue7"
         ],
         "MY.habitatEnumValue11": [
-          "MY.habitatEnumValue7"
+          "MY.habitatEnumValue100"
         ],
         "MY.habitatEnumValue12": [
-          "MY.habitatEnumValue7"
+          "MY.habitatEnumValue107"
         ],
         "MY.habitatEnumValue13": [
-          "MY.habitatEnumValue1"
+          "MY.habitatEnumValue107"
         ],
         "MY.habitatEnumValue14": [],
         "MY.habitatEnumValue15": [
           "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue16": [
-          "MY.habitatEnumValue15"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue17": [
-          "MY.habitatEnumValue15"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue18": [
-          "MY.habitatEnumValue15"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue19": [
           "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue20": [
-          "MY.habitatEnumValue19"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue21": [
-          "MY.habitatEnumValue19"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue22": [
-          "MY.habitatEnumValue19"
+          "MY.habitatEnumValue14"
         ],
         "MY.habitatEnumValue23": [
-          "MY.habitatEnumValue19"
+          "MY.habitatEnumValue28"
         ],
         "MY.habitatEnumValue24": [],
         "MY.habitatEnumValue25": [
@@ -3520,7 +3833,7 @@
         ],
         "MY.habitatEnumValue27": [],
         "MY.habitatEnumValue28": [
-          "MY.habitatEnumValue27"
+          "MY.habitatEnumValue1"
         ],
         "MY.habitatEnumValue29": [
           "MY.habitatEnumValue27"
@@ -3532,7 +3845,7 @@
           "MY.habitatEnumValue27"
         ],
         "MY.habitatEnumValue32": [
-          "MY.habitatEnumValue27"
+          "MY.habitatEnumValue30"
         ],
         "MY.habitatEnumValue33": [
           "MY.habitatEnumValue27"
@@ -3547,17 +3860,8 @@
         "MY.habitatEnumValue87": [
           "MY.habitatEnumValue36"
         ],
-        "MY.habitatEnumValue37": [
-          "MY.habitatEnumValue87"
-        ],
-        "MY.habitatEnumValue38": [
-          "MY.habitatEnumValue87"
-        ],
-        "MY.habitatEnumValue39": [
-          "MY.habitatEnumValue87"
-        ],
         "MY.habitatEnumValue40": [
-          "MY.habitatEnumValue87"
+          "MY.habitatEnumValue1"
         ],
         "MY.habitatEnumValue41": [
           "MY.habitatEnumValue36"
@@ -3597,41 +3901,32 @@
           "MY.habitatEnumValue44"
         ],
         "MY.habitatEnumValue54": [
-          "MY.habitatEnumValue44"
+          "MY.habitatEnumValue36"
         ],
-        "MY.habitatEnumValue55": [],
-        "MY.habitatEnumValue56": [
-          "MY.habitatEnumValue55"
-        ],
+        "MY.habitatEnumValue56": [],
         "MY.habitatEnumValue57": [
-          "MY.habitatEnumValue56"
+          "MY.habitatEnumValue155"
         ],
         "MY.habitatEnumValue58": [
           "MY.habitatEnumValue56"
         ],
         "MY.habitatEnumValue59": [
-          "MY.habitatEnumValue56"
+          "MY.habitatEnumValue155"
         ],
         "MY.habitatEnumValue60": [
           "MY.habitatEnumValue56"
         ],
         "MY.habitatEnumValue61": [
-          "MY.habitatEnumValue56"
+          "MY.habitatEnumValue155"
         ],
         "MY.habitatEnumValue62": [
           "MY.habitatEnumValue56"
         ],
-        "MY.habitatEnumValue63": [
-          "MY.habitatEnumValue56"
-        ],
         "MY.habitatEnumValue64": [
-          "MY.habitatEnumValue55"
-        ],
-        "MY.habitatEnumValue65": [
-          "MY.habitatEnumValue55"
+          "MY.habitatEnumValue79"
         ],
         "MY.habitatEnumValue66": [
-          "MY.habitatEnumValue55"
+          "MY.habitatEnumValue79"
         ],
         "MY.habitatEnumValue67": [
           "MY.habitatEnumValue66"
@@ -3646,7 +3941,7 @@
           "MY.habitatEnumValue66"
         ],
         "MY.habitatEnumValue71": [
-          "MY.habitatEnumValue55"
+          "MY.habitatEnumValue79"
         ],
         "MY.habitatEnumValue72": [
           "MY.habitatEnumValue71"
@@ -3655,9 +3950,6 @@
           "MY.habitatEnumValue71"
         ],
         "MY.habitatEnumValue74": [
-          "MY.habitatEnumValue71"
-        ],
-        "MY.habitatEnumValue75": [
           "MY.habitatEnumValue71"
         ],
         "MY.habitatEnumValue76": [
@@ -3669,9 +3961,7 @@
         "MY.habitatEnumValue78": [
           "MY.habitatEnumValue71"
         ],
-        "MY.habitatEnumValue79": [
-          "MY.habitatEnumValue55"
-        ],
+        "MY.habitatEnumValue79": [],
         "MY.habitatEnumValue80": [
           "MY.habitatEnumValue79"
         ],
@@ -3693,13 +3983,252 @@
         "MY.habitatEnumValue86": [
           "MY.habitatEnumValue79"
         ],
-        "MY.habitatEnumValue88": [],
-        "MY.habitatEnumValue89": [],
-        "MY.habitatEnumValue90": [],
-        "MY.habitatEnumValue91": [],
-        "MY.habitatEnumValue92": [],
-        "MY.habitatEnumValue93": [],
-        "MY.habitatEnumValue94": []
+        "MY.habitatEnumValue88": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue89": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue90": [
+          "MY.habitatEnumValue139"
+        ],
+        "MY.habitatEnumValue91": [
+          "MY.habitatEnumValue139"
+        ],
+        "MY.habitatEnumValue92": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue93": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue94": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue95": [
+          "MY.habitatEnumValue1"
+        ],
+        "MY.habitatEnumValue96": [
+          "MY.habitatEnumValue95"
+        ],
+        "MY.habitatEnumValue97": [
+          "MY.habitatEnumValue95"
+        ],
+        "MY.habitatEnumValue98": [
+          "MY.habitatEnumValue95"
+        ],
+        "MY.habitatEnumValue99": [
+          "MY.habitatEnumValue95"
+        ],
+        "MY.habitatEnumValue100": [
+          "MY.habitatEnumValue1"
+        ],
+        "MY.habitatEnumValue101": [
+          "MY.habitatEnumValue100"
+        ],
+        "MY.habitatEnumValue102": [
+          "MY.habitatEnumValue1"
+        ],
+        "MY.habitatEnumValue103": [
+          "MY.habitatEnumValue102"
+        ],
+        "MY.habitatEnumValue104": [
+          "MY.habitatEnumValue102"
+        ],
+        "MY.habitatEnumValue105": [
+          "MY.habitatEnumValue28"
+        ],
+        "MY.habitatEnumValue106": [
+          "MY.habitatEnumValue1"
+        ],
+        "MY.habitatEnumValue107": [
+          "MY.habitatEnumValue1"
+        ],
+        "MY.habitatEnumValue108": [
+          "MY.habitatEnumValue16"
+        ],
+        "MY.habitatEnumValue109": [
+          "MY.habitatEnumValue16"
+        ],
+        "MY.habitatEnumValue110": [
+          "MY.habitatEnumValue16"
+        ],
+        "MY.habitatEnumValue111": [
+          "MY.habitatEnumValue17"
+        ],
+        "MY.habitatEnumValue112": [
+          "MY.habitatEnumValue17"
+        ],
+        "MY.habitatEnumValue113": [
+          "MY.habitatEnumValue20"
+        ],
+        "MY.habitatEnumValue114": [
+          "MY.habitatEnumValue20"
+        ],
+        "MY.habitatEnumValue115": [
+          "MY.habitatEnumValue21"
+        ],
+        "MY.habitatEnumValue116": [
+          "MY.habitatEnumValue21"
+        ],
+        "MY.habitatEnumValue117": [
+          "MY.habitatEnumValue14"
+        ],
+        "MY.habitatEnumValue118": [
+          "MY.habitatEnumValue34"
+        ],
+        "MY.habitatEnumValue119": [
+          "MY.habitatEnumValue34"
+        ],
+        "MY.habitatEnumValue120": [
+          "MY.habitatEnumValue34"
+        ],
+        "MY.habitatEnumValue121": [
+          "MY.habitatEnumValue34"
+        ],
+        "MY.habitatEnumValue122": [
+          "MY.habitatEnumValue34"
+        ],
+        "MY.habitatEnumValue123": [
+          "MY.habitatEnumValue27"
+        ],
+        "MY.habitatEnumValue124": [
+          "MY.habitatEnumValue31"
+        ],
+        "MY.habitatEnumValue125": [
+          "MY.habitatEnumValue31"
+        ],
+        "MY.habitatEnumValue126": [
+          "MY.habitatEnumValue31"
+        ],
+        "MY.habitatEnumValue127": [
+          "MY.habitatEnumValue35"
+        ],
+        "MY.habitatEnumValue128": [
+          "MY.habitatEnumValue30"
+        ],
+        "MY.habitatEnumValue129": [
+          "MY.habitatEnumValue30"
+        ],
+        "MY.habitatEnumValue130": [
+          "MY.habitatEnumValue29"
+        ],
+        "MY.habitatEnumValue131": [
+          "MY.habitatEnumValue29"
+        ],
+        "MY.habitatEnumValue132": [
+          "MY.habitatEnumValue29"
+        ],
+        "MY.habitatEnumValue133": [
+          "MY.habitatEnumValue27"
+        ],
+        "MY.habitatEnumValue134": [
+          "MY.habitatEnumValue89"
+        ],
+        "MY.habitatEnumValue135": [
+          "MY.habitatEnumValue89"
+        ],
+        "MY.habitatEnumValue136": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue137": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue138": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue139": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue140": [
+          "MY.habitatEnumValue25"
+        ],
+        "MY.habitatEnumValue141": [
+          "MY.habitatEnumValue25"
+        ],
+        "MY.habitatEnumValue142": [
+          "MY.habitatEnumValue25"
+        ],
+        "MY.habitatEnumValue143": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue144": [
+          "MY.habitatEnumValue24"
+        ],
+        "MY.habitatEnumValue145": [
+          "MY.habitatEnumValue36"
+        ],
+        "MY.habitatEnumValue147": [
+          "MY.habitatEnumValue36"
+        ],
+        "MY.habitatEnumValue148": [
+          "MY.habitatEnumValue36"
+        ],
+        "MY.habitatEnumValue149": [
+          "MY.habitatEnumValue50"
+        ],
+        "MY.habitatEnumValue150": [
+          "MY.habitatEnumValue50"
+        ],
+        "MY.habitatEnumValue151": [
+          "MY.habitatEnumValue50"
+        ],
+        "MY.habitatEnumValue152": [
+          "MY.habitatEnumValue50"
+        ],
+        "MY.habitatEnumValue153": [
+          "MY.habitatEnumValue50"
+        ],
+        "MY.habitatEnumValue154": [
+          "MY.habitatEnumValue44"
+        ],
+        "MY.habitatEnumValue155": [
+          "MY.habitatEnumValue56"
+        ],
+        "MY.habitatEnumValue156": [
+          "MY.habitatEnumValue60"
+        ],
+        "MY.habitatEnumValue157": [
+          "MY.habitatEnumValue60"
+        ],
+        "MY.habitatEnumValue158": [
+          "MY.habitatEnumValue60"
+        ],
+        "MY.habitatEnumValue159": [
+          "MY.habitatEnumValue56"
+        ],
+        "MY.habitatEnumValue160": [
+          "MY.habitatEnumValue66"
+        ],
+        "MY.habitatEnumValue161": [
+          "MY.habitatEnumValue71"
+        ],
+        "MY.habitatEnumValue162": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue163": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue164": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue165": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue166": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue167": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue168": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue169": [
+          "MY.habitatEnumValue79"
+        ],
+        "MY.habitatEnumValue170": [
+          "MY.habitatEnumValue79"
+        ]
       }
     }
   },
@@ -3785,9 +4314,6 @@
           },
           "geometry": {
             "geometry": {
-              "requireShape": true,
-              "maximumSize": 10,
-              "includeGatheringUnits": true,
               "message": {
                 "missingGeometries": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                 "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
@@ -3796,9 +4322,14 @@
                 "invalidRadius": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                 "invalidCoordinates": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                 "invalidGeometries": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
-                "noOverlap": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle."
+                "noOverlap": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
+                "polygonsWithHoles": "Polygonilla ei saa olla reikiä"
               },
-              "boundingBoxMaxHectares": 5000000
+              "boundingBoxMaxHectares": 5000000,
+              "polygonsWithHoles": true,
+              "requireShape": true,
+              "maximumSize": 10,
+              "includeGatheringUnits": true
             }
           },
           "units": {
@@ -3823,18 +4354,20 @@
                   "properties": {
                     "geometry": {
                       "geometry": {
-                        "maximumSize": 10,
                         "message": {
-                          "missingGeometries": "Täytyy olla vähintään yksi kuvio.",
+                          "missingGeometries": "Täytyy olla vähintään yksi kuvio",
                           "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
                           "notGeometry": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                           "missingType": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                           "invalidRadius": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                           "invalidCoordinates": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
                           "invalidGeometries": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
-                          "noOverlap": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle."
+                          "noOverlap": "Paikalla täytyy olla vähintään yksi alue, reitti tai piste piirrettynä kartalle.",
+                          "polygonsWithHoles": "Polygonilla ei saa olla reikiä"
                         },
-                        "boundingBoxMaxHectares": 5000000
+                        "boundingBoxMaxHectares": 5000000,
+                        "polygonsWithHoles": true,
+                        "maximumSize": 10
                       }
                     },
                     "dateBegin": {
@@ -3886,6 +4419,15 @@
     "gatherings": {
       "items": {
         "properties": {
+          "geometry": {
+            "geometry": {
+              "boundingBoxMaxHectares": 500000,
+              "includeGatheringUnits": true,
+              "message": {
+                "invalidBoundingBoxHectares": "Alue on hyvin iso"
+              }
+            }
+          },
           "units": {
             "presence": {
               "message": "Vähintään yksi havainto täytyy ilmoittaa.",
@@ -3923,117 +4465,303 @@
                 "children": {
                   "MY.habitatEnumValue8": {},
                   "MY.habitatEnumValue9": {},
-                  "MY.habitatEnumValue10": {},
-                  "MY.habitatEnumValue11": {},
-                  "MY.habitatEnumValue12": {}
+                  "MY.habitatEnumValue10": {}
                 },
                 "order": [
                   "MY.habitatEnumValue8",
                   "MY.habitatEnumValue9",
-                  "MY.habitatEnumValue10",
+                  "MY.habitatEnumValue10"
+                ]
+              },
+              "MY.habitatEnumValue28": {
+                "children": {
+                  "MY.habitatEnumValue23": {},
+                  "MY.habitatEnumValue105": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue23",
+                  "MY.habitatEnumValue105"
+                ]
+              },
+              "MY.habitatEnumValue40": {},
+              "MY.habitatEnumValue95": {
+                "children": {
+                  "MY.habitatEnumValue96": {},
+                  "MY.habitatEnumValue97": {},
+                  "MY.habitatEnumValue98": {},
+                  "MY.habitatEnumValue99": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue96",
+                  "MY.habitatEnumValue97",
+                  "MY.habitatEnumValue98",
+                  "MY.habitatEnumValue99"
+                ]
+              },
+              "MY.habitatEnumValue100": {
+                "children": {
+                  "MY.habitatEnumValue11": {},
+                  "MY.habitatEnumValue101": {}
+                },
+                "order": [
                   "MY.habitatEnumValue11",
-                  "MY.habitatEnumValue12"
+                  "MY.habitatEnumValue101"
                 ]
               },
-              "MY.habitatEnumValue13": {}
-            },
-            "order": [
-              "MY.habitatEnumValue2",
-              "MY.habitatEnumValue7",
-              "MY.habitatEnumValue13"
-            ]
-          },
-          "MY.habitatEnumValue14": {
-            "children": {
-              "MY.habitatEnumValue15": {
+              "MY.habitatEnumValue102": {
                 "children": {
-                  "MY.habitatEnumValue16": {},
-                  "MY.habitatEnumValue17": {},
-                  "MY.habitatEnumValue18": {}
+                  "MY.habitatEnumValue103": {},
+                  "MY.habitatEnumValue104": {}
                 },
                 "order": [
-                  "MY.habitatEnumValue16",
-                  "MY.habitatEnumValue17",
-                  "MY.habitatEnumValue18"
+                  "MY.habitatEnumValue103",
+                  "MY.habitatEnumValue104"
                 ]
               },
-              "MY.habitatEnumValue19": {
+              "MY.habitatEnumValue106": {},
+              "MY.habitatEnumValue107": {
                 "children": {
-                  "MY.habitatEnumValue20": {},
-                  "MY.habitatEnumValue21": {},
-                  "MY.habitatEnumValue22": {},
-                  "MY.habitatEnumValue23": {}
+                  "MY.habitatEnumValue12": {},
+                  "MY.habitatEnumValue13": {}
                 },
                 "order": [
-                  "MY.habitatEnumValue20",
-                  "MY.habitatEnumValue21",
-                  "MY.habitatEnumValue22",
-                  "MY.habitatEnumValue23"
+                  "MY.habitatEnumValue12",
+                  "MY.habitatEnumValue13"
                 ]
               }
             },
             "order": [
+              "MY.habitatEnumValue2",
+              "MY.habitatEnumValue7",
+              "MY.habitatEnumValue28",
+              "MY.habitatEnumValue40",
+              "MY.habitatEnumValue95",
+              "MY.habitatEnumValue100",
+              "MY.habitatEnumValue102",
+              "MY.habitatEnumValue106",
+              "MY.habitatEnumValue107"
+            ]
+          },
+          "MY.habitatEnumValue14": {
+            "children": {
+              "MY.habitatEnumValue15": {},
+              "MY.habitatEnumValue16": {
+                "children": {
+                  "MY.habitatEnumValue108": {},
+                  "MY.habitatEnumValue109": {},
+                  "MY.habitatEnumValue110": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue108",
+                  "MY.habitatEnumValue109",
+                  "MY.habitatEnumValue110"
+                ]
+              },
+              "MY.habitatEnumValue17": {
+                "children": {
+                  "MY.habitatEnumValue111": {},
+                  "MY.habitatEnumValue112": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue111",
+                  "MY.habitatEnumValue112"
+                ]
+              },
+              "MY.habitatEnumValue18": {},
+              "MY.habitatEnumValue19": {},
+              "MY.habitatEnumValue20": {
+                "children": {
+                  "MY.habitatEnumValue113": {},
+                  "MY.habitatEnumValue114": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue113",
+                  "MY.habitatEnumValue114"
+                ]
+              },
+              "MY.habitatEnumValue21": {
+                "children": {
+                  "MY.habitatEnumValue115": {},
+                  "MY.habitatEnumValue116": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue115",
+                  "MY.habitatEnumValue116"
+                ]
+              },
+              "MY.habitatEnumValue22": {},
+              "MY.habitatEnumValue117": {}
+            },
+            "order": [
               "MY.habitatEnumValue15",
-              "MY.habitatEnumValue19"
+              "MY.habitatEnumValue16",
+              "MY.habitatEnumValue17",
+              "MY.habitatEnumValue18",
+              "MY.habitatEnumValue19",
+              "MY.habitatEnumValue20",
+              "MY.habitatEnumValue21",
+              "MY.habitatEnumValue22",
+              "MY.habitatEnumValue117"
             ]
           },
           "MY.habitatEnumValue24": {
             "children": {
-              "MY.habitatEnumValue25": {},
-              "MY.habitatEnumValue26": {}
+              "MY.habitatEnumValue25": {
+                "children": {
+                  "MY.habitatEnumValue140": {},
+                  "MY.habitatEnumValue141": {},
+                  "MY.habitatEnumValue142": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue140",
+                  "MY.habitatEnumValue141",
+                  "MY.habitatEnumValue142"
+                ]
+              },
+              "MY.habitatEnumValue26": {},
+              "MY.habitatEnumValue88": {},
+              "MY.habitatEnumValue89": {
+                "children": {
+                  "MY.habitatEnumValue134": {},
+                  "MY.habitatEnumValue135": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue134",
+                  "MY.habitatEnumValue135"
+                ]
+              },
+              "MY.habitatEnumValue92": {},
+              "MY.habitatEnumValue93": {},
+              "MY.habitatEnumValue94": {},
+              "MY.habitatEnumValue136": {},
+              "MY.habitatEnumValue137": {},
+              "MY.habitatEnumValue138": {},
+              "MY.habitatEnumValue139": {
+                "children": {
+                  "MY.habitatEnumValue90": {},
+                  "MY.habitatEnumValue91": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue90",
+                  "MY.habitatEnumValue91"
+                ]
+              },
+              "MY.habitatEnumValue143": {},
+              "MY.habitatEnumValue144": {}
             },
             "order": [
               "MY.habitatEnumValue25",
-              "MY.habitatEnumValue26"
+              "MY.habitatEnumValue26",
+              "MY.habitatEnumValue88",
+              "MY.habitatEnumValue89",
+              "MY.habitatEnumValue92",
+              "MY.habitatEnumValue93",
+              "MY.habitatEnumValue94",
+              "MY.habitatEnumValue136",
+              "MY.habitatEnumValue137",
+              "MY.habitatEnumValue138",
+              "MY.habitatEnumValue139",
+              "MY.habitatEnumValue143",
+              "MY.habitatEnumValue144"
             ]
           },
           "MY.habitatEnumValue27": {
             "children": {
-              "MY.habitatEnumValue28": {},
-              "MY.habitatEnumValue29": {},
-              "MY.habitatEnumValue30": {},
-              "MY.habitatEnumValue31": {},
-              "MY.habitatEnumValue32": {},
+              "MY.habitatEnumValue29": {
+                "children": {
+                  "MY.habitatEnumValue130": {},
+                  "MY.habitatEnumValue131": {},
+                  "MY.habitatEnumValue132": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue130",
+                  "MY.habitatEnumValue131",
+                  "MY.habitatEnumValue132"
+                ]
+              },
+              "MY.habitatEnumValue30": {
+                "children": {
+                  "MY.habitatEnumValue32": {},
+                  "MY.habitatEnumValue128": {},
+                  "MY.habitatEnumValue129": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue32",
+                  "MY.habitatEnumValue128",
+                  "MY.habitatEnumValue129"
+                ]
+              },
+              "MY.habitatEnumValue31": {
+                "children": {
+                  "MY.habitatEnumValue124": {},
+                  "MY.habitatEnumValue125": {},
+                  "MY.habitatEnumValue126": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue124",
+                  "MY.habitatEnumValue125",
+                  "MY.habitatEnumValue126"
+                ]
+              },
               "MY.habitatEnumValue33": {},
-              "MY.habitatEnumValue34": {},
-              "MY.habitatEnumValue35": {}
+              "MY.habitatEnumValue34": {
+                "children": {
+                  "MY.habitatEnumValue118": {},
+                  "MY.habitatEnumValue119": {},
+                  "MY.habitatEnumValue120": {},
+                  "MY.habitatEnumValue121": {},
+                  "MY.habitatEnumValue122": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue118",
+                  "MY.habitatEnumValue119",
+                  "MY.habitatEnumValue120",
+                  "MY.habitatEnumValue121",
+                  "MY.habitatEnumValue122"
+                ]
+              },
+              "MY.habitatEnumValue35": {
+                "children": {
+                  "MY.habitatEnumValue127": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue127"
+                ]
+              },
+              "MY.habitatEnumValue123": {},
+              "MY.habitatEnumValue133": {}
             },
             "order": [
-              "MY.habitatEnumValue28",
               "MY.habitatEnumValue29",
               "MY.habitatEnumValue30",
               "MY.habitatEnumValue31",
-              "MY.habitatEnumValue32",
               "MY.habitatEnumValue33",
               "MY.habitatEnumValue34",
-              "MY.habitatEnumValue35"
+              "MY.habitatEnumValue35",
+              "MY.habitatEnumValue123",
+              "MY.habitatEnumValue133"
             ]
           },
           "MY.habitatEnumValue36": {
             "children": {
-              "MY.habitatEnumValue87": {
-                "children": {
-                  "MY.habitatEnumValue37": {},
-                  "MY.habitatEnumValue38": {},
-                  "MY.habitatEnumValue39": {},
-                  "MY.habitatEnumValue40": {}
-                },
-                "order": [
-                  "MY.habitatEnumValue37",
-                  "MY.habitatEnumValue38",
-                  "MY.habitatEnumValue39",
-                  "MY.habitatEnumValue40"
-                ]
-              },
+              "MY.habitatEnumValue87": {},
               "MY.habitatEnumValue41": {},
               "MY.habitatEnumValue42": {},
-              "MY.habitatEnumValue43": {}
+              "MY.habitatEnumValue43": {},
+              "MY.habitatEnumValue54": {},
+              "MY.habitatEnumValue145": {},
+              "MY.habitatEnumValue147": {},
+              "MY.habitatEnumValue148": {}
             },
             "order": [
               "MY.habitatEnumValue87",
               "MY.habitatEnumValue41",
               "MY.habitatEnumValue42",
-              "MY.habitatEnumValue43"
+              "MY.habitatEnumValue43",
+              "MY.habitatEnumValue54",
+              "MY.habitatEnumValue145",
+              "MY.habitatEnumValue147",
+              "MY.habitatEnumValue148"
             ]
           },
           "MY.habitatEnumValue44": {
@@ -4043,11 +4771,26 @@
               "MY.habitatEnumValue47": {},
               "MY.habitatEnumValue48": {},
               "MY.habitatEnumValue49": {},
-              "MY.habitatEnumValue50": {},
+              "MY.habitatEnumValue50": {
+                "children": {
+                  "MY.habitatEnumValue149": {},
+                  "MY.habitatEnumValue150": {},
+                  "MY.habitatEnumValue151": {},
+                  "MY.habitatEnumValue152": {},
+                  "MY.habitatEnumValue153": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue149",
+                  "MY.habitatEnumValue150",
+                  "MY.habitatEnumValue151",
+                  "MY.habitatEnumValue152",
+                  "MY.habitatEnumValue153"
+                ]
+              },
               "MY.habitatEnumValue51": {},
               "MY.habitatEnumValue52": {},
               "MY.habitatEnumValue53": {},
-              "MY.habitatEnumValue54": {}
+              "MY.habitatEnumValue154": {}
             },
             "order": [
               "MY.habitatEnumValue45",
@@ -4059,45 +4802,64 @@
               "MY.habitatEnumValue51",
               "MY.habitatEnumValue52",
               "MY.habitatEnumValue53",
-              "MY.habitatEnumValue54"
+              "MY.habitatEnumValue154"
             ]
           },
-          "MY.habitatEnumValue55": {
+          "MY.habitatEnumValue56": {
             "children": {
-              "MY.habitatEnumValue56": {
+              "MY.habitatEnumValue58": {},
+              "MY.habitatEnumValue60": {
+                "children": {
+                  "MY.habitatEnumValue156": {},
+                  "MY.habitatEnumValue157": {},
+                  "MY.habitatEnumValue158": {}
+                },
+                "order": [
+                  "MY.habitatEnumValue156",
+                  "MY.habitatEnumValue157",
+                  "MY.habitatEnumValue158"
+                ]
+              },
+              "MY.habitatEnumValue62": {},
+              "MY.habitatEnumValue155": {
                 "children": {
                   "MY.habitatEnumValue57": {},
-                  "MY.habitatEnumValue58": {},
                   "MY.habitatEnumValue59": {},
-                  "MY.habitatEnumValue60": {},
-                  "MY.habitatEnumValue61": {},
-                  "MY.habitatEnumValue62": {},
-                  "MY.habitatEnumValue63": {}
+                  "MY.habitatEnumValue61": {}
                 },
                 "order": [
                   "MY.habitatEnumValue57",
-                  "MY.habitatEnumValue58",
                   "MY.habitatEnumValue59",
-                  "MY.habitatEnumValue60",
-                  "MY.habitatEnumValue61",
-                  "MY.habitatEnumValue62",
-                  "MY.habitatEnumValue63"
+                  "MY.habitatEnumValue61"
                 ]
               },
+              "MY.habitatEnumValue159": {}
+            },
+            "order": [
+              "MY.habitatEnumValue58",
+              "MY.habitatEnumValue60",
+              "MY.habitatEnumValue62",
+              "MY.habitatEnumValue155",
+              "MY.habitatEnumValue159"
+            ]
+          },
+          "MY.habitatEnumValue79": {
+            "children": {
               "MY.habitatEnumValue64": {},
-              "MY.habitatEnumValue65": {},
               "MY.habitatEnumValue66": {
                 "children": {
                   "MY.habitatEnumValue67": {},
                   "MY.habitatEnumValue68": {},
                   "MY.habitatEnumValue69": {},
-                  "MY.habitatEnumValue70": {}
+                  "MY.habitatEnumValue70": {},
+                  "MY.habitatEnumValue160": {}
                 },
                 "order": [
                   "MY.habitatEnumValue67",
                   "MY.habitatEnumValue68",
                   "MY.habitatEnumValue69",
-                  "MY.habitatEnumValue70"
+                  "MY.habitatEnumValue70",
+                  "MY.habitatEnumValue160"
                 ]
               },
               "MY.habitatEnumValue71": {
@@ -4105,58 +4867,60 @@
                   "MY.habitatEnumValue72": {},
                   "MY.habitatEnumValue73": {},
                   "MY.habitatEnumValue74": {},
-                  "MY.habitatEnumValue75": {},
                   "MY.habitatEnumValue76": {},
                   "MY.habitatEnumValue77": {},
-                  "MY.habitatEnumValue78": {}
+                  "MY.habitatEnumValue78": {},
+                  "MY.habitatEnumValue161": {}
                 },
                 "order": [
                   "MY.habitatEnumValue72",
                   "MY.habitatEnumValue73",
                   "MY.habitatEnumValue74",
-                  "MY.habitatEnumValue75",
                   "MY.habitatEnumValue76",
                   "MY.habitatEnumValue77",
-                  "MY.habitatEnumValue78"
+                  "MY.habitatEnumValue78",
+                  "MY.habitatEnumValue161"
                 ]
               },
-              "MY.habitatEnumValue79": {
-                "children": {
-                  "MY.habitatEnumValue80": {},
-                  "MY.habitatEnumValue81": {},
-                  "MY.habitatEnumValue82": {},
-                  "MY.habitatEnumValue83": {},
-                  "MY.habitatEnumValue84": {},
-                  "MY.habitatEnumValue85": {},
-                  "MY.habitatEnumValue86": {}
-                },
-                "order": [
-                  "MY.habitatEnumValue80",
-                  "MY.habitatEnumValue81",
-                  "MY.habitatEnumValue82",
-                  "MY.habitatEnumValue83",
-                  "MY.habitatEnumValue84",
-                  "MY.habitatEnumValue85",
-                  "MY.habitatEnumValue86"
-                ]
-              }
+              "MY.habitatEnumValue80": {},
+              "MY.habitatEnumValue81": {},
+              "MY.habitatEnumValue82": {},
+              "MY.habitatEnumValue83": {},
+              "MY.habitatEnumValue84": {},
+              "MY.habitatEnumValue85": {},
+              "MY.habitatEnumValue86": {},
+              "MY.habitatEnumValue162": {},
+              "MY.habitatEnumValue163": {},
+              "MY.habitatEnumValue164": {},
+              "MY.habitatEnumValue165": {},
+              "MY.habitatEnumValue166": {},
+              "MY.habitatEnumValue167": {},
+              "MY.habitatEnumValue168": {},
+              "MY.habitatEnumValue169": {},
+              "MY.habitatEnumValue170": {}
             },
             "order": [
-              "MY.habitatEnumValue56",
               "MY.habitatEnumValue64",
-              "MY.habitatEnumValue65",
               "MY.habitatEnumValue66",
               "MY.habitatEnumValue71",
-              "MY.habitatEnumValue79"
+              "MY.habitatEnumValue80",
+              "MY.habitatEnumValue81",
+              "MY.habitatEnumValue82",
+              "MY.habitatEnumValue83",
+              "MY.habitatEnumValue84",
+              "MY.habitatEnumValue85",
+              "MY.habitatEnumValue86",
+              "MY.habitatEnumValue162",
+              "MY.habitatEnumValue163",
+              "MY.habitatEnumValue164",
+              "MY.habitatEnumValue165",
+              "MY.habitatEnumValue166",
+              "MY.habitatEnumValue167",
+              "MY.habitatEnumValue168",
+              "MY.habitatEnumValue169",
+              "MY.habitatEnumValue170"
             ]
-          },
-          "MY.habitatEnumValue88": {},
-          "MY.habitatEnumValue89": {},
-          "MY.habitatEnumValue90": {},
-          "MY.habitatEnumValue91": {},
-          "MY.habitatEnumValue92": {},
-          "MY.habitatEnumValue93": {},
-          "MY.habitatEnumValue94": {}
+          }
         },
         "order": [
           "MY.habitatEnumValue1",
@@ -4165,17 +4929,11 @@
           "MY.habitatEnumValue27",
           "MY.habitatEnumValue36",
           "MY.habitatEnumValue44",
-          "MY.habitatEnumValue55",
-          "MY.habitatEnumValue88",
-          "MY.habitatEnumValue89",
-          "MY.habitatEnumValue90",
-          "MY.habitatEnumValue91",
-          "MY.habitatEnumValue92",
-          "MY.habitatEnumValue93",
-          "MY.habitatEnumValue94"
+          "MY.habitatEnumValue56",
+          "MY.habitatEnumValue79"
         ]
       }
     }
   },
-  "$id": "9bc1f675be5e8ca621053d7f0b315795"
+  "$id": "8c55bd4745139a629b183bd7cc7491d7"
 }
