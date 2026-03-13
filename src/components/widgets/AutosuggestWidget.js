@@ -736,10 +736,12 @@ export class Autosuggest extends React.Component {
 		triggerParentComponent("onFocus", e, this.props.inputProps);
 	};
 
-	onBlur = (e) => {
+	onBlur = (e, blurSelected = false) => {
 		this.setState({focused: false}, () => {
-			this._valueForBlurAndFetch = this.state.inputValue;
-			this.afterBlurAndFetch(this.state.suggestions);
+			if (!blurSelected) {
+				this._valueForBlurAndFetch = this.state.inputValue;
+				this.afterBlurAndFetch(this.state.suggestions);
+			}
 			triggerParentComponent("onBlur", e, this.props.inputProps);
 			const overlay = this.wrapperRef.current;
 			if (overlay && overlay.overlayTriggerRef && overlay.overlayTriggerRef.hide) {
@@ -1340,7 +1342,7 @@ class ReactAutosuggest extends React.Component {
 		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 		suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
 		this.setState({focused: false, focusedIdx: undefined, touched: false});
-		this.props.inputProps?.onBlur?.(e);
+		this.props.inputProps?.onBlur?.(e, !!suggestion);
 	}
 
 	onListBlur = (e) => {

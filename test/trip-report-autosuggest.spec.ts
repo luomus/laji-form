@@ -218,7 +218,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 		});
 
 		test.describe("power user", () => {
-			test("is shown power taxon field", async () => {
+			test("is shown for taxon field", async () => {
 				await expect(taxonAutosuggest.$powerUserButton).toBeVisible();
 			});
 
@@ -231,7 +231,6 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 
 				await expect(taxonAutosuggest.$powerUserButton).not.toHaveClass(/active/);
 			});
-
 
 			test("clicking any match after waiting for suggestion list works", async () => {
 				await taxonAutosuggest.$powerUserButton.click();
@@ -257,7 +256,7 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 
 				expect(await form.$locate("gatherings.0.units.1").evaluate(e => e.tagName)).toBe("TR");
 
-				await expect(form.$locate("gatherings.0.units.1").locator("td").first()).toHaveText(lastText);
+				await expect(form.$locate("gatherings.0.units.1").locator("td").first()).toHaveText(lastText!);
 
 				await removeUnit(0, 0);
 				await removeUnit(0, 0);
@@ -267,23 +266,68 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			});
 
 
-			test("entering exact match adds new unit automatically", async () => {
+
+			test("selecting by enter", async () => {
 				await taxonAutosuggest.$powerUserButton.click();
-				await taxonAutosuggest.$input.fill("susi");
-				await taxonAutosuggest.$input.press("Tab");
+				await taxonAutosuggest.$input.fill("3 pikku");
+
+				await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+
+				const firstText = await taxonAutosuggest.$suggestions.first().textContent();
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("Enter");
+
 				await expect(form.$locate("gatherings.0.units.1")).toBeVisible();
 
 				expect(await form.$locate("gatherings.0.units.0").evaluate(e => e.tagName)).toBe("TR");
-				expect(await form.$locate("gatherings.0.units.1").evaluate(e => e.tagName)).toBe("DIV");
 
-				await removeUnit(0, 1);
-
-				await taxonAutosuggest.$powerUserButton.click();
-
-				await expect(taxonAutosuggest.$powerUserButton).not.toHaveClass(/active/);
+				await expect(form.$locate("gatherings.0.units.0").locator("td").first()).toHaveText(firstText!.replace("3 ", "")!);
+				await removeUnit(0, 0);
 				await removeUnit(0, 0);
 				await $addUnit.click();
+				await taxonAutosuggest.$powerUserButton.click();
+			});
+
+			test("selecting by tab", async () => {
+				await taxonAutosuggest.$powerUserButton.click();
+				await taxonAutosuggest.$input.fill("3 pikku");
+
+				await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+
+				const firstText = await taxonAutosuggest.$suggestions.first().textContent();
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("Tab");
+
+				await expect(form.$locate("gatherings.0.units.1")).toBeVisible();
+
+				expect(await form.$locate("gatherings.0.units.0").evaluate(e => e.tagName)).toBe("TR");
+
+				await expect(form.$locate("gatherings.0.units.0").locator("td").first()).toHaveText(firstText!.replace("3 ", "")!);
+				await removeUnit(0, 0);
+				await removeUnit(0, 0);
+				await $addUnit.click();
+				await taxonAutosuggest.$powerUserButton.click();
 			});
 		});
+
+		test("entering exact match adds new unit automatically", async () => {
+			await taxonAutosuggest.$powerUserButton.click();
+			await taxonAutosuggest.$input.fill("susi");
+			await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+			await taxonAutosuggest.$input.press("Tab");
+			await expect(form.$locate("gatherings.0.units.1")).toBeVisible();
+
+			expect(await form.$locate("gatherings.0.units.0").evaluate(e => e.tagName)).toBe("TR");
+			expect(await form.$locate("gatherings.0.units.1").evaluate(e => e.tagName)).toBe("DIV");
+
+			await removeUnit(0, 1);
+
+			await taxonAutosuggest.$powerUserButton.click();
+
+			await expect(taxonAutosuggest.$powerUserButton).not.toHaveClass(/active/);
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
+
 	});
 });
