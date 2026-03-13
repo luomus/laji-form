@@ -1,0 +1,751 @@
+{
+  "secureLevel": "MX.secureLevelNone",
+  "gatheringEvent": {
+    "leg": [
+      "MA.2718"
+    ],
+    "legPublic": true,
+    "dateBegin": "2026-03-02",
+    "timeStart": "10:00",
+    "dateEnd": "2026-03-02",
+    "timeEnd": "11:00",
+    "id": "JX.345039#1",
+    "@type": "MZ.gatheringEvent"
+  },
+  "gatherings": [
+    {
+      "taxonCensus": [
+        {
+          "censusTaxonSetID": "MX.taxonSetArchipelagoWaterbirds",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#6",
+              "taxon": "Cygnus olor",
+              "taxonID": "MX.26277",
+              "taxonVerbatim": "kyhmyjoutsen"
+            }
+          ],
+          "id": "JX.345039#5",
+          "@type": "MY.unit",
+          "maleIndividualCount": 1
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#8",
+              "taxon": "Cygnus cygnus",
+              "taxonID": "MX.26280",
+              "taxonVerbatim": "laulujoutsen"
+            }
+          ],
+          "id": "JX.345039#7",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#10",
+              "taxon": "Anser fabalis sensu lato",
+              "taxonID": "MX.26287",
+              "taxonVerbatim": "metsähanhiryhmä"
+            }
+          ],
+          "id": "JX.345039#9",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#12",
+              "taxon": "Anser albifrons",
+              "taxonID": "MX.26289",
+              "taxonVerbatim": "tundrahanhi"
+            }
+          ],
+          "id": "JX.345039#11",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#14",
+              "taxon": "Anser anser",
+              "taxonID": "MX.26291",
+              "taxonVerbatim": "merihanhi"
+            }
+          ],
+          "id": "JX.345039#13",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#16",
+              "taxon": "Branta canadensis",
+              "taxonID": "MX.26298",
+              "taxonVerbatim": "kanadanhanhi"
+            }
+          ],
+          "id": "JX.345039#15",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#18",
+              "taxon": "Branta leucopsis",
+              "taxonID": "MX.26299",
+              "taxonVerbatim": "valkoposkihanhi"
+            }
+          ],
+          "id": "JX.345039#17",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#20",
+              "taxon": "Tadorna tadorna",
+              "taxonID": "MX.26323",
+              "taxonVerbatim": "ristisorsa"
+            }
+          ],
+          "id": "JX.345039#19",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#22",
+              "taxon": "Spatula querquedula",
+              "taxonID": "MX.26388",
+              "taxonVerbatim": "heinätavi"
+            }
+          ],
+          "id": "JX.345039#21",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#24",
+              "taxon": "Spatula clypeata",
+              "taxonID": "MX.26394",
+              "taxonVerbatim": "lapasorsa"
+            }
+          ],
+          "id": "JX.345039#23",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#26",
+              "taxon": "Mareca strepera",
+              "taxonID": "MX.26364",
+              "taxonVerbatim": "harmaasorsa"
+            }
+          ],
+          "id": "JX.345039#25",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#28",
+              "taxon": "Mareca penelope",
+              "taxonID": "MX.26360",
+              "taxonVerbatim": "haapana"
+            }
+          ],
+          "id": "JX.345039#27",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#30",
+              "taxon": "Anas platyrhynchos",
+              "taxonID": "MX.26373",
+              "taxonVerbatim": "sinisorsa"
+            }
+          ],
+          "id": "JX.345039#29",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#32",
+              "taxon": "Anas acuta",
+              "taxonID": "MX.26382",
+              "taxonVerbatim": "jouhisorsa"
+            }
+          ],
+          "id": "JX.345039#31",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#34",
+              "taxon": "Anas crecca",
+              "taxonID": "MX.26366",
+              "taxonVerbatim": "tavi"
+            }
+          ],
+          "id": "JX.345039#33",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#36",
+              "taxon": "Aythya ferina",
+              "taxonID": "MX.26407",
+              "taxonVerbatim": "punasotka"
+            }
+          ],
+          "id": "JX.345039#35",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#38",
+              "taxon": "Aythya fuligula",
+              "taxonID": "MX.26415",
+              "taxonVerbatim": "tukkasotka"
+            }
+          ],
+          "id": "JX.345039#37",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#40",
+              "taxon": "Aythya marila",
+              "taxonID": "MX.26416",
+              "taxonVerbatim": "lapasotka"
+            }
+          ],
+          "id": "JX.345039#39",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#42",
+              "taxon": "Somateria mollissima",
+              "taxonID": "MX.26419",
+              "taxonVerbatim": "haahka"
+            }
+          ],
+          "id": "JX.345039#41",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#44",
+              "taxon": "Clangula hyemalis",
+              "taxonID": "MX.26427",
+              "taxonVerbatim": "alli"
+            }
+          ],
+          "id": "JX.345039#43",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#46",
+              "taxon": "Melanitta nigra",
+              "taxonID": "MX.26429",
+              "taxonVerbatim": "mustalintu"
+            }
+          ],
+          "id": "JX.345039#45",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#48",
+              "taxon": "Melanitta fusca",
+              "taxonID": "MX.26431",
+              "taxonVerbatim": "pilkkasiipi"
+            }
+          ],
+          "id": "JX.345039#47",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#50",
+              "taxon": "Bucephala clangula",
+              "taxonID": "MX.26435",
+              "taxonVerbatim": "telkkä"
+            }
+          ],
+          "id": "JX.345039#49",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#52",
+              "taxon": "Mergellus albellus",
+              "taxonID": "MX.26438",
+              "taxonVerbatim": "uivelo"
+            }
+          ],
+          "id": "JX.345039#51",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#54",
+              "taxon": "Mergus serrator",
+              "taxonID": "MX.26440",
+              "taxonVerbatim": "tukkakoskelo"
+            }
+          ],
+          "id": "JX.345039#53",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#56",
+              "taxon": "Mergus merganser",
+              "taxonID": "MX.26442",
+              "taxonVerbatim": "isokoskelo"
+            }
+          ],
+          "id": "JX.345039#55",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#58",
+              "taxon": "Gavia stellata",
+              "taxonID": "MX.25836",
+              "taxonVerbatim": "kaakkuri"
+            }
+          ],
+          "id": "JX.345039#57",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#60",
+              "taxon": "Gavia arctica",
+              "taxonID": "MX.25837",
+              "taxonVerbatim": "kuikka"
+            }
+          ],
+          "id": "JX.345039#59",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#62",
+              "taxon": "Tachybaptus ruficollis",
+              "taxonID": "MX.25844",
+              "taxonVerbatim": "pikku-uikku"
+            }
+          ],
+          "id": "JX.345039#61",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#64",
+              "taxon": "Podiceps cristatus",
+              "taxonID": "MX.25860",
+              "taxonVerbatim": "silkkiuikku"
+            }
+          ],
+          "id": "JX.345039#63",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#66",
+              "taxon": "Podiceps grisegena",
+              "taxonID": "MX.25859",
+              "taxonVerbatim": "härkälintu"
+            }
+          ],
+          "id": "JX.345039#65",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#68",
+              "taxon": "Podiceps auritus",
+              "taxonID": "MX.25861",
+              "taxonVerbatim": "mustakurkku-uikku"
+            }
+          ],
+          "id": "JX.345039#67",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.1",
+            "MVL.1241"
+          ],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#70",
+              "taxon": "Fulica atra",
+              "taxonID": "MX.27381",
+              "taxonVerbatim": "nokikana"
+            }
+          ],
+          "id": "JX.345039#69",
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "checklistID": "",
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.345039#4"
+            }
+          ],
+          "id": "JX.345039#3",
+          "@type": "MY.unit"
+        }
+      ],
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  21.866346,
+                  59.953556
+                ],
+                [
+                  21.944423,
+                  59.953556
+                ],
+                [
+                  21.944423,
+                  59.988627
+                ],
+                [
+                  21.866346,
+                  59.988627
+                ],
+                [
+                  21.866346,
+                  59.953556
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      "localityDescription": "Kopparholmin saaristoa",
+      "biologicalProvince": "Varsinais-Suomi",
+      "country": "Suomi",
+      "municipality": "Parainen",
+      "id": "JX.345039#2",
+      "@type": "MY.gathering"
+    }
+  ],
+  "namedPlaceID": "MNP.56680",
+  "formID": "MHL.1166",
+  "creator": "MA.2718",
+  "sourceID": "KE.841",
+  "collectionID": "HR.6920",
+  "editor": "MA.2718",
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "dateEdited": "2026-03-02T13:50:17+02:00",
+  "dateCreated": "2026-03-02T11:20:11.915Z",
+  "id": "JX.345039",
+  "@type": "MY.document",
+  "@context": "https://store-dev.luomus.fi/json-ld-context/MY.document.json"
+}

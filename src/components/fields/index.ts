@@ -3,6 +3,7 @@ export { default as ArrayField } from "./ArrayField";
 export { default as ObjectField } from "./ObjectField";
 export { default as NestField } from "./NestField";
 export { default as ArrayPropertySumField } from "./ArrayPropertySumField";
+export { default as ArrayPropertyCountField } from "./ArrayPropertyCountField";
 export { default as ScopeField } from "./ScopeField";
 export { default as SelectTreeField } from "./SelectTreeField";
 export { default as GridLayoutField } from "./GridLayoutField";

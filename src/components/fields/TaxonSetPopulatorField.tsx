@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { parseJSONPointer } from "../../utils";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -47,20 +46,48 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 		return "TaxonSetPopulatorField";
 	}
 
-	taxonSets: any[] = [];
+	selectedTaxonSets: string[] = [];
+	unitTaxonSets: Record<string, string[]> = {};
 
 	getStateFromProps() {
 		return { onChange: this.onChange };
 	}
 
+	async componentDidMount() {
+		const taxonCensus = this.props.formData?.taxonCensus || [];
+		this.selectedTaxonSets = taxonCensus.map((item: any) => item.censusTaxonSetID);
+
+		let resultTaxonSets: {id: string, taxonSets: string[]}[] = [];
+		if (this.selectedTaxonSets.length > 0) {
+			const allResults = await Promise.all(
+				this.selectedTaxonSets.map(taxonSetId => this.fetchTaxaFromSet(this.props, [taxonSetId]))
+			);
+			resultTaxonSets = allResults.flat().map((result: any) => ({
+				id: result.id,
+				taxonSets: result.taxonSets || []
+			}));
+		}
+
+		this.props.formData?.units?.forEach((unit: any) => {
+			const taxonID = unit?.identifications?.[0]?.taxonID;
+			if (!taxonID) {
+				return;
+			}
+			const taxonSets = resultTaxonSets?.find((result: any) => result.id === taxonID)?.taxonSets || [];
+			this.unitTaxonSets[taxonID] = taxonSets;
+		});
+	}
+
 	onChange = async (formData: any) => {
-		const previousTaxonSets = this.taxonSets;
+		const { translations } = this.props.formContext;
+
+		const previousTaxonSets = this.selectedTaxonSets;
 		const currentTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
 		const deletedTaxonSets = previousTaxonSets.filter((item: string) => !currentTaxonSets.includes(item));
 		const addedTaxonSets = currentTaxonSets.filter((item: string) => !previousTaxonSets.includes(item));
 
-		this.taxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
+		this.selectedTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
 		if (deletedTaxonSets.length > 0) {
 			deletedTaxonSets.map((deletedTaxonSetId: string) => {
@@ -68,45 +95,38 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 				let observationsExist = false;
 
 				const deletedTaxonSetUnits = currentUnits.filter((unit: any) => {
-					return unit.taxonSets && unit.taxonSets.includes(deletedTaxonSetId);
+					return this.unitTaxonSets[unit.identifications[0].taxonID]
+					&& this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
-				deletedTaxonSetUnits.map((unit: any) => {
-					if (
-						unit.maleIndividualCount ||
-						unit.femaleIndividualCount ||
-						unit.nestCount ||
-						unit.unitFact?.destroyedNestCount ||
-						unit.unitFact?.broodCount ||
-						unit.unitFact?.femalesWithBroodsCount ||
-						unit.unitFact?.juvenileCount
-					) {
-						window.alert(
-							"Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.\n\n" +
-							"This taxon set cannot be removed because it contains observations.\n\n" +
-							"Den här artgruppen kan inte tas bort eftersom det finns observationer i den."
-						);
-						observationsExist = true;
-						const updatedFormData = {
-							...formData,
-							taxonCensus: [
-								...formData.taxonCensus,
-								{
-									censusTaxonSetID: deletedTaxonSetId,
-									taxonCensusType: "MY.taxonCensusTypeCounted"
-								}
-							]
-						};
-						this.taxonSets = [...this.taxonSets, deletedTaxonSetId];
-						this.props.onChange(updatedFormData);
-						return;
-					}
-				});
+				observationsExist = deletedTaxonSetUnits.some((unit: any) =>
+					unit.maleIndividualCount ||
+					unit.femaleIndividualCount ||
+					unit.nestCount ||
+					unit.unitFact?.destroyedNestCount ||
+					unit.unitFact?.broodCount ||
+					unit.unitFact?.femalesWithBroodsCount ||
+					unit.unitFact?.juvenileCount
+				);
 				if (observationsExist) {
+					window.alert(translations?.TaxonSetDeletionFailed);
+					const restoredFormData = {
+						...formData,
+						taxonCensus: [
+							...formData.taxonCensus,
+							{
+								censusTaxonSetID: deletedTaxonSetId,
+								taxonCensusType: "MY.taxonCensusTypeCounted"
+							}
+						]
+					};
+					this.selectedTaxonSets = [...this.selectedTaxonSets, deletedTaxonSetId];
+					this.props.onChange(restoredFormData);
 					return;
 				}
 
 				const updatedUnits = currentUnits.filter((unit: any) => {
-					return !unit.taxonSets || !unit.taxonSets.includes(deletedTaxonSetId);
+					return !this.unitTaxonSets[unit.identifications[0].taxonID]
+					|| !this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
 				const updatedFormData = {
 					...formData,
@@ -121,7 +141,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 			// if current units include any units with taxon sets that are being added, return to avoid duplicates
 			const duplicateUnits = currentUnits.filter((unit: any) => {
-				return unit.taxonSets && unit.taxonSets.some((taxonSetId: string) => addedTaxonSets.includes(taxonSetId));
+				return this.unitTaxonSets[unit.identifications[0].taxonID]
+				&& this.unitTaxonSets[unit.identifications[0].taxonID].some((taxonSetId: string) => addedTaxonSets.includes(taxonSetId));
 			});
 			if (duplicateUnits.length > 0) {
 				return;
@@ -130,14 +151,14 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
 
 			const newUnits = results.map((result: any) => {
+				this.unitTaxonSets[result.id] = result.taxonSets || [];
 				return {
 					identifications: [{
 						taxon: result.scientificName,
 						taxonID: result.id,
 						taxonVerbatim: result.vernacularName
 					}],
-					informalTaxonGroups: result.informalTaxonGroups || [],
-					taxonSets: result.taxonSets || []
+					informalTaxonGroups: result.informalTaxonGroups || []
 				};
 			});
 
