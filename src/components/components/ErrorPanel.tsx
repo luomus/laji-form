@@ -1,6 +1,7 @@
 import * as React from "react";
 import ReactContext from "../../ReactContext";
 import { GlyphButton } from "../components";
+import { FormContext } from "../LajiForm";
 
 export type PanelError = {
 	label: string;
@@ -16,9 +17,11 @@ type Props = {
 	title: string;
 	clickHandler: (id?: string) => void
 	poppedToggle: React.MouseEventHandler;
+	popped: boolean;
 	showToggle?: boolean;
 	classNames?: string;
 	footer?: React.ReactNode;
+	formContext: FormContext;
 }
 
 type State = { expanded: boolean };
@@ -37,7 +40,7 @@ export class ErrorPanel extends React.Component<Props, State> {
 	collapseToggle = () => this.setState({expanded: !this.state.expanded});
 
 	render() {
-		const {errors, title, clickHandler, poppedToggle, showToggle, classNames, footer} = this.props;
+		const {errors, title, clickHandler, poppedToggle, showToggle, classNames, footer, formContext: { translations }, popped } = this.props;
 
 		if (errors.length === 0) return null;
 
@@ -50,8 +53,8 @@ export class ErrorPanel extends React.Component<Props, State> {
 						<div className="panel-title">
 							{title}
 							<span className="pull-right">
-								<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" />
-								{showToggle ? <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle} /> : null}
+								<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" >{ translations[this.state.expanded ? "Close" : "Open"] }</GlyphButton>
+								{showToggle && <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle}>{ translations[popped ? "Unpop" : "Pop"] }</GlyphButton>}
 							</span>
 						</div>
 					</div>

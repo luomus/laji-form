@@ -90,6 +90,8 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 					errors={errors}
 					showToggle={true}
 					poppedToggle={this.poppedToggle}
+					popped={this.state.popped}
+					formContext={this.props.formContext}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
 					footer={footer}

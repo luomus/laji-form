@@ -82,27 +82,27 @@ export default class KeyhandlerService {
 	getKeyHandlers(shortcuts: ShortcutKeys = {}): InternalKeyHandlers {
 		return Object.keys(shortcuts).reduce((list, keyCombo) => {
 			const shortcut = shortcuts[keyCombo];
-			const specials: any = {
+			const modifiers: any = {
 				alt: false,
 				ctrl: false,
 				shift: false,
 			};
 
 			list.push(keyCombo.split("+").reduce((keyHandler, key) => {
-				if (key in specials) {
-					(specials as any)[key] = true;
+				if (key in modifiers) {
+					(modifiers as any)[key] = true;
 				}
 
 				keyHandler.conditions.push(e =>
-					e.key === key || (key in specials && ((specials[key] && (e as any)[`${key}Key`]) || (!specials[key] && !(e as any)[`${key}Key`])))
+					e.key === key || (key in modifiers && ((modifiers[key] && (e as any)[`${key}Key`]) || (!modifiers[key] && !(e as any)[`${key}Key`])))
 				);
 
 				return keyHandler;
 			}, {...shortcut, conditions: []} as InternalKeyHandler));
 
-			for (let special in specials) {
-				if (!(specials as any)[special]) list[list.length - 1].conditions.push(e => {
-					return !(e as any)[`${special}Key`];
+			for (let modifier in modifiers) {
+				if (!(modifiers as any)[modifier]) list[list.length - 1].conditions.push(e => {
+					return !(e as any)[`${modifier}Key`];
 				});
 			}
 

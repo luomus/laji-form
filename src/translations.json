@@ -893,5 +893,15 @@
 		"fi": "Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.",
 		"en": "This taxon set cannot be removed because it contains observations.",
 		"sv": "Den här artgruppen kan inte tas bort eftersom det finns observationer i den."
+	},
+	"pop": {
+		"fi": "Kelluta",
+		"en": "Float",
+		"sv": "Frikoppla"
+	},
+	"unpop": {
+		"fi": "Kiinnitä ylös",
+		"en": "Pin to top",
+		"sv": "Fäst överst"
 	}
 }

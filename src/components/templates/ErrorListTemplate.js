@@ -89,6 +89,8 @@ export default class ErrorListTemplate extends React.Component {
 					clickHandler={clickHandler}
 					showToggle={true}
 					poppedToggle={this.poppedToggle}
+					popped={this.state.popped}
+					formContext={this.props.formContext}
 					footer={footer} />
 				<ErrorPanel classNames="warning-panel"
 					ref="warningPanel"
@@ -97,6 +99,8 @@ export default class ErrorListTemplate extends React.Component {
 					clickHandler={clickHandler}
 					showToggle={errors.length === 0}
 					poppedToggle={this.poppedToggle}
+					popped={this.state.popped}
+					formContext={this.props.formContext}
 					footer={footer} />
 			</div>
 		);

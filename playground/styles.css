@@ -328,6 +328,10 @@ body .laji-form {
 	margin-bottom: 1px;
 	margin-left: 1px;
 }
+.laji-form .glyph-button:not(.button-corner) {
+	min-width: 25px;
+	width: initial;
+}
 .laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
 }
@@ -1743,6 +1747,13 @@ body .laji-form {
 }
 .laji-form .glyph-button > .svg-inline--fa {
 	font-size: initial;
+}
+.laji-form .glyph-button {
+	display: inline-flex;
+	align-items: center;
+	flex-direction: row-reverse;
+	gap: 4px;
+	justify-content: center;
 }
 .laji-form .form-control-feedback.svg-inline--fa {
 	position: absolute;
