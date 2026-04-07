@@ -46,7 +46,7 @@ export default class SettingsService {
 				// Swallow failing settings parsing.
 			}
 			return settings;
-		}, {});
+		}, this.settings);
 	}
 
 	onSettingsChange = () => {
