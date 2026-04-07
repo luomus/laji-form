@@ -134,6 +134,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 				};
 				this.props.onChange(updatedFormData);
 			});
+			return;
 		}
 
 		if (addedTaxonSets.length > 0) {
@@ -168,7 +169,10 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 			};
 
 			this.props.onChange(updatedFormData);
+			return;
 		}
+
+		this.props.onChange(formData);
 	};
 
 	private async fetchTaxaFromSet(props: any, taxonSets: any): Promise<any[]> {
