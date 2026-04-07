@@ -3,7 +3,7 @@ import { parseJSONPointer } from "../utils";
 const equals = require("deep-equal");
 
 export type Settings = Record<string, string>;
-type OnSettingsChange = (settings: Record<string, string>, global: boolean) => void;
+type OnSettingsChange = (settings: Record<string, string>) => void;
 
 /**
  * Handles parsing settings from uiSchema. Settings can be either global or form specific (it's up to the client using LajiForm to pass the global or form specific settings).
@@ -12,7 +12,6 @@ export default class SettingsService {
 	public settings: Settings = {};
 
 	private settingSavers: {[key: string]: () => any} = {};
-	private globalSettingSavers: {[key: string]: () => any} = {} as any;
 	private _onSettingsChange: OnSettingsChange;
 
 	constructor(onSettingsChange: OnSettingsChange, settings: Settings = {}) {
@@ -20,13 +19,13 @@ export default class SettingsService {
 		this.settings = settings;
 	}
 
-	addSettingSaver = (key: string, fn: () => any, global = false) => {
-		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+	addSettingSaver = (key: string, fn: () => any) => {
+		const settingSavers = this.settingSavers;
 		settingSavers[key] = fn;
 	};
 
-	removeSettingSaver = (key: string, global = false) => {
-		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+	removeSettingSaver = (key: string) => {
+		const settingSavers = this.settingSavers;
 		delete settingSavers[key];
 	};
 
@@ -34,8 +33,8 @@ export default class SettingsService {
 		this.settings = settings;
 	}
 
-	getSettings(global = false) {
-		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+	getSettings() {
+		const settingSavers = this.settingSavers;
 		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
 				const value = settingSavers[key]();
@@ -50,11 +49,11 @@ export default class SettingsService {
 		}, {});
 	}
 
-	onSettingsChange = (global = false) => {
-		const settings = this.getSettings(global);
+	onSettingsChange = () => {
+		const settings = this.getSettings();
 		if (!equals(this.settings, settings)) {
 			this.settings = settings;
-			this._onSettingsChange(settings, global);
+			this._onSettingsChange(settings);
 		}
 	};
 

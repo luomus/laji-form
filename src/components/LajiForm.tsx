@@ -82,7 +82,7 @@ export interface LajiFormProps extends HasMaybeChildren {
 	onValidationError?: (extraErrors: ErrorSchema) => void;
 	validators?: any;
 	warnings?: any;
-	onSettingsChange?: (settings: any, global: boolean) => void;
+	onSettingsChange?: (settings: any) => void;
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
 	lajiGeoServerAddress?: string;
@@ -733,12 +733,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.memoizedFormContext.services.multiActiveArray.closeAll();
 	};
 
-	getSettings(global = false) {
-		return this.memoizedFormContext.services.settings.getSettings(global);
+	getSettings() {
+		return this.memoizedFormContext.services.settings.getSettings();
 	}
 
-	onSettingsChange = (settings: Settings, global = false) => {
-		if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
+	onSettingsChange = (settings: Settings) => {
+		if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
 	};
 
 	addEventListener = (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => {
