@@ -590,6 +590,10 @@ class LineTransectMapArrayField extends React.Component {
 		this.state = {showLTTools: false};
 		this.props.onChange(syncLineTransectStartEnd(this.props.formData));
 	}
+
+	componentDidMount() {
+		this.focusOnMap(this.state.idx);
+	}
 	
 	getOptions() {
 		const {formData, disabled, readonly} = this.props;
@@ -723,9 +727,9 @@ class LineTransectMapArrayField extends React.Component {
 				formData = syncLineTransectStartEnd(formData);
 				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 			}
-			if ("activeIdx" in state) {
-				this.afterActiveChange(state.activeIdx);
-			}
+			// if ("activeIdx" in state) {
+			// 	this.afterActiveChange(state.activeIdx);
+			// }
 		};
 		Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
 	};
@@ -754,8 +758,8 @@ class LineTransectMapArrayField extends React.Component {
 		return content;
 	};
 
-	afterActiveChange(idx) {
-		this.focusOnMap(idx);
+	afterActiveChange(idx, initialCall) {
+		this.focusOnMap(idx, initialCall);
 	}
 
 	hasLineTransectFeature(props) {
@@ -763,13 +767,21 @@ class LineTransectMapArrayField extends React.Component {
 		return props.formData && props.formData[0] && Object.keys(props.formData[0][geometryField] || {}).length;
 	}
 
-	focusOnMap = (idx) => {
+	focusOnMap = (idx, initialCall) => {
 		if (!this.hasLineTransectFeature(this.props)) {
 			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
 		this.props.formContext.setTimeout(() => {
-			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100});  
+			if (!this.map) {
+				return;
+			}
+			const bounds = L.featureGroup(this.map._corridorLayers[idx]).getBounds();
+			if (initialCall) {
+				this.map.fitBounds(bounds, {paddingInMeters: 100});  
+			} else if (bounds.isValid()) {
+				this.map.map.panTo(bounds.getCenter());
+			}
 		});
 	};
 
@@ -1170,8 +1182,8 @@ function _MapArrayField(ComposedComponent) {
 			}
 		}
 
-		afterActiveChange(idx) {
-			super.afterActiveChange && super.afterActiveChange(idx);
+		afterActiveChange(idx, initialCall) {
+			super.afterActiveChange && super.afterActiveChange(idx, initialCall);
 			this.onLocateOrAddNew();
 		}
 
