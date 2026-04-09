@@ -74,7 +74,7 @@ export default class ConditionalOnChangeField extends React.Component {
 			}
 
 			// If condition fields didn't change, do nothing.
-			if (Object.keys(conditions).every(field => 
+			if (Object.keys(conditions).every(field =>
 				formData && formData[field] && formData[field] === this.props.formData[field]
 			)) {
 				return;

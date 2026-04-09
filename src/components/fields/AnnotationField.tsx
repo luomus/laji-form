@@ -10,7 +10,7 @@ import { isObject } from "@luomus/laji-map/lib/utils";
 import { FieldProps, Lang, UiSchema } from "../../types";
 import memoize from "memoizee";
 // import { Annotation } from "@luomus/laji-schema";
-import type { components } from "generated/api.d";
+import type { components } from "../../generated/api.d";
 
 type Form = components["schemas"]["Form"];
 type Annotation = components["schemas"]["store-annotation"];

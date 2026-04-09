@@ -4,7 +4,7 @@ import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../../types";
 import { addLajiFormIds, getDefaultFormState, getInnerUiSchema, getUiOptions } from "../../../utils";
 import getContext from "../../../Context";
 import { NamedPlaceChooser } from "./NamedPlaceChooser";
-import type { components } from "generated/api.d";
+import type { components } from "../../../generated/api.d";
 type NamedPlace = components["schemas"]["store-namedPlace"];
 
 type Props = FieldProps<NamedPlace, JSONSchemaObject | JSONSchemaArray<JSONSchemaObject>>

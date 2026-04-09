@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FieldProps, JSONSchemaObject } from "src/types";
+import { FieldProps, JSONSchemaObject } from "../../types";
 import ReactContext from "../../ReactContext";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";

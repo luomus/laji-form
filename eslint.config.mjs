@@ -7,6 +7,7 @@ import stylistic from "@stylistic/eslint-plugin"
 export default [
 	{
 		files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+		ignores: ["src/generated/*"],
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {

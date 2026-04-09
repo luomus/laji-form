@@ -1,7 +1,7 @@
 import * as React from "react";
 import ReactContext from "../../ReactContext";
 import { TooltipComponent } from "../components";
-import { ButtonProps as ThemedButtonProps } from "src/themes/theme";
+import { ButtonProps as ThemedButtonProps } from "../../themes/theme";
 import { forwardRef } from "react";
 
 export type ButtonProps = ThemedButtonProps & {

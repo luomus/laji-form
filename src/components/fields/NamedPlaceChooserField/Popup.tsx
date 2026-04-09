@@ -4,7 +4,7 @@ import { FormContext } from "src/components/LajiForm";
 import Spinner from "react-spinner";
 import { isEmptyString } from "../../../utils";
 import { Button, DeleteButton } from "../../../components/components";
-import type { components } from "generated/api.d";
+import type { components } from "../../../generated/api.d";
 type NamedPlace = components["schemas"]["store-namedPlace"];
 
 type Props = {

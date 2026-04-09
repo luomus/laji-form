@@ -14,7 +14,7 @@
   "scripts": {
     "start": "npx webpack serve",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
-    "build:lib": "rimraf lib && NODE_ENV=production tsc -p tsconfig.lib.json",
+    "build:lib": "rimraf lib && NODE_ENV=production tsc -p tsconfig.lib.json && cpx src/generated/* lib/generated",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build:tests": "rimraf test-export && NODE_ENV=production tsc -p tsconfig.test.json",
     "build": "npm run build:lib && npm run build:dist && npm run build:tests",
@@ -29,7 +29,7 @@
     "test:lightweight": "npx playwright test --project chromium",
     "test:docker:build": "docker build -t laji-form-test -f test.Dockerfile .",
     "test:docker:run": "docker run laji-form-test",
-    "generate:api-client": "openapi-typescript http://apitest.laji.fi/openapi-json -o ./generated/api.d.ts --properties-required-by-default"
+    "generate:api-client": "openapi-typescript http://apitest.laji.fi/openapi-json -o ./src/generated/api.d.ts --properties-required-by-default"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -76,6 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "copy-webpack-plugin": "^9.0.1",
+    "cpx": "^1.5.0",
     "css-loader": "^5.2.6",
     "eslint": "^9.36.0",
     "eslint-plugin-jasmine": "^4.2.2",

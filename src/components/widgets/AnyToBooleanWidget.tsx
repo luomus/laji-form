@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
-import { FieldProps, WidgetProps } from "src/types";
+import { FieldProps, WidgetProps } from "../../types";
 
 export const AnyToBoolean = (props: FieldProps | (WidgetProps & { widget: true })) => <_AnyToBoolean {...props} />;
 

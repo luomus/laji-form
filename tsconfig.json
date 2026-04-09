@@ -2,8 +2,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"src/*": ["./src/*"],
-			"generated/*": ["./generated/*"]
+			"src/*": ["./src/*"]
 		},
 		"outDir": "./build",
 		"module": "commonjs",

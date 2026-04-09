@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AnyToBoolean } from "../widgets/AnyToBooleanWidget";
 import * as PropTypes from "prop-types";
-import { FieldProps } from "src/types";
+import { FieldProps } from "../../types";
 
 const _anyToBoolean = (props: FieldProps) => <AnyToBoolean {...props} />;
 _anyToBoolean.propTypes =  {
