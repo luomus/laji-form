@@ -14,7 +14,7 @@ type Props = {
 const hash = (action: Action) => JSON.stringify(action);
 
 export const ShortcutsPanel = React.forwardRef(({ formContext, onClose, shortcuts }: Props, ref) => {
-	const { translations, topOffset = 0, bottomOffset = 0 } = formContext;
+	const { translations, topOffset = 0 } = formContext;
 	const { Panel, Table } = React.useContext(ReactContext).theme;
 
 
@@ -25,15 +25,16 @@ export const ShortcutsPanel = React.forwardRef(({ formContext, onClose, shortcut
 		const existing = actionsToShortcuts.find(item => hash(item.action) === hashedAction);
 		if (existing) {
 			existing.keyCombos.push(keyCombo);
+		} else { 
+			actionsToShortcuts.push({ action, keyCombos: [keyCombo] });
 		}
-		actionsToShortcuts.push({ action, keyCombos: [keyCombo] });
 		return actionsToShortcuts;
 	}, [] as {action: Action, keyCombos: string[]}[]);
 
 	return (
 		<Panel ref={ref}
 			className="shortcut-help laji-form-popped z-depth-3 hidden"
-			style={{top: topOffset + 5, bottom: bottomOffset + 5}}
+			style={{top: topOffset + 5 }}
 			variant="info">
 			<Panel.Heading>
 				<h3>
