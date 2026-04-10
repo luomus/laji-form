@@ -17,8 +17,6 @@ export const ShortcutsPanel = React.forwardRef(({ formContext, onClose, shortcut
 	const { translations, topOffset = 0 } = formContext;
 	const { Panel, Table } = React.useContext(ReactContext).theme;
 
-
-
 	const actionsToShortcuts = Object.keys(shortcuts).reduce((actionsToShortcuts, keyCombo) => {
 		const action = shortcuts[keyCombo];
 		const hashedAction = hash(action);
@@ -44,15 +42,17 @@ export const ShortcutsPanel = React.forwardRef(({ formContext, onClose, shortcut
 			</Panel.Heading>
 			<Table>
 				<tbody className="well">{
-					actionsToShortcuts.map((props, i) => <ShortcutVisualization  {...props} key={i} translations={translations} />)
+					actionsToShortcuts.map((props, i) => <ShortcutVisualization {...props} key={i} translations={translations} />)
 				}</tbody>
 			</Table>
 		</Panel>
 	);
 });
 
-
-const ShortcutVisualization = ({action, keyCombos, translations}: { action: Action, keyCombos: string[], translations: ByLang }) => {
+const ShortcutVisualization = (
+	{ action, keyCombos, translations }
+	: { action: Action, keyCombos: string[], translations: ByLang }
+) => {
 	const {fn, targetLabel, label, ...rest} = action;
 	if (["help", "autosuggestToggle"].includes(fn) || fn === "navigateSection" && rest.goOverRow) {
 		return null;
@@ -68,7 +68,9 @@ const ShortcutVisualization = ({action, keyCombos, translations}: { action: Acti
 	}
 	return (
 		<tr>
-			<td className="laji-form-shortcut-keycombo-container">{keyCombos.map(keyCombo => <span>{stringifyKeyCombo(keyCombo)}</span>)}</td>
+			<td className="laji-form-shortcut-keycombo-container">{
+				keyCombos.map((keyCombo, i) => <span key={i}>{stringifyKeyCombo(keyCombo)}</span>)
+			}</td>
 			<td>{translation}</td>
 		</tr>
 	);

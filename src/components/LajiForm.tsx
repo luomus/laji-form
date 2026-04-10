@@ -5,7 +5,6 @@ import validate, { toErrorSchema } from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label, ShortcutsPanel } from "./components";
 import {
-	capitalizeFirstLetter,
 	stringifyKeyCombo,
 	getScrollPositionForScrollIntoViewIfNeeded,
 	getWindowScrolled,
@@ -44,6 +43,7 @@ import MultiActiveArrayService from "../services/multi-active-array-service";
 import * as fields from "./fields";
 import * as widgets from "./widgets";
 import * as templates from "./templates";
+import macShortcuts from "../mac-shortcuts.json";
 
 // Each form should have a unique id to keep Context private.
 let id = 0;
@@ -209,7 +209,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._id = getNewId();
 
 		this.getMemoizedFormContext(props); // Initialize form context.
-		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
+		this.resetShortcuts(getShortcuts(props.uiSchema));
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -332,7 +332,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	componentDidUpdate(prevProps: LajiFormProps) {
 		if ((prevProps.uiSchema || {})["ui:shortcuts"] !== (this.props.uiSchema || {})["ui:shortcuts"]) {
-			this.resetShortcuts((this.props.uiSchema || {})["ui:shortcuts"]);
+			this.resetShortcuts(getShortcuts(this.props.uiSchema));
 		}
 	}
 
@@ -402,11 +402,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (this.state.error) return null;
 		const {translations} = this.state.formContext;
 		const {
-			"ui:shortcuts": shortcuts,
 			"ui:showShortcutsButton": showShortcutsButton = true,
 			"ui:readonly": readonly,
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
+		const shortcuts = getShortcuts(this.props.uiSchema);
 		const uiSchema = {
 			...this.props.uiSchema,
 			"ui:submitButtonOptions": {
@@ -761,4 +761,15 @@ const removeUndefinedFromArrays = (formData: any) => {
 		}, []);
 	}
 	return formData;
+};
+
+
+const getShortcuts = (uiSchema: any) => {
+	if (window.navigator?.platform?.includes("Mac")) {
+		return macShortcuts;
+	}
+	const {
+		"ui:shortcuts": shortcuts
+	} = uiSchema || {};
+	return shortcuts;
 };
