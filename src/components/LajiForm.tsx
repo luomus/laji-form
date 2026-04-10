@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import validate, { toErrorSchema } from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
+import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label, ShortcutsPanel } from "./components";
 import {
 	capitalizeFirstLetter,
 	stringifyKeyCombo,
@@ -413,12 +413,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				norender: true
 			}
 		};
-
-		const {Panel, Table} = this.getContext(this.props, this.context).theme;
-
-		const panelHeader = (
-			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-		);
 		return (
 			<Context.Provider value={this.getContext(this.props, this.context)}>
 				<div className="laji-form">
@@ -464,29 +458,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						</Button>
 					) : null}
 					{shortcuts &&
-						<Panel ref={this.shortcutHelpRef}
-							className="shortcut-help laji-form-popped z-depth-3 hidden"
-							style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-							variant="info">
-							<Panel.Heading>{panelHeader}</Panel.Heading>
-							<Table>
-								<tbody className="well">{
-									Object.keys(shortcuts).map((keyCombo, idx) => {
-										const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-										if (["help", "autosuggestToggle"].includes(fn) || fn === "navigateSection" && rest.goOverRow) return;
-										let translation = "";
-										if (translation) translation = label;
-										else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")] as string;
-										if  (targetLabel) translation = `${translation} ${targetLabel}`;
-										return (
-											<tr key={idx}>
-												<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
-											</tr>
-										);
-									})
-								}</tbody>
-							</Table>
-						</Panel>
+					<ShortcutsPanel ref={this.shortcutHelpRef} shortcuts={shortcuts} formContext={this.state.formContext} onClose={this.dismissHelp} />
 					}
 					{this.renderSubmitHooks()}
 				</div>

@@ -11,3 +11,4 @@ export * from "./FetcherInput";
 export * from "./OverlayTrigger";
 export * from "./Fullscreen";
 export * from "./FailedBackgroundJobsPanel";
+export * from "./ShortcutsPanel";

@@ -31,7 +31,6 @@ import ControlLabel from "react-bootstrap/lib/ControlLabel";
 import Checkbox from "react-bootstrap/lib/Checkbox";
 import ToggleButton from "react-bootstrap/lib/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/lib/ToggleButtonGroup";
-import Radio from "react-bootstrap/lib/Radio";
 import {
 	Theme,
 	PanelProps,
