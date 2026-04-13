@@ -233,11 +233,18 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 		getEnumOptionsAsync,
 		formContext
 	} = props;
-	const [enumOptions, setEnumOptions] = useState(getEnumOptionsAsync
+	const [allEnumOptions, setAllEnumOptions] = useState(getEnumOptionsAsync
 		? undefined
 		 
 		: getEnumOptions<T>(options.enumOptions!, uiSchema, false)
 	);
+
+	const enumOptions = useMemo(() => {
+		if (allEnumOptions && options.whitelist) {
+			return allEnumOptions.filter(e => e.value === undefined || options.whitelist.includes(e.value));
+		}
+		return allEnumOptions;
+	}, [allEnumOptions, options.whitelist]);
 
 	const [filterTerm, setFilterTerm] = useState<string | undefined>();
 	const [loading, setLoading] = useState<boolean | undefined>(undefined);
@@ -298,7 +305,7 @@ function SearchableMultiDrowndown<T extends string | number>(props: MultiSelectW
 			try {
 				 
 				const enums = await getEnumOptionsAsync!();
-				setEnumOptions(enums);
+				setAllEnumOptions(enums);
 			} finally {
 				setLoading(false);
 			}
