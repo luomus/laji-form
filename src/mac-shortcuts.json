@@ -1,0 +1,14 @@
+{
+	"ctrl+Enter": {
+		"fn": "navigate"
+	},
+	"ctrl+shift+Enter": {
+		"fn": "navigate",
+		"reverse": true
+	},
+	"ctrl+u": {
+		"fn": "insert",
+		"target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+		"targetLabel": "havainto"
+	}
+}
