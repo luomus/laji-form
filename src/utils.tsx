@@ -1109,6 +1109,9 @@ export function highlightElem(elem?: Element) {
 }
 
 export function filteredErrors(errorSchema: any) {
+	if (!errorSchema || typeof errorSchema !== "object") {
+		return {};
+	}
 	return Object.keys(errorSchema).reduce<any>((_errorSchema, prop) => {
 		if (prop === "__errors") {
 			if (errorSchema.__errors.length) {
