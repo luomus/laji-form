@@ -1072,39 +1072,39 @@
                     "oneOf": [
                       {
                         "const": "MX.taxonSetArchipelagoWaterbirds",
-                        "title": "MX.taxonSetArchipelagoWaterbirds"
+                        "title": "Archipelago bird census: Water birds"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoWaders",
-                        "title": "MX.taxonSetArchipelagoWaders"
+                        "title": "Archipelago bird census: Waders"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoGulls",
-                        "title": "MX.taxonSetArchipelagoGulls"
+                        "title": "Archipelago bird census: Gulls"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoPasserines",
-                        "title": "MX.taxonSetArchipelagoPasserines"
+                        "title": "Archipelago bird census: Passerines"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoAlcids",
-                        "title": "MX.taxonSetArchipelagoAlcids"
+                        "title": "Archipelago bird census: Alcids"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoRaptors",
-                        "title": "MX.taxonSetArchipelagoRaptors"
+                        "title": "Archipelago bird census: Raptors"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoCormorants",
-                        "title": "MX.taxonSetArchipelagoCormorants"
+                        "title": "Archipelago bird census: Cormorants"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoEgrets",
-                        "title": "MX.taxonSetArchipelagoEgrets"
+                        "title": "Archipelago bird census: Egrets"
                       },
                       {
                         "const": "MX.taxonSetArchipelagoMammals",
-                        "title": "MX.taxonSetArchipelagoMammals"
+                        "title": "Archipelago bird census: Mammals"
                       }
                     ],
                     "title": "Censused taxon set"
@@ -2268,7 +2268,7 @@
                       }
                     },
                     "required": [],
-                    "title": ""
+                    "title": "Units gathering"
                   },
                   "unitFact": {
                     "type": "object",
@@ -2294,11 +2294,25 @@
                       },
                       "juvenileIndividualCount": {
                         "type": "integer",
-                        "title": "Juvenile individual count"
+                        "title": "Juvenile count"
+                      },
+                      "adultIndividualCount": {
+                        "type": "integer",
+                        "title": "Adults of unknown sex"
+                      },
+                      "pullusIndividualCount": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "title": "Pullus individual count"
+                      },
+                      "eggCount": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "title": "Egg count"
                       }
                     },
                     "required": [],
-                    "title": ""
+                    "title": "Count fields"
                   },
                   "birdPlumage": {
                     "type": "string",
@@ -2607,6 +2621,36 @@
                     "type": "boolean",
                     "title": "Alive"
                   },
+                  "observationStatus": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.observationStatusIgnored",
+                        "title": "A - Ignored"
+                      },
+                      {
+                        "const": "MY.observationStatusNotObserved",
+                        "title": "B - Not observed"
+                      },
+                      {
+                        "const": "MY.observationStatusObservedNoCount",
+                        "title": "C - Observed, not counted"
+                      },
+                      {
+                        "const": "MY.observationStatusObservedPartialCount",
+                        "title": "D - Observed, partially counted"
+                      },
+                      {
+                        "const": "MY.observationStatusObservedCompleteCount",
+                        "title": "E - Observed, completely counted"
+                      }
+                    ],
+                    "title": "Observation status"
+                  },
                   "maleIndividualCount": {
                     "type": "integer",
                     "minimum": 0,
@@ -2620,7 +2664,7 @@
                   "nestCount": {
                     "type": "integer",
                     "minimum": 0,
-                    "title": "Nest/cavity count"
+                    "title": "Nest count"
                   }
                 },
                 "required": []
@@ -2655,11 +2699,11 @@
     "$.gatherings[*].units",
     "$.gatherings[*].units[*].unitGathering.dateEnd"
   ],
-  "name": "Archipelago Census, Field Data",
-  "description": "With this form you can record all observations and/or data from possible collection samples from a field trip which lasts one or several days.",
+  "name": "Archipelago Census, Field Observations",
+  "description": "",
   "language": "en",
-  "title": "Archipelago Census, Field Data",
-  "shortDescription": "Record all your observations and/or collection samples from a field trip.",
+  "title": "Archipelago Census",
+  "shortDescription": "",
   "uiSchema": {
     "ui:shortcuts": {
       "alt": {
@@ -2994,6 +3038,9 @@
         "canAdd": false,
         "removable": false,
         "mapOptions": {
+          "draw": {
+            "editable": false
+          },
           "controls": {
             "draw": false
           }
@@ -3465,6 +3512,66 @@
           "items": {
             "ui:functions": [
               {
+                "ui:field": "ConditionalUiSchemaField",
+                "ui:options": {
+                  "cases": [
+                    {
+                      "rules": [
+                        {
+                          "field": "unitFact_adultIndividualCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "maleIndividualCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "femaleIndividualCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "nestCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "unitFact_destroyedNestCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "unitFact_broodCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "unitFact_femalesWithBroodsCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "unitFact_juvenileIndividualCount",
+                          "regexp": "^$"
+                        },
+                        {
+                          "field": "unitFact_pullusIndividualCount",
+                          "regexp": "^$"
+                        }
+                      ],
+                      "else": {
+                        "type": "merge",
+                        "uiSchema": {
+                          "observationStatus": {
+                            "ui:options": {
+                              "whitelist": [
+                                "MY.observationStatusObservedPartialCount",
+                                "MY.observationStatusObservedCompleteCount"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
                 "ui:field": "AutosuggestField",
                 "ui:settings": [
                   "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit",
@@ -3567,16 +3674,37 @@
                     "unitFact_autocompleteSelectedTaxonID",
                     "identifications_0_taxon",
                     "identifications_0_taxonVerbatim",
-                    "maleIndividualCount",
-                    "femaleIndividualCount",
-                    "nestCount",
-                    "unitFact_destroyedNestCount",
-                    "unitFact_broodCount",
-                    "unitFact_femalesWithBroodsCount",
-                    "unitFact_juvenileIndividualCount",
-                    "notes"
+                    "observationStatus"
                   ],
+                  "definitions": {
+                    "countFields": {
+                      "fields": [
+                        "unitFact_adultIndividualCount",
+                        "maleIndividualCount",
+                        "femaleIndividualCount",
+                        "nestCount",
+                        "unitFact_destroyedNestCount",
+                        "unitFact_broodCount",
+                        "unitFact_femalesWithBroodsCount",
+                        "unitFact_juvenileIndividualCount",
+                        "unitFact_pullusIndividualCount",
+                        "notes"
+                      ]
+                    }
+                  },
                   "fieldScopes": {
+                    "observationStatus": {
+                      "MY.observationStatusObservedPartialCount": {
+                        "refs": [
+                          "countFields"
+                        ]
+                      },
+                      "MY.observationStatusObservedCompleteCount": {
+                        "refs": [
+                          "countFields"
+                        ]
+                      }
+                    },
                     "informalTaxonGroups": {
                       "*": {
                         "title": "All",
@@ -3594,7 +3722,8 @@
                           "checklistID",
                           "keywords",
                           "additionalIDs",
-                          "alive"
+                          "alive",
+                          "unitFact_eggCount"
                         ]
                       }
                     }
@@ -3621,6 +3750,8 @@
             "ui:order": [
               "identifications_0_taxon",
               "identifications_0_taxonVerbatim",
+              "observationStatus",
+              "unitFact_adultIndividualCount",
               "maleIndividualCount",
               "femaleIndividualCount",
               "nestCount",
@@ -3628,6 +3759,7 @@
               "unitFact_broodCount",
               "unitFact_femalesWithBroodsCount",
               "unitFact_juvenileIndividualCount",
+              "unitFact_pullusIndividualCount",
               "notes",
               "informalTaxonGroups",
               "taxonConfidence",
@@ -3688,6 +3820,8 @@
               "lg": {
                 "identifications_0_taxon": 3,
                 "identifications_0_taxonVerbatim": 3,
+                "observationStatus": 3,
+                "unitFact_adultIndividualCount": 3,
                 "maleIndividualCount": 3,
                 "femaleIndividualCount": 3,
                 "notes": 3,
@@ -3696,6 +3830,8 @@
               "md": {
                 "identifications_0_taxon": 3,
                 "identifications_0_taxonVerbatim": 3,
+                "observationStatus": 3,
+                "unitFact_adultIndividualCount": 3,
                 "maleIndividualCount": 3,
                 "femaleIndividualCount": 3,
                 "notes": 3,
@@ -3704,6 +3840,8 @@
               "sm": {
                 "identifications_0_taxon": 6,
                 "identifications_0_taxonVerbatim": 6,
+                "observationStatus": 6,
+                "unitFact_adultIndividualCount": 6,
                 "maleIndividualCount": 6,
                 "femaleIndividualCount": 6,
                 "notes": 6,
@@ -3714,6 +3852,10 @@
                 [
                   "identifications_0_taxon",
                   "identifications_0_taxonVerbatim",
+                  "observationStatus"
+                ],
+                [
+                  "unitFact_adultIndividualCount",
                   "maleIndividualCount",
                   "femaleIndividualCount"
                 ],
@@ -3723,6 +3865,7 @@
                   "unitFact_broodCount",
                   "unitFact_femalesWithBroodsCount",
                   "unitFact_juvenileIndividualCount",
+                  "unitFact_pullusIndividualCount",
                   "notes",
                   "*"
                 ]
@@ -3835,9 +3978,9 @@
   },
   "options": {
     "instructions": {
-      "fi": "https://laji.fi/about/8794",
-      "en": "https://laji.fi/about/8794",
-      "sv": "https://laji.fi/about/8794"
+      "fi": "https://laji.fi/about/9081",
+      "en": "https://laji.fi/about/9081",
+      "sv": "https://laji.fi/about/9081"
     },
     "allowExcel": true,
     "allowExcelGeneration": false,
@@ -3859,7 +4002,7 @@
       ],
       "createNewButtonLabel": "Luo uusi seurantapaikka",
       "createNewButtonPrependingTextLabel": "Valitse alta perustettu seurantapaikka",
-      "chooseDescription": "<ol> <li> <strong>Jos haluat perustaa seurantapaikan</strong>, siirry painikeen <strong>\"Luo uusi seurantapaikka\"</strong> avulla uuteen ikkunaan ja täytä tarvittavat tiedot. Luomasi uusi seurantapaikka on nyt lisätty luetteloon ja on käytettävissä uusien tietojen tallentamista varten.  </li> <li> <strong>Jos haluat lisätä tietoa  perustettuun seurantapaikkaan</strong> (uusi seurantatapahtuma), valitse joko <strong>luettelo- tai kartta-välilehdeltä</strong> haluamasi <strong>seurantapaikka</strong>, ja siirry palveluun kyseisen paikan tietoikkunan (avautuu valintasi jälkeen) kuvakkeen <strong>\"Lisää havaintoja seurantapaikkaan\"</strong> avulla.  </li> </ol>",
+      "chooseDescription": "",
       "copyLatestDocumentToNamedPlace": true,
       "allowAddingPublic": false,
       "infoFields": [
@@ -3877,6 +4020,9 @@
       "en": "9083",
       "sv": "9085"
     },
+    "forms": [
+      "MHL.1167"
+    ],
     "saveLabel": "Tallenna havainnot",
     "cancelLabel": "Poistu tallentamatta",
     "draftLabel": "Tallenna julkaisematta",
@@ -3886,10 +4032,11 @@
     "ownSubmissionsAdminTitle": "Kaikki seurannat",
     "restrictAccess": "MHL.restrictAccessStrict",
     "emptyOnNoCount": true,
-    "sidebarFormLabel": "Save"
+    "sidebarFormLabel": "Save field observations"
   },
+  "category": "MHL.categoryBirdMonitoringSchemes",
   "collectionID": "HR.6920",
-  "logo": "https://cms.laji.fi/wp-content/uploads/2024/05/moth_monitoring_200px.png",
+  "logo": "https://cms.laji.fi/wp-content/uploads/2026/02/archipelago_bird_census_200px.png",
   "id": "MHL.1166",
   "extra": {
     "habitat": {
@@ -4503,6 +4650,108 @@
                       }
                     }
                   }
+                },
+                "unitFact": {
+                  "crossCheck": {
+                    "check": "observationStatus",
+                    "onlyWhenCheckIn": [
+                      "MY.observationStatusObservedCompleteCount"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                  },
+                  "properties": {
+                    "destroyedNestCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    },
+                    "broodCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    },
+                    "femalesWithBroodsCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    },
+                    "juvenileIndividualCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    },
+                    "adultIndividualCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    },
+                    "pullusIndividualCount": {
+                      "crossCheck": {
+                        "check": "../observationStatus",
+                        "onlyWhenCheckIn": [
+                          "MY.observationStatusObservedCompleteCount"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                      }
+                    }
+                  }
+                },
+                "maleIndividualCount": {
+                  "crossCheck": {
+                    "check": "observationStatus",
+                    "onlyWhenCheckIn": [
+                      "MY.observationStatusObservedCompleteCount"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                  }
+                },
+                "femaleIndividualCount": {
+                  "crossCheck": {
+                    "check": "observationStatus",
+                    "onlyWhenCheckIn": [
+                      "MY.observationStatusObservedCompleteCount"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                  }
+                },
+                "nestCount": {
+                  "crossCheck": {
+                    "check": "observationStatus",
+                    "onlyWhenCheckIn": [
+                      "MY.observationStatusObservedCompleteCount"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "All counts must be added, if 'Observed, completely counted' has been selected."
+                  }
                 }
               }
             }
@@ -5031,5 +5280,5 @@
       }
     }
   },
-  "$id": "066351daa4b622f1cbc26569a2ba58a2"
+  "$id": "8e1e6f6abc5dbb75b64e63b1b8344950"
 }
