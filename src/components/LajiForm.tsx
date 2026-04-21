@@ -15,8 +15,7 @@ import {
 	ReactUtils,
 	ReactUtilsType,
 	JSONPointerToId,
-	isObject,
-	immutableDelete
+	isObject
 } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
@@ -483,14 +482,16 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	};
 
 	validateAndSubmit = (warnings = true, onlySchema = false) => {
-		const {formData} = this.state;
+		let {formData} = this.state;
 		const {onValidationError, onSubmit, schema} = this.props;
 		this.setState({ externalErrors: undefined });
 		return this.validate(warnings, true, onlySchema).then(valid => {
 			if (formData !== this.state.formData) {
 				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
-				onSubmit?.({formData: this.getFormDataReadyForSubmit(formData, schema)});
+				formData = this.getFormDataReadyForSubmit(formData, schema);
+				this.setState({ formData });
+				onSubmit?.({ formData });
 			} else {
 				onValidationError && onValidationError(this.state.extraErrors!);
 			}
