@@ -746,45 +746,45 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 		let schemaErrors = toErrorSchema(errors);
 
-		const removedPaths = this.getFormDataReadyForSubmit(formData, this.props.schema).removedPaths;
-		removedPaths.forEach(path => {
+		const ignoreErrorPaths = this.getFormDataReadyForSubmit(formData, this.props.schema).removedArrayItemsAndObjects;
+		ignoreErrorPaths.forEach(path => {
 			schemaErrors = immutableDelete(schemaErrors, path);
 		});
 
 		return schemaErrors;
 	};
 
-	getFormDataReadyForSubmit = (formData: any, schema: JSONSchema): { formData: any, removedPaths: string[] } => {
+	getFormDataReadyForSubmit = (formData: any, schema: JSONSchema): { formData: any, removedArrayItemsAndObjects: string[] } => {
 		formData = this.memoizedFormContext.services.ids.removeLajiFormIds(formData);
 		return removeEmptyValuesAndTrim(formData, schema);
 	};
 }
 
 
-const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData: any, removedPaths: string[] } => {
-	const removedPaths: string[] = [];
+const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData: any, removedArrayItemsAndObjects: string[] } => {
+	const removedArrayItemsAndObjects: string[] = [];
 
 	return {
 		formData: removeRecursive(formData, schema, true, ""),
-		removedPaths
+		removedArrayItemsAndObjects
 	};
 
 	function removeRecursive(formData: any, schema: JSONSchema | undefined, isRequired: boolean, path: string): any {
 		if (schema && isJSONSchemaObject(schema) && isObject(formData)) {
 			const object = Object.keys(formData).reduce((obj, k) => {
-				const value = removeRecursive(formData[k], schema.properties[k], schema.required?.includes(k) || false, `${path}/${k}`);
+				const childSchema = schema.properties[k];
+				const value = removeRecursive(formData[k], childSchema, schema.required?.includes(k) || false, `${path}/${k}`);
+
 				if (value !== undefined) {
 					obj[k] = value;
+				} else if (childSchema && isJSONSchemaObject(childSchema)) {
+					removedArrayItemsAndObjects.push(`${path}/${k}`);
 				}
+
 				return obj;
 			}, {} as Record<string, unknown>);
 
-			if (isRequired || Object.keys(object).length > 0) {
-				return object;
-			} else {
-				removedPaths.push(path);
-				return undefined;
-			}
+			return isRequired || Object.keys(object).length > 0 ? object : undefined;
 		} else if (schema && isJSONSchemaArray(schema) && Array.isArray(formData)) {
 			const nonEmptyItems: Record<number, any> = {};
 			formData.forEach((item, idx) => {
@@ -804,7 +804,7 @@ const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData
 					arr.push(removeRecursive(item, schema.items, true, childPath));
 					missingItems--;
 				} else {
-					removedPaths.push(childPath);
+					removedArrayItemsAndObjects.push(childPath);
 				}
 				return arr;
 			}, []);
