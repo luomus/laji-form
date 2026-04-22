@@ -773,12 +773,13 @@ const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData
 		if (schema && isJSONSchemaObject(schema) && isObject(formData)) {
 			const object = Object.keys(formData).reduce((obj, k) => {
 				const childSchema = schema.properties[k];
-				const value = removeRecursive(formData[k], childSchema, schema.required?.includes(k) || false, `${path}/${k}`);
+				const childPath = `${path}/${k}`;
+				const value = removeRecursive(formData[k], childSchema, schema.required?.includes(k) || false, childPath);
 
 				if (value !== undefined) {
 					obj[k] = value;
 				} else if (childSchema && isJSONSchemaObject(childSchema)) {
-					removedArrayItemsAndObjects.push(`${path}/${k}`);
+					removedArrayItemsAndObjects.push(childPath);
 				}
 
 				return obj;
