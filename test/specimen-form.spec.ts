@@ -220,6 +220,13 @@ test.describe("specimen form (MHL.1158)", () => {
 					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.kingdom");
 					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("(Lichtenstein, 1823)");
 				});
+
+				test("browsing suggestions with array keys should show the scientific name in the input", async () => {
+					await taxonAutosuggest.$input.fill("susi");
+					await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+					await taxonAutosuggest.$input.press("ArrowDown");
+					await expect(taxonAutosuggest.$input).toHaveValue("Canis lupus");
+				});
 			});
 		});
 

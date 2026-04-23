@@ -837,6 +837,7 @@ export class Autosuggest extends React.Component {
 					onUnsuggestedSelected={this.onUnsuggestedSelected}
 					highlightFirstSuggestion={highlightFirstSuggestion}
 					suggestionsOpenOnFocus={!this.isSuggested()}
+					getSuggestionValue={this.getSuggestionValue}
 					theme={cssClasses}
 					formContext={this.props.formContext}
 					ref={this.setRef}
@@ -1318,6 +1319,12 @@ class ReactAutosuggest extends React.Component {
 		}
 	}
 
+	getDisplayValue = (suggestion) => {
+		return this.props.getSuggestionValue
+			? this.props.getSuggestionValue(suggestion)
+			: suggestion.value;
+	};
+
 	render() {
 		return (
 			<div onFocus={this.onContainerFocus} onBlur={this.onContainerBlur}>
@@ -1371,7 +1378,7 @@ class ReactAutosuggest extends React.Component {
 				touched: true
 			};
 			if (state.focusedIdx !== undefined) {
-				state.inputValue = this.props.suggestions[state.focusedIdx].value;
+				state.inputValue = this.getDisplayValue(this.props.suggestions[state.focusedIdx]);
 			}
 			this.setState(state);
 			break;
@@ -1379,7 +1386,7 @@ class ReactAutosuggest extends React.Component {
 			e.preventDefault();
 			state = {focusedIdx: this.state.focusedIdx > 0 ? this.state.focusedIdx - 1 : undefined, touched: true};
 			if (state.focusedIdx !== undefined) {
-				state.inputValue = this.props.suggestions[state.focusedIdx].value;
+				state.inputValue = this.getDisplayValue(this.props.suggestions[state.focusedIdx]);
 			}
 			this.setState(state);
 			break;
