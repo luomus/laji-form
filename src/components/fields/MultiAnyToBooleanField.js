@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import AnyToBoolean from "./AnyToBooleanField";
 import { getTemplate } from "@rjsf/utils";
+import { Button } from "../components";
 
 export default class MultiAnyToBooleanField extends React.Component {
 	static propTypes = {
@@ -15,7 +16,8 @@ export default class MultiAnyToBooleanField extends React.Component {
 						falseValue: PropTypes.any,
 						allowUndefined: PropTypes.bool
 					})
-				)
+				),
+				selectAll: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -76,11 +78,26 @@ export default class MultiAnyToBooleanField extends React.Component {
 		this.props.onChange(formData);
 	};
 
+	onSelectAll = () => {
+		const {groups} = getUiOptions(this.props.uiSchema) || [];
+		const groupsFormData = groups.map(group => group.trueValue);
+		this.setState({groupsFormData});
+
+		const formData = groupsFormData.reduce((arr, val) => {
+			if (val !== undefined) {
+				arr.push(val);
+			}
+			return arr;
+		}, []);
+
+		this.props.onChange(formData);
+	};
+
 	render() {
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 
 		const {"ui:title": _title} = this.props.uiSchema || {};
-		let {groups} = getUiOptions(this.props.uiSchema) || [];
+		let {groups, selectAll} = getUiOptions(this.props.uiSchema) || [];
 
 		return (
 			<React.Fragment>
@@ -103,6 +120,11 @@ export default class MultiAnyToBooleanField extends React.Component {
 						);
 					})}
 				</div>
+				{selectAll && (
+					<Button onClick={this.onSelectAll} style={{marginTop: "10px"}}>
+						{this.props.formContext.translations.SelectAll}
+					</Button>
+				)}
 			</React.Fragment>
 		);
 	}

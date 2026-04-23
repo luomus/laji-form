@@ -3325,7 +3325,8 @@
                 },
                 "allowUndefined": false
               }
-            ]
+            ],
+            "selectAll": "true"
           },
           "ui:help": "@taxonCensusHelp"
         },

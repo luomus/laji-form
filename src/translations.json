@@ -209,6 +209,11 @@
 		"en": "All",
 		"sv": "Alla"
 	},
+	"selectAll": {
+		"fi": "Valitse kaikki",
+		"en": "Select all",
+		"sv": "Välj alla"
+	},
 	"saveFail": {
 		"fi": "Tallennus epäonnistui.",
 		"en": "Saving failed.",

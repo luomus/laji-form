@@ -81,11 +81,11 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 	onChange = async (formData: any) => {
 		const { translations } = this.props.formContext;
 
-		const previousTaxonSets = this.selectedTaxonSets;
-		const currentTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
+		const previousTaxonSets: string[] = this.selectedTaxonSets;
+		const currentTaxonSets: string[] = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
-		const deletedTaxonSets = previousTaxonSets.filter((item: string) => !currentTaxonSets.includes(item));
-		const addedTaxonSets = currentTaxonSets.filter((item: string) => !previousTaxonSets.includes(item));
+		const deletedTaxonSets: string[] = previousTaxonSets.filter((item: string) => !currentTaxonSets.includes(item));
+		const addedTaxonSets: string[] = currentTaxonSets.filter((item: string) => !previousTaxonSets.includes(item));
 
 		this.selectedTaxonSets = formData?.taxonCensus?.map((item: any) => item.censusTaxonSetID) || [];
 
@@ -150,6 +150,21 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 			}
 
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
+
+			// sort results by taxon set (lowest index of result's taxon sets in addedTaxonSets)
+			if (addedTaxonSets.length > 1) {
+				results.sort((a: any, b: any) => {
+					const aIndex = (a.taxonSets || []).reduce((min: number, taxonSet: string) => {
+						const idx = addedTaxonSets.indexOf(taxonSet);
+						return idx !== -1 && idx < min ? idx : min;
+					}, addedTaxonSets.length);
+					const bIndex = (b.taxonSets || []).reduce((min: number, taxonSet: string) => {
+						const idx = addedTaxonSets.indexOf(taxonSet);
+						return idx !== -1 && idx < min ? idx : min;
+					}, addedTaxonSets.length);
+					return aIndex - bIndex;
+				});
+			}
 
 			const newUnits = results.map((result: any) => {
 				this.unitTaxonSets[result.id] = result.taxonSets || [];
