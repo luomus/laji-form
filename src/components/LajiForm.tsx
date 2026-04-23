@@ -15,7 +15,8 @@ import {
 	ReactUtils,
 	ReactUtilsType,
 	JSONPointerToId,
-	isObject
+	isObject,
+	immutableDelete
 } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
@@ -38,7 +39,7 @@ import DOMIdService from "../services/dom-id-service";
 import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
 import SingletonMapService from "../services/singleton-map-service";
-import { FieldProps, HasMaybeChildren, Lang } from "../types";
+import { FieldProps, HasMaybeChildren, isJSONSchemaArray, isJSONSchemaObject, JSONSchema, Lang } from "../types";
 import MultiActiveArrayService from "../services/multi-active-array-service";
 import * as fields from "./fields";
 import * as widgets from "./widgets";
@@ -482,16 +483,16 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	};
 
 	validateAndSubmit = (warnings = true, onlySchema = false) => {
-		const {formData} = this.state;
-		const {onValidationError, onSubmit} = this.props;
+		let {formData} = this.state;
+		const {onValidationError, onSubmit, schema} = this.props;
 		this.setState({ externalErrors: undefined });
 		return this.validate(warnings, true, onlySchema).then(valid => {
 			if (formData !== this.state.formData) {
 				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
-				onSubmit?.({formData: removeUndefinedFromArrays(
-					this.memoizedFormContext.services.ids.removeLajiFormIds(formData)
-				)});
+				formData = this.getFormDataReadyForSubmit(formData, schema).formData;
+				this.setState({ formData });
+				onSubmit?.({ formData });
 			} else {
 				onValidationError && onValidationError(this.state.extraErrors!);
 			}
@@ -509,8 +510,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 
 		const block = nonlive || onlySchema;
-		
+
 		const { formData } = this.state;
+
 		const {live: liveErrorValidators, rest: errorValidators} =
 			splitLive(this.props.validators, this.props.schema.properties);
 		const {live: liveWarningValidators, rest: warningValidators} =
@@ -543,7 +545,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					? (this.cachedNonliveValidations || {})
 					: merge(_validations, schemaErrors)
 				);
-				const mergedAll = merge(
+				let mergedAll = merge(
 					this.state.externalErrors || {},
 					mergedInternalErrors as any
 				) as any;
@@ -736,31 +738,87 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	getSchemaValidationErrors = (formData: any) => {
 		const errors = rjsfValidator.validateFormData(
-			removeUndefinedFromArrays(formData),
+			formData,
 			this.props.schema,
 			undefined,
 			((e: any) => transformErrors(this.state.formContext.translations, e))
 		).errors;
-		return toErrorSchema(errors);
+
+		let schemaErrors = toErrorSchema(errors);
+
+		const ignoreErrorPaths = this.getFormDataReadyForSubmit(formData, this.props.schema).removedArrayItemsAndObjects;
+		ignoreErrorPaths.forEach(path => {
+			schemaErrors = immutableDelete(schemaErrors, path);
+		});
+
+		return schemaErrors;
+	};
+
+	getFormDataReadyForSubmit = (formData: any, schema: JSONSchema): { formData: any, removedArrayItemsAndObjects: string[] } => {
+		formData = this.memoizedFormContext.services.ids.removeLajiFormIds(formData);
+		return removeEmptyValuesAndTrim(formData, schema);
 	};
 }
 
-const removeUndefinedFromArrays = (formData: any) => {
-	if (isObject(formData)) {
-		return Object.keys(formData).reduce((obj, k) => {
-			obj[k] = removeUndefinedFromArrays(formData[k]);
-			return obj;
-		}, {} as Record<string, unknown>);
-	} else if (Array.isArray(formData)) {
-		return formData.reduce((filtered, i) => {
-			if (i === undefined || i === null || i === "") {
-				return filtered;
-			}
-			filtered.push(removeUndefinedFromArrays(i));
-			return filtered;
-		}, []);
+
+const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData: any, removedArrayItemsAndObjects: string[] } => {
+	const removedArrayItemsAndObjects: string[] = [];
+
+	return {
+		formData: removeRecursive(formData, schema, true, ""),
+		removedArrayItemsAndObjects
+	};
+
+	function removeRecursive(formData: any, schema: JSONSchema | undefined, isRequired: boolean, path: string): any {
+		if (schema && isJSONSchemaObject(schema) && isObject(formData)) {
+			const object = Object.keys(formData).reduce((obj, k) => {
+				const childSchema = schema.properties[k];
+				const childPath = `${path}/${k}`;
+				const value = removeRecursive(formData[k], childSchema, schema.required?.includes(k) || false, childPath);
+
+				if (value !== undefined) {
+					obj[k] = value;
+				} else if (childSchema && isJSONSchemaObject(childSchema)) {
+					removedArrayItemsAndObjects.push(childPath);
+				}
+
+				return obj;
+			}, {} as Record<string, unknown>);
+
+			return isRequired || Object.keys(object).length > 0 ? object : undefined;
+		} else if (schema && isJSONSchemaArray(schema) && Array.isArray(formData)) {
+			const nonEmptyItems: Record<number, any> = {};
+			formData.forEach((item, idx) => {
+				const value = removeRecursive(item, schema.items, false, `${path}/${idx}`);
+				if (value !== undefined) {
+					nonEmptyItems[idx] = value;
+				}
+			});
+
+			let missingItems = Math.max((schema.minItems || 0) - Object.keys(nonEmptyItems).length, 0);
+
+			const array = formData.reduce((arr: any[], item, idx) => {
+				const childPath = `${path}/${idx}`;
+				if (idx in nonEmptyItems) {
+					arr.push(nonEmptyItems[idx]);
+				} else if (missingItems > 0) {
+					arr.push(removeRecursive(item, schema.items, true, childPath));
+					missingItems--;
+				} else {
+					removedArrayItemsAndObjects.push(childPath);
+				}
+				return arr;
+			}, []);
+
+			return isRequired || array.length > 0 ? array : undefined;
+		} else if (formData === null) {
+			return undefined;
+		} else if (typeof formData === "string") {
+			return formData.trim() || undefined;
+		}
+
+		return formData;
 	}
-	return formData;
 };
 
 
