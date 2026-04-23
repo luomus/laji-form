@@ -543,7 +543,6 @@ export class Autosuggest extends React.Component {
 				this.setState(state);
 			});
 		} else if (valueContextChanged) {
-			this.setState({isLoading: true});
 			if (this.triggerConvertTimeout) {
 				clearTimeout(this.triggerConvertTimeout);
 			}
