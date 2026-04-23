@@ -2623,6 +2623,7 @@
                   },
                   "observationStatus": {
                     "type": "string",
+                    "default": "MY.observationStatusNotObserved",
                     "oneOf": [
                       {
                         "const": "",
@@ -3902,6 +3903,12 @@
                 "sideEffects": {
                   "/../recordBasis": "MY.recordBasisHumanObservationAudio"
                 }
+              }
+            },
+            "observationStatus": {
+              "ui:widget": "SelectWidget",
+              "ui:options": {
+                "includeEmpty": false
               }
             },
             "unitGathering": {
