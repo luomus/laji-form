@@ -763,6 +763,11 @@ export class Autosuggest extends React.Component {
 		}
 		const parsedInputValue = this.props.parseInputValue ? this.props.parseInputValue(inputValue) : inputValue;
 
+		if (this.state.suggestion && inputValue === this.getSuggestionValue(this.state.suggestion)) {
+			callback && callback();
+			return;
+		}
+
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, parsedInputValue);
@@ -1464,10 +1469,9 @@ class ReactAutosuggest extends React.Component {
 	onSuggestionMouseUp = (e) => {
 		this.suggestionMouseDownFlag = false;
 		const suggestion = this.getSuggestionFromClick(e);
-		this.setState({inputValue: suggestion.value}, () => {
-			this._onInputChange(suggestion.value, "click");
-			this.onBlur(e);
-		});
+		this.onSuggestionSelected(suggestion);
+		this.setState({focused: false, focusedIdx: undefined, touched: false});
+		this.props.inputProps?.onBlur?.(e, true);
 	};
 
 	getSuggestionFromClick = ({target}) => {
