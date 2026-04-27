@@ -40,6 +40,8 @@ export function transformErrors(translations, errors) {
 			error.message = translations.FieldIsRequired + ".";
 		} else if (error.name === "uniqueItems") {
 			error.message = translations.UniqueItems + ".";
+		} else if (error.name === "minimum") {
+			error.message = translations.ValueMustBe + " " + error.params.comparison + " " + error.params.limit + ".";
 		}
 		return error;
 	});

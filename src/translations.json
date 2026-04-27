@@ -894,6 +894,11 @@
 		"en": "The same value may not be used more than once",
 		"sv": "Samma värde får inte användas mer än en gång"
 	},
+	"valueMustBe": {
+		"fi": "Arvon on oltava",
+		"en": "Value must be",
+		"sv": "Värdet måste vara"
+	},
 	"taxonSetDeletionFailed": {
 		"fi": "Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.",
 		"en": "This taxon set cannot be removed because it contains observations.",
