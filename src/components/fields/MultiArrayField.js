@@ -109,6 +109,12 @@ export default class MultiArrayField extends React.Component {
 			}
 		});
 
+		// preserve original formData order within each group
+		const formDataArray = props.formData || [];
+		groupedItems.forEach(group => {
+			group.sort((a, b) => formDataArray.indexOf(a) - formDataArray.indexOf(b));
+		});
+
 		this.groupedItems = groupedItems;
 		const withoutNonGrouped = [...groupedItems];
 		withoutNonGrouped.pop();
