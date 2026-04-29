@@ -25,8 +25,6 @@ export default class MultiArrayField extends React.Component {
 		formData: PropTypes.array
 	};
 
-	itemIds = {};
-
 	render() {
 		const {props} = this;
 		let {groups, cache = true, arrayMerge, persistByParent, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
@@ -55,6 +53,8 @@ export default class MultiArrayField extends React.Component {
 
 		const groupedItems = Array(groups.length + 1).fill(undefined).map(_ => []);   
 		const addToGroup = (groupIdx, item) => {
+			const id = getUUID(item);
+			this.groupItemIds[groupIdx][id] = true;
 			groupedItems[groupIdx].push(item);
 			return true;
 		};
