@@ -868,7 +868,7 @@ export function checkArrayRules(rules: any[], props: FieldProps, idx: number, ca
 	const nonArrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => !arrayRules.includes(rule));
 	if (nonArrayRules.length) {
 		const nonArrayRulesCheck = checkRules(nonArrayRules, {...props, formData: props.formData[idx]}, cache, prop);
-		const allPass = passes && cache ? (nonArrayRulesCheck as any).passes :  nonArrayRulesCheck;
+		const allPass = passes && cache ? (nonArrayRulesCheck as any).passes : nonArrayRulesCheck;
 		if (cache) {
 			return {passes: allPass, cache};
 		} else {

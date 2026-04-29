@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
+import { addLajiFormIds } from "../..//utils";
 
 const propsPropType = PropTypes.shape({
 	from: PropTypes.string.isRequired,
@@ -155,16 +156,17 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
 
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.units.$id);
 			const newUnits = results.map((result: any) => {
 				this.unitTaxonSets[result.id] = result.taxonSets || [];
-				return {
+				return addLajiFormIds({
 					identifications: [{
 						taxon: result.scientificName,
 						taxonID: result.id,
 						taxonVerbatim: result.vernacularName
 					}],
 					informalTaxonGroups: result.informalTaxonGroups || []
-				};
+				}, tmpIdTree, false)[0];
 			});
 
 			const sortedUnits = this.sortByTaxonSet([...currentUnits, ...newUnits], currentTaxonSets);
