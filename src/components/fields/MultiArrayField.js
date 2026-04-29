@@ -53,30 +53,24 @@ export default class MultiArrayField extends React.Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);   
-		const addToGroup = (idx, item) => {
-			const id = getUUID(item);
-			itemGroups[idx].push(item);
-			this.groupItemIds[idx][id] = true;
-			this.itemIds[id] = true;
+		const groupedItems = Array(groups.length + 1).fill(undefined).map(_ => []);   
+		const addToGroup = (groupIdx, item) => {
+			groupedItems[groupIdx].push(item);
 			return true;
 		};
 
-		(props.formData || []).forEach(item => {
-			this.groupItemIds.forEach((_, groupIdx) => {
-				if (this.groupItemIds[groupIdx][getUUID(item)]) {
-					addToGroup(groupIdx, item);
-				}
-			});
-		});
-
 		const nonGrouped = [];
-		const groupedItems = (props.formData || []).reduce((itemGroups, item, idx) => {
-			const addedToGroup = groups.some((group, groupIdx) => {
-				if (this.itemIds[getUUID(item)]) {
-					return true;
+		(props.formData || []).forEach((item, idx) => {
+			const id = getUUID(item);
+			// Restore persisted group
+			for (let g = 0; g < this.groupItemIds.length; g++) {
+				if (this.groupItemIds[g][id]) {
+					addToGroup(g, item);
+					return;
 				}
+			}
 
+			const addedToGroup = groups.some((group, groupIdx) => {
 				const {rules = []} = group; 
 				let passes;
 				if (cache) {
@@ -96,8 +90,7 @@ export default class MultiArrayField extends React.Component {
 			if (!addedToGroup) {
 				nonGrouped.push([item, idx]);
 			}
-			return itemGroups;
-		}, itemGroups);
+		});
 
 		nonGrouped.forEach(([item, idx]) => {
 			const context = getContext(`${persistenceKey}_MULTI`);

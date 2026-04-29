@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
+import { addLajiFormIds } from "../..//utils";
 
 const propsPropType = PropTypes.shape({
 	from: PropTypes.string.isRequired,
@@ -122,10 +123,14 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 					return !this.unitTaxonSets[unit.identifications[0].taxonID]
 					|| !this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
+
+				const sortedUnits = this.sortByTaxonSet(updatedUnits, currentTaxonSets);
+
 				const updatedFormData = {
 					...formData,
-					units: updatedUnits
+					units: sortedUnits
 				};
+
 				this.props.onChange(updatedFormData);
 			});
 			return;
@@ -145,36 +150,24 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 			const results = await this.fetchTaxaFromSet(this.props, addedTaxonSets);
 
-			// sort results by taxon set (lowest index of result's taxon sets in addedTaxonSets)
-			if (addedTaxonSets.length > 1) {
-				results.sort((a: any, b: any) => {
-					const aIndex = (a.taxonSets || []).reduce((min: number, taxonSet: string) => {
-						const idx = addedTaxonSets.indexOf(taxonSet);
-						return idx !== -1 && idx < min ? idx : min;
-					}, addedTaxonSets.length);
-					const bIndex = (b.taxonSets || []).reduce((min: number, taxonSet: string) => {
-						const idx = addedTaxonSets.indexOf(taxonSet);
-						return idx !== -1 && idx < min ? idx : min;
-					}, addedTaxonSets.length);
-					return aIndex - bIndex;
-				});
-			}
-
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.units.$id);
 			const newUnits = results.map((result: any) => {
 				this.unitTaxonSets[result.id] = result.taxonSets || [];
-				return {
+				return addLajiFormIds({
 					identifications: [{
 						taxon: result.scientificName,
 						taxonID: result.id,
 						taxonVerbatim: result.vernacularName
 					}],
 					informalTaxonGroups: result.informalTaxonGroups || []
-				};
+				}, tmpIdTree, false)[0];
 			});
+
+			const sortedUnits = this.sortByTaxonSet([...currentUnits, ...newUnits], currentTaxonSets);
 
 			const updatedFormData = {
 				...formData,
-				units: [...currentUnits, ...newUnits]
+				units: sortedUnits
 			};
 
 			this.props.onChange(updatedFormData);
@@ -183,6 +176,23 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 
 		this.props.onChange(formData);
 	};
+
+	// sort unit by taxon set (lowest index of unit's taxon sets in currentTaxonSets)
+	private sortByTaxonSet(units: any[], taxonSets: string[]): any[] {
+		return units.sort((a: any, b: any) => {
+			const aTaxonSets = this.unitTaxonSets[a.identifications?.[0]?.taxonID] || [];
+			const bTaxonSets = this.unitTaxonSets[b.identifications?.[0]?.taxonID] || [];
+			const aIndex = aTaxonSets.reduce((min: number, taxonSet: string) => {
+				const idx = taxonSets.indexOf(taxonSet);
+				return idx !== -1 && idx < min ? idx : min;
+			}, taxonSets.length);
+			const bIndex = bTaxonSets.reduce((min: number, taxonSet: string) => {
+				const idx = taxonSets.indexOf(taxonSet);
+				return idx !== -1 && idx < min ? idx : min;
+			}, taxonSets.length);
+			return aIndex - bIndex;
+		});
+	}
 
 	private async fetchTaxaFromSet(props: any, taxonSets: any): Promise<any[]> {
 		const apiClient = props.formContext?.apiClient;
