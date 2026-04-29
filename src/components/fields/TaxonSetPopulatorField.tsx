@@ -99,13 +99,7 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 					&& this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
 				observationsExist = deletedTaxonSetUnits.some((unit: any) =>
-					unit.maleIndividualCount ||
-					unit.femaleIndividualCount ||
-					unit.nestCount ||
-					unit.unitFact?.destroyedNestCount ||
-					unit.unitFact?.broodCount ||
-					unit.unitFact?.femalesWithBroodsCount ||
-					unit.unitFact?.juvenileCount
+					unit.observationStatus !== "MY.observationStatusIgnored"
 				);
 				if (observationsExist) {
 					window.alert(translations?.TaxonSetDeletionFailed);
