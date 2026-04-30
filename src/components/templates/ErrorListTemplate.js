@@ -91,7 +91,7 @@ export default class ErrorListTemplate extends React.Component {
 					poppedToggle={this.poppedToggle}
 					popped={this.state.popped}
 					formContext={this.props.formContext}
-					footer={footer} />
+					footer={warnings.length === 0 ? footer : null} />
 				<ErrorPanel classNames="warning-panel"
 					ref="warningPanel"
 					errors={warnings}
