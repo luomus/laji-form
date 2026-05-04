@@ -100,7 +100,8 @@ export default class TaxonSetPopulatorField extends React.Component<FieldProps> 
 					&& this.unitTaxonSets[unit.identifications[0].taxonID].includes(deletedTaxonSetId);
 				});
 				observationsExist = deletedTaxonSetUnits.some((unit: any) =>
-					unit.observationStatus !== "MY.observationStatusIgnored"
+					unit.observationStatus !== "MY.observationStatusIgnored" &&
+					unit.observationStatus !== "MY.observationStatusNotObserved"
 				);
 				if (observationsExist) {
 					window.alert(translations?.TaxonSetDeletionFailed);
