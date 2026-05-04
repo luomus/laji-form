@@ -329,5 +329,56 @@ test.describe("Trip report (JX.519) autosuggestions", () => {
 			await $addUnit.click();
 		});
 
+
+		test.describe("multiple exact matches", () => {
+			test("selecting a value from suggestions works", async () => {
+				await taxonAutosuggest.$input.fill("Petunia");
+				await taxonAutosuggest.$suggestions.nth(1).click();
+
+				await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
+				await expect(taxonAutosuggest.$input).toHaveValue("Petunia");
+
+				const formData = await form.getChangedData();
+				expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Petunia");
+
+				await removeUnit(0, 0);
+				await $addUnit.click();
+			});
+
+			test("typing a value with suggestion works", async () => {
+				await taxonAutosuggest.$input.fill("Petunia");
+				await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("Tab");
+
+				await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
+				await expect(taxonAutosuggest.$input).toHaveValue("Petunia");
+
+				const formData = await form.getChangedData();
+				expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Petunia");
+
+				await removeUnit(0, 0);
+				await $addUnit.click();
+			});
+
+			test("typing a value with suggestion works and enter is pressed", async () => {
+				await taxonAutosuggest.$input.fill("Petunia");
+				await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("ArrowDown");
+				await taxonAutosuggest.$input.press("Enter");
+				await taxonAutosuggest.$input.press("Tab");
+
+				await expect(taxonAutosuggest.$suggestedGlyph).toBeVisible();
+				await expect(taxonAutosuggest.$input).toHaveValue("Petunia");
+
+				const formData = await form.getChangedData();
+				expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Petunia");
+
+				await removeUnit(0, 0);
+				await $addUnit.click();
+			});
+		});
 	});
 });
