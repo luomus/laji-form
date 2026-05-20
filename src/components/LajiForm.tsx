@@ -221,7 +221,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang as Lang);
 		}
-		this.setState(this.getStateFromProps(props), this.popErrorListIfNeeded);
+		const popErrorList = props.extraErrors !== this.state?.externalErrors;
+		this.setState(this.getStateFromProps(props), popErrorList ? this.popErrorListIfNeeded : undefined);
 	}
 
 	getStateFromProps(props: LajiFormProps) {
