@@ -354,6 +354,11 @@
 		"en": "below",
 		"sv": "under"
 	},
+	"externalErrors": {
+		"fi": "virheet tallennettaessa",
+		"en": "errors while saving",
+		"sv": "fel när du sparar"
+	},
 	"errors": {
 		"fi": "virheet",
 		"en": "errors",

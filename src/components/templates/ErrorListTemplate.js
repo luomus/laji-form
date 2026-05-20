@@ -44,36 +44,36 @@ export default class ErrorListTemplate extends React.Component {
 			const _schema = parseJSONPointer(schema, path);
 			const title = _schema.title || defaultTitle;
 
-			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
-				if (_error.includes("[warning]")) {
-					warnings.push({
-						label: title,
-						error: formatErrorMessage(_error),
-						id: id
-					});
+			let {externalErrors, errors, warnings} = (__errors || []).reduce(({externalErrors, errors, warnings}, _error) => {
+				const error = {
+					label: title,
+					error: formatErrorMessage(_error),
+					id: id
+				};
+				if (_error.includes("[external]")) {
+					externalErrors.push(error);
+				} else if (_error.includes("[warning]")) {
+					warnings.push(error);
 				} else {
-					errors.push({
-						label: title,
-						error: formatErrorMessage(_error),
-						id: id
-					});
+					errors.push(error);
 				}
-				return {errors, warnings};
-			}, {errors: [], warnings: []});
+				return {externalErrors, errors, warnings};
+			}, {externalErrors: [], errors: [], warnings: []});
 			Object.keys(properties).forEach(prop => {
 				let _path = path;
 				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
 				else _path = `${_path}/properties/${prop}`;
 				const _defaultTitle = _schema.type === "array" || uiSchema["ui:multiLanguage"] ? `${title} (${prop})` : prop;
 				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop], uiSchema[prop] || {}, _defaultTitle);
+				externalErrors = [...externalErrors, ...childErrors.externalErrors];
 				errors = [...errors, ...childErrors.errors];
 				warnings = [...warnings, ...childErrors.warnings];
 			});
-			return {errors, warnings};
+			return {externalErrors, errors, warnings};
 		}
 
 		const {Glyphicon} = this.context.theme;
-		const {errors, warnings} = walkErrors("", "root", errorSchema, uiSchema, "");
+		const {externalErrors, errors, warnings} = walkErrors("", "root", errorSchema, uiSchema, "");
 		const footer = (
 			errors.length > 0
 				? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
@@ -82,12 +82,23 @@ export default class ErrorListTemplate extends React.Component {
 		return (
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
+				<ErrorPanel
+					classNames="error-panel"
+					ref="externalErrorPanel"
+					errors={externalErrors}
+					title={translations.ExternalErrors}
+					clickHandler={clickHandler}
+					showToggle={true}
+					poppedToggle={this.poppedToggle}
+					popped={this.state.popped}
+					formContext={this.props.formContext}
+					footer={null} />
 				<ErrorPanel classNames="error-panel"
 					ref="errorPanel"
 					errors={errors}
 					title={translations.Errors}
 					clickHandler={clickHandler}
-					showToggle={true}
+					showToggle={externalErrors.length === 0}
 					poppedToggle={this.poppedToggle}
 					popped={this.state.popped}
 					formContext={this.props.formContext}
@@ -97,7 +108,7 @@ export default class ErrorListTemplate extends React.Component {
 					errors={warnings}
 					title={translations.Warnings}
 					clickHandler={clickHandler}
-					showToggle={errors.length === 0}
+					showToggle={externalErrors.length === 0 && errors.length === 0}
 					poppedToggle={this.poppedToggle}
 					popped={this.state.popped}
 					formContext={this.props.formContext}
