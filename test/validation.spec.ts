@@ -418,4 +418,28 @@ test.describe("Validations", () => {
 			await expect(form.errors.$$all).toHaveCount(1);
 		});
 	});
+
+	test.describe("External errors", () => {
+		const externalErrorMessage = "external error!";
+		const extraErrors = { a: { __errors: [externalErrorMessage] } };
+
+		test("shows external errors", async () => {
+			await form.setState({ schema, formData });
+			await form.setState({ extraErrors });
+
+			await expect(form.errors.$$all).toHaveCount(1);
+			await expect(form.errors.$$all.nth(0)).toHaveText(new RegExp(externalErrorMessage));
+		});
+
+		test("clears external errors on submit", async () => {
+			await form.setState({ schema, formData });
+			await form.setState({ extraErrors });
+
+			await expect(form.errors.$$all).toHaveCount(1);
+
+			await form.submit();
+
+			await expect(form.errors.$$all).toHaveCount(0);
+		});
+	});
 });
