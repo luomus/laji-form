@@ -209,6 +209,11 @@
 		"en": "All",
 		"sv": "Alla"
 	},
+	"selectAll": {
+		"fi": "Valitse kaikki",
+		"en": "Select all",
+		"sv": "Välj alla"
+	},
 	"saveFail": {
 		"fi": "Tallennus epäonnistui.",
 		"en": "Saving failed.",
@@ -893,6 +898,11 @@
 		"fi": "Samaa arvoa ei saa käyttää useammin kuin kerran",
 		"en": "The same value may not be used more than once",
 		"sv": "Samma värde får inte användas mer än en gång"
+	},
+	"valueMustBe": {
+		"fi": "Arvon on oltava",
+		"en": "Value must be",
+		"sv": "Värdet måste vara"
 	},
 	"taxonSetDeletionFailed": {
 		"fi": "Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.",

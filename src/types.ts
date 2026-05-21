@@ -31,6 +31,7 @@ export function isJSONSchemaObject(schema: JSONSchema): schema is JSONSchemaObje
 export type JSONSchemaArray<T = JSONSchema, D = never> = JSONShemaTypeCommon<"array", D[]> & {
 	items: T;
 	uniqueItems?: boolean;
+	minItems?: number;
 	maxItems?: number;
 }
 

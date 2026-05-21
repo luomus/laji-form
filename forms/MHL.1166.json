@@ -2623,6 +2623,7 @@
                   },
                   "observationStatus": {
                     "type": "string",
+                    "default": "MY.observationStatusNotObserved",
                     "oneOf": [
                       {
                         "const": "",
@@ -3325,7 +3326,8 @@
                 },
                 "allowUndefined": false
               }
-            ]
+            ],
+            "selectAll": "true"
           },
           "ui:help": "@taxonCensusHelp"
         },
@@ -3901,6 +3903,12 @@
                 "sideEffects": {
                   "/../recordBasis": "MY.recordBasisHumanObservationAudio"
                 }
+              }
+            },
+            "observationStatus": {
+              "ui:widget": "SelectWidget",
+              "ui:options": {
+                "includeEmpty": false
               }
             },
             "unitGathering": {

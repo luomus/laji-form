@@ -419,21 +419,101 @@ test.describe("Validations", () => {
 		});
 	});
 
+	test.describe("Validation bypass for empty array items", () => {
+		const schemaWithArrays = {
+			...schema,
+			properties: {
+				...schema.properties,
+				c: {
+					type: "array",
+					items: {
+						type: "string"
+					}
+				},
+				d: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							d1: {
+								type: "string"
+							},
+							d2: {
+								type: "string"
+							}
+						},
+						required: ["d1"]
+					}
+				},
+				e: {
+					type: "object",
+					properties: {
+						e1: {
+							type: "string"
+						}
+					},
+					required: ["e1"]
+				}
+			}
+		};
+
+		test("doesn't run schema validations for empty string items", async ({browser}) => {
+			form = await createForm(await browser.newPage());
+			const formDataWithEmptyArray = {...formData, c: ["", undefined]};
+			await form.setState({ schema: schemaWithArrays, formData: formDataWithEmptyArray });
+			await form.submit();
+			await expect(form.$blocker).not.toBeVisible();
+
+			await expect(form.errors.$$all).toHaveCount(0);
+		});
+
+		test("doesn't run schema validations for empty object items", async ({browser}) => {
+			form = await createForm(await browser.newPage());
+			const formDataWithEmptyObjects = {...formData, d: [{}]};
+			await form.setState({ schema: schemaWithArrays, formData: formDataWithEmptyObjects });
+			await form.submit();
+			await expect(form.$blocker).not.toBeVisible();
+
+			await expect(form.errors.$$all).toHaveCount(0);
+		});
+
+		test("doesn't run schema validations for empty objects", async ({browser}) => {
+			form = await createForm(await browser.newPage());
+			const formDataWithEmptyObjects = {...formData, e: {}};
+			await form.setState({ schema: schemaWithArrays, formData: formDataWithEmptyObjects });
+			await form.submit();
+			await expect(form.$blocker).not.toBeVisible();
+
+			await expect(form.errors.$$all).toHaveCount(0);
+		});
+
+		test("runs schema validations for non-empty items", async ({browser}) => {
+			form = await createForm(await browser.newPage());
+			const formDataWithEmptyObjects = {...formData, d: [{}, {d2: "abc"}]};
+			await form.setState({ schema: schemaWithArrays, formData: formDataWithEmptyObjects });
+			await form.submit();
+			await expect(form.$blocker).not.toBeVisible();
+
+			await expect(form.errors.$$all).toHaveCount(1);
+			await expect(form.errors.$$all.nth(0)).toHaveText(/d1/);
+		});
+	});
+
 	test.describe("External errors", () => {
 		const externalErrorMessage = "external error!";
-		const extraErrors = { a: { __errors: [externalErrorMessage] } };
+		const extraErrors = {a: {__errors: [externalErrorMessage]}};
 
 		test("shows external errors", async () => {
-			await form.setState({ schema, formData });
-			await form.setState({ extraErrors });
+			await form.setState({schema, formData});
+			await form.setState({extraErrors});
 
 			await expect(form.errors.$$all).toHaveCount(1);
 			await expect(form.errors.$$all.nth(0)).toHaveText(new RegExp(externalErrorMessage));
 		});
 
 		test("clears external errors on submit", async () => {
-			await form.setState({ schema, formData });
-			await form.setState({ extraErrors });
+			await form.setState({schema, formData});
+			await form.setState({extraErrors});
 
 			await expect(form.errors.$$all).toHaveCount(1);
 

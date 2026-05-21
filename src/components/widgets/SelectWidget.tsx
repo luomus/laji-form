@@ -84,7 +84,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 		uiSchema,
 		options,
 		onChange,
-		includeEmpty = true
+		includeEmpty = options.includeEmpty ?? true
 	} = props;
 	const { theme } = useContext(ReactContext);
 	const { FormControl } = theme;
