@@ -194,6 +194,17 @@ export default class DateTimeWidget extends React.Component {
 		!isDescendant(findDOMNode(this.containerRef), document.activeElement) && this.setState({textInputFocused: false});
 	};
 
+	// used to display time when 00:00 (same as default time) is selected
+	onDateTimePickerSelect = (dateTime) => {
+		if (this.toggle === "time") {
+			const {value} = this.props;
+			const momentValue = moment(dateTime);
+			if (value && !value.includes("T") && momentValue.isValid()) {
+				this.onChange(momentValue.format("YYYY-MM-DDTHH:mm"));
+			}
+		}
+	};
+
 	onDateTimePickerChange = (value) => {
 		const momentValue = moment(value);
 		let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
@@ -235,6 +246,7 @@ export default class DateTimeWidget extends React.Component {
 			timeFormat={this.state.timeFormat}
 			placeholder={this.state.placeholder}
 			onToggle={this.onToggle}
+			onSelect={this.onDateTimePickerSelect}
 			onChange={this.onDateTimePickerChange}
 			value={value && momentValue.isValid() ? momentValue.toDate() : null}
 			parse={this.parse}
