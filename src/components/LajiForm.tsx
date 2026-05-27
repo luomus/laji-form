@@ -222,16 +222,15 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang as Lang);
 		}
-		this.setState(this.getStateFromProps(props), this.popErrorListIfNeeded);
+		const popErrorList = props.extraErrors !== this.state?.externalErrors;
+		this.setState(this.getStateFromProps(props), popErrorList ? this.popErrorListIfNeeded : undefined);
 	}
 
 	getStateFromProps(props: LajiFormProps) {
 		const state: LajiFormState = {
 			formContext: this.getMemoizedFormContext(props),
 			externalErrors: props.extraErrors,
-			extraErrors: this.state?.extraErrors
-				? merge(this.state.extraErrors, props.extraErrors || {})
-				: props.extraErrors
+			extraErrors: addExternalErrors(this.state?.extraErrors || {}, props.extraErrors || {})
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
 			state.formData = state.formContext.services.ids.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema))[0];
@@ -545,10 +544,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					? (this.cachedNonliveValidations || {})
 					: merge(_validations, schemaErrors)
 				);
-				let mergedAll = merge(
-					this.state.externalErrors || {},
-					mergedInternalErrors as any
-				) as any;
+				const mergedAll = addExternalErrors(mergedInternalErrors as any, this.state.externalErrors || {});
 				this.validating = false;
 				resolve(!Object.keys(mergedAll).length);
 				if (!equals((this.state.extraErrors || {}), mergedAll)) {
@@ -830,4 +826,24 @@ const getShortcuts = (uiSchema: any) => {
 		"ui:shortcuts": shortcuts
 	} = uiSchema || {};
 	return shortcuts;
+};
+
+const addExternalErrors = (internalErrors: ErrorSchema, externalErrors: ErrorSchema): ErrorSchema => {
+	return merge(internalErrors, processExternalErrors(externalErrors));
+};
+
+const processExternalErrors = (errors: ErrorSchema): ErrorSchema => {
+	const result: ErrorSchema = {};
+
+	if (errors.__errors) {
+		result.__errors = errors.__errors.map(error => `[external]${error}`);
+	}
+
+	for (const key in errors) {
+		if (key !== "__errors" && errors[key]) {
+			result[key] = processExternalErrors(errors[key]);
+		}
+	}
+
+	return result;
 };

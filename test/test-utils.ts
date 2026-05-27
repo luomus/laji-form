@@ -33,6 +33,7 @@ export interface DateWidgetPO {
 		$today: Locator;
 	},
 	clock: {
+		"$00:00": Locator;
 		"$01:00": Locator;
 	}
 }
@@ -125,18 +126,18 @@ export class Form {
 	createValidatorPO = (type: "error" | "warning") => ({
 		$$all: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
 		$panel: this.$locator.locator(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
-	})
+	});
 
-	errors = this.createValidatorPO("error")
-	warnings = this.createValidatorPO("warning")
+	errors = this.createValidatorPO("error");
+	warnings = this.createValidatorPO("warning");
 	failedJobs = {
 		$container: this.$locator.locator(".laji-form-failed-jobs-list"),
 		$$errors: this.$locator.locator(".laji-form-failed-jobs-list .list-group-item")
-	}
+	};
 
 	$runningJobs = this.$locator.locator(".running-jobs");
 
-	$acknowledgeWarnings = this.$locator.locator(".laji-form-warning-list .panel-footer button")
+	$acknowledgeWarnings = this.$locator.locator(".laji-form-warning-list .panel-footer button");
 	$blocker = this.page.locator(".laji-form.blocking-loader");
 	$mapFieldFullscreenMap = this.$locator.locator(".laji-form.fullscreen .laji-form-map");
 
@@ -183,6 +184,7 @@ export class Form {
 				$today: $widget.locator(".rw-calendar-footer button"),
 			},
 			clock: {
+				"$00:00": $widget.locator(".rw-list li").nth(0),
 				"$01:00": $widget.locator(".rw-list li").nth(2),
 			}
 		};
@@ -210,7 +212,7 @@ export class Form {
 			$modalClose: $modal.locator(".modal-header .close"),
 			$addModalCancel: $addModal.locator(".cancel")
 		};
-	}
+	};
 
 	getAutosuggestWidget = (lajiFormLocator: string) => {
 		return {
@@ -219,7 +221,7 @@ export class Form {
 			$suggestions: this.$locate(lajiFormLocator).locator(".rw-list-option"),
 			$loadingSpinner: this.$locate(lajiFormLocator).locator(".react-spinner"),
 		};
-	}
+	};
 
 	getTaxonAutosuggestWidget = (lajiFormLocator: string) => {
 		const autosuggest = this.getAutosuggestWidget(lajiFormLocator);
@@ -229,7 +231,7 @@ export class Form {
 			$suggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-ok"),
 			$nonsuggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-warning-sign"),
 		};
-	}
+	};
 
 	getPersonAutosuggestWidget = (lajiFormLocator: string) => {
 		const autosuggest = this.getAutosuggestWidget(lajiFormLocator);
@@ -237,7 +239,7 @@ export class Form {
 			...autosuggest,
 			$suggestedGlyph: this.$locate(lajiFormLocator).locator(".glyphicon-user")
 		};
-	}
+	};
 
 	getScopeField = (lajiFormLocator: string) => ({
 		$button: this.$locateButton(lajiFormLocator, "additionals"),
@@ -337,10 +339,10 @@ export class DemoPageForm extends Form {
 
 	setState(state: any) {
 		return this.page.evaluate((state) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 			// @ts-ignore
 			const onSubmit = function(data) {window.submittedData = data.formData;};
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			 
 			// @ts-ignore
 			const onChange = function(formData) {window.changedData = formData;};
 
@@ -409,7 +411,7 @@ export class DemoPageForm extends Form {
 				await mdRemove();
 			}
 		};
-	}
+	};
 }
 
 export async function createForm(page: Page, props?: DemoPageProps, beforeInit?: (form: Form) => Promise<void>): Promise<DemoPageForm> {
@@ -457,5 +459,4 @@ export const updateValue = async ($input: Locator, value: string) => {
 export const getRemoveUnit = (page: Page) => async (gatheringIdx: number, unitIdx: number) => {
 	await page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete`).click();
 	return page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
-}
-;
+};
