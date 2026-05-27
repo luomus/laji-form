@@ -33,6 +33,7 @@ export interface DateWidgetPO {
 		$today: Locator;
 	},
 	clock: {
+		"$00:00": Locator;
 		"$01:00": Locator;
 	}
 }
@@ -183,6 +184,7 @@ export class Form {
 				$today: $widget.locator(".rw-calendar-footer button"),
 			},
 			clock: {
+				"$00:00": $widget.locator(".rw-list li").nth(0),
 				"$01:00": $widget.locator(".rw-list li").nth(2),
 			}
 		};

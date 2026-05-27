@@ -79,6 +79,14 @@ test.describe("Date & time widgets", () => {
 			expect(await form.getChangedData()).toBe(today.format(ISO8601DateFormat));
 		});
 
+		test("selecting 00:00 from time list adds time", async () => {
+			await widget.buttons.$time.click();
+			await widget.clock["$00:00"].click();
+
+			await expect(widget.$input).toHaveValue(`${today.format(displayDateFormat)}, 00.00`);
+			expect(await form.getChangedData()).toBe(`${today.format(ISO8601DateFormat)}T00:00`);
+		});
+
 		test("whole value can be cleared", async () => {
 			await updateValue(widget.$input, "");
 
