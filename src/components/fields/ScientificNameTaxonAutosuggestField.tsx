@@ -89,6 +89,7 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			getSuggestionValue: this.getSuggestionValue,
+			findExactMatch: this.findExactMatch,
 			renderSuggestion: this.renderSuggestion,
 			valueContext: {taxonRank, author},
 			taxonRankLabel,
@@ -121,6 +122,10 @@ export default class ScientificNameTaxonAutosuggestField extends React.Component
 
 	getSuggestionValue = (suggestion: any): string => {
 		return suggestion.scientificName;
+	};
+
+	findExactMatch = (suggestions: any[], inputValue = "") => {
+		return suggestions.find(suggestion => (suggestion?.scientificName?.toLowerCase() === inputValue.trim().toLowerCase()));
 	};
 
 	onSuggestionSelected = (suggestion: any, mounted: boolean) => {

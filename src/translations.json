@@ -66,7 +66,7 @@
 	},
 	"unknownName": {
 		"fi": "Ei tunnettu nimi",
-		"en": "Not known name",
+		"en": "Name not known",
 		"sv": "Okänt namn"
 	},
 	"unknownOrganization": {
@@ -358,6 +358,11 @@
 		"fi": "alla",
 		"en": "below",
 		"sv": "under"
+	},
+	"externalErrors": {
+		"fi": "virheet tallennettaessa",
+		"en": "errors while saving",
+		"sv": "fel när du sparar"
 	},
 	"errors": {
 		"fi": "virheet",

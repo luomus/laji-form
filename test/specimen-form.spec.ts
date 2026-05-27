@@ -6,7 +6,9 @@ import {
 	getFocusedElement,
 	getRemoveUnit,
 	updateValue,
-	DateWidgetPO, ImageArrayFieldPOI, TaxonAutosuggestWidgetPOI
+	DateWidgetPO,
+	ImageArrayFieldPOI,
+	TaxonAutosuggestWidgetPOI
 } from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
@@ -158,6 +160,11 @@ test.describe("specimen form (MHL.1158)", () => {
 					taxonRankEnum$ = form.$getEnumWidget("gatherings.0.units.0.identifications.0.taxonRank");
 				});
 
+				test.afterEach(async () => {
+					await page.locator("#root_gatherings_0_units_0_identifications_0-delete").click();
+					await $identificationAdd.click();
+				});
+
 				test("selecting a value from suggestions works", async () => {
 					await taxonAutosuggest.$input.fill("susi");
 					await taxonAutosuggest.$suggestions.first().click();
@@ -172,6 +179,8 @@ test.describe("specimen form (MHL.1158)", () => {
 				});
 
 				test("typing a value with no suggestion works", async () => {
+					await taxonAutosuggest.$input.fill("susi");
+					await taxonAutosuggest.$suggestions.first().click();
 					await taxonAutosuggest.$input.fill("susikoira");
 					await taxonAutosuggest.$input.press("Tab");
 
@@ -198,6 +207,8 @@ test.describe("specimen form (MHL.1158)", () => {
 				});
 
 				test("changing a wrong taxon rank shows the warning sign", async () => {
+					await taxonAutosuggest.$input.fill("zootoca vivipara");
+					await taxonAutosuggest.$input.press("Tab");
 					await taxonRankEnum$.openEnums();
 					await taxonRankEnum$.$$enums.nth(3).click();
 
@@ -208,6 +219,13 @@ test.describe("specimen form (MHL.1158)", () => {
 					expect(formData.gatherings[0].units[0].identifications[0].taxon).toEqual("Zootoca vivipara");
 					expect(formData.gatherings[0].units[0].identifications[0].taxonRank).toEqual("MX.kingdom");
 					expect(formData.gatherings[0].units[0].identifications[0].author).toEqual("(Lichtenstein, 1823)");
+				});
+
+				test("browsing suggestions with array keys should show the scientific name in the input", async () => {
+					await taxonAutosuggest.$input.fill("susi");
+					await expect(taxonAutosuggest.$suggestionsContainer).toBeVisible();
+					await taxonAutosuggest.$input.press("ArrowDown");
+					await expect(taxonAutosuggest.$input).toHaveValue("Canis lupus");
 				});
 			});
 		});
