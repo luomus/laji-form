@@ -41,7 +41,15 @@ export default class ErrorListTemplate extends React.Component {
 
 		function walkErrors(path, id, errorSchema, uiSchema, defaultTitle) {
 			const {__errors, ...properties} = errorSchema;
-			const _schema = parseJSONPointer(schema, path);
+			try {
+				parseJSONPointer(schema, path);
+			} catch (e) {
+				console.warn("If you see this warning, tell Olli about with repro steps please");
+			}
+			// TODO shouldn't really default to {} here. If the errors do not follow the schema, there's another bug somewhere
+			// and this is a mere symptom. This was added because I absolutely could not repro the bug.
+			// https://luomus-ict.slack.com/archives/CQUQRRATU/p1779693889123989
+			const _schema = parseJSONPointer(schema, path) || {};
 			const title = _schema.title || defaultTitle;
 
 			let {externalErrors, errors, warnings} = (__errors || []).reduce(({externalErrors, errors, warnings}, _error) => {
