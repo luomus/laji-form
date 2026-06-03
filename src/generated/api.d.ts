@@ -206,7 +206,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["NotificationsController_getAllV1"];
+        get: operations["NotificationsController_getPage"];
         put?: never;
         post?: never;
         delete?: never;
@@ -341,7 +341,24 @@ export interface paths {
             cookie?: never;
         };
         /** Get all alts as a lookup object where keys are property names and values are alts */
-        get: operations["MetadataController_getAlts"];
+        get: operations["MetadataController_getAltsLookup"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/metadata/alts-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all alts as a list */
+        get: operations["MetadataController_getAltsList"];
         put?: never;
         post?: never;
         delete?: never;
@@ -393,6 +410,23 @@ export interface paths {
         };
         /** Get a page of all root collections */
         get: operations["CollectionsController_findRoots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/collections/tree": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get collection tree */
+        get: operations["CollectionsController_getTree"];
         put?: never;
         post?: never;
         delete?: never;
@@ -967,7 +1001,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/images": {
+    "/api-user/{accessToken}": {
         parameters: {
             query?: never;
             header?: never;
@@ -975,6 +1009,24 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
+        post?: never;
+        /** Delete API user by access token */
+        delete: operations["ApiUsersController_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a page of images. Private/protected images aren't included. */
+        get: operations["ImagesController_getPage"];
         put?: never;
         /** Upload image and get temporary id */
         post: operations["ImagesController_upload"];
@@ -1078,7 +1130,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get a page of audio. Private/protected audio aren't included. */
+        get: operations["AudioController_getPage"];
         put?: never;
         /** Upload audio and get temporary id */
         post: operations["AudioController_upload"];
@@ -1244,23 +1297,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/information/index": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns id of the index page. Allowed languages are 'fi', 'sv', 'en'. */
-        get: operations["InformationController_getIndex"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/information/{id}": {
         parameters: {
             query?: never;
@@ -1270,23 +1306,6 @@ export interface paths {
         };
         /** Get information page by id */
         get: operations["InformationController_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/information": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get information page contents. Allowed languages are 'fi', 'sv', 'en'. */
-        get: operations["InformationController_getAll"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1371,7 +1390,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get all organizations */
-        get: operations["OrganizationsController_getAll"];
+        get: operations["OrganizationsController_getPage"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1975,7 +1994,7 @@ export interface paths {
         put?: never;
         /**
          * Load data to the Data Warehouse
-         * @description Requires that API key has load permissions. Data is given in request body. Supports multiple data formats. See [documentation](https://laji.fi/about/1402). Accepts all payloads that pass format validation (for example is valid XML), but that does not mean the data will be processed succesfully.
+         * @description Requires that API key has load permissions. Data is given in request body. Supports multiple data formats. See [documentation](https://info.laji.fi/en/frontpage/api/api-laji-fi/data-warehouse-api/etl-document-formats/). Accepts all payloads that pass format validation (for example is valid XML), but that does not mean the data will be processed succesfully.
          */
         post: {
             parameters: {
@@ -1987,7 +2006,7 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            /** @description See [documentation](https://laji.fi/about/1402) for complete reference. Can contain multiple documents. */
+            /** @description See [documentation](https://info.laji.fi/en/frontpage/api/api-laji-fi/data-warehouse-api/etl-document-formats/) for complete reference. Can contain multiple documents. */
             requestBody: {
                 content: {
                     "application/json": components["schemas"]["WarehouseDwETL_DwRoot"];
@@ -2943,6 +2962,8 @@ export interface paths {
                     hasUnitModel?: boolean;
                     /** @description Filter only records where parent document, gathering or unit has media or none have media. */
                     hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
                     /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
                     teamMember?: string;
                     /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
@@ -3089,7 +3110,7 @@ export interface paths {
             parameters: {
                 query?: {
                     /** @description Define what fields to include to the result. Defaults to [document.collectionId, document.documentId, document.licenseId, document.secureLevel, document.secureReasons, document.sourceId, gathering.conversions.wgs84CenterPoint.lat, gathering.conversions.wgs84CenterPoint.lon, gathering.displayDateTime, gathering.gatheringId, gathering.interpretations.coordinateAccuracy, gathering.interpretations.municipalityDisplayname, gathering.interpretations.sourceOfCoordinates, gathering.locality, gathering.team, unit.abundanceString, unit.linkings.taxon.id, unit.linkings.taxon.qname, unit.linkings.taxon.scientificName, unit.linkings.taxon.vernacularName, unit.notes, unit.recordBasis, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
-                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
+                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sequenceText" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
                     /** @description Define what fields to use when sorting results. Defaults to [unit.unitId ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
                     orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
                     /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
@@ -3290,6 +3311,8 @@ export interface paths {
                     hasUnitModel?: boolean;
                     /** @description Filter only records where parent document, gathering or unit has media or none have media. */
                     hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
                     /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
                     teamMember?: string;
                     /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
@@ -3654,6 +3677,8 @@ export interface paths {
                     hasUnitModel?: boolean;
                     /** @description Filter only records where parent document, gathering or unit has media or none have media. */
                     hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
                     /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
                     teamMember?: string;
                     /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
@@ -3964,7 +3989,7 @@ export interface paths {
             parameters: {
                 query?: {
                     /** @description Define what fields to include to the result. Defaults to [annotation.addedTags, annotation.annotationByPerson, annotation.annotationByPersonName, annotation.annotationBySystem, annotation.annotationBySystemName, annotation.atlasCode, annotation.byRole, annotation.created, annotation.deleted, annotation.deletedByPerson, annotation.deletedByPersonName, annotation.deletedDateTime, annotation.id, annotation.identification.author, annotation.identification.facts.decimalValue, annotation.identification.facts.fact, annotation.identification.facts.integerValue, annotation.identification.facts.value, annotation.identification.id, annotation.identification.linkings.taxon.administrativeStatuses, annotation.identification.linkings.taxon.checklist, annotation.identification.linkings.taxon.cursiveName, annotation.identification.linkings.taxon.finnish, annotation.identification.linkings.taxon.id, annotation.identification.linkings.taxon.informalTaxonGroups, annotation.identification.linkings.taxon.kingdomScientificName, annotation.identification.linkings.taxon.latestRedListStatusFinland.status, annotation.identification.linkings.taxon.latestRedListStatusFinland.year, annotation.identification.linkings.taxon.nameEnglish, annotation.identification.linkings.taxon.nameFinnish, annotation.identification.linkings.taxon.nameSwedish, annotation.identification.linkings.taxon.occurrenceCountFinland, annotation.identification.linkings.taxon.primaryHabitat.habitat, annotation.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes, annotation.identification.linkings.taxon.primaryHabitat.id, annotation.identification.linkings.taxon.primaryHabitat.order, annotation.identification.linkings.taxon.qname, annotation.identification.linkings.taxon.scientificName, annotation.identification.linkings.taxon.scientificNameAuthorship, annotation.identification.linkings.taxon.scientificNameDisplayName, annotation.identification.linkings.taxon.sensitive, annotation.identification.linkings.taxon.taxonConceptIds, annotation.identification.linkings.taxon.taxonRank, annotation.identification.linkings.taxon.taxonomicOrder, annotation.identification.linkings.taxon.threatenedStatus, annotation.identification.linkings.taxon.vernacularName, annotation.identification.notes, annotation.identification.taxon, annotation.identification.taxonID, annotation.identification.taxonSpecifier, annotation.identification.taxonSpecifierAuthor, annotation.notes, annotation.occurrenceAtTimeOfAnnotation.countryVerbatim, annotation.occurrenceAtTimeOfAnnotation.dateBegin, annotation.occurrenceAtTimeOfAnnotation.dateEnd, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.id, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.qname, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus, annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName, annotation.occurrenceAtTimeOfAnnotation.locality, annotation.occurrenceAtTimeOfAnnotation.municipalityVerbatim, annotation.occurrenceAtTimeOfAnnotation.taxonId, annotation.occurrenceAtTimeOfAnnotation.taxonVerbatim, annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLat, annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLon, annotation.removedTags, annotation.valid, document.collectionId, document.documentId, gathering.displayDateTime, gathering.team, unit.linkings.originalTaxon.id, unit.linkings.originalTaxon.scientificName, unit.linkings.originalTaxon.vernacularName, unit.linkings.taxon.id, unit.linkings.taxon.scientificName, unit.linkings.taxon.vernacularName, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
-                    selected?: ("annotation.addedTags" | "annotation.annotationByPerson" | "annotation.annotationByPersonName" | "annotation.annotationBySystem" | "annotation.annotationBySystemName" | "annotation.atlasCode" | "annotation.byRole" | "annotation.created" | "annotation.deleted" | "annotation.deletedByPerson" | "annotation.deletedByPersonName" | "annotation.deletedDateTime" | "annotation.id" | "annotation.identification.author" | "annotation.identification.facts.decimalValue" | "annotation.identification.facts.fact" | "annotation.identification.facts.integerValue" | "annotation.identification.facts.value" | "annotation.identification.id" | "annotation.identification.linkings.taxon.administrativeStatuses" | "annotation.identification.linkings.taxon.checklist" | "annotation.identification.linkings.taxon.cursiveName" | "annotation.identification.linkings.taxon.finnish" | "annotation.identification.linkings.taxon.id" | "annotation.identification.linkings.taxon.informalTaxonGroups" | "annotation.identification.linkings.taxon.kingdomScientificName" | "annotation.identification.linkings.taxon.latestRedListStatusFinland.status" | "annotation.identification.linkings.taxon.latestRedListStatusFinland.year" | "annotation.identification.linkings.taxon.nameEnglish" | "annotation.identification.linkings.taxon.nameFinnish" | "annotation.identification.linkings.taxon.nameSwedish" | "annotation.identification.linkings.taxon.occurrenceCountFinland" | "annotation.identification.linkings.taxon.primaryHabitat.habitat" | "annotation.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "annotation.identification.linkings.taxon.primaryHabitat.id" | "annotation.identification.linkings.taxon.primaryHabitat.order" | "annotation.identification.linkings.taxon.qname" | "annotation.identification.linkings.taxon.scientificName" | "annotation.identification.linkings.taxon.scientificNameAuthorship" | "annotation.identification.linkings.taxon.scientificNameDisplayName" | "annotation.identification.linkings.taxon.sensitive" | "annotation.identification.linkings.taxon.taxonConceptIds" | "annotation.identification.linkings.taxon.taxonRank" | "annotation.identification.linkings.taxon.taxonomicOrder" | "annotation.identification.linkings.taxon.threatenedStatus" | "annotation.identification.linkings.taxon.vernacularName" | "annotation.identification.notes" | "annotation.identification.taxon" | "annotation.identification.taxonID" | "annotation.identification.taxonSpecifier" | "annotation.identification.taxonSpecifierAuthor" | "annotation.notes" | "annotation.occurrenceAtTimeOfAnnotation.countryVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.dateBegin" | "annotation.occurrenceAtTimeOfAnnotation.dateEnd" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "annotation.occurrenceAtTimeOfAnnotation.locality" | "annotation.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.taxonId" | "annotation.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "annotation.removedTags" | "annotation.valid" | "document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
+                    selected?: ("annotation.addedTags" | "annotation.annotationByPerson" | "annotation.annotationByPersonName" | "annotation.annotationBySystem" | "annotation.annotationBySystemName" | "annotation.atlasCode" | "annotation.byRole" | "annotation.created" | "annotation.deleted" | "annotation.deletedByPerson" | "annotation.deletedByPersonName" | "annotation.deletedDateTime" | "annotation.id" | "annotation.identification.author" | "annotation.identification.facts.decimalValue" | "annotation.identification.facts.fact" | "annotation.identification.facts.integerValue" | "annotation.identification.facts.value" | "annotation.identification.id" | "annotation.identification.linkings.taxon.administrativeStatuses" | "annotation.identification.linkings.taxon.checklist" | "annotation.identification.linkings.taxon.cursiveName" | "annotation.identification.linkings.taxon.finnish" | "annotation.identification.linkings.taxon.id" | "annotation.identification.linkings.taxon.informalTaxonGroups" | "annotation.identification.linkings.taxon.kingdomScientificName" | "annotation.identification.linkings.taxon.latestRedListStatusFinland.status" | "annotation.identification.linkings.taxon.latestRedListStatusFinland.year" | "annotation.identification.linkings.taxon.nameEnglish" | "annotation.identification.linkings.taxon.nameFinnish" | "annotation.identification.linkings.taxon.nameSwedish" | "annotation.identification.linkings.taxon.occurrenceCountFinland" | "annotation.identification.linkings.taxon.primaryHabitat.habitat" | "annotation.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "annotation.identification.linkings.taxon.primaryHabitat.id" | "annotation.identification.linkings.taxon.primaryHabitat.order" | "annotation.identification.linkings.taxon.qname" | "annotation.identification.linkings.taxon.scientificName" | "annotation.identification.linkings.taxon.scientificNameAuthorship" | "annotation.identification.linkings.taxon.scientificNameDisplayName" | "annotation.identification.linkings.taxon.sensitive" | "annotation.identification.linkings.taxon.taxonConceptIds" | "annotation.identification.linkings.taxon.taxonRank" | "annotation.identification.linkings.taxon.taxonomicOrder" | "annotation.identification.linkings.taxon.threatenedStatus" | "annotation.identification.linkings.taxon.vernacularName" | "annotation.identification.notes" | "annotation.identification.taxon" | "annotation.identification.taxonID" | "annotation.identification.taxonSpecifier" | "annotation.identification.taxonSpecifierAuthor" | "annotation.notes" | "annotation.occurrenceAtTimeOfAnnotation.countryVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.dateBegin" | "annotation.occurrenceAtTimeOfAnnotation.dateEnd" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "annotation.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "annotation.occurrenceAtTimeOfAnnotation.locality" | "annotation.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.taxonId" | "annotation.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "annotation.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "annotation.removedTags" | "annotation.valid" | "document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sequenceText" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
                     /** @description Define what fields to use when sorting results. Defaults to [unit.annotations.created DESC, unit.annotations.id ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
                     orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystemName" | "unit.annotations.created" | "unit.annotations.id" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
                     /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
@@ -4165,6 +4190,8 @@ export interface paths {
                     hasUnitModel?: boolean;
                     /** @description Filter only records where parent document, gathering or unit has media or none have media. */
                     hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
                     /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
                     teamMember?: string;
                     /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
@@ -4217,722 +4244,6 @@ export interface paths {
                     gatheringFact?: string;
                     /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
                     documentFact?: string;
-                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
-                    partition?: string;
-                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
-                    hasValue?: string;
-                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
-                    atlasCode?: string;
-                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
-                    atlasClass?: string;
-                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
-                    onlyNonStateLands?: boolean;
-                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsEditor?: boolean;
-                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsObserver?: boolean;
-                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsEditorOrObserver?: boolean;
-                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
-                    selfIsNotEditorOrObserver?: boolean;
-                    /** @description Alternative way to Accept header to define content type of the response. */
-                    format?: "json" | "geojson" | "xml" | "rdf_xml";
-                };
-                header?: {
-                    /** @description Use granted permissions to search the private warehouse */
-                    "Permission-Token"?: string;
-                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
-                    "Person-Token"?: string;
-                };
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Succesful query. Schema varies based on content-type of the response. */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
-                        "application/geo+json": string;
-                        "application/xml": string;
-                        "application/rdf+xml": string;
-                    };
-                };
-                /** @description Parameters were not accepted. Message has details. */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Invalid credentials. Message has details. */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Too many pending requests for the access_token; max is 12 */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Service is in unknown erroneous state. */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/warehouse/query/unitMedia/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get list of unit_medias using given filters
-         * @description Get list of results as a 'flat row'. Application/json and application/xml responses respect the "selected" parameter, but application/rdf+xml returns always the same "CETAF standard" fields.
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description Define what fields to include to the result. Defaults to [document.documentId, media.author, media.caption, media.copyrightOwner, media.fullResolutionMediaAvailable, media.fullURL, media.highDetailModelURL, media.licenseId, media.lowDetailModelURL, media.mediaType, media.mp3URL, media.squareThumbnailURL, media.thumbnailURL, media.type, media.videoURL, media.wavURL, unit.linkings.taxon.scientificName, unit.linkings.taxon.vernacularName, unit.reportedInformalTaxonGroup, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
-                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "media.author" | "media.caption" | "media.copyrightOwner" | "media.fullResolutionMediaAvailable" | "media.fullURL" | "media.highDetailModelURL" | "media.licenseId" | "media.lowDetailModelURL" | "media.mediaType" | "media.mp3URL" | "media.squareThumbnailURL" | "media.thumbnailURL" | "media.type" | "media.videoURL" | "media.wavURL" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
-                    /** @description Define what fields to use when sorting results. Defaults to [unit.media.fullURL ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
-                    orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.media.fullURL" | "unit.media.mediaType" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
-                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
-                    crs?: "WGS84" | "EUREF" | "YKJ";
-                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the type of returned GeoJSON features. */
-                    featureType?: "CENTER_POINT" | "ENVELOPE" | "ORIGINAL_FEATURE";
-                    /** @description Set number of results in one page. */
-                    pageSize?: number;
-                    /** @description Set current page. */
-                    page?: number;
-                    /** @description Use cache for this query. Defaults to false. */
-                    cache?: boolean;
-                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    taxonId?: string;
-                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    target?: string;
-                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
-                    useIdentificationAnnotations?: boolean;
-                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
-                    includeSubTaxa?: boolean;
-                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
-                    includeNonValidTaxa?: boolean;
-                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
-                    onlyNonValidTaxa?: boolean;
-                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupId?: string;
-                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupIdNot?: string;
-                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupIdIncludingReported?: string;
-                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
-                    administrativeStatusId?: string;
-                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
-                    redListStatusId?: string;
-                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
-                    taxonAdminFiltersOperator?: "AND" | "OR";
-                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
-                    typeOfOccurrenceId?: string;
-                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
-                    typeOfOccurrenceIdNot?: string;
-                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    primaryHabitat?: string;
-                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    anyHabitat?: string;
-                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
-                    occurrenceCountMax?: number;
-                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
-                    occurrenceCountFinlandMax?: number;
-                    /** @description Filter only those taxa that are finnish or are not finnish. */
-                    finnish?: boolean;
-                    /** @description Filter only those taxa that are invasive or are not invasive. */
-                    invasive?: boolean;
-                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
-                    sensitive?: boolean;
-                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
-                    higherTaxon?: boolean;
-                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
-                    taxonRankId?: string;
-                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    countryId?: string;
-                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    finnishMunicipalityId?: string;
-                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    biogeographicalProvinceId?: string;
-                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    elyCentreId?: string;
-                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    provinceId?: string;
-                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    area?: string;
-                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
-                    namedPlaceId?: string;
-                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
-                    namedPlaceTag?: string;
-                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    birdAssociationAreaId?: string;
-                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
-                    formId?: string;
-                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    time?: string;
-                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
-                    timeAccuracy?: number;
-                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    yearMonth?: string;
-                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    dayOfYear?: string;
-                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    season?: string;
-                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    keyword?: string;
-                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionId?: string;
-                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdExplicit?: string;
-                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdNot?: string;
-                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdExplicitNot?: string;
-                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
-                    includeSubCollections?: boolean;
-                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
-                    sourceId?: string;
-                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
-                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
-                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
-                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
-                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
-                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
-                    invasiveControlled?: boolean;
-                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    documentId?: string;
-                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    documentIdPrefix?: string;
-                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    gatheringId?: string;
-                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    unitId?: string;
-                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    individualId?: string;
-                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
-                    individualCountMin?: number;
-                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
-                    individualCountMax?: number;
-                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
-                    loadedSameOrAfter?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
-                    loadedSameOrBefore?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
-                    firstLoadedSameOrAfter?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
-                    firstLoadedSameOrBefore?: string;
-                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
-                    includeNullLoadDates?: boolean;
-                    /** @description Filter using the year the record was created */
-                    createdDateYear?: number;
-                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    coordinates?: string;
-                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
-                    polygon?: string;
-                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
-                    polygonId?: string;
-                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
-                    coordinateAccuracyMax?: number;
-                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    wgs84CenterPoint?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj1km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj10km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj50km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj100km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj1kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj10kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj50kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj100kmCenter?: string;
-                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
-                    /** @description Filter only type specimens or those that are not type specimens. */
-                    typeSpecimen?: boolean;
-                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
-                    /** @description Filter only occurrences reported to be at their breeding site. */
-                    breedingSite?: boolean;
-                    /** @description Filter only for local species. */
-                    local?: boolean;
-                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
-                    alive?: boolean;
-                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
-                    identificationBasis?: string;
-                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
-                    samplingMethod?: string;
-                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
-                    plantStatusCode?: string;
-                    /** @description Filter only units where parent document has media or doesn't have media. */
-                    hasDocumentMedia?: boolean;
-                    /** @description Filter only units where parent gathering has media or doesn't have media. */
-                    hasGatheringMedia?: boolean;
-                    /** @description Filter only units where unit has media or doesn't have media. */
-                    hasUnitMedia?: boolean;
-                    /** @description Filter only units where unit has images or doesn't have images. */
-                    hasUnitImages?: boolean;
-                    /** @description Filter only units where unit has audio or doesn't have audio. */
-                    hasUnitAudio?: boolean;
-                    /** @description Filter only units where unit has video or doesn't have video. */
-                    hasUnitVideo?: boolean;
-                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
-                    hasUnitModel?: boolean;
-                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
-                    hasMedia?: boolean;
-                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    teamMember?: string;
-                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    teamMemberId?: string;
-                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
-                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
-                    /** @description Include only those that are secured or those that are not secured. */
-                    secured?: boolean;
-                    /** @description Include only those units that have annotations or those that do not have annotations. */
-                    annotated?: boolean;
-                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
-                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
-                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
-                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
-                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    collectionAndRecordQuality?: string;
-                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
-                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
-                    /** @description Show only records that need an identification (or do not need an identification) */
-                    unidentified?: boolean;
-                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
-                    needsCheck?: boolean;
-                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    completeListTaxonId?: string;
-                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
-                    completeListType?: string;
-                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
-                    taxonSetId?: string;
-                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    taxonCensus?: string;
-                    /** @description Include only those units that have samples or those that do not have samples. */
-                    hasSample?: boolean;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    unitFact?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    gatheringFact?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    documentFact?: string;
-                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
-                    partition?: string;
-                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
-                    hasValue?: string;
-                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
-                    atlasCode?: string;
-                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
-                    atlasClass?: string;
-                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
-                    onlyNonStateLands?: boolean;
-                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsEditor?: boolean;
-                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsObserver?: boolean;
-                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
-                    selfAsEditorOrObserver?: boolean;
-                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
-                    selfIsNotEditorOrObserver?: boolean;
-                    /** @description Alternative way to Accept header to define content type of the response. */
-                    format?: "json" | "geojson" | "xml" | "rdf_xml";
-                };
-                header?: {
-                    /** @description Use granted permissions to search the private warehouse */
-                    "Permission-Token"?: string;
-                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
-                    "Person-Token"?: string;
-                };
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Succesful query. Schema varies based on content-type of the response. */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
-                        "application/geo+json": string;
-                        "application/xml": string;
-                        "application/rdf+xml": string;
-                    };
-                };
-                /** @description Parameters were not accepted. Message has details. */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Invalid credentials. Message has details. */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Too many pending requests for the access_token; max is 12 */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["WarehouseDwError"];
-                    };
-                };
-                /** @description Service is in unknown erroneous state. */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/warehouse/query/sample/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get list of samples using given filters
-         * @description Get list of results as a 'flat row'. Application/json and application/xml responses respect the "selected" parameter, but application/rdf+xml returns always the same "CETAF standard" fields.
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description Define what fields to include to the result. Defaults to [document.documentId, sample.collectionId, sample.facts.decimalValue, sample.facts.fact, sample.facts.integerValue, sample.facts.value, sample.keywords, sample.material, sample.multiple, sample.notes, sample.quality, sample.sampleId, sample.sampleOrder, sample.status, sample.type, unit.linkings.taxon.id, unit.linkings.taxon.scientificName, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
-                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "sample.collectionId" | "sample.facts.decimalValue" | "sample.facts.fact" | "sample.facts.integerValue" | "sample.facts.value" | "sample.keywords" | "sample.material" | "sample.multiple" | "sample.notes" | "sample.quality" | "sample.sampleId" | "sample.sampleOrder" | "sample.status" | "sample.type" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
-                    /** @description Define what fields to use when sorting results. Defaults to [unit.taxonVerbatim ASC, unit.unitId ASC, unit.samples.sampleOrder ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
-                    orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.samples.collectionId" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
-                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
-                    crs?: "WGS84" | "EUREF" | "YKJ";
-                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the type of returned GeoJSON features. */
-                    featureType?: "CENTER_POINT" | "ENVELOPE" | "ORIGINAL_FEATURE";
-                    /** @description Set number of results in one page. */
-                    pageSize?: number;
-                    /** @description Set current page. */
-                    page?: number;
-                    /** @description Use cache for this query. Defaults to false. */
-                    cache?: boolean;
-                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    taxonId?: string;
-                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    target?: string;
-                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
-                    useIdentificationAnnotations?: boolean;
-                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
-                    includeSubTaxa?: boolean;
-                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
-                    includeNonValidTaxa?: boolean;
-                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
-                    onlyNonValidTaxa?: boolean;
-                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupId?: string;
-                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupIdNot?: string;
-                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
-                    informalTaxonGroupIdIncludingReported?: string;
-                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
-                    administrativeStatusId?: string;
-                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
-                    redListStatusId?: string;
-                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
-                    taxonAdminFiltersOperator?: "AND" | "OR";
-                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
-                    typeOfOccurrenceId?: string;
-                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
-                    typeOfOccurrenceIdNot?: string;
-                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    primaryHabitat?: string;
-                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    anyHabitat?: string;
-                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
-                    occurrenceCountMax?: number;
-                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
-                    occurrenceCountFinlandMax?: number;
-                    /** @description Filter only those taxa that are finnish or are not finnish. */
-                    finnish?: boolean;
-                    /** @description Filter only those taxa that are invasive or are not invasive. */
-                    invasive?: boolean;
-                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
-                    sensitive?: boolean;
-                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
-                    higherTaxon?: boolean;
-                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
-                    taxonRankId?: string;
-                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    countryId?: string;
-                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    finnishMunicipalityId?: string;
-                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    biogeographicalProvinceId?: string;
-                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    elyCentreId?: string;
-                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    provinceId?: string;
-                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    area?: string;
-                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
-                    namedPlaceId?: string;
-                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
-                    namedPlaceTag?: string;
-                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
-                    birdAssociationAreaId?: string;
-                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
-                    formId?: string;
-                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    time?: string;
-                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
-                    timeAccuracy?: number;
-                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    yearMonth?: string;
-                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    dayOfYear?: string;
-                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    season?: string;
-                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    keyword?: string;
-                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionId?: string;
-                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdExplicit?: string;
-                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdNot?: string;
-                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    collectionIdExplicitNot?: string;
-                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
-                    includeSubCollections?: boolean;
-                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
-                    sourceId?: string;
-                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
-                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
-                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
-                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
-                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
-                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
-                    invasiveControlled?: boolean;
-                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    documentId?: string;
-                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    documentIdPrefix?: string;
-                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    gatheringId?: string;
-                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    unitId?: string;
-                    /** @description Filter using preparation/sample ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    sampleId?: string;
-                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    individualId?: string;
-                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
-                    individualCountMin?: number;
-                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
-                    individualCountMax?: number;
-                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
-                    loadedSameOrAfter?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
-                    loadedSameOrBefore?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
-                    firstLoadedSameOrAfter?: string;
-                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
-                    firstLoadedSameOrBefore?: string;
-                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
-                    includeNullLoadDates?: boolean;
-                    /** @description Filter using the year the record was created */
-                    createdDateYear?: number;
-                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    coordinates?: string;
-                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
-                    polygon?: string;
-                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
-                    polygonId?: string;
-                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
-                    coordinateAccuracyMax?: number;
-                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    wgs84CenterPoint?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj1km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj10km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj50km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj100km?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj1kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj10kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj50kmCenter?: string;
-                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    ykj100kmCenter?: string;
-                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
-                    /** @description Filter only type specimens or those that are not type specimens. */
-                    typeSpecimen?: boolean;
-                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
-                    /** @description Filter only occurrences reported to be at their breeding site. */
-                    breedingSite?: boolean;
-                    /** @description Filter only for local species. */
-                    local?: boolean;
-                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
-                    alive?: boolean;
-                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
-                    identificationBasis?: string;
-                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
-                    samplingMethod?: string;
-                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
-                    plantStatusCode?: string;
-                    /** @description Filter only units where parent document has media or doesn't have media. */
-                    hasDocumentMedia?: boolean;
-                    /** @description Filter only units where parent gathering has media or doesn't have media. */
-                    hasGatheringMedia?: boolean;
-                    /** @description Filter only units where unit has media or doesn't have media. */
-                    hasUnitMedia?: boolean;
-                    /** @description Filter only units where unit has images or doesn't have images. */
-                    hasUnitImages?: boolean;
-                    /** @description Filter only units where unit has audio or doesn't have audio. */
-                    hasUnitAudio?: boolean;
-                    /** @description Filter only units where unit has video or doesn't have video. */
-                    hasUnitVideo?: boolean;
-                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
-                    hasUnitModel?: boolean;
-                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
-                    hasMedia?: boolean;
-                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    teamMember?: string;
-                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    teamMemberId?: string;
-                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
-                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
-                    /** @description Include only those that are secured or those that are not secured. */
-                    secured?: boolean;
-                    /** @description Include only those units that have annotations or those that do not have annotations. */
-                    annotated?: boolean;
-                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
-                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
-                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
-                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
-                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
-                    collectionAndRecordQuality?: string;
-                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
-                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
-                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
-                    /** @description Show only records that need an identification (or do not need an identification) */
-                    unidentified?: boolean;
-                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
-                    needsCheck?: boolean;
-                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    completeListTaxonId?: string;
-                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
-                    completeListType?: string;
-                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
-                    taxonSetId?: string;
-                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
-                    taxonCensus?: string;
-                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
-                    sampleCollectionId?: string;
-                    /** @description Include only those units that have samples or those that do not have samples. */
-                    hasSample?: boolean;
-                    /** @description Was DNA extracted from single or multiple individuals? Include only those that were (true) or weren't (false). */
-                    sampleMultiple?: boolean;
-                    /** @description Filter based on URI or Qname identifier of MF.preparationTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.preparationTypeEnum */
-                    sampleType?: string;
-                    /** @description Filter based on URI or Qname identifier of MF.qualityEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.qualityEnum */
-                    sampleQuality?: string;
-                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.statuses */
-                    sampleStatus?: string;
-                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.materialEnum */
-                    sampleMaterial?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    unitFact?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    gatheringFact?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    documentFact?: string;
-                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
-                    sampleFact?: string;
                     /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
                     partition?: string;
                     /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
@@ -5245,6 +4556,8 @@ export interface paths {
                     hasUnitModel?: boolean;
                     /** @description Filter only records where parent document, gathering or unit has media or none have media. */
                     hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
                     /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
                     teamMember?: string;
                     /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
@@ -5388,6 +4701,1456 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/warehouse/query/unitMedia/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get list of unit_medias using given filters
+         * @description Get list of results as a 'flat row'. Application/json and application/xml responses respect the "selected" parameter, but application/rdf+xml returns always the same "CETAF standard" fields.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Define what fields to include to the result. Defaults to [document.documentId, media.author, media.caption, media.copyrightOwner, media.fullResolutionMediaAvailable, media.fullURL, media.highDetailModelURL, media.licenseId, media.lowDetailModelURL, media.mediaType, media.mp3URL, media.squareThumbnailURL, media.thumbnailURL, media.type, media.videoURL, media.wavURL, unit.linkings.taxon.scientificName, unit.linkings.taxon.vernacularName, unit.reportedInformalTaxonGroup, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
+                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "media.author" | "media.caption" | "media.copyrightOwner" | "media.fullResolutionMediaAvailable" | "media.fullURL" | "media.highDetailModelURL" | "media.licenseId" | "media.lowDetailModelURL" | "media.mediaType" | "media.mp3URL" | "media.squareThumbnailURL" | "media.thumbnailURL" | "media.type" | "media.videoURL" | "media.wavURL" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sequenceText" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
+                    /** @description Define what fields to use when sorting results. Defaults to [unit.media.fullURL ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
+                    orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.media.fullURL" | "unit.media.mediaType" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
+                    crs?: "WGS84" | "EUREF" | "YKJ";
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the type of returned GeoJSON features. */
+                    featureType?: "CENTER_POINT" | "ENVELOPE" | "ORIGINAL_FEATURE";
+                    /** @description Set number of results in one page. */
+                    pageSize?: number;
+                    /** @description Set current page. */
+                    page?: number;
+                    /** @description Use cache for this query. Defaults to false. */
+                    cache?: boolean;
+                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonId?: string;
+                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    target?: string;
+                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
+                    useIdentificationAnnotations?: boolean;
+                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
+                    includeSubTaxa?: boolean;
+                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    includeNonValidTaxa?: boolean;
+                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    onlyNonValidTaxa?: boolean;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupId?: string;
+                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdNot?: string;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdIncludingReported?: string;
+                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
+                    administrativeStatusId?: string;
+                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
+                    redListStatusId?: string;
+                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
+                    taxonAdminFiltersOperator?: "AND" | "OR";
+                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceId?: string;
+                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceIdNot?: string;
+                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    primaryHabitat?: string;
+                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    anyHabitat?: string;
+                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
+                    occurrenceCountMax?: number;
+                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
+                    occurrenceCountFinlandMax?: number;
+                    /** @description Filter only those taxa that are finnish or are not finnish. */
+                    finnish?: boolean;
+                    /** @description Filter only those taxa that are invasive or are not invasive. */
+                    invasive?: boolean;
+                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
+                    sensitive?: boolean;
+                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
+                    higherTaxon?: boolean;
+                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
+                    taxonRankId?: string;
+                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    countryId?: string;
+                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    finnishMunicipalityId?: string;
+                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    biogeographicalProvinceId?: string;
+                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    elyCentreId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    provinceId?: string;
+                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    area?: string;
+                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
+                    namedPlaceId?: string;
+                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
+                    namedPlaceTag?: string;
+                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    birdAssociationAreaId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
+                    formId?: string;
+                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    time?: string;
+                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
+                    timeAccuracy?: number;
+                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    yearMonth?: string;
+                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    dayOfYear?: string;
+                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    season?: string;
+                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    keyword?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionId?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicit?: string;
+                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdNot?: string;
+                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicitNot?: string;
+                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
+                    includeSubCollections?: boolean;
+                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
+                    sourceId?: string;
+                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
+                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
+                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
+                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
+                    invasiveControlled?: boolean;
+                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentId?: string;
+                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentIdPrefix?: string;
+                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    gatheringId?: string;
+                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    unitId?: string;
+                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    individualId?: string;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
+                    individualCountMin?: number;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
+                    individualCountMax?: number;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    loadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    loadedSameOrBefore?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    firstLoadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    firstLoadedSameOrBefore?: string;
+                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
+                    includeNullLoadDates?: boolean;
+                    /** @description Filter using the year the record was created */
+                    createdDateYear?: number;
+                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    coordinates?: string;
+                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
+                    polygon?: string;
+                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
+                    polygonId?: string;
+                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
+                    coordinateAccuracyMax?: number;
+                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wgs84CenterPoint?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100kmCenter?: string;
+                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
+                    /** @description Filter only type specimens or those that are not type specimens. */
+                    typeSpecimen?: boolean;
+                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
+                    /** @description Filter only occurrences reported to be at their breeding site. */
+                    breedingSite?: boolean;
+                    /** @description Filter only for local species. */
+                    local?: boolean;
+                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
+                    alive?: boolean;
+                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
+                    identificationBasis?: string;
+                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
+                    samplingMethod?: string;
+                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
+                    plantStatusCode?: string;
+                    /** @description Filter only units where parent document has media or doesn't have media. */
+                    hasDocumentMedia?: boolean;
+                    /** @description Filter only units where parent gathering has media or doesn't have media. */
+                    hasGatheringMedia?: boolean;
+                    /** @description Filter only units where unit has media or doesn't have media. */
+                    hasUnitMedia?: boolean;
+                    /** @description Filter only units where unit has images or doesn't have images. */
+                    hasUnitImages?: boolean;
+                    /** @description Filter only units where unit has audio or doesn't have audio. */
+                    hasUnitAudio?: boolean;
+                    /** @description Filter only units where unit has video or doesn't have video. */
+                    hasUnitVideo?: boolean;
+                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
+                    hasUnitModel?: boolean;
+                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
+                    hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
+                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    teamMember?: string;
+                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    teamMemberId?: string;
+                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
+                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
+                    /** @description Include only those that are secured or those that are not secured. */
+                    secured?: boolean;
+                    /** @description Include only those units that have annotations or those that do not have annotations. */
+                    annotated?: boolean;
+                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
+                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
+                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
+                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
+                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    collectionAndRecordQuality?: string;
+                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
+                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
+                    /** @description Show only records that need an identification (or do not need an identification) */
+                    unidentified?: boolean;
+                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
+                    needsCheck?: boolean;
+                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    completeListTaxonId?: string;
+                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
+                    completeListType?: string;
+                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
+                    taxonSetId?: string;
+                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonCensus?: string;
+                    /** @description Include only those units that have samples or those that do not have samples. */
+                    hasSample?: boolean;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    unitFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    gatheringFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    documentFact?: string;
+                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
+                    partition?: string;
+                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
+                    hasValue?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
+                    atlasCode?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
+                    atlasClass?: string;
+                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
+                    onlyNonStateLands?: boolean;
+                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditor?: boolean;
+                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsObserver?: boolean;
+                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditorOrObserver?: boolean;
+                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
+                    selfIsNotEditorOrObserver?: boolean;
+                    /** @description Alternative way to Accept header to define content type of the response. */
+                    format?: "json" | "geojson" | "xml" | "rdf_xml";
+                };
+                header?: {
+                    /** @description Use granted permissions to search the private warehouse */
+                    "Permission-Token"?: string;
+                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
+                    "Person-Token"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful query. Schema varies based on content-type of the response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
+                        "application/geo+json": string;
+                        "application/xml": string;
+                        "application/rdf+xml": string;
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warehouse/query/sample/count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get count of units using given filters
+         * @description Use this API to test how many results your query would return and then proceed with list query.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Alternative way to Accept header to define content type of the response. */
+                    format?: "json" | "xml" | "plain";
+                    /** @description Use cache for this query. Defaults to false. */
+                    cache?: boolean;
+                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonId?: string;
+                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    target?: string;
+                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
+                    useIdentificationAnnotations?: boolean;
+                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
+                    includeSubTaxa?: boolean;
+                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    includeNonValidTaxa?: boolean;
+                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    onlyNonValidTaxa?: boolean;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupId?: string;
+                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdNot?: string;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdIncludingReported?: string;
+                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
+                    administrativeStatusId?: string;
+                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
+                    redListStatusId?: string;
+                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
+                    taxonAdminFiltersOperator?: "AND" | "OR";
+                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceId?: string;
+                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceIdNot?: string;
+                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    primaryHabitat?: string;
+                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    anyHabitat?: string;
+                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
+                    occurrenceCountMax?: number;
+                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
+                    occurrenceCountFinlandMax?: number;
+                    /** @description Filter only those taxa that are finnish or are not finnish. */
+                    finnish?: boolean;
+                    /** @description Filter only those taxa that are invasive or are not invasive. */
+                    invasive?: boolean;
+                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
+                    sensitive?: boolean;
+                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
+                    higherTaxon?: boolean;
+                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
+                    taxonRankId?: string;
+                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    countryId?: string;
+                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    finnishMunicipalityId?: string;
+                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    biogeographicalProvinceId?: string;
+                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    elyCentreId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    provinceId?: string;
+                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    area?: string;
+                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
+                    namedPlaceId?: string;
+                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
+                    namedPlaceTag?: string;
+                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    birdAssociationAreaId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
+                    formId?: string;
+                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    time?: string;
+                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
+                    timeAccuracy?: number;
+                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    yearMonth?: string;
+                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    dayOfYear?: string;
+                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    season?: string;
+                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    keyword?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionId?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicit?: string;
+                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdNot?: string;
+                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicitNot?: string;
+                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
+                    includeSubCollections?: boolean;
+                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
+                    sourceId?: string;
+                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
+                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
+                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
+                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
+                    invasiveControlled?: boolean;
+                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentId?: string;
+                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentIdPrefix?: string;
+                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    gatheringId?: string;
+                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    unitId?: string;
+                    /** @description Filter using preparation/sample ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sampleId?: string;
+                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    individualId?: string;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
+                    individualCountMin?: number;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
+                    individualCountMax?: number;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    loadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    loadedSameOrBefore?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    firstLoadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    firstLoadedSameOrBefore?: string;
+                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
+                    includeNullLoadDates?: boolean;
+                    /** @description Filter using the year the record was created */
+                    createdDateYear?: number;
+                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    coordinates?: string;
+                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
+                    polygon?: string;
+                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
+                    polygonId?: string;
+                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
+                    coordinateAccuracyMax?: number;
+                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wgs84CenterPoint?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100kmCenter?: string;
+                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
+                    /** @description Filter only type specimens or those that are not type specimens. */
+                    typeSpecimen?: boolean;
+                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
+                    /** @description Filter only occurrences reported to be at their breeding site. */
+                    breedingSite?: boolean;
+                    /** @description Filter only for local species. */
+                    local?: boolean;
+                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
+                    alive?: boolean;
+                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
+                    identificationBasis?: string;
+                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
+                    samplingMethod?: string;
+                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
+                    plantStatusCode?: string;
+                    /** @description Filter only units where parent document has media or doesn't have media. */
+                    hasDocumentMedia?: boolean;
+                    /** @description Filter only units where parent gathering has media or doesn't have media. */
+                    hasGatheringMedia?: boolean;
+                    /** @description Filter only units where unit has media or doesn't have media. */
+                    hasUnitMedia?: boolean;
+                    /** @description Filter only units where unit has images or doesn't have images. */
+                    hasUnitImages?: boolean;
+                    /** @description Filter only units where unit has audio or doesn't have audio. */
+                    hasUnitAudio?: boolean;
+                    /** @description Filter only units where unit has video or doesn't have video. */
+                    hasUnitVideo?: boolean;
+                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
+                    hasUnitModel?: boolean;
+                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
+                    hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
+                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    teamMember?: string;
+                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    teamMemberId?: string;
+                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
+                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
+                    /** @description Include only those that are secured or those that are not secured. */
+                    secured?: boolean;
+                    /** @description Include only those units that have annotations or those that do not have annotations. */
+                    annotated?: boolean;
+                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
+                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
+                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
+                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
+                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    collectionAndRecordQuality?: string;
+                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
+                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
+                    /** @description Show only records that need an identification (or do not need an identification) */
+                    unidentified?: boolean;
+                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
+                    needsCheck?: boolean;
+                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    completeListTaxonId?: string;
+                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
+                    completeListType?: string;
+                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
+                    taxonSetId?: string;
+                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonCensus?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    sampleCollectionId?: string;
+                    /** @description Include only those units that have samples or those that do not have samples. */
+                    hasSample?: boolean;
+                    /** @description Was DNA extracted from single or multiple individuals? Include only those that were (true) or weren't (false). */
+                    sampleMultiple?: boolean;
+                    /** @description Filter based on URI or Qname identifier of MF.preparationTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.preparationTypeEnum */
+                    sampleType?: string;
+                    /** @description Filter based on URI or Qname identifier of MF.qualityEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.qualityEnum */
+                    sampleQuality?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.statuses */
+                    sampleStatus?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.materialEnum */
+                    sampleMaterial?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    unitFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    gatheringFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    documentFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    sampleFact?: string;
+                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
+                    partition?: string;
+                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
+                    hasValue?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
+                    atlasCode?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
+                    atlasClass?: string;
+                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
+                    onlyNonStateLands?: boolean;
+                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditor?: boolean;
+                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsObserver?: boolean;
+                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditorOrObserver?: boolean;
+                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
+                    selfIsNotEditorOrObserver?: boolean;
+                };
+                header?: {
+                    /** @description Use granted permissions to search the private warehouse */
+                    "Permission-Token"?: string;
+                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
+                    "Person-Token"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful query. Schema varies based on content-type of the response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwQuery_CountResponse"];
+                        "application/xml": string;
+                        "text/plain": string;
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warehouse/query/sample/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get list of samples using given filters
+         * @description Get list of results as a 'flat row'. Application/json and application/xml responses respect the "selected" parameter, but application/rdf+xml returns always the same "CETAF standard" fields.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Define what fields to include to the result. Defaults to [document.documentId, sample.collectionId, sample.facts.decimalValue, sample.facts.fact, sample.facts.integerValue, sample.facts.value, sample.keywords, sample.material, sample.multiple, sample.notes, sample.quality, sample.sampleId, sample.sampleOrder, sample.status, sample.type, unit.linkings.taxon.id, unit.linkings.taxon.scientificName, unit.taxonVerbatim, unit.unitId] Multiple values are seperated by ','. */
+                    selected?: ("document.annotations.addedTags" | "document.annotations.annotationByPerson" | "document.annotations.annotationByPersonName" | "document.annotations.annotationBySystem" | "document.annotations.annotationBySystemName" | "document.annotations.atlasCode" | "document.annotations.byRole" | "document.annotations.created" | "document.annotations.deleted" | "document.annotations.deletedByPerson" | "document.annotations.deletedByPersonName" | "document.annotations.deletedDateTime" | "document.annotations.id" | "document.annotations.notes" | "document.annotations.removedTags" | "document.annotations.valid" | "document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors.fullName" | "document.linkings.editors.id" | "document.linkings.editors.userId" | "document.loadDate" | "document.media.author" | "document.media.caption" | "document.media.copyrightOwner" | "document.media.fullResolutionMediaAvailable" | "document.media.fullURL" | "document.media.highDetailModelURL" | "document.media.licenseId" | "document.media.lowDetailModelURL" | "document.media.mediaType" | "document.media.mp3URL" | "document.media.squareThumbnailURL" | "document.media.thumbnailURL" | "document.media.type" | "document.media.videoURL" | "document.media.wavURL" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.tags" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.notes" | "document.partial" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.message" | "document.quality.issue.source" | "document.referenceURL" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "document.sourceTags" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.eurefWKT" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.wgs84WKT" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.conversions.ykjWKT" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.biogeographicalProvinces" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipalities" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers.fullName" | "gathering.linkings.observers.id" | "gathering.linkings.observers.userId" | "gathering.locality" | "gathering.media.author" | "gathering.media.caption" | "gathering.media.copyrightOwner" | "gathering.media.fullResolutionMediaAvailable" | "gathering.media.fullURL" | "gathering.media.highDetailModelURL" | "gathering.media.licenseId" | "gathering.media.lowDetailModelURL" | "gathering.media.mediaType" | "gathering.media.mp3URL" | "gathering.media.squareThumbnailURL" | "gathering.media.thumbnailURL" | "gathering.media.type" | "gathering.media.videoURL" | "gathering.media.wavURL" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.notes" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.message" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.message" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.message" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "sample.collectionId" | "sample.facts.decimalValue" | "sample.facts.fact" | "sample.facts.integerValue" | "sample.facts.value" | "sample.keywords" | "sample.material" | "sample.multiple" | "sample.notes" | "sample.quality" | "sample.sampleId" | "sample.sampleOrder" | "sample.status" | "sample.type" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.addedTags" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.atlasCode" | "unit.annotations.byRole" | "unit.annotations.created" | "unit.annotations.deleted" | "unit.annotations.deletedByPerson" | "unit.annotations.deletedByPersonName" | "unit.annotations.deletedDateTime" | "unit.annotations.id" | "unit.annotations.identification.author" | "unit.annotations.identification.facts.decimalValue" | "unit.annotations.identification.facts.fact" | "unit.annotations.identification.facts.integerValue" | "unit.annotations.identification.facts.value" | "unit.annotations.identification.id" | "unit.annotations.identification.linkings.taxon.administrativeStatuses" | "unit.annotations.identification.linkings.taxon.checklist" | "unit.annotations.identification.linkings.taxon.cursiveName" | "unit.annotations.identification.linkings.taxon.finnish" | "unit.annotations.identification.linkings.taxon.id" | "unit.annotations.identification.linkings.taxon.informalTaxonGroups" | "unit.annotations.identification.linkings.taxon.kingdomScientificName" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.identification.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.identification.linkings.taxon.nameEnglish" | "unit.annotations.identification.linkings.taxon.nameFinnish" | "unit.annotations.identification.linkings.taxon.nameSwedish" | "unit.annotations.identification.linkings.taxon.occurrenceCountFinland" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.identification.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.identification.linkings.taxon.primaryHabitat.id" | "unit.annotations.identification.linkings.taxon.primaryHabitat.order" | "unit.annotations.identification.linkings.taxon.qname" | "unit.annotations.identification.linkings.taxon.scientificName" | "unit.annotations.identification.linkings.taxon.scientificNameAuthorship" | "unit.annotations.identification.linkings.taxon.scientificNameDisplayName" | "unit.annotations.identification.linkings.taxon.sensitive" | "unit.annotations.identification.linkings.taxon.taxonConceptIds" | "unit.annotations.identification.linkings.taxon.taxonRank" | "unit.annotations.identification.linkings.taxon.taxonomicOrder" | "unit.annotations.identification.linkings.taxon.threatenedStatus" | "unit.annotations.identification.linkings.taxon.vernacularName" | "unit.annotations.identification.notes" | "unit.annotations.identification.taxon" | "unit.annotations.identification.taxonID" | "unit.annotations.identification.taxonSpecifier" | "unit.annotations.identification.taxonSpecifierAuthor" | "unit.annotations.notes" | "unit.annotations.occurrenceAtTimeOfAnnotation.countryVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateBegin" | "unit.annotations.occurrenceAtTimeOfAnnotation.dateEnd" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.administrativeStatuses" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.checklist" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.cursiveName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.finnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.informalTaxonGroups" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.kingdomScientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.status" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.latestRedListStatusFinland.year" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameEnglish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameFinnish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.nameSwedish" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.occurrenceCountFinland" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitat" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.id" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.primaryHabitat.order" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.qname" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameAuthorship" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.scientificNameDisplayName" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.sensitive" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonConceptIds" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonRank" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.taxonomicOrder" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.threatenedStatus" | "unit.annotations.occurrenceAtTimeOfAnnotation.linkings.taxon.vernacularName" | "unit.annotations.occurrenceAtTimeOfAnnotation.locality" | "unit.annotations.occurrenceAtTimeOfAnnotation.municipalityVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonId" | "unit.annotations.occurrenceAtTimeOfAnnotation.taxonVerbatim" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLat" | "unit.annotations.occurrenceAtTimeOfAnnotation.wgs84centerPointLon" | "unit.annotations.removedTags" | "unit.annotations.valid" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.externalMediaCount" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.identificationBasis" | "unit.identifications.author" | "unit.identifications.det" | "unit.identifications.detDate" | "unit.identifications.facts.decimalValue" | "unit.identifications.facts.fact" | "unit.identifications.facts.integerValue" | "unit.identifications.facts.value" | "unit.identifications.id" | "unit.identifications.linkings.taxon.administrativeStatuses" | "unit.identifications.linkings.taxon.checklist" | "unit.identifications.linkings.taxon.cursiveName" | "unit.identifications.linkings.taxon.finnish" | "unit.identifications.linkings.taxon.id" | "unit.identifications.linkings.taxon.informalTaxonGroups" | "unit.identifications.linkings.taxon.kingdomScientificName" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.status" | "unit.identifications.linkings.taxon.latestRedListStatusFinland.year" | "unit.identifications.linkings.taxon.nameEnglish" | "unit.identifications.linkings.taxon.nameFinnish" | "unit.identifications.linkings.taxon.nameSwedish" | "unit.identifications.linkings.taxon.occurrenceCountFinland" | "unit.identifications.linkings.taxon.primaryHabitat.habitat" | "unit.identifications.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.identifications.linkings.taxon.primaryHabitat.id" | "unit.identifications.linkings.taxon.primaryHabitat.order" | "unit.identifications.linkings.taxon.qname" | "unit.identifications.linkings.taxon.scientificName" | "unit.identifications.linkings.taxon.scientificNameAuthorship" | "unit.identifications.linkings.taxon.scientificNameDisplayName" | "unit.identifications.linkings.taxon.sensitive" | "unit.identifications.linkings.taxon.taxonConceptIds" | "unit.identifications.linkings.taxon.taxonRank" | "unit.identifications.linkings.taxon.taxonomicOrder" | "unit.identifications.linkings.taxon.threatenedStatus" | "unit.identifications.linkings.taxon.vernacularName" | "unit.identifications.notes" | "unit.identifications.preferred" | "unit.identifications.taxon" | "unit.identifications.taxonID" | "unit.identifications.taxonSpecifier" | "unit.identifications.taxonSpecifierAuthor" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.det" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.checklist" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.kingdomScientificName" | "unit.linkings.originalTaxon.latestRedListStatusFinland.status" | "unit.linkings.originalTaxon.latestRedListStatusFinland.year" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.primaryHabitat.habitat" | "unit.linkings.originalTaxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.originalTaxon.primaryHabitat.id" | "unit.linkings.originalTaxon.primaryHabitat.order" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameAuthorship" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.taxonConceptIds" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.threatenedStatus" | "unit.linkings.originalTaxon.vernacularName" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.checklist" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.kingdomScientificName" | "unit.linkings.taxon.latestRedListStatusFinland.status" | "unit.linkings.taxon.latestRedListStatusFinland.year" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.primaryHabitat.habitat" | "unit.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.linkings.taxon.primaryHabitat.id" | "unit.linkings.taxon.primaryHabitat.order" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameAuthorship" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.taxonConceptIds" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.threatenedStatus" | "unit.linkings.taxon.vernacularName" | "unit.local" | "unit.media.author" | "unit.media.caption" | "unit.media.copyrightOwner" | "unit.media.fullResolutionMediaAvailable" | "unit.media.fullURL" | "unit.media.highDetailModelURL" | "unit.media.licenseId" | "unit.media.lowDetailModelURL" | "unit.media.mediaType" | "unit.media.mp3URL" | "unit.media.squareThumbnailURL" | "unit.media.thumbnailURL" | "unit.media.type" | "unit.media.videoURL" | "unit.media.wavURL" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.message" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.reportedTaxonId" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.notes" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sequenceText" | "unit.sex" | "unit.sourceTags" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.types.author" | "unit.types.basionymePublication" | "unit.types.facts.decimalValue" | "unit.types.facts.fact" | "unit.types.facts.integerValue" | "unit.types.facts.value" | "unit.types.id" | "unit.types.linkings.taxon.administrativeStatuses" | "unit.types.linkings.taxon.checklist" | "unit.types.linkings.taxon.cursiveName" | "unit.types.linkings.taxon.finnish" | "unit.types.linkings.taxon.id" | "unit.types.linkings.taxon.informalTaxonGroups" | "unit.types.linkings.taxon.kingdomScientificName" | "unit.types.linkings.taxon.latestRedListStatusFinland.status" | "unit.types.linkings.taxon.latestRedListStatusFinland.year" | "unit.types.linkings.taxon.nameEnglish" | "unit.types.linkings.taxon.nameFinnish" | "unit.types.linkings.taxon.nameSwedish" | "unit.types.linkings.taxon.occurrenceCountFinland" | "unit.types.linkings.taxon.primaryHabitat.habitat" | "unit.types.linkings.taxon.primaryHabitat.habitatSpecificTypes" | "unit.types.linkings.taxon.primaryHabitat.id" | "unit.types.linkings.taxon.primaryHabitat.order" | "unit.types.linkings.taxon.qname" | "unit.types.linkings.taxon.scientificName" | "unit.types.linkings.taxon.scientificNameAuthorship" | "unit.types.linkings.taxon.scientificNameDisplayName" | "unit.types.linkings.taxon.sensitive" | "unit.types.linkings.taxon.taxonConceptIds" | "unit.types.linkings.taxon.taxonRank" | "unit.types.linkings.taxon.taxonomicOrder" | "unit.types.linkings.taxon.threatenedStatus" | "unit.types.linkings.taxon.vernacularName" | "unit.types.notes" | "unit.types.publication" | "unit.types.status" | "unit.types.taxon" | "unit.types.taxonID" | "unit.types.taxonSpecifier" | "unit.types.taxonSpecifierAuthor" | "unit.types.typif" | "unit.types.typifDate" | "unit.types.verification" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
+                    /** @description Define what fields to use when sorting results. Defaults to [unit.taxonVerbatim ASC, unit.unitId ASC, unit.samples.sampleOrder ASC]. Unit key is always added as a last parameter to ensure correct paging. You can include ASC or DESC after the name of the field (defaults to ASC).Multiple values are seperated by ','. */
+                    orderBy?: ("RANDOM" | "RANDOM:seed" | "document.collectionId" | "document.createdDate" | "document.dataSource" | "document.documentId" | "document.firstLoadDate" | "document.linkings.collectionQuality" | "document.loadDate" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.name" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secured" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.biogeographicalProvince" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.locality" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.team" | "unit.abundanceString" | "unit.alive" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.lifeStage" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.taxon.author" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonomicOrder" | "unit.local" | "unit.mediaCount" | "unit.notes" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedTaxonConfidence" | "unit.samples.collectionId" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.wild")[];
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
+                    crs?: "WGS84" | "EUREF" | "YKJ";
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the type of returned GeoJSON features. */
+                    featureType?: "CENTER_POINT" | "ENVELOPE" | "ORIGINAL_FEATURE";
+                    /** @description Set number of results in one page. */
+                    pageSize?: number;
+                    /** @description Set current page. */
+                    page?: number;
+                    /** @description Use cache for this query. Defaults to false. */
+                    cache?: boolean;
+                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonId?: string;
+                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    target?: string;
+                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
+                    useIdentificationAnnotations?: boolean;
+                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
+                    includeSubTaxa?: boolean;
+                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    includeNonValidTaxa?: boolean;
+                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    onlyNonValidTaxa?: boolean;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupId?: string;
+                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdNot?: string;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdIncludingReported?: string;
+                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
+                    administrativeStatusId?: string;
+                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
+                    redListStatusId?: string;
+                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
+                    taxonAdminFiltersOperator?: "AND" | "OR";
+                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceId?: string;
+                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceIdNot?: string;
+                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    primaryHabitat?: string;
+                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    anyHabitat?: string;
+                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
+                    occurrenceCountMax?: number;
+                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
+                    occurrenceCountFinlandMax?: number;
+                    /** @description Filter only those taxa that are finnish or are not finnish. */
+                    finnish?: boolean;
+                    /** @description Filter only those taxa that are invasive or are not invasive. */
+                    invasive?: boolean;
+                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
+                    sensitive?: boolean;
+                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
+                    higherTaxon?: boolean;
+                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
+                    taxonRankId?: string;
+                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    countryId?: string;
+                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    finnishMunicipalityId?: string;
+                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    biogeographicalProvinceId?: string;
+                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    elyCentreId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    provinceId?: string;
+                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    area?: string;
+                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
+                    namedPlaceId?: string;
+                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
+                    namedPlaceTag?: string;
+                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    birdAssociationAreaId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
+                    formId?: string;
+                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    time?: string;
+                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
+                    timeAccuracy?: number;
+                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    yearMonth?: string;
+                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    dayOfYear?: string;
+                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    season?: string;
+                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    keyword?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionId?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicit?: string;
+                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdNot?: string;
+                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicitNot?: string;
+                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
+                    includeSubCollections?: boolean;
+                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
+                    sourceId?: string;
+                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
+                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
+                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
+                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
+                    invasiveControlled?: boolean;
+                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentId?: string;
+                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentIdPrefix?: string;
+                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    gatheringId?: string;
+                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    unitId?: string;
+                    /** @description Filter using preparation/sample ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sampleId?: string;
+                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    individualId?: string;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
+                    individualCountMin?: number;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
+                    individualCountMax?: number;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    loadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    loadedSameOrBefore?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    firstLoadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    firstLoadedSameOrBefore?: string;
+                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
+                    includeNullLoadDates?: boolean;
+                    /** @description Filter using the year the record was created */
+                    createdDateYear?: number;
+                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    coordinates?: string;
+                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
+                    polygon?: string;
+                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
+                    polygonId?: string;
+                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
+                    coordinateAccuracyMax?: number;
+                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wgs84CenterPoint?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100kmCenter?: string;
+                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
+                    /** @description Filter only type specimens or those that are not type specimens. */
+                    typeSpecimen?: boolean;
+                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
+                    /** @description Filter only occurrences reported to be at their breeding site. */
+                    breedingSite?: boolean;
+                    /** @description Filter only for local species. */
+                    local?: boolean;
+                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
+                    alive?: boolean;
+                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
+                    identificationBasis?: string;
+                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
+                    samplingMethod?: string;
+                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
+                    plantStatusCode?: string;
+                    /** @description Filter only units where parent document has media or doesn't have media. */
+                    hasDocumentMedia?: boolean;
+                    /** @description Filter only units where parent gathering has media or doesn't have media. */
+                    hasGatheringMedia?: boolean;
+                    /** @description Filter only units where unit has media or doesn't have media. */
+                    hasUnitMedia?: boolean;
+                    /** @description Filter only units where unit has images or doesn't have images. */
+                    hasUnitImages?: boolean;
+                    /** @description Filter only units where unit has audio or doesn't have audio. */
+                    hasUnitAudio?: boolean;
+                    /** @description Filter only units where unit has video or doesn't have video. */
+                    hasUnitVideo?: boolean;
+                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
+                    hasUnitModel?: boolean;
+                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
+                    hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
+                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    teamMember?: string;
+                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    teamMemberId?: string;
+                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
+                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
+                    /** @description Include only those that are secured or those that are not secured. */
+                    secured?: boolean;
+                    /** @description Include only those units that have annotations or those that do not have annotations. */
+                    annotated?: boolean;
+                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
+                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
+                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
+                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
+                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    collectionAndRecordQuality?: string;
+                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
+                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
+                    /** @description Show only records that need an identification (or do not need an identification) */
+                    unidentified?: boolean;
+                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
+                    needsCheck?: boolean;
+                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    completeListTaxonId?: string;
+                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
+                    completeListType?: string;
+                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
+                    taxonSetId?: string;
+                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonCensus?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    sampleCollectionId?: string;
+                    /** @description Include only those units that have samples or those that do not have samples. */
+                    hasSample?: boolean;
+                    /** @description Was DNA extracted from single or multiple individuals? Include only those that were (true) or weren't (false). */
+                    sampleMultiple?: boolean;
+                    /** @description Filter based on URI or Qname identifier of MF.preparationTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.preparationTypeEnum */
+                    sampleType?: string;
+                    /** @description Filter based on URI or Qname identifier of MF.qualityEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.qualityEnum */
+                    sampleQuality?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.statuses */
+                    sampleStatus?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.materialEnum */
+                    sampleMaterial?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    unitFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    gatheringFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    documentFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    sampleFact?: string;
+                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
+                    partition?: string;
+                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
+                    hasValue?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
+                    atlasCode?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
+                    atlasClass?: string;
+                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
+                    onlyNonStateLands?: boolean;
+                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditor?: boolean;
+                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsObserver?: boolean;
+                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditorOrObserver?: boolean;
+                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
+                    selfIsNotEditorOrObserver?: boolean;
+                    /** @description Alternative way to Accept header to define content type of the response. */
+                    format?: "json" | "geojson" | "xml" | "rdf_xml";
+                };
+                header?: {
+                    /** @description Use granted permissions to search the private warehouse */
+                    "Permission-Token"?: string;
+                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
+                    "Person-Token"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful query. Schema varies based on content-type of the response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwQuery_ListResponse"];
+                        "application/geo+json": string;
+                        "application/xml": string;
+                        "application/rdf+xml": string;
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warehouse/query/sample/aggregate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Perform aggregate queries (group by) on samples.
+         * @description Aggregates the results of the query based on given "aggregateBy" parameters. Always includes count of rows (count(*)) to the result. Other aggregate functions vary based on the given parameters. Possible aggregate functions are [count, individualCountSum, individualCountMax, oldestRecord, newestRecord, recordQualityMax, firstLoadDateMin, firstLoadDateMax, gatheringCount, securedCount, pairCountMax, pairCountSum, taxonCount, speciesCount, redListStatusMax, atlasCodeMax, atlasClassMax]
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Define fields to aggregate by. Multiple values are seperated by ','. */
+                    aggregateBy?: ("document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.createdDateMonth" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors" | "document.loadDate" | "document.media.author" | "document.media.copyrightOwner" | "document.media.licenseId" | "document.media.mediaType" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers" | "gathering.locality" | "gathering.media.author" | "gathering.media.copyrightOwner" | "gathering.media.licenseId" | "gathering.media.mediaType" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "gathering.team.memberId" | "gathering.team.memberName" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.created" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.aggregateId" | "unit.linkings.originalTaxon.anamorphId" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.birdlifeCode" | "unit.linkings.originalTaxon.classId" | "unit.linkings.originalTaxon.cultivarId" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.divisionId" | "unit.linkings.originalTaxon.domainId" | "unit.linkings.originalTaxon.ecotypeId" | "unit.linkings.originalTaxon.euringCode" | "unit.linkings.originalTaxon.euringNumber" | "unit.linkings.originalTaxon.familyId" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.formId" | "unit.linkings.originalTaxon.genusId" | "unit.linkings.originalTaxon.grexId" | "unit.linkings.originalTaxon.groupId" | "unit.linkings.originalTaxon.habitats" | "unit.linkings.originalTaxon.hybridId" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.infraclassId" | "unit.linkings.originalTaxon.infradivisionId" | "unit.linkings.originalTaxon.infragenericHybridId" | "unit.linkings.originalTaxon.infragenericTaxonId" | "unit.linkings.originalTaxon.infrakingdomId" | "unit.linkings.originalTaxon.infraorderId" | "unit.linkings.originalTaxon.infraphylumId" | "unit.linkings.originalTaxon.infraspecificTaxonId" | "unit.linkings.originalTaxon.intergenericHybridId" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.kingdomId" | "unit.linkings.originalTaxon.nameAccordingTo" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.nothogenusId" | "unit.linkings.originalTaxon.nothospeciesId" | "unit.linkings.originalTaxon.nothosubspeciesId" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.orderId" | "unit.linkings.originalTaxon.parentId" | "unit.linkings.originalTaxon.parvclassId" | "unit.linkings.originalTaxon.parvorderId" | "unit.linkings.originalTaxon.phylumId" | "unit.linkings.originalTaxon.populationGroupId" | "unit.linkings.originalTaxon.primaryHabitat" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.redListStatusGroup" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sectionId" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.seriesId" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesAggregateId" | "unit.linkings.originalTaxon.speciesId" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.speciesTaxonomicOrder" | "unit.linkings.originalTaxon.subclassId" | "unit.linkings.originalTaxon.subdivisionId" | "unit.linkings.originalTaxon.subfamilyId" | "unit.linkings.originalTaxon.subformId" | "unit.linkings.originalTaxon.subgenusId" | "unit.linkings.originalTaxon.subkingdomId" | "unit.linkings.originalTaxon.suborderId" | "unit.linkings.originalTaxon.subphylumId" | "unit.linkings.originalTaxon.subsectionId" | "unit.linkings.originalTaxon.subseriesId" | "unit.linkings.originalTaxon.subspeciesId" | "unit.linkings.originalTaxon.subspecificAggregateId" | "unit.linkings.originalTaxon.subtribeId" | "unit.linkings.originalTaxon.subvarietyId" | "unit.linkings.originalTaxon.superclassId" | "unit.linkings.originalTaxon.superdivisionId" | "unit.linkings.originalTaxon.superdomainId" | "unit.linkings.originalTaxon.superfamilyId" | "unit.linkings.originalTaxon.supergenusId" | "unit.linkings.originalTaxon.superorderId" | "unit.linkings.originalTaxon.superphylumId" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonSets" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.tribeId" | "unit.linkings.originalTaxon.typesOfOccurrenceInFinland" | "unit.linkings.originalTaxon.varietyId" | "unit.linkings.originalTaxon.virva" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.aggregateId" | "unit.linkings.taxon.anamorphId" | "unit.linkings.taxon.author" | "unit.linkings.taxon.birdlifeCode" | "unit.linkings.taxon.classId" | "unit.linkings.taxon.cultivarId" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.divisionId" | "unit.linkings.taxon.domainId" | "unit.linkings.taxon.ecotypeId" | "unit.linkings.taxon.euringCode" | "unit.linkings.taxon.euringNumber" | "unit.linkings.taxon.familyId" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.formId" | "unit.linkings.taxon.genusId" | "unit.linkings.taxon.grexId" | "unit.linkings.taxon.groupId" | "unit.linkings.taxon.habitats" | "unit.linkings.taxon.hybridId" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.infraclassId" | "unit.linkings.taxon.infradivisionId" | "unit.linkings.taxon.infragenericHybridId" | "unit.linkings.taxon.infragenericTaxonId" | "unit.linkings.taxon.infrakingdomId" | "unit.linkings.taxon.infraorderId" | "unit.linkings.taxon.infraphylumId" | "unit.linkings.taxon.infraspecificTaxonId" | "unit.linkings.taxon.intergenericHybridId" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.kingdomId" | "unit.linkings.taxon.nameAccordingTo" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.nothogenusId" | "unit.linkings.taxon.nothospeciesId" | "unit.linkings.taxon.nothosubspeciesId" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.orderId" | "unit.linkings.taxon.parentId" | "unit.linkings.taxon.parvclassId" | "unit.linkings.taxon.parvorderId" | "unit.linkings.taxon.phylumId" | "unit.linkings.taxon.populationGroupId" | "unit.linkings.taxon.primaryHabitat" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.redListStatusGroup" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sectionId" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.seriesId" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesAggregateId" | "unit.linkings.taxon.speciesId" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.speciesTaxonomicOrder" | "unit.linkings.taxon.subclassId" | "unit.linkings.taxon.subdivisionId" | "unit.linkings.taxon.subfamilyId" | "unit.linkings.taxon.subformId" | "unit.linkings.taxon.subgenusId" | "unit.linkings.taxon.subkingdomId" | "unit.linkings.taxon.suborderId" | "unit.linkings.taxon.subphylumId" | "unit.linkings.taxon.subsectionId" | "unit.linkings.taxon.subseriesId" | "unit.linkings.taxon.subspeciesId" | "unit.linkings.taxon.subspecificAggregateId" | "unit.linkings.taxon.subtribeId" | "unit.linkings.taxon.subvarietyId" | "unit.linkings.taxon.superclassId" | "unit.linkings.taxon.superdivisionId" | "unit.linkings.taxon.superdomainId" | "unit.linkings.taxon.superfamilyId" | "unit.linkings.taxon.supergenusId" | "unit.linkings.taxon.superorderId" | "unit.linkings.taxon.superphylumId" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonSets" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.tribeId" | "unit.linkings.taxon.typesOfOccurrenceInFinland" | "unit.linkings.taxon.varietyId" | "unit.linkings.taxon.virva" | "unit.local" | "unit.media.author" | "unit.media.copyrightOwner" | "unit.media.licenseId" | "unit.media.mediaType" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild")[];
+                    /** @description Define what fields to use when sorting results. Defaults to count (desc) and each aggregate by field (asc). Each fieldname given as parameter defaults to ASC - if you want to sort using descending order, add " DESC" to the end of the field name. In addition to aggregateBy fields you can use the following aggregate function names: [count, individualCountSum, individualCountMax, oldestRecord, newestRecord, recordQualityMax, firstLoadDateMin, firstLoadDateMax, gatheringCount, securedCount, pairCountMax, pairCountSum, taxonCount, speciesCount, redListStatusMax, atlasCodeMax, atlasClassMax]. Multiple values are seperated by ','. */
+                    orderBy?: ("document.collectionId" | "document.completeListTaxonId" | "document.completeListType" | "document.createdDate" | "document.createdDateMonth" | "document.dataSource" | "document.documentId" | "document.editorUserIds" | "document.facts.decimalValue" | "document.facts.fact" | "document.facts.integerValue" | "document.facts.value" | "document.firstLoadDate" | "document.formId" | "document.keywords" | "document.licenseId" | "document.linkings.collectionQuality" | "document.linkings.editors" | "document.loadDate" | "document.media.author" | "document.media.copyrightOwner" | "document.media.licenseId" | "document.media.mediaType" | "document.mediaCount" | "document.modifiedDate" | "document.namedPlace.alternativeId" | "document.namedPlace.alternativeIds" | "document.namedPlace.birdAssociationAreaDisplayName" | "document.namedPlace.birdAssociationAreaId" | "document.namedPlace.collectionId" | "document.namedPlace.id" | "document.namedPlace.municipalityDisplayName" | "document.namedPlace.municipalityId" | "document.namedPlace.name" | "document.namedPlace.wgs84CenterPoint.lat" | "document.namedPlace.wgs84CenterPoint.lon" | "document.namedPlace.ykj10km.lat" | "document.namedPlace.ykj10km.lon" | "document.namedPlaceId" | "document.prefix" | "document.quality.issue.issue" | "document.quality.issue.source" | "document.secureLevel" | "document.secureReasons" | "document.secured" | "document.siteDead" | "document.siteStatus" | "document.siteType" | "document.sourceId" | "gathering.accurateArea" | "gathering.biogeographicalProvince" | "gathering.conversions.birdAssociationArea" | "gathering.conversions.boundingBoxAreaInSquareMeters" | "gathering.conversions.century" | "gathering.conversions.day" | "gathering.conversions.dayOfYearBegin" | "gathering.conversions.dayOfYearEnd" | "gathering.conversions.decade" | "gathering.conversions.euref.latMax" | "gathering.conversions.euref.latMin" | "gathering.conversions.euref.lonMax" | "gathering.conversions.euref.lonMin" | "gathering.conversions.eurefCenterPoint.lat" | "gathering.conversions.eurefCenterPoint.lon" | "gathering.conversions.linelengthInMeters" | "gathering.conversions.month" | "gathering.conversions.seasonBegin" | "gathering.conversions.seasonEnd" | "gathering.conversions.wgs84.latMax" | "gathering.conversions.wgs84.latMin" | "gathering.conversions.wgs84.lonMax" | "gathering.conversions.wgs84.lonMin" | "gathering.conversions.wgs84CenterPoint.lat" | "gathering.conversions.wgs84CenterPoint.lon" | "gathering.conversions.wgs84Grid005.lat" | "gathering.conversions.wgs84Grid005.lon" | "gathering.conversions.wgs84Grid01.lat" | "gathering.conversions.wgs84Grid01.lon" | "gathering.conversions.wgs84Grid05.lat" | "gathering.conversions.wgs84Grid05.lon" | "gathering.conversions.wgs84Grid1.lat" | "gathering.conversions.wgs84Grid1.lon" | "gathering.conversions.year" | "gathering.conversions.ykj.latMax" | "gathering.conversions.ykj.latMin" | "gathering.conversions.ykj.lonMax" | "gathering.conversions.ykj.lonMin" | "gathering.conversions.ykj100km.lat" | "gathering.conversions.ykj100km.lon" | "gathering.conversions.ykj100kmCenter.lat" | "gathering.conversions.ykj100kmCenter.lon" | "gathering.conversions.ykj10km.lat" | "gathering.conversions.ykj10km.lon" | "gathering.conversions.ykj10kmCenter.lat" | "gathering.conversions.ykj10kmCenter.lon" | "gathering.conversions.ykj1km.lat" | "gathering.conversions.ykj1km.lon" | "gathering.conversions.ykj1kmCenter.lat" | "gathering.conversions.ykj1kmCenter.lon" | "gathering.conversions.ykj50km.lat" | "gathering.conversions.ykj50km.lon" | "gathering.conversions.ykj50kmCenter.lat" | "gathering.conversions.ykj50kmCenter.lon" | "gathering.coordinatesVerbatim" | "gathering.country" | "gathering.displayDateTime" | "gathering.eventDate.begin" | "gathering.eventDate.end" | "gathering.facts.decimalValue" | "gathering.facts.fact" | "gathering.facts.integerValue" | "gathering.facts.value" | "gathering.gatheringId" | "gathering.gatheringOrder" | "gathering.gatheringSection" | "gathering.higherGeography" | "gathering.hourBegin" | "gathering.hourEnd" | "gathering.interpretations.biogeographicalProvince" | "gathering.interpretations.biogeographicalProvinceDisplayname" | "gathering.interpretations.coordinateAccuracy" | "gathering.interpretations.country" | "gathering.interpretations.countryDisplayname" | "gathering.interpretations.finnishMunicipality" | "gathering.interpretations.municipalityDisplayname" | "gathering.interpretations.sourceOfBiogeographicalProvince" | "gathering.interpretations.sourceOfCoordinates" | "gathering.interpretations.sourceOfCountry" | "gathering.interpretations.sourceOfFinnishMunicipality" | "gathering.linkings.observers" | "gathering.locality" | "gathering.media.author" | "gathering.media.copyrightOwner" | "gathering.media.licenseId" | "gathering.media.mediaType" | "gathering.mediaCount" | "gathering.minutesBegin" | "gathering.minutesEnd" | "gathering.municipality" | "gathering.observerUserIds" | "gathering.province" | "gathering.quality.issue.issue" | "gathering.quality.issue.source" | "gathering.quality.locationIssue.issue" | "gathering.quality.locationIssue.source" | "gathering.quality.timeIssue.issue" | "gathering.quality.timeIssue.source" | "gathering.stateLand" | "gathering.taxonCensus.taxonId" | "gathering.taxonCensus.type" | "gathering.team" | "gathering.team.memberId" | "gathering.team.memberName" | "unit.abundanceString" | "unit.abundanceUnit" | "unit.alive" | "unit.annotationCount" | "unit.annotations.annotationByPerson" | "unit.annotations.annotationByPersonName" | "unit.annotations.annotationBySystem" | "unit.annotations.annotationBySystemName" | "unit.annotations.created" | "unit.atlasClass" | "unit.atlasCode" | "unit.audioCount" | "unit.author" | "unit.breedingSite" | "unit.det" | "unit.facts.decimalValue" | "unit.facts.fact" | "unit.facts.integerValue" | "unit.facts.value" | "unit.imageCount" | "unit.individualCountFemale" | "unit.individualCountMale" | "unit.individualId" | "unit.interpretations.annotatedTaxonId" | "unit.interpretations.collectionAndRecordQuality" | "unit.interpretations.effectiveTags" | "unit.interpretations.individualCount" | "unit.interpretations.invasiveControlEffectiveness" | "unit.interpretations.invasiveControlled" | "unit.interpretations.needsCheck" | "unit.interpretations.needsIdentification" | "unit.interpretations.pairCount" | "unit.interpretations.recordQuality" | "unit.interpretations.recordQualityNumeric" | "unit.interpretations.reliability" | "unit.keywords" | "unit.lifeStage" | "unit.linkings.originalTaxon.administrativeStatuses" | "unit.linkings.originalTaxon.aggregateId" | "unit.linkings.originalTaxon.anamorphId" | "unit.linkings.originalTaxon.author" | "unit.linkings.originalTaxon.birdlifeCode" | "unit.linkings.originalTaxon.classId" | "unit.linkings.originalTaxon.cultivarId" | "unit.linkings.originalTaxon.cursiveName" | "unit.linkings.originalTaxon.divisionId" | "unit.linkings.originalTaxon.domainId" | "unit.linkings.originalTaxon.ecotypeId" | "unit.linkings.originalTaxon.euringCode" | "unit.linkings.originalTaxon.euringNumber" | "unit.linkings.originalTaxon.familyId" | "unit.linkings.originalTaxon.finnish" | "unit.linkings.originalTaxon.formId" | "unit.linkings.originalTaxon.genusId" | "unit.linkings.originalTaxon.grexId" | "unit.linkings.originalTaxon.groupId" | "unit.linkings.originalTaxon.habitats" | "unit.linkings.originalTaxon.hybridId" | "unit.linkings.originalTaxon.id" | "unit.linkings.originalTaxon.informalTaxonGroups" | "unit.linkings.originalTaxon.infraclassId" | "unit.linkings.originalTaxon.infradivisionId" | "unit.linkings.originalTaxon.infragenericHybridId" | "unit.linkings.originalTaxon.infragenericTaxonId" | "unit.linkings.originalTaxon.infrakingdomId" | "unit.linkings.originalTaxon.infraorderId" | "unit.linkings.originalTaxon.infraphylumId" | "unit.linkings.originalTaxon.infraspecificTaxonId" | "unit.linkings.originalTaxon.intergenericHybridId" | "unit.linkings.originalTaxon.invasive" | "unit.linkings.originalTaxon.kingdomId" | "unit.linkings.originalTaxon.nameAccordingTo" | "unit.linkings.originalTaxon.nameEnglish" | "unit.linkings.originalTaxon.nameFinnish" | "unit.linkings.originalTaxon.nameSwedish" | "unit.linkings.originalTaxon.nothogenusId" | "unit.linkings.originalTaxon.nothospeciesId" | "unit.linkings.originalTaxon.nothosubspeciesId" | "unit.linkings.originalTaxon.occurrenceCount" | "unit.linkings.originalTaxon.occurrenceCountFinland" | "unit.linkings.originalTaxon.orderId" | "unit.linkings.originalTaxon.parentId" | "unit.linkings.originalTaxon.parvclassId" | "unit.linkings.originalTaxon.parvorderId" | "unit.linkings.originalTaxon.phylumId" | "unit.linkings.originalTaxon.populationGroupId" | "unit.linkings.originalTaxon.primaryHabitat" | "unit.linkings.originalTaxon.qname" | "unit.linkings.originalTaxon.redListStatus" | "unit.linkings.originalTaxon.redListStatusGroup" | "unit.linkings.originalTaxon.scientificName" | "unit.linkings.originalTaxon.scientificNameDisplayName" | "unit.linkings.originalTaxon.sectionId" | "unit.linkings.originalTaxon.sensitive" | "unit.linkings.originalTaxon.seriesId" | "unit.linkings.originalTaxon.species" | "unit.linkings.originalTaxon.speciesAggregateId" | "unit.linkings.originalTaxon.speciesId" | "unit.linkings.originalTaxon.speciesNameEnglish" | "unit.linkings.originalTaxon.speciesNameFinnish" | "unit.linkings.originalTaxon.speciesNameSwedish" | "unit.linkings.originalTaxon.speciesScientificName" | "unit.linkings.originalTaxon.speciesTaxonomicOrder" | "unit.linkings.originalTaxon.subclassId" | "unit.linkings.originalTaxon.subdivisionId" | "unit.linkings.originalTaxon.subfamilyId" | "unit.linkings.originalTaxon.subformId" | "unit.linkings.originalTaxon.subgenusId" | "unit.linkings.originalTaxon.subkingdomId" | "unit.linkings.originalTaxon.suborderId" | "unit.linkings.originalTaxon.subphylumId" | "unit.linkings.originalTaxon.subsectionId" | "unit.linkings.originalTaxon.subseriesId" | "unit.linkings.originalTaxon.subspeciesId" | "unit.linkings.originalTaxon.subspecificAggregateId" | "unit.linkings.originalTaxon.subtribeId" | "unit.linkings.originalTaxon.subvarietyId" | "unit.linkings.originalTaxon.superclassId" | "unit.linkings.originalTaxon.superdivisionId" | "unit.linkings.originalTaxon.superdomainId" | "unit.linkings.originalTaxon.superfamilyId" | "unit.linkings.originalTaxon.supergenusId" | "unit.linkings.originalTaxon.superorderId" | "unit.linkings.originalTaxon.superphylumId" | "unit.linkings.originalTaxon.taxonRank" | "unit.linkings.originalTaxon.taxonSets" | "unit.linkings.originalTaxon.taxonomicOrder" | "unit.linkings.originalTaxon.tribeId" | "unit.linkings.originalTaxon.typesOfOccurrenceInFinland" | "unit.linkings.originalTaxon.varietyId" | "unit.linkings.originalTaxon.virva" | "unit.linkings.taxon.administrativeStatuses" | "unit.linkings.taxon.aggregateId" | "unit.linkings.taxon.anamorphId" | "unit.linkings.taxon.author" | "unit.linkings.taxon.birdlifeCode" | "unit.linkings.taxon.classId" | "unit.linkings.taxon.cultivarId" | "unit.linkings.taxon.cursiveName" | "unit.linkings.taxon.divisionId" | "unit.linkings.taxon.domainId" | "unit.linkings.taxon.ecotypeId" | "unit.linkings.taxon.euringCode" | "unit.linkings.taxon.euringNumber" | "unit.linkings.taxon.familyId" | "unit.linkings.taxon.finnish" | "unit.linkings.taxon.formId" | "unit.linkings.taxon.genusId" | "unit.linkings.taxon.grexId" | "unit.linkings.taxon.groupId" | "unit.linkings.taxon.habitats" | "unit.linkings.taxon.hybridId" | "unit.linkings.taxon.id" | "unit.linkings.taxon.informalTaxonGroups" | "unit.linkings.taxon.infraclassId" | "unit.linkings.taxon.infradivisionId" | "unit.linkings.taxon.infragenericHybridId" | "unit.linkings.taxon.infragenericTaxonId" | "unit.linkings.taxon.infrakingdomId" | "unit.linkings.taxon.infraorderId" | "unit.linkings.taxon.infraphylumId" | "unit.linkings.taxon.infraspecificTaxonId" | "unit.linkings.taxon.intergenericHybridId" | "unit.linkings.taxon.invasive" | "unit.linkings.taxon.kingdomId" | "unit.linkings.taxon.nameAccordingTo" | "unit.linkings.taxon.nameEnglish" | "unit.linkings.taxon.nameFinnish" | "unit.linkings.taxon.nameSwedish" | "unit.linkings.taxon.nothogenusId" | "unit.linkings.taxon.nothospeciesId" | "unit.linkings.taxon.nothosubspeciesId" | "unit.linkings.taxon.occurrenceCount" | "unit.linkings.taxon.occurrenceCountFinland" | "unit.linkings.taxon.orderId" | "unit.linkings.taxon.parentId" | "unit.linkings.taxon.parvclassId" | "unit.linkings.taxon.parvorderId" | "unit.linkings.taxon.phylumId" | "unit.linkings.taxon.populationGroupId" | "unit.linkings.taxon.primaryHabitat" | "unit.linkings.taxon.qname" | "unit.linkings.taxon.redListStatus" | "unit.linkings.taxon.redListStatusGroup" | "unit.linkings.taxon.scientificName" | "unit.linkings.taxon.scientificNameDisplayName" | "unit.linkings.taxon.sectionId" | "unit.linkings.taxon.sensitive" | "unit.linkings.taxon.seriesId" | "unit.linkings.taxon.species" | "unit.linkings.taxon.speciesAggregateId" | "unit.linkings.taxon.speciesId" | "unit.linkings.taxon.speciesNameEnglish" | "unit.linkings.taxon.speciesNameFinnish" | "unit.linkings.taxon.speciesNameSwedish" | "unit.linkings.taxon.speciesScientificName" | "unit.linkings.taxon.speciesTaxonomicOrder" | "unit.linkings.taxon.subclassId" | "unit.linkings.taxon.subdivisionId" | "unit.linkings.taxon.subfamilyId" | "unit.linkings.taxon.subformId" | "unit.linkings.taxon.subgenusId" | "unit.linkings.taxon.subkingdomId" | "unit.linkings.taxon.suborderId" | "unit.linkings.taxon.subphylumId" | "unit.linkings.taxon.subsectionId" | "unit.linkings.taxon.subseriesId" | "unit.linkings.taxon.subspeciesId" | "unit.linkings.taxon.subspecificAggregateId" | "unit.linkings.taxon.subtribeId" | "unit.linkings.taxon.subvarietyId" | "unit.linkings.taxon.superclassId" | "unit.linkings.taxon.superdivisionId" | "unit.linkings.taxon.superdomainId" | "unit.linkings.taxon.superfamilyId" | "unit.linkings.taxon.supergenusId" | "unit.linkings.taxon.superorderId" | "unit.linkings.taxon.superphylumId" | "unit.linkings.taxon.taxonRank" | "unit.linkings.taxon.taxonSets" | "unit.linkings.taxon.taxonomicOrder" | "unit.linkings.taxon.tribeId" | "unit.linkings.taxon.typesOfOccurrenceInFinland" | "unit.linkings.taxon.varietyId" | "unit.linkings.taxon.virva" | "unit.local" | "unit.media.author" | "unit.media.copyrightOwner" | "unit.media.licenseId" | "unit.media.mediaType" | "unit.mediaCount" | "unit.modelCount" | "unit.notes" | "unit.plantStatusCode" | "unit.primarySpecimen" | "unit.quality.documentGatheringUnitQualityIssues" | "unit.quality.issue.issue" | "unit.quality.issue.source" | "unit.recordBasis" | "unit.reportedInformalTaxonGroup" | "unit.reportedTaxonConfidence" | "unit.sampleCount" | "unit.samples.collectionId" | "unit.samples.facts.decimalValue" | "unit.samples.facts.fact" | "unit.samples.facts.integerValue" | "unit.samples.facts.value" | "unit.samples.keywords" | "unit.samples.material" | "unit.samples.multiple" | "unit.samples.quality" | "unit.samples.sampleId" | "unit.samples.sampleOrder" | "unit.samples.status" | "unit.samples.type" | "unit.samplingMethod" | "unit.sex" | "unit.superRecordBasis" | "unit.taxonVerbatim" | "unit.typeSpecimen" | "unit.unitId" | "unit.unitOrder" | "unit.videoCount" | "unit.wild" | "count" | "individualCountSum" | "individualCountMax" | "oldestRecord" | "newestRecord" | "recordQualityMax" | "firstLoadDateMin" | "firstLoadDateMax" | "gatheringCount" | "securedCount" | "pairCountMax" | "pairCountSum" | "taxonCount" | "speciesCount" | "redListStatusMax" | "atlasCodeMax" | "atlasClassMax")[];
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the coordinate reference system used in the returned GeoJSON features. (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393) */
+                    crs?: "WGS84" | "EUREF" | "YKJ";
+                    /** @description For GeoJSON requests there are two additional parameters: crs and featureType. This controls the type of returned GeoJSON features. */
+                    featureType?: "CENTER_POINT" | "ENVELOPE" | "ORIGINAL_FEATURE";
+                    /** @description Return only count of rows (default) or also additional aggregate function values. */
+                    onlyCount?: boolean;
+                    /** @description Include or exclude nulls to result. Will only check nullness of the first aggregateBy field. */
+                    excludeNulls?: boolean;
+                    /** @description Value of this parameter affects how oldestRecord and newestRecord are calculated regarding observations reported as date span. False (default): oldest=min(date.begin), newest=max(date.end). True: oldest=min(date.end), newest=max(date.begin). */
+                    pessimisticDateRangeHandling?: boolean;
+                    /** @description Set number of results in one page. */
+                    pageSize?: number;
+                    /** @description Set current page. */
+                    page?: number;
+                    /** @description Use cache for this query. Defaults to false. */
+                    cache?: boolean;
+                    /** @description Filter based on URI or Qname identifier of a taxon. Use Taxonomy-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonId?: string;
+                    /** @description Same as taxonId, but system resolves identifier of the taxon based on the given target name. If no such match can be resolved (name does not exist in taxonomy), will filter based on the given verbatim target name (case insensitive). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    target?: string;
+                    /** @description By default, all taxon linking related filters use taxon linking that may have been altered because of quality control identification annotations. If you want to use original user identifications, set this to false. */
+                    useIdentificationAnnotations?: boolean;
+                    /** @description By default, all taxon linking related filters return all entries that belong to the filtered taxa. To return only exact matches (no subtaxa), set this to false. */
+                    includeSubTaxa?: boolean;
+                    /** @description Set to false if you want to include only those entries where reported target name can be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    includeNonValidTaxa?: boolean;
+                    /** @description Set to true if you want to include only those entries where reported target name can not be linked with a taxon of the reference taxonomy. By default includes all entries. */
+                    onlyNonValidTaxa?: boolean;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupId?: string;
+                    /** @description Exclude based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will exclude entries that have been linked with taxa that belong to any of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdNot?: string;
+                    /** @description Filter based on URI or Qname identifier of an informal taxon group. Use InformalTaxonGroups-API to find identifiers. Will return entries that have been linked with taxa that belong to one of the given groups OR reported to belong to one of the given groups. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /informal-taxon-groups */
+                    informalTaxonGroupIdIncludingReported?: string;
+                    /** @description Filter based on URI or Qname identifier of an administrative status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the admin status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.adminStatusEnum */
+                    administrativeStatusId?: string;
+                    /** @description Filter based on URI or Qname identifier of red list status. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with the red list status. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.iucnStatuses */
+                    redListStatusId?: string;
+                    /** @description This parameter controls if search between administrativeStatusId and redListStatusId is an AND (default) or OR search. */
+                    taxonAdminFiltersOperator?: "AND" | "OR";
+                    /** @description Filter based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are marked with one or more of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceId?: string;
+                    /** @description Exclude based on URI or Qname identifier of type of occurrence in Finland. Use Metadata-API to find identifiers. Will return entries of taxa that are not marked with any of the specified statuses. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.typeOfOccurrenceEnum */
+                    typeOfOccurrenceIdNot?: string;
+                    /** @description Filter based on primary habitat of taxa. Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    primaryHabitat?: string;
+                    /** @description Filter based on habitat of taxa (primary or secondary). Will return entries of taxa that have one of the specified habitats or a subhabitat of the given habitats. Syntax: MKV.habitatMk[MKV.habitatSpecificTypeJ,MKV.habitatSpecificTypePAK] Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    anyHabitat?: string;
+                    /** @description Filter based on occurrence count of taxa. Will return entries of taxa that have less occurrences than the given parameter. */
+                    occurrenceCountMax?: number;
+                    /** @description Filter based on occurrence count in Finland of taxa. Will return entries of taxa that have less occurrences in Finland than the given parameter. */
+                    occurrenceCountFinlandMax?: number;
+                    /** @description Filter only those taxa that are finnish or are not finnish. */
+                    finnish?: boolean;
+                    /** @description Filter only those taxa that are invasive or are not invasive. */
+                    invasive?: boolean;
+                    /** @description Include only those occurrences that are of sensitive species or those that are of non-sensitive species */
+                    sensitive?: boolean;
+                    /** @description True: Filter those occurrence that are linked to a higher taxon (like genus, family). False: linked to taxon that is species, subspecies, aggregate or other lower rank. */
+                    higherTaxon?: boolean;
+                    /** @description Filter based on URI or Qname identifier of taxon rank. Use Metadata-API to find identifiers. Will return entries of taxa that are of the specified ranks. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonRankEnum */
+                    taxonRankId?: string;
+                    /** @description Filter based on URI or Qname identifier of a country. Use Area-API to find identifiers. Will return entries where we have been able to interpret the country from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    countryId?: string;
+                    /** @description Filter based on URI or Qname identifier of a finnish municipality. Use Area-API to find identifiers. Will return entries where we have been able to interpret the municipality from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    finnishMunicipalityId?: string;
+                    /** @description Filter based on URI or Qname identifier of a biogeographical province. Use Area-API to find identifiers. Will return entries where we have been able to interpret the province from coordinates or from reported area name. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    biogeographicalProvinceId?: string;
+                    /** @description Filter based on URI or Qname identifier of a ELY centre. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    elyCentreId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Finnish province. Use Area-API to find identifiers. Implementation is based on municipality interpretations. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    provinceId?: string;
+                    /** @description Filter using name of country, municipality, province or locality. If the given name matches exactly one known area, the search will perform an identifier search. Otherwise the search looks from country verbatim, municipality verbatim, province verbatim and locality using exact match case insensitive search. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    area?: string;
+                    /** @description Filter based on URI or Qname identifier of a NamedPlace. Use NamedPlace-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /named-places */
+                    namedPlaceId?: string;
+                    /** @description Filter based on URI or Qname identifier of MNP.tagEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MNP.tagEnum */
+                    namedPlaceTag?: string;
+                    /** @description Filter based on URI or Qname identifier of a BirdAssociationArea. Use Area-API to find identifiers. Bird association area is interpreted based on YKJ 10KM grids (the grid the occurrence centerpoint is in). Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /areas */
+                    birdAssociationAreaId?: string;
+                    /** @description Filter based on URI or Qname identifier of a Vihko Notebook form that was used to report the entry. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /forms */
+                    formId?: string;
+                    /** @description Filter using event date. Date can be a full date or part of a date, for example 2000, 2000-06 or 2000-06-25. Time can be a range, for example 2000/2005 or 2000-01-01/2005-12-31. Relative days "last N days" can be used: 0 is today, -1 is yesterday and so on; for example -7/0 is a range between 7 days ago and today. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    time?: string;
+                    /** @description Filter using event date accuracy range in days. Will include entries where time span in days is less or equal to the given value. */
+                    timeAccuracy?: number;
+                    /** @description Filter using event date. Value can be a year (2000), year range (2000/2001), year-month (2000-06) or a year-month range (2000-06/2000-08). (Note: this filter is mostly aimed to be used in /statistics queries because 'time' filter is not available for /statistics queries.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    yearMonth?: string;
+                    /** @description Filter using day of year. For example "100/160" gives all records during spring and "330/30" during mid winter. If begin is ommited will use day 1 and if end is ommited will use day 366. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    dayOfYear?: string;
+                    /** @description Filter using season. For example "501/630" gives all records for May and July and "1220/0220" between 20.12. - 20.2. If begin is ommited will use 1.1. and if end is ommited will use 31.12. Multiple ranges can be given by providing the parameter more times. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    season?: string;
+                    /** @description Filter using keywords that have been tagged to entries. There are many types of keywods varying from legacy identifiers, project names and IDs, dataset ids, etc.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    keyword?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionId?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Will not include child collections Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicit?: string;
+                    /** @description Exclude certain collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdNot?: string;
+                    /** @description Exclude certain collection (only the specified collection, not child collections) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    collectionIdExplicitNot?: string;
+                    /** @description Defines if collectionId filter should include sub collections of the given collection ids. By default sub collections are included. */
+                    includeSubCollections?: boolean;
+                    /** @description Filter using identifiers of data sources (information systems). Use InformationSystem-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /sources */
+                    sourceId?: string;
+                    /** @description Filter using record basis. This can be used for example to get only preserved specimens. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using super record basis. (Note: Even though the enumeration lists all record basis values, only few of those are super record basis: PRESERVED_SPECIMEN, HUMAN_OBSERVATION_UNSPECIFIED, ..; use aggregate by superRecordBasis to find used values. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    superRecordBasis?: "PRESERVED_SPECIMEN" | "LIVING_SPECIMEN" | "FOSSIL_SPECIMEN" | "SUBFOSSIL_SPECIMEN" | "SUBFOSSIL_AMBER_INCLUSION_SPECIMEN" | "MICROBIAL_SPECIMEN" | "HUMAN_OBSERVATION_UNSPECIFIED" | "HUMAN_OBSERVATION_SEEN" | "HUMAN_OBSERVATION_HEARD" | "HUMAN_OBSERVATION_PHOTO" | "HUMAN_OBSERVATION_INDIRECT" | "HUMAN_OBSERVATION_HANDLED" | "HUMAN_OBSERVATION_VIDEO" | "HUMAN_OBSERVATION_RECORDED_AUDIO" | "MACHINE_OBSERVATION_UNSPECIFIED" | "MACHINE_OBSERVATION_PHOTO" | "MACHINE_OBSERVATION_VIDEO" | "MACHINE_OBSERVATION_AUDIO" | "MACHINE_OBSERVATION_GEOLOGGER" | "MACHINE_OBSERVATION_SATELLITE_TRANSMITTER" | "LITERATURE" | "MATERIAL_SAMPLE" | "MATERIAL_SAMPLE_AIR" | "MATERIAL_SAMPLE_SOIL" | "MATERIAL_SAMPLE_WATER";
+                    /** @description Filter using life stage of an unit. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    lifeStage?: "ADULT" | "JUVENILE" | "IMMATURE" | "EGG" | "TADPOLE" | "PUPA" | "NYMPH" | "SUBIMAGO" | "LARVA" | "SNAG" | "EMBRYO" | "SUBADULT" | "MATURE" | "STERILE" | "FERTILE" | "SPROUT" | "DEAD_SPROUT" | "BUD" | "FLOWER" | "WITHERED_FLOWER" | "SEED" | "RIPENING_FRUIT" | "RIPE_FRUIT" | "SUBTERRANEAN" | "GALL" | "MARKS" | "TRIUNGULIN";
+                    /** @description Filter using sex of an unit. When filtering MALE or FEMALE, will include those where individualCountMale/Female is >= 1 Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sex?: "MALE" | "FEMALE" | "WORKER" | "UNKNOWN" | "NOT_APPLICABLE" | "GYNANDROMORPH" | "MULTIPLE" | "CONFLICTING";
+                    /** @description Filter using effectiveness of invasive control measures Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    invasiveControl?: "FULL" | "PARTIAL" | "NO_EFFECT" | "NOT_FOUND";
+                    /** @description Filter only invasives that are reported to have been controlled successfully or not reported to have been controlled succesfully. */
+                    invasiveControlled?: boolean;
+                    /** @description Filter using document URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentId?: string;
+                    /** @description Filter using document URI prefix. For example prefix of http://id.luomus.fi/JA.1 is luomus:JA.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    documentIdPrefix?: string;
+                    /** @description Filter using gathering URIs. Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    gatheringId?: string;
+                    /** @description Filter using unit ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    unitId?: string;
+                    /** @description Filter using preparation/sample ids.  Will include records with quality issues (normally exluded by default). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sampleId?: string;
+                    /** @description Filter using identifier of an individual, for example bird ring. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    individualId?: string;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "zero observations" use max=0. Defaults to 1 but when using annotation endpoint defaults to null. */
+                    individualCountMin?: number;
+                    /** @description Filter using idividual count. Unreported individual count is assumed to mean "1+", so searching min=1 returns where count > 0 or count is not given. To search for "null observations" use max=0. */
+                    individualCountMax?: number;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    loadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse. Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    loadedSameOrBefore?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded later or on the same date/timestamp. */
+                    firstLoadedSameOrAfter?: string;
+                    /** @description Filter using the date data was loaded to Data Warehouse (first load of document). Format is yyyy-MM-dd or UNIX EPOCH timestamp in seconds. Returns entries loaded before or on the same date/timestamp. */
+                    firstLoadedSameOrBefore?: string;
+                    /** @description Used with filters loadedSameOrAfter, loadedSameOrBefore, firstLoadedSameOrAfter, firstLoadedSameOrBefore: If set to true will include matches even if the date is not present. Default is false. */
+                    includeNullLoadDates?: boolean;
+                    /** @description Filter using the year the record was created */
+                    createdDateYear?: number;
+                    /** @description Filter using coordinates. Valid formats are latMin:latMax:lonMin:lonMax:CRS:ratio and lat:lon:CRS:ratio. The last parameter (ratio) is not required. Valid CRSs are WGS84, YKJ and EUREF (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393). For metric coordinates (ykj, euref): the search 666:333:YKJ means lat between 6660000-6670000 and lon between 3330000-3340000. Ratio is a number between 0.0-1.0. Default ratio is 1.0 (observation area must be entirely inside the search area). Ratio 0.0: the search area must intersect with the observation area. For WGS84 the ratio is not calculated in meters but in degrees so it an approximation. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    coordinates?: string;
+                    /** @description Filter centerpoint of occurrences by polygon. Valid formats are WKT and WKT:CRS. Valid CRSs are WGS84, YKJ and EUREF (default) (WGS84 = EPSG:4326; EUREF = ETRS-TM35FIN EPSG:3067; YKJ = EPSG:2393).  Polygon search is implemented only for Finland (based on ETRS-TM35FIN coordinate system). WKT must be somewhat shorter than 4000 chars. To overcome this limitation use polygonId filter and /polygon/ endpoint to get the polygonIds. */
+                    polygon?: string;
+                    /** @description Filter centerpoint occurrences using ID of a search polygon. Use /polygon/ endpoint to get id if the polygon. */
+                    polygonId?: string;
+                    /** @description Exclude coordinates that are less accurate or equal than the provided value (inclusive). Value is meters. Accuracy is a guiding logaritmic figure, for example 1m, 10m, 100m or 100km. (More specifically the longest length of the area bouding box rounded up on the logarithmic scale.) */
+                    coordinateAccuracyMax?: number;
+                    /** @description Filter using WGS84 (EPSG:4326) centerpoint. Valid formats are lat:lon:WGS84 and latMin:latMax:lonMin:lonMax:WGS84. (You must include the crs WGS84 even though it is the only supported type.) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wgs84CenterPoint?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s). Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100km?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 1km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj1kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 10km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj10kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 50km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj50kmCenter?: string;
+                    /** @description Filter using uniform (YKJ, EPSG:2393) 100km grid square(s) that are resolved using center point of the area. Valid format is lat:lon. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    ykj100kmCenter?: string;
+                    /** @description Filter based on source of coordinates. Possible values are REPORTED_VALUE = the reported coordinates or FINNISH_MUNICIPALITY = the coordinates are the bounding box of the reported Finnish municipality (no coordinates were reported). Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    sourceOfCoordinates?: "COORDINATES" | "COORDINATE_CENTERPOINT" | "REPORTED_VALUE" | "FINNISH_MUNICIPALITY" | "OLD_FINNISH_MUNICIPALITY";
+                    /** @description Filter only type specimens or those that are not type specimens. */
+                    typeSpecimen?: boolean;
+                    /** @description Filter occurrences based on reported/annotated wild status. By default, non-wild occurrences are exluded. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    wild?: "WILD" | "WILD_UNKNOWN" | "NON_WILD";
+                    /** @description Filter only occurrences reported to be at their breeding site. */
+                    breedingSite?: boolean;
+                    /** @description Filter only for local species. */
+                    local?: boolean;
+                    /** @description Filter occurences reported to be dead (alive=false) or alive or unknown ( reported to be alive (true) or dead (false). */
+                    alive?: boolean;
+                    /** @description Filter based on URI or Qname identifier of identification basis. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.identificationBasisEnum */
+                    identificationBasis?: string;
+                    /** @description Filter based on URI or Qname identifier of sampling method. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.samplingMethods */
+                    samplingMethod?: string;
+                    /** @description Filter only occurrences reported with a certain plant status code. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.plantStatusCodeEnum */
+                    plantStatusCode?: string;
+                    /** @description Filter only units where parent document has media or doesn't have media. */
+                    hasDocumentMedia?: boolean;
+                    /** @description Filter only units where parent gathering has media or doesn't have media. */
+                    hasGatheringMedia?: boolean;
+                    /** @description Filter only units where unit has media or doesn't have media. */
+                    hasUnitMedia?: boolean;
+                    /** @description Filter only units where unit has images or doesn't have images. */
+                    hasUnitImages?: boolean;
+                    /** @description Filter only units where unit has audio or doesn't have audio. */
+                    hasUnitAudio?: boolean;
+                    /** @description Filter only units where unit has video or doesn't have video. */
+                    hasUnitVideo?: boolean;
+                    /** @description Filter only units where unit has 3d models or doesn't have 3d-models. */
+                    hasUnitModel?: boolean;
+                    /** @description Filter only records where parent document, gathering or unit has media or none have media. */
+                    hasMedia?: boolean;
+                    /** @description Filter only units where at least one sequence text is present (unit fact 'MY.sequenceText'). */
+                    hasSequenceText?: boolean;
+                    /** @description Filter based on verbatim observer names. Search is case insensitive and wildcard * can be used. Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    teamMember?: string;
+                    /** @description Filter based on ids of verbatim observer name strings. (The only way to access these ids is to aggregate by gathering.team.memberId) Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    teamMemberId?: string;
+                    /** @description Filter based on secure reasons. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureReason?: "DEFAULT_TAXON_CONSERVATION" | "BREEDING_SITE_CONSERVATION" | "NATURA_AREA_CONSERVATION" | "WINTER_SEASON_TAXON_CONSERVATION" | "BREEDING_SEASON_TAXON_CONSERVATION" | "CUSTOM" | "USER_HIDDEN" | "ADMIN_HIDDEN" | "DATA_QUARANTINE_PERIOD" | "ONLY_PRIVATE" | "USER_PERSON_NAMES_HIDDEN" | "USER_HIDDEN_LOCATION" | "USER_HIDDEN_TIME";
+                    /** @description Filter based on secure level. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    secureLevel?: "NOSHOW" | "HIGHEST" | "KM100" | "KM50" | "KM25" | "KM10" | "KM5" | "KM1" | "NONE";
+                    /** @description Include only those that are secured or those that are not secured. */
+                    secured?: boolean;
+                    /** @description Include only those units that have annotations or those that do not have annotations. */
+                    annotated?: boolean;
+                    /** @description Possible values: NO_ISSUES, BOTH, ONLY_ISSUES. Include records with quality issues (document, gathering or unit issues). Default is NO_ISSUES, but when searching by id (documentId, unitId, keyword) or using annotation endpoint the default is BOTH. */
+                    qualityIssues?: "NO_ISSUES" | "BOTH" | "ONLY_ISSUES";
+                    /** @description Filter based on quality rating of collections. Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    collectionQuality?: "PROFESSIONAL" | "HOBBYIST" | "AMATEUR";
+                    /** @description Filter using quality rating of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    recordQuality?: "EXPERT_VERIFIED" | "COMMUNITY_VERIFIED" | "NEUTRAL" | "UNCERTAIN" | "ERRONEOUS";
+                    /** @description Filter using quality rating of collection and occurrence. Format: "PROFESSIONAL:NEUTRAL,UNCERTAIN". Multiple values are seperated by ';'. When multiple values are given, this is an OR search. */
+                    collectionAndRecordQuality?: string;
+                    /** @description Filter using reliability of the occurrence Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    reliability?: "RELIABLE" | "UNDEFINED" | "UNRELIABLE";
+                    /** @description Filter using effective tags of the record Multiple values are seperated by ','. When multiple values are given, this is an OR search. */
+                    effectiveTag?: "ADMIN_MARKED_SPAM" | "ADMIN_MARKED_COARSE" | "ADMIN_MARKED_NON_WILD" | "EXPERT_TAG_VERIFIED" | "EXPERT_TAG_UNCERTAIN" | "EXPERT_TAG_ERRONEOUS" | "COMMUNITY_TAG_VERIFIED" | "AUTO_VALIDATIONS_PASS" | "CHECKED_CANNOT_VERIFY" | "CHANGED_OWNER_MANUAL" | "CHANGED_DW_AUTO" | "CHECK" | "CHECK_COORDINATES" | "CHECK_DATETIME" | "CHECK_LOCATION" | "CHECK_OBSERVER" | "CHECK_TAXON" | "CHECK_DUPLICATE" | "CHECK_WILDNESS" | "CHECK_NEEDS_INFO" | "CHECK_SPAM" | "CHECK_BREEDING_INDEX" | "AUTO_DISTRIBUTION_CHECK" | "AUTO_PERIOD_CHECK" | "FORMADMIN_CENSUS_COUNT_ERROR" | "FORMADMIN_CENSUS_INNER_COUNT_ERROR" | "FORMADMIN_CENSUS_OTHER_ERROR" | "FORMADMIN_VERIFIED" | "FORMADMIN_UNCERTAIN" | "INVASIVE_FULL" | "INVASIVE_PARTIAL" | "INVASIVE_NO_EFFECT" | "INVASIVE_NOT_FOUND";
+                    /** @description Show only records that need an identification (or do not need an identification) */
+                    unidentified?: boolean;
+                    /** @description Show only records that are marked to need checking by experts (or do not need checking) */
+                    needsCheck?: boolean;
+                    /** @description Show only records where document contains complete list for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    completeListTaxonId?: string;
+                    /** @description Show only records where document contains complete list and the list is of this type: URI or Qname identifier of MY.completeListTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.completeListTypeEnum */
+                    completeListType?: string;
+                    /** @description Filter based on URI or Qname identifier of an taxon sets: Use Metadata-API to find identifiers. Returns occurrences of taxa that belong to the specified taxon set. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MX.taxonSetEnum */
+                    taxonSetId?: string;
+                    /** @description Show only records where observations are completely recorded for this higher taxon. For example include only records where all birds or mammals were documented, if they were seens -> something that is not documented was not seen. Use taxon IDs. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /taxa */
+                    taxonCensus?: string;
+                    /** @description Filter based on URI or Qname identifier of collections. Use Collections-API to resolve identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /collections */
+                    sampleCollectionId?: string;
+                    /** @description Include only those units that have samples or those that do not have samples. */
+                    hasSample?: boolean;
+                    /** @description Was DNA extracted from single or multiple individuals? Include only those that were (true) or weren't (false). */
+                    sampleMultiple?: boolean;
+                    /** @description Filter based on URI or Qname identifier of MF.preparationTypeEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.preparationTypeEnum */
+                    sampleType?: string;
+                    /** @description Filter based on URI or Qname identifier of MF.qualityEnum (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.qualityEnum */
+                    sampleQuality?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.statuses */
+                    sampleStatus?: string;
+                    /** @description Filter based on URI or Qname identifier of MY.statuses (use metadata-api to resolve identifiers) Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MF.materialEnum */
+                    sampleMaterial?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    unitFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    gatheringFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    documentFact?: string;
+                    /** @description Format is "factName=value;otherFact=value". If value is not given (for example just "factName"), this filter matches all records that have the given fact. If value is a numeric range (for example "factName=-5.0/-1.5"), this filter matches all values where the value is between the range (inclusive). When multiple fact names are given, this is an AND search. For facts that are URIs, you can use full URI or Qname. */
+                    sampleFact?: string;
+                    /** @description You can split search results into partitions. Syntax: '1/5' splits the results to five partitions and returns the first. Useful when downloading large lists of results and you want to split the task into smaller sub-queries. */
+                    partition?: string;
+                    /** @description Name (or names) of fields that must be non-null for the occurrence to be included to results. The field must be from level document, gathering or unit (not for example annotation) and must not be an array field. Also, when quering gathering level, unit fields can not be used, etc. When multiple fields are listed, this is an AND search (all must be non-null). Multiple values are seperated by ','. */
+                    hasValue?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas code. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasCodeEnum */
+                    atlasCode?: string;
+                    /** @description Filter based on URI or Qname identifier of atlas class. Use Metadata-API to find identifiers. Multiple values are seperated by ','. When multiple values are given, this is an OR search. API resource: /metadata/ranges/MY.atlasClassEnum */
+                    atlasClass?: string;
+                    /** @description Filter to occurrences that are not on state lands (true) or to occurrences that are only from state lands (false) */
+                    onlyNonStateLands?: boolean;
+                    /** @description Search for records the user has save or modified. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditor?: boolean;
+                    /** @description Search for records where the user has been marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsObserver?: boolean;
+                    /** @description Search for records the user has saved OR where marked as the observer. When using this filter, results come from the private warehouse! You  must provide a Person-Token header when using this filter. */
+                    selfAsEditorOrObserver?: boolean;
+                    /** @description Search for records where the user has not saved or observed the record (= everyone else's records). These come from the public warehouse! -> Results may contain records that have actually been saved by the user, but the info is not available in public (has been secured). You  must provide a Person-Token header when using this filter. */
+                    selfIsNotEditorOrObserver?: boolean;
+                    /** @description Alternative way to Accept header to define content type of the response. */
+                    format?: "json" | "geojson" | "xml" | "csv" | "tsv";
+                };
+                header?: {
+                    /** @description Use granted permissions to search the private warehouse */
+                    "Permission-Token"?: string;
+                    /** @description Provide identify of the user that is using [selfAsEditor, selfAsObserver, selfAsEditorOrObserver, selfIsNotEditorOrObserver] filters. */
+                    "Person-Token"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful query. Schema varies based on content-type of the response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwQuery_AggregateResponse"];
+                        "application/geo+json": string;
+                        "application/xml": string;
+                        "text/csv": string;
+                        "text/tab-separated-values": string;
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/warehouse/enumeration-labels": {
         parameters: {
             query?: never;
@@ -5414,7 +6177,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["WarehouseDwEnumerationLabels"];
                     };
                 };
                 /** @description Parameters were not accepted. Message has details. */
@@ -5492,7 +6255,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["WarehouseDwEnumerationLabel"];
                     };
                 };
                 /** @description Parameters were not accepted. Message has details. */
@@ -5567,7 +6330,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["WarehouseDwFilters"];
                     };
                 };
                 /** @description Parameters were not accepted. Message has details. */
@@ -5645,7 +6408,163 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["WarehouseDwFilter"];
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warehouse/teamMember": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Team members
+         * @description Filter team members by a searchword.
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Search word to filter person names. Search is case insensitive and wildcard * can be used. */
+                    query: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwTeamMembers"];
+                    };
+                };
+                /** @description Parameters were not accepted. Message has details. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Invalid credentials. Message has details. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Too many pending requests for the access_token; max is 12 */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwError"];
+                    };
+                };
+                /** @description Service is in unknown erroneous state. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warehouse/teamMember/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Team member
+         * @description Get name of a team member by id.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Id of the Team member */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Succesful response. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WarehouseDwTeamMember"];
                     };
                 };
                 /** @description Parameters were not accepted. Message has details. */
@@ -5734,7 +6653,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["WarehouseDwPolygonId"];
                         "application/xml": string;
                         "text/plain": string;
                     };
@@ -8780,7 +9699,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/convert-to-table": {
+    "/geo-convert/convert-to-table": {
         parameters: {
             query?: never;
             header?: never;
@@ -8791,7 +9710,7 @@ export interface paths {
         put?: never;
         /**
          * Convert GIS file to CSV table
-         * @description Upload a GIS file (Shapefile, GeoJSON, GPKG, etc.) and get back a CSV file with geometry as WKT
+         * @description Upload a GIS file (GeoJSON, GPKG, KML, GML, or a ZIP archive for Shapefiles) and get back a CSV file with geometry as WKT
          */
         post: operations["convert_gis_to_table_convert_to_table_post"];
         delete?: never;
@@ -8800,7 +9719,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/": {
+    "/geo-convert/": {
         parameters: {
             query?: never;
             header?: never;
@@ -8811,7 +9730,7 @@ export interface paths {
         put?: never;
         /**
          * Convert uploaded ZIP file to a zipped GeoPackage
-         * @description Upload a ZIP file containing TSV data ('occurrences.tsv') and convert it to a zipped GeoPackage format. ID is generated based on the original filename and parameters.
+         * @description Upload a ZIP file containing TSV data ('occurrences.tsv') or TSV file directly and convert it to a zipped GeoPackage format. ID is generated based on the original filename and parameters.
          */
         post: operations["convert_with_file__post"];
         delete?: never;
@@ -8820,7 +9739,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/status/{id}": {
+    "/geo-convert/status/{conversion_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8831,7 +9750,7 @@ export interface paths {
          * Check conversion status
          * @description Get the current status of a file conversion process
          */
-        get: operations["get_status_status__id__get"];
+        get: operations["get_status_status__conversion_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8840,7 +9759,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/health": {
+    "/geo-convert/health": {
         parameters: {
             query?: never;
             header?: never;
@@ -8860,7 +9779,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/output/{id}": {
+    "/geo-convert/output/{conversion_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8871,7 +9790,7 @@ export interface paths {
          * Download conversion output
          * @description Download the converted file for a completed conversion
          */
-        get: operations["get_output_output__id__get"];
+        get: operations["get_output_output__conversion_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8880,7 +9799,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "geo-convert/{id}": {
+    "/geo-convert/{dataset_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8888,10 +9807,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Convert TSV file from the data warehouse to a zipped GeoPackage
-         * @description Convert a TSV file that is stored in the data warehouse to a zipped GeoPackage format
+         * Convert ZIP or TSV file from the data warehouse to a zipped GeoPackage
+         * @description Convert ZIP or TSV file that is stored in the data warehouse to a zipped GeoPackage format
          */
-        get: operations["convert_with_id__id__get"];
+        get: operations["convert_with_id__dataset_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8980,7 +9899,7 @@ export interface components {
         MultiLangDto: string;
         MetadataClass: {
             class: string;
-            label: string;
+            label?: string;
             shortName: string;
         };
         Property: {
@@ -8992,14 +9911,14 @@ export interface components {
             multiLanguage: boolean;
             shortName: string;
             range: string;
-            label: string;
+            label?: string;
             hasMany: boolean;
             sortOrder: number;
             isEmbeddable: boolean;
         };
         Alt: {
             id: string;
-            value: string;
+            value?: string;
         };
         Collection: {
             collectionName: Record<string, never>;
@@ -9015,6 +9934,9 @@ export interface components {
             inMustikka?: boolean;
             editor?: string;
             creator?: string;
+            longNameMultiLang?: Record<string, never>;
+            descriptionMultiLang?: Record<string, never>;
+            onlineUrlMultiLang?: Record<string, never>;
             "@context": string;
             id: string;
             /** @enum {string} */
@@ -9029,7 +9951,7 @@ export interface components {
             downloadRequestHandler?: string[];
             shareToFEO?: boolean;
             shareToGbif?: string;
-            collectionType: Record<string, never>;
+            collectionType?: Record<string, never>;
             intellectualRights: Record<string, never>;
         };
         FormPermissionPersonDto: {
@@ -9054,14 +9976,12 @@ export interface components {
             total: number;
         };
         BatchJobValidationStatusResponse: {
-            /** @enum {string} */
-            phase: "VALIDATING" | "READY_TO_COMPLETE" | "COMPLETING" | "COMPLETED" | "FAILED_UPON_VALIDATION" | "FAILED_UPON_COMPLETION";
             /** @default [] */
             errors: (components["schemas"]["ErrorsObj"] | null)[];
+            /** @enum {string} */
+            phase: "VALIDATING" | "READY_TO_COMPLETE" | "COMPLETING" | "COMPLETED" | "FAILED_UPON_VALIDATION" | "FAILED_UPON_COMPLETION";
             id: string;
-            documents?: components["schemas"]["store-document"][];
             status: components["schemas"]["BatchJobValidationStatus"];
-            personID: string;
         };
         DocumentCountItemResponse: {
             year: string;
@@ -9083,7 +10003,6 @@ export interface components {
              */
             editors: string[];
             prepopulatedDocument?: Record<string, never>;
-            acceptedDocument?: Record<string, never>;
         };
         RedListEvaluation: {
             primaryHabitatSearchStrings: string;
@@ -9133,6 +10052,16 @@ export interface components {
             thumbnailURL: string;
             uploadedBy?: string;
         };
+        ImagesPagedDto: {
+            results: components["schemas"]["Image"][];
+            currentPage: number;
+            pageSize: number;
+            total: number;
+            lastPage: number;
+            prevPage?: number;
+            nextPage?: number;
+            "@context": string;
+        };
         Audio: {
             /** @enum {string} */
             intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0" | "MZ.intellectualRightsCC-BY-NC-4.0" | "MZ.intellectualRightsCC-BY-NC-SA-4.0" | "MZ.intellectualRightsCC-BY-4.0" | "MZ.intellectualRightsCC0-4.0" | "MZ.intellectualRightsODBL-1.0" | "MZ.intellectualRightsPD" | "MZ.intellectualRightsARR" | "MZ.intellectualRightsCC-BY-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0" | "MZ.intellectualRightsCC-BY-SA-2.0-DE" | "MZ.intellectualRightsCC-BY-NC-2.0" | "MZ.intellectualRightsCC-BY-NC-SA-2.0" | "MZ.intellectualRightsCC-BY-NC-ND-2.0" | "MZ.intellectualRightsCC-BY-SA-2.5" | "MZ.intellectualRightsCC-BY-SA-2.5-SE" | "MZ.intellectualRightsCC-BY-3.0" | "MZ.intellectualRightsCC-BY-SA-3.0" | "MZ.intellectualRightsCC-BY-NC-SA-3.0" | "MZ.intellectualRightsCC-BY-ND-4.0" | "MZ.intellectualRightsCC-BY-NC-ND-4.0";
@@ -9149,9 +10078,20 @@ export interface components {
             uploadedBy?: string;
             wavURL?: string;
         };
+        AudioPagedDto: {
+            results: components["schemas"]["Audio"][];
+            currentPage: number;
+            pageSize: number;
+            total: number;
+            lastPage: number;
+            prevPage?: number;
+            nextPage?: number;
+            "@context": string;
+        };
         FeaturedImage: {
             url: string;
             caption: string;
+            alt?: string;
         };
         InformationChild: {
             title: string;
@@ -9212,8 +10152,8 @@ export interface components {
             };
         };
         AddressComponent: {
-            long_name: string;
-            short_name: string;
+            long_name?: string;
+            short_name: components["schemas"]["MultiLangDto"];
             types: string[];
         };
         Location: {
@@ -9229,8 +10169,8 @@ export interface components {
         };
         Source: {
             id?: string;
-            name: string;
-            description: string;
+            name?: string;
+            description: components["schemas"]["MultiLangDto"];
         };
         GetTmpTokenDto: {
             loginURL?: string;
@@ -9239,19 +10179,20 @@ export interface components {
         CheckTmpTokenDto: {
             tmpToken: string;
         };
-        NewsDto: {
-            id: string;
-            featuredImage: string;
+        LajiBackendNewsNode: {
             external: boolean;
-            externalURL?: boolean;
-            title: boolean;
-            content: boolean;
-            posted: boolean;
-            modified?: boolean;
-            tag: boolean;
+            externalURL?: string;
+            id: string;
+            content?: string;
+            title?: string;
+            author?: string;
+            posted?: string;
+            tags?: string[];
+            featuredImage?: components["schemas"]["FeaturedImage"];
+            modified?: string;
         };
         NewsPagedDto: {
-            results: components["schemas"]["NewsDto"][];
+            results: components["schemas"]["LajiBackendNewsNode"][];
             currentPage: number;
             pageSize: number;
             total: number;
@@ -9259,6 +10200,16 @@ export interface components {
             prevPage?: number;
             nextPage?: number;
             "@context": string;
+        };
+        LajiBackendCMSNode: {
+            id: string;
+            content?: string;
+            title?: string;
+            author?: string;
+            posted?: string;
+            tags?: string[];
+            featuredImage?: components["schemas"]["FeaturedImage"];
+            modified?: string;
         };
         WarehouseDwQuery_CountResponse: {
             total: number;
@@ -9430,6 +10381,7 @@ export interface components {
             atlasCode: string;
             atlasClass: string;
             individualId: string;
+            sequenceText: string;
             notes: string;
             annotationCount: number;
             annotations: components["schemas"]["WarehouseDwQuery_Annotation"][];
@@ -10108,6 +11060,7 @@ export interface components {
             atlasCode: string;
             atlasClass: string;
             individualId: string;
+            sequenceText: string;
             notes: string;
             annotationCount: number;
             annotations: components["schemas"]["WarehouseDwSingle_Annotation"][];
@@ -10450,7 +11403,7 @@ export interface components {
             finnish: boolean;
             /** Format: URI */
             taxonRank: string;
-            vernacularName: Record<string, never>;
+            vernacularName: unknown;
             nameFinnish: string;
             nameSwedish: string;
             nameEnglish: string;
@@ -10479,7 +11432,7 @@ export interface components {
             finnish: boolean;
             /** Format: URI */
             taxonRank: string;
-            vernacularName: Record<string, never>;
+            vernacularName: unknown;
             nameFinnish: string;
             nameSwedish: string;
             nameEnglish: string;
@@ -10498,6 +11451,44 @@ export interface components {
         WarehouseDwError: {
             status: number;
             message: string;
+        };
+        WarehouseDwPolygonId: {
+            id: number;
+        };
+        WarehouseDwTeamMember: {
+            id: string;
+            name: string;
+        };
+        WarehouseDwTeamMembers: {
+            results: {
+                id: string;
+                name: string;
+                count: number;
+            }[];
+        };
+        /** @description Map of filter name to filter definition */
+        WarehouseDwFilter: {
+            label?: string;
+            /** @enum {string} */
+            type: "STRING" | "ENUMERATION" | "RESOURCE";
+            resource: string;
+            enumerations: components["schemas"]["WarehouseDwFilterEnum"][];
+        };
+        WarehouseDwFilterEnum: {
+            name: string;
+            label?: string;
+        };
+        WarehouseDwFilters: {
+            [key: string]: components["schemas"]["WarehouseDwFilter"];
+        };
+        WarehouseDwLocalized: string;
+        WarehouseDwEnumerationLabel: {
+            enumeration: string;
+            property: string;
+            label?: string;
+        };
+        WarehouseDwEnumerationLabels: {
+            results: components["schemas"]["WarehouseDwEnumerationLabel"][];
         };
         LajiBackendTaxonSearchResponse: {
             /** @description Name that matched the search word */
@@ -10583,7 +11574,7 @@ export interface components {
             uncertainSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
             misappliedNames: components["schemas"]["LajiBackendSimpleTaxon"][];
             alternativeNames: components["schemas"]["LajiBackendSimpleTaxon"][];
-            vernacularName: components["schemas"]["LajiBackendLocalizedText"];
+            vernacularName?: string;
             alternativeVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
             obsoleteVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
             colloquialVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
@@ -10716,7 +11707,7 @@ export interface components {
             id: string;
             scientificName: string;
             scientificNameAuthorship: string;
-            vernacularName: components["schemas"]["LajiBackendLocalizedText"];
+            vernacularName?: string;
             taxonRank: string;
             cursiveName: boolean;
             notes: string;
@@ -10755,7 +11746,7 @@ export interface components {
             year: number;
         };
         LajiBackendHabitatOccurrenceCount: {
-            habitat: components["schemas"]["LajiBackendLocalizedText"];
+            habitat?: string;
             id: string;
             occurrenceCount: number;
         };
@@ -10770,7 +11761,7 @@ export interface components {
             keywords: string[];
             largeURL: string;
             licenseAbbreviation: string;
-            licenseFullname: components["schemas"]["LajiBackendLocalizedText"];
+            licenseFullname?: string;
             /** @description Qname identifier */
             licenseId: string;
             lifeStage: string[];
@@ -10825,7 +11816,7 @@ export interface components {
         LajiBackendContent: components["schemas"]["LajiBackendContext"][];
         LajiBackendContext: {
             id: string;
-            title: components["schemas"]["LajiBackendLocalizedText"];
+            title?: string;
             groups: {
                 group: string;
                 title: components["schemas"]["LajiBackendLocalizedText"];
@@ -11291,7 +12282,7 @@ export interface components {
             /**
              * File
              * Format: binary
-             * @description GIS file to convert (SHP, GeoJSON, GPKG, KML, GML, ZIP)
+             * @description GIS file to convert (GeoJSON, GPKG, KML, GML, or ZIP for Shapefiles)
              */
             file: string;
         };
@@ -11462,7 +12453,7 @@ export interface components {
             id: string;
             /** Type for the MHL.formOptionsClass */
             "@type": string;
-            about: string;
+            about?: string;
             /**
              * Document are lockable by admin
              * @description Form admin can lock documents. Locked documents can't be edited
@@ -11575,7 +12566,7 @@ export interface components {
              * @description Hides the draft button at form footer
              */
             hideTempButton: boolean;
-            instructions: string;
+            instructions: components["schemas"]["store-multiLang"];
             /**
              * Use mobile UI
              * @description Form UI has a greeting page for convenient mobile usage
@@ -11715,7 +12706,7 @@ export interface components {
              * Duration of editing old document warning
              * @description Duration in ISO 8601 duration format. Defaults to P1W (one week)
              */
-            warnEditingOldDocumentDuration: boolean;
+            warnEditingOldDocumentDuration: string;
         };
         "store-multiLang": string;
         "store-formFooter": {
@@ -11831,6 +12822,11 @@ export interface components {
              */
             filterByTags: boolean;
             /**
+             * Tags filter whitelist
+             * @description Affects "MHL.filterByTags" feature
+             */
+            filterByTagsWhitelist: ("" | "MNP.tagAccessibilityEasy" | "MNP.tagAccessibilityModerate" | "MNP.tagAccessibilityDifficult" | "MNP.tagHabitatImportant" | "MNP.tagCensusRare" | "MNP.tagHabitatFarmland" | "MNP.tagHabitatMire" | "MNP.tagHabitatMountain" | "MNP.tagSuitable" | "MNP.tagTypeIsland" | "MNP.tagTypePartialIsland" | "MNP.tagTypeIslandGroup" | "MNP.tagTypeWater" | "MNP.tagTypeShoreline" | "MNP.tagTypeMixed" | "MNP.tagTypeUnknown" | "MNP.tagWishedToBeCounted")[];
+            /**
              * Document header fields of place
              * @description When recording a document for a named place, the named place's data of these fields will be shown at the top of the page (defaults to ["alternativeIDs", "name", "municipality"]
              */
@@ -11939,6 +12935,11 @@ export interface components {
              * @description Named place chooser view starts with map tab instead of list
              */
             startWithMap: boolean;
+            /**
+             * Tags filter whitelist
+             * @description Affects "MHL.filterByTags" feature
+             */
+            tagsWhiteList: ("" | "MNP.tagAccessibilityEasy" | "MNP.tagAccessibilityModerate" | "MNP.tagAccessibilityDifficult" | "MNP.tagHabitatImportant" | "MNP.tagCensusRare" | "MNP.tagHabitatFarmland" | "MNP.tagHabitatMire" | "MNP.tagHabitatMountain" | "MNP.tagSuitable" | "MNP.tagTypeIsland" | "MNP.tagTypePartialIsland" | "MNP.tagTypeIslandGroup" | "MNP.tagTypeWater" | "MNP.tagTypeShoreline" | "MNP.tagTypeMixed" | "MNP.tagTypeUnknown" | "MNP.tagWishedToBeCounted")[];
             /**
              * use accepted document
              * @description Instead of populating observation form with prepopulatedDocument, it is populated with acceptedDocument. Admin can change the acceptedDocument from observation list
@@ -12061,6 +13062,8 @@ export interface components {
             datatype?: string;
             /** Device ID */
             deviceID?: string;
+            /** Digitised by */
+            digitisers?: string[];
             documentIdentifications?: components["schemas"]["store-documentIdentification"][];
             /**
              * Specimen location
@@ -12319,6 +13322,8 @@ export interface components {
             artificialLight: "" | "MY.artificialLightEnum1" | "MY.artificialLightEnum2" | "MY.artificialLightEnum3" | "MY.artificialLightEnum4" | "MY.artificialLightEnum5";
             /** Breaks kept in minutes */
             breaksDuringCensusInMinutes: number;
+            /** Number of censuses */
+            censusCount: number;
             /** Weather (etc) hindered the census */
             censusHinderedByEnviromentalFactors: boolean;
             /** Fog hindered the census */
@@ -12426,6 +13431,8 @@ export interface components {
             id: string;
             /** Type for the Keruutapahtuman faktat */
             "@type": string;
+            /** Kaikki havaitut pesäkolot ja pöntöt kirjattu */
+            allObservedNestsRecorded: boolean;
             /**
              * I placed the sound recorder to the terrain
              * @enum {string}
@@ -12774,7 +13781,7 @@ export interface components {
              * Censused taxon set
              * @enum {string}
              */
-            censusTaxonSetID?: "" | "MX.taxonSetSykeButterflyCensusPapilionoidea" | "MX.taxonSetSykeButterflyCensusOther" | "MX.taxonSetWaterbirdWaterbirds" | "MX.taxonSetWaterbirdWaders" | "MX.taxonSetWaterbirdGulls" | "MX.taxonSetWaterbirdPasserines" | "MX.taxonSetWaterbirdAmphibia" | "MX.taxonSetSykeBumblebee" | "MVL.1201" | "MX.taxonSetSykeBumblebeeOther" | "MX.taxonSetBirdAtlasCommon" | "MX.taxonSetBiomonCompleteListOdonata" | "MX.taxonSetBiomonCompleteListButterflies" | "MX.taxonSetBiomonCompleteListMoths" | "MX.taxonSetBiomonCompleteListBombus" | "MX.taxonSetBiomonCompleteListAmphibiaReptilia" | "MX.taxonSetBiomonCompleteListLargeFlowers" | "MX.taxonSetBiomonCompleteListSubarcticPlants" | "MX.taxonSetBiomonCompleteListMacrolichens" | "MX.taxonSetBiomonCompleteListBracketFungi" | "MX.taxonSetBiomonCompleteListPracticalFungi" | "MX.taxonSetSykeMacrozoobenthos" | "MX.taxonSetArchipelagoWaterbirds" | "MX.taxonSetArchipelagoWaders" | "MX.taxonSetArchipelagoGulls" | "MX.taxonSetArchipelagoPasserines" | "MX.taxonSetArchipelagoAlcids" | "MX.taxonSetArchipelagoRaptors" | "MX.taxonSetArchipelagoCormorants" | "MX.taxonSetArchipelagoEgrets" | "MX.taxonSetArchipelagoMammals";
+            censusTaxonSetID?: "" | "MX.taxonSetSykeButterflyCensusPapilionoidea" | "MX.taxonSetSykeButterflyCensusOther" | "MX.taxonSetWaterbirdWaterbirds" | "MX.taxonSetWaterbirdWaders" | "MX.taxonSetWaterbirdGulls" | "MX.taxonSetWaterbirdPasserines" | "MX.taxonSetWaterbirdAmphibia" | "MX.taxonSetSykeBumblebee" | "MVL.1201" | "MX.taxonSetSykeBumblebeeOther" | "MX.taxonSetBirdAtlasCommon" | "MX.taxonSetBiomonCompleteListOdonata" | "MX.taxonSetBiomonCompleteListButterflies" | "MX.taxonSetBiomonCompleteListMoths" | "MX.taxonSetBiomonCompleteListBombus" | "MX.taxonSetBiomonCompleteListAmphibiaReptilia" | "MX.taxonSetBiomonCompleteListLargeFlowers" | "MX.taxonSetBiomonCompleteListSubarcticPlants" | "MX.taxonSetBiomonCompleteListMacrolichens" | "MX.taxonSetBiomonCompleteListBracketFungi" | "MX.taxonSetBiomonCompleteListPracticalFungi" | "MX.taxonSetSykeMacrozoobenthos" | "MX.taxonSetArchipelagoWaterbirds" | "MX.taxonSetArchipelagoWaders" | "MX.taxonSetArchipelagoGulls" | "MX.taxonSetArchipelagoPasserines" | "MX.taxonSetArchipelagoAlcids" | "MX.taxonSetArchipelagoRaptors" | "MX.taxonSetArchipelagoCormorants" | "MX.taxonSetArchipelagoEgrets" | "MX.taxonSetArchipelagoMammals" | "MX.taxonSetPriodiversityOldForestPolypores" | "MX.taxonSetPriodiversityIndicatorLichens";
             /**
              * Completeness of census
              * @enum {string}
@@ -12847,6 +13854,8 @@ export interface components {
              * @description Name of an expedition or such.
              */
             collectingEventName: string;
+            /** Tämän laskentakerran lisätiedot */
+            conditionNotes: string;
             /** Prevention measures */
             controlActivitiesNotes: string;
             /**
@@ -13361,8 +14370,15 @@ export interface components {
             nativeStatus: "" | "MY.native" | "MY.nonNative";
             /** Nest/cavity count */
             nestCount: number;
+            /** metrimäärä (linjan alusta), jolla pönttö/kolo on */
+            nestDistanceFromLineTransectStartMeters: number;
             /** Nest notes */
             nestNotes: string;
+            /**
+             * Pöntön kokoluokka
+             * @enum {string}
+             */
+            nestSize: "" | "MY.nestSizeEnum1" | "MY.nestSizeEnum2" | "MY.nestSizeEnum3";
             /** Diameter of the tree (cm) */
             nestTreeDiameterInCentimeters: number;
             /**
@@ -13375,6 +14391,11 @@ export interface components {
              * @description Additional information to the data in each section.
              */
             notes: string;
+            /**
+             * Observation status
+             * @enum {string}
+             */
+            observationStatus: "" | "MY.observationStatusIgnored" | "MY.observationStatusNotObserved" | "MY.observationStatusObservedNoCount" | "MY.observationStatusObservedPartialCount" | "MY.observationStatusObservedCompleteCount";
             /** Pair count */
             pairCount: number;
             /** Own interpretation/pairs */
@@ -13612,6 +14633,8 @@ export interface components {
             adultIndividualCount: number;
             /** Taxon ID selected from autocomplete */
             autocompleteSelectedTaxonID: string;
+            /** K-multiplier */
+            birdMultiplier: boolean;
             /** Brood count */
             broodCount: number;
             /** Destroyed nests count */
@@ -13624,6 +14647,8 @@ export interface components {
             detOnSite: "" | "MY.duringObservation" | "MY.afterObservation";
             /** Observation distance (m) */
             distanceMeters: number;
+            /** Egg count */
+            eggCount: number;
             /** Females with broods count */
             femalesWithBroodsCount: number;
             /**
@@ -13631,6 +14656,8 @@ export interface components {
              * @enum {string}
              */
             glowWormMicrohabitat: "" | "MY.glowWormMicrohabitatEnum1" | "MY.glowWormMicrohabitatEnum2" | "MY.glowWormMicrohabitatEnum3" | "MY.glowWormMicrohabitatEnum4" | "MY.glowWormMicrohabitatEnum5" | "MY.glowWormMicrohabitatEnum6" | "MY.glowWormMicrohabitatEnumOther";
+            /** Ground nest count */
+            groundNestCount: number;
             /** Parven koko */
             individualCountFlock: number;
             /** Yksilömäärä sisällä */
@@ -13679,6 +14706,8 @@ export interface components {
             pairCountOuter: number;
             /** Parvien koot */
             pointCountFlock: string;
+            /** Pullus individual count */
+            pullusIndividualCount: number;
             /** Is the plant growing next to running water? */
             runningWaterInVicinity: boolean;
             /**
@@ -13688,6 +14717,8 @@ export interface components {
             taxonConfidenceDescription: string;
             /** Observed traits */
             traits: string;
+            /** Puupesien määrä */
+            treeNestCount: number;
             /**
              * Female observed
              * @enum {string}
@@ -14222,6 +15253,16 @@ export interface components {
                 [key: string]: unknown;
             };
             schema: components["schemas"]["JSONSchema"];
+            excludeFromCopy: string[];
+            validators: {
+                [key: string]: unknown;
+            };
+            warnings: {
+                [key: string]: unknown;
+            };
+            uiSchemaContext: {
+                [key: string]: unknown;
+            };
         };
         JSONSchema: components["schemas"]["JSONSchemaObject"] | components["schemas"]["JSONSchemaArray"] | components["schemas"]["JSONSchemaPrimitive"];
         JSONSchemaObject: {
@@ -14486,6 +15527,8 @@ export interface components {
             taxonExpertiseNotes?: string;
             /** This users profile */
             userID: string;
+            /** Xeno-Canto API key */
+            xenoCantoApiKey?: string;
             /** profileKey */
             profileKey?: string;
         };
@@ -14516,6 +15559,242 @@ export interface components {
             image: string;
         };
         SensitiveCollection: {
+            /** Context for the Collection */
+            "@context"?: string;
+            /** Id for the Collection */
+            id: string;
+            /** Type for the Collection */
+            "@type"?: string;
+            /**
+             * Secure level
+             * @description Secure level (salaus-/karkeistustaso) for the data
+             * @enum {string}
+             */
+            secureLevel?: "" | "MX.secureLevelNone" | "MX.secureLevelKM1" | "MX.secureLevelKM5" | "MX.secureLevelKM10" | "MX.secureLevelKM25" | "MX.secureLevelKM50" | "MX.secureLevelKM100" | "MX.secureLevelHighest" | "MX.secureLevelNoShow";
+            /**
+             * Unofficial abbreviation
+             * @description Unofficial abbreviation (or acronym) for this collection
+             */
+            abbreviation?: string;
+            /** Identifier of this dataset/collection in other databases */
+            additionalIdentifier?: string[];
+            /**
+             * Allowed for DW statistics
+             * @description Admin field. Is it allowed to use collection with data warehouse /statistic endpoints.
+             */
+            allowedForDwStatistics?: boolean;
+            /** Bounding box latitude max (WGS84) */
+            boundingBoxLatMax?: string;
+            /** Bounding box latitude min (WGS84) */
+            boundingBoxLatMin?: string;
+            /** Bounding box longitude max (WGS84) */
+            boundingBoxLonMax?: string;
+            /** Bounding box longitude min (WGS84) */
+            boundingBoxLonMin?: string;
+            /**
+             * Citation recommendation
+             * @description Example how to cite this collection in a scientific article, if using organization, name and abbreviation is not enough.
+             */
+            citation?: string;
+            /**
+             * Specimen collection code
+             * @description Collection code for natural history specimen collection, such as H-BR
+             */
+            collectionCode?: string;
+            collectionName?: string;
+            /**
+             * Collection quality
+             * @description Quality classification for the collection.
+             * @enum {string}
+             */
+            collectionQuality?: "" | "MY.collectionQualityEnum3" | "MY.collectionQualityEnum2" | "MY.collectionQualityEnum1";
+            /**
+             * Size (approx.)
+             * @description How many specimens, records or such does the collection contain? Fill in approximate number, describe more in notes if necessary.
+             */
+            collectionSize?: string;
+            /**
+             * Type
+             * @description Type of the collection (specimen, monitoring etc).
+             * @enum {string}
+             */
+            collectionType?: "" | "MY.collectionTypeSpecimens" | "MY.collectionTypeLiving" | "MY.collectionTypeMonitoring" | "MY.collectionTypeObservations" | "MY.collectionTypePublicationdata" | "MY.collectionTypePublication" | "MY.collectionTypeMixed" | "MY.collectionTypeOther" | "MY.collectionTypeGardenArea" | "MY.collectionTypeIndoorGardenArea" | "MY.collectionTypeOutdoorGardenArea" | "MY.collectionTypeGardenSublocation" | "MY.collectionTypeTrait";
+            concealmentBasis?: components["schemas"]["store-multiLang"];
+            /**
+             * Contact email
+             * @description Personal or general (e.g. group of people in the organisation) email address to reach the person(s) responsible.
+             */
+            contactEmail: string;
+            coverageBasis?: components["schemas"]["store-multiLang"];
+            /** Data download URL */
+            dataDownloadURL?: string[];
+            /**
+             * Notes about the data
+             * @description Diary-like notes about the data, with date/time. For example "2020-08-19: Changed country names Fönland to Finland", or "Specimens collected during 2019 are missing coordinates due to malfunctioning GPS"
+             */
+            dataNotes?: string;
+            /**
+             * Data quality
+             * @description Quality estimation for the data in this collection
+             * @enum {string}
+             */
+            dataQuality?: "" | "MY.dataQuality1" | "MY.dataQuality2" | "MY.dataQuality3" | "MY.dataQuality4" | "MY.dataQuality5" | "MY.dataQualityNA";
+            dataQualityDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Embargo in years
+             * @description Embargo period in years after which data is opened
+             */
+            dataQuarantinePeriod?: number;
+            dataUseTerms?: components["schemas"]["store-multiLang"];
+            description: components["schemas"]["store-multiLang"];
+            /**
+             * % digitized (approx.)
+             * @description How many percent of the collection is in digital form, e.g. in a database or Excel file? Fill in approximate number, describe more in notes if necessary.
+             */
+            digitizedSize?: string;
+            /** DOI provided by FinBIF */
+            doi?: string;
+            /**
+             * Download request handler
+             * @description Admin field. The identifier of the person responsible for handling requests for restricted data for this set (typically same person who's responsible for the collection)
+             */
+            downloadRequestHandler?: string[];
+            /**
+             * Notes about this edit
+             * @description Reason for this edit or notes about it.
+             */
+            editNotes?: string;
+            /**
+             * Collection DOI from GBIF
+             * @description Admin field. DOI received from GBIF after the collection has been published.
+             */
+            gbifDoi?: string;
+            geographicCoverage?: components["schemas"]["store-multiLang"];
+            /**
+             * Hierarchical type
+             * @description Type of the collection within the collection hierarchy tree.
+             * @enum {string}
+             */
+            hierarchyType: "MY.hierarchyTypeDocumentParent" | "MY.hierarchyTypeCollectionParent";
+            /**
+             * Institution code
+             * @description Institution code for natural history specimen collection holding institution, such as H, MHZ or TUR
+             */
+            institutionCode?: string;
+            intellectualDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Publisher name (en)
+             * @description Name of the institution or organisation publishing the data.
+             */
+            intellectualOwner?: string;
+            /**
+             * License for use
+             * @description License which is used when publishing data that belongs to this collection.
+             * @enum {string}
+             */
+            intellectualRights: "MY.intellectualRightsCC-BY" | "MY.intellectualRightsCC0" | "MY.intellectualRightsPD" | "MY.intellectualRightsARR";
+            /**
+             * Internal use only
+             * @description Is the data to be used only within Kotka?
+             */
+            internalUseOnly?: boolean;
+            /**
+             * Is part of
+             * @description Which parent or larger collection this is part of.
+             */
+            isPartOf?: string;
+            /**
+             * Language
+             * @description Language the data is (mainly) written in, if applicable.
+             */
+            language?: string;
+            longName?: components["schemas"]["store-multiLang"];
+            /** Person responsible for this metadata */
+            metadataCreator?: string;
+            /**
+             * Status of this metadata
+             * @description Indication of how comprehensive the information on this form is.
+             * @enum {string}
+             */
+            metadataStatus?: "" | "MY.metadataStatusPreliminary" | "MY.metadataStatusSatisfactory" | "MY.metadataStatusComprehensive" | "MY.metadataStatusHidden";
+            methods?: components["schemas"]["store-multiLang"];
+            /**
+             * Notes
+             * @description Additional information to the data in each section.
+             */
+            notes?: string;
+            onlineUrl?: components["schemas"]["store-multiLang"];
+            /**
+             * Person responsible
+             * @description Person(s) responsible for the collection (Lastname, Firstname; Lastname, Firstname).
+             */
+            personResponsible: string;
+            /**
+             * Accessibility to public
+             * @description Used for botanic garden collections. Is the collection/garden area accessible to public or not.
+             */
+            publicAccess?: boolean;
+            publicationDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Publication terms
+             * @description How can Luomus publish the data, if it is owned by third party?
+             * @enum {string}
+             */
+            publicationTerms?: "" | "MY.publicationTermsFree" | "MY.publicationTermsOfficial" | "MY.publicationTermsInternal" | "MY.publicationTermsNone";
+            publisherShortname?: components["schemas"]["store-multiLang"];
+            /** Share to FEO */
+            shareToFEO?: string;
+            /**
+             * Share to GBIF
+             * @description Admin field. Can the data be shared to GBIF or not: Given collection ID means data is shared under that collection.
+             */
+            shareToGbif?: string;
+            taxonomicCoverage?: components["schemas"]["store-multiLang"];
+            temporalCoverage?: components["schemas"]["store-multiLang"];
+            /**
+             * Amount of type specimens (approx.)
+             * @description How many TYPE specimens does the collection contain?  Fill in approximate number, describe more in notes if necessary.
+             */
+            typesSize?: string;
+            /**
+             * Created
+             * Format: date-time
+             */
+            dateCreated?: string;
+            /**
+             * Edited
+             * Format: date-time
+             */
+            dateEdited?: string;
+            /**
+             * Owner of record
+             * @description Team or organisation that owns the record and can edit it.
+             */
+            owner?: string;
+            /**
+             * Publicity restrictions
+             * @description PUBLIC: all data can be published; PROTECTED: exact locality is hidden (100*100km square); PRIVATE: most of the data is hidden. Empty value means same as public.
+             * @enum {string}
+             */
+            publicityRestrictions?: "" | "MZ.publicityRestrictionsPublic" | "MZ.publicityRestrictionsProtected" | "MZ.publicityRestrictionsPrivate";
+            hasChildren?: boolean;
+            longNameMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+            descriptionMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+            onlineUrlMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+        };
+        "store-collection": {
             /** Context for the Collection */
             "@context"?: string;
             /** Id for the Collection */
@@ -14558,13 +15837,14 @@ export interface components {
              * @description Collection code for natural history specimen collection, such as H-BR
              */
             collectionCode?: string;
-            collectionName: string;
+            collectionLocation?: string;
+            collectionName: components["schemas"]["store-multiLang"];
             /**
              * Collection quality
              * @description Quality classification for the collection.
              * @enum {string}
              */
-            collectionQuality: "MY.collectionQualityEnum3" | "MY.collectionQualityEnum2" | "MY.collectionQualityEnum1";
+            collectionQuality?: "" | "MY.collectionQualityEnum3" | "MY.collectionQualityEnum2" | "MY.collectionQualityEnum1";
             /**
              * Size (approx.)
              * @description How many specimens, records or such does the collection contain? Fill in approximate number, describe more in notes if necessary.
@@ -14575,16 +15855,17 @@ export interface components {
              * @description Type of the collection (specimen, monitoring etc).
              * @enum {string}
              */
-            collectionType: "MY.collectionTypeSpecimens" | "MY.collectionTypeLiving" | "MY.collectionTypeMonitoring" | "MY.collectionTypeObservations" | "MY.collectionTypePublicationdata" | "MY.collectionTypePublication" | "MY.collectionTypeMixed" | "MY.collectionTypeOther" | "MY.collectionTypeGardenArea" | "MY.collectionTypeIndoorGardenArea" | "MY.collectionTypeOutdoorGardenArea" | "MY.collectionTypeGardenSublocation" | "MY.collectionTypeTrait";
-            concealmentBasis?: string;
+            collectionType?: "" | "MY.collectionTypeSpecimens" | "MY.collectionTypeLiving" | "MY.collectionTypeMonitoring" | "MY.collectionTypeObservations" | "MY.collectionTypePublicationdata" | "MY.collectionTypePublication" | "MY.collectionTypeMixed" | "MY.collectionTypeOther" | "MY.collectionTypeGardenArea" | "MY.collectionTypeIndoorGardenArea" | "MY.collectionTypeOutdoorGardenArea" | "MY.collectionTypeGardenSublocation" | "MY.collectionTypeTrait";
+            concealmentBasis?: components["schemas"]["store-multiLang"];
             /**
              * Contact email
              * @description Personal or general (e.g. group of people in the organisation) email address to reach the person(s) responsible.
              */
             contactEmail: string;
-            coverageBasis?: string;
+            coverageBasis?: components["schemas"]["store-multiLang"];
             /** Data download URL */
             dataDownloadURL?: string[];
+            dataLocation?: components["schemas"]["store-multiLang"];
             /**
              * Notes about the data
              * @description Diary-like notes about the data, with date/time. For example "2020-08-19: Changed country names Fönland to Finland", or "Specimens collected during 2019 are missing coordinates due to malfunctioning GPS"
@@ -14596,14 +15877,14 @@ export interface components {
              * @enum {string}
              */
             dataQuality?: "" | "MY.dataQuality1" | "MY.dataQuality2" | "MY.dataQuality3" | "MY.dataQuality4" | "MY.dataQuality5" | "MY.dataQualityNA";
-            dataQualityDescription?: string;
+            dataQualityDescription?: components["schemas"]["store-multiLang"];
             /**
              * Embargo in years
              * @description Embargo period in years after which data is opened
              */
             dataQuarantinePeriod?: number;
-            dataUseTerms?: string;
-            description: string;
+            dataUseTerms?: components["schemas"]["store-multiLang"];
+            description: components["schemas"]["store-multiLang"];
             /**
              * % digitized (approx.)
              * @description How many percent of the collection is in digital form, e.g. in a database or Excel file? Fill in approximate number, describe more in notes if necessary.
@@ -14626,13 +15907,19 @@ export interface components {
              * @description Admin field. DOI received from GBIF after the collection has been published.
              */
             gbifDoi?: string;
-            geographicCoverage?: string;
+            geographicCoverage?: components["schemas"]["store-multiLang"];
+            /**
+             * Hierarchical type
+             * @description Type of the collection within the collection hierarchy tree.
+             * @enum {string}
+             */
+            hierarchyType: "MY.hierarchyTypeDocumentParent" | "MY.hierarchyTypeCollectionParent";
             /**
              * Institution code
              * @description Institution code for natural history specimen collection holding institution, such as H, MHZ or TUR
              */
             institutionCode?: string;
-            intellectualDescription?: string;
+            intellectualDescription?: components["schemas"]["store-multiLang"];
             /**
              * Publisher name (en)
              * @description Name of the institution or organisation publishing the data.
@@ -14659,7 +15946,7 @@ export interface components {
              * @description Language the data is (mainly) written in, if applicable.
              */
             language?: string;
-            longName?: string;
+            longName?: components["schemas"]["store-multiLang"];
             /** Person responsible for this metadata */
             metadataCreator?: string;
             /**
@@ -14668,13 +15955,13 @@ export interface components {
              * @enum {string}
              */
             metadataStatus?: "" | "MY.metadataStatusPreliminary" | "MY.metadataStatusSatisfactory" | "MY.metadataStatusComprehensive" | "MY.metadataStatusHidden";
-            methods?: string;
+            methods?: components["schemas"]["store-multiLang"];
             /**
              * Notes
              * @description Additional information to the data in each section.
              */
             notes?: string;
-            onlineUrl?: string;
+            onlineUrl?: components["schemas"]["store-multiLang"];
             /**
              * Person responsible
              * @description Person(s) responsible for the collection (Lastname, Firstname; Lastname, Firstname).
@@ -14685,14 +15972,14 @@ export interface components {
              * @description Used for botanic garden collections. Is the collection/garden area accessible to public or not.
              */
             publicAccess?: boolean;
-            publicationDescription?: string;
+            publicationDescription?: components["schemas"]["store-multiLang"];
             /**
              * Publication terms
              * @description How can Luomus publish the data, if it is owned by third party?
              * @enum {string}
              */
             publicationTerms?: "" | "MY.publicationTermsFree" | "MY.publicationTermsOfficial" | "MY.publicationTermsInternal" | "MY.publicationTermsNone";
-            publisherShortname?: string;
+            publisherShortname?: components["schemas"]["store-multiLang"];
             /** Share to FEO */
             shareToFEO?: string;
             /**
@@ -14700,8 +15987,232 @@ export interface components {
              * @description Admin field. Can the data be shared to GBIF or not: Given collection ID means data is shared under that collection.
              */
             shareToGbif?: string;
-            taxonomicCoverage?: string;
-            temporalCoverage?: string;
+            taxonomicCoverage?: components["schemas"]["store-multiLang"];
+            temporalCoverage?: components["schemas"]["store-multiLang"];
+            /**
+             * Amount of type specimens (approx.)
+             * @description How many TYPE specimens does the collection contain?  Fill in approximate number, describe more in notes if necessary.
+             */
+            typesSize?: string;
+            /** Creator */
+            creator?: string;
+            /**
+             * Created
+             * Format: date-time
+             */
+            dateCreated?: string;
+            /**
+             * Edited
+             * Format: date-time
+             */
+            dateEdited?: string;
+            /** Editor */
+            editor?: string;
+            /**
+             * Owner of record
+             * @description Team or organisation that owns the record and can edit it.
+             */
+            owner?: string;
+            /**
+             * Publicity restrictions
+             * @description PUBLIC: all data can be published; PROTECTED: exact locality is hidden (100*100km square); PRIVATE: most of the data is hidden. Empty value means same as public.
+             * @enum {string}
+             */
+            publicityRestrictions?: "" | "MZ.publicityRestrictionsPublic" | "MZ.publicityRestrictionsProtected" | "MZ.publicityRestrictionsPrivate";
+        };
+        ExpandedSensitiveCollection: {
+            /** Context for the Collection */
+            "@context"?: string;
+            /** Id for the Collection */
+            id: string;
+            /** Type for the Collection */
+            "@type"?: string;
+            /**
+             * Secure level
+             * @description Secure level (salaus-/karkeistustaso) for the data
+             * @enum {string}
+             */
+            secureLevel?: "" | "MX.secureLevelNone" | "MX.secureLevelKM1" | "MX.secureLevelKM5" | "MX.secureLevelKM10" | "MX.secureLevelKM25" | "MX.secureLevelKM50" | "MX.secureLevelKM100" | "MX.secureLevelHighest" | "MX.secureLevelNoShow";
+            /**
+             * Unofficial abbreviation
+             * @description Unofficial abbreviation (or acronym) for this collection
+             */
+            abbreviation?: string;
+            /** Identifier of this dataset/collection in other databases */
+            additionalIdentifier?: string[];
+            /**
+             * Allowed for DW statistics
+             * @description Admin field. Is it allowed to use collection with data warehouse /statistic endpoints.
+             */
+            allowedForDwStatistics?: boolean;
+            /** Bounding box latitude max (WGS84) */
+            boundingBoxLatMax?: string;
+            /** Bounding box latitude min (WGS84) */
+            boundingBoxLatMin?: string;
+            /** Bounding box longitude max (WGS84) */
+            boundingBoxLonMax?: string;
+            /** Bounding box longitude min (WGS84) */
+            boundingBoxLonMin?: string;
+            /**
+             * Citation recommendation
+             * @description Example how to cite this collection in a scientific article, if using organization, name and abbreviation is not enough.
+             */
+            citation?: string;
+            /**
+             * Specimen collection code
+             * @description Collection code for natural history specimen collection, such as H-BR
+             */
+            collectionCode?: string;
+            collectionName?: string;
+            /**
+             * Collection quality
+             * @description Quality classification for the collection.
+             * @enum {string}
+             */
+            collectionQuality?: "" | "MY.collectionQualityEnum3" | "MY.collectionQualityEnum2" | "MY.collectionQualityEnum1";
+            /**
+             * Size (approx.)
+             * @description How many specimens, records or such does the collection contain? Fill in approximate number, describe more in notes if necessary.
+             */
+            collectionSize?: string;
+            /**
+             * Type
+             * @description Type of the collection (specimen, monitoring etc).
+             * @enum {string}
+             */
+            collectionType?: "" | "MY.collectionTypeSpecimens" | "MY.collectionTypeLiving" | "MY.collectionTypeMonitoring" | "MY.collectionTypeObservations" | "MY.collectionTypePublicationdata" | "MY.collectionTypePublication" | "MY.collectionTypeMixed" | "MY.collectionTypeOther" | "MY.collectionTypeGardenArea" | "MY.collectionTypeIndoorGardenArea" | "MY.collectionTypeOutdoorGardenArea" | "MY.collectionTypeGardenSublocation" | "MY.collectionTypeTrait";
+            concealmentBasis?: components["schemas"]["store-multiLang"];
+            /**
+             * Contact email
+             * @description Personal or general (e.g. group of people in the organisation) email address to reach the person(s) responsible.
+             */
+            contactEmail: string;
+            coverageBasis?: components["schemas"]["store-multiLang"];
+            /** Data download URL */
+            dataDownloadURL?: string[];
+            /**
+             * Notes about the data
+             * @description Diary-like notes about the data, with date/time. For example "2020-08-19: Changed country names Fönland to Finland", or "Specimens collected during 2019 are missing coordinates due to malfunctioning GPS"
+             */
+            dataNotes?: string;
+            /**
+             * Data quality
+             * @description Quality estimation for the data in this collection
+             * @enum {string}
+             */
+            dataQuality?: "" | "MY.dataQuality1" | "MY.dataQuality2" | "MY.dataQuality3" | "MY.dataQuality4" | "MY.dataQuality5" | "MY.dataQualityNA";
+            dataQualityDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Embargo in years
+             * @description Embargo period in years after which data is opened
+             */
+            dataQuarantinePeriod?: number;
+            dataUseTerms?: components["schemas"]["store-multiLang"];
+            description: components["schemas"]["store-multiLang"];
+            /**
+             * % digitized (approx.)
+             * @description How many percent of the collection is in digital form, e.g. in a database or Excel file? Fill in approximate number, describe more in notes if necessary.
+             */
+            digitizedSize?: string;
+            /** DOI provided by FinBIF */
+            doi?: string;
+            /**
+             * Download request handler
+             * @description Admin field. The identifier of the person responsible for handling requests for restricted data for this set (typically same person who's responsible for the collection)
+             */
+            downloadRequestHandler?: string[];
+            /**
+             * Notes about this edit
+             * @description Reason for this edit or notes about it.
+             */
+            editNotes?: string;
+            /**
+             * Collection DOI from GBIF
+             * @description Admin field. DOI received from GBIF after the collection has been published.
+             */
+            gbifDoi?: string;
+            geographicCoverage?: components["schemas"]["store-multiLang"];
+            /**
+             * Hierarchical type
+             * @description Type of the collection within the collection hierarchy tree.
+             * @enum {string}
+             */
+            hierarchyType: "MY.hierarchyTypeDocumentParent" | "MY.hierarchyTypeCollectionParent";
+            /**
+             * Institution code
+             * @description Institution code for natural history specimen collection holding institution, such as H, MHZ or TUR
+             */
+            institutionCode?: string;
+            intellectualDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Publisher name (en)
+             * @description Name of the institution or organisation publishing the data.
+             */
+            intellectualOwner?: string;
+            /**
+             * License for use
+             * @description License which is used when publishing data that belongs to this collection.
+             * @enum {string}
+             */
+            intellectualRights: "MY.intellectualRightsCC-BY" | "MY.intellectualRightsCC0" | "MY.intellectualRightsPD" | "MY.intellectualRightsARR";
+            /**
+             * Internal use only
+             * @description Is the data to be used only within Kotka?
+             */
+            internalUseOnly?: boolean;
+            /**
+             * Is part of
+             * @description Which parent or larger collection this is part of.
+             */
+            isPartOf?: string;
+            /**
+             * Language
+             * @description Language the data is (mainly) written in, if applicable.
+             */
+            language?: string;
+            longName?: components["schemas"]["store-multiLang"];
+            /** Person responsible for this metadata */
+            metadataCreator?: string;
+            /**
+             * Status of this metadata
+             * @description Indication of how comprehensive the information on this form is.
+             * @enum {string}
+             */
+            metadataStatus?: "" | "MY.metadataStatusPreliminary" | "MY.metadataStatusSatisfactory" | "MY.metadataStatusComprehensive" | "MY.metadataStatusHidden";
+            methods?: components["schemas"]["store-multiLang"];
+            /**
+             * Notes
+             * @description Additional information to the data in each section.
+             */
+            notes?: string;
+            onlineUrl?: components["schemas"]["store-multiLang"];
+            /**
+             * Person responsible
+             * @description Person(s) responsible for the collection (Lastname, Firstname; Lastname, Firstname).
+             */
+            personResponsible: string;
+            /**
+             * Accessibility to public
+             * @description Used for botanic garden collections. Is the collection/garden area accessible to public or not.
+             */
+            publicAccess?: boolean;
+            publicationDescription?: components["schemas"]["store-multiLang"];
+            /**
+             * Publication terms
+             * @description How can Luomus publish the data, if it is owned by third party?
+             * @enum {string}
+             */
+            publicationTerms?: "" | "MY.publicationTermsFree" | "MY.publicationTermsOfficial" | "MY.publicationTermsInternal" | "MY.publicationTermsNone";
+            publisherShortname?: components["schemas"]["store-multiLang"];
+            /** Share to FEO */
+            shareToFEO?: string;
+            /**
+             * Share to GBIF
+             * @description Admin field. Can the data be shared to GBIF or not: Given collection ID means data is shared under that collection.
+             */
+            shareToGbif?: string;
+            taxonomicCoverage?: components["schemas"]["store-multiLang"];
+            temporalCoverage?: components["schemas"]["store-multiLang"];
             /**
              * Amount of type specimens (approx.)
              * @description How many TYPE specimens does the collection contain?  Fill in approximate number, describe more in notes if necessary.
@@ -14728,7 +16239,23 @@ export interface components {
              * @enum {string}
              */
             publicityRestrictions?: "" | "MZ.publicityRestrictionsPublic" | "MZ.publicityRestrictionsProtected" | "MZ.publicityRestrictionsPrivate";
-            hasChildren: boolean;
+            hasChildren?: boolean;
+            longNameMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+            descriptionMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+            onlineUrlMultiLang?: {
+                fi: components["schemas"]["store-multiLang"];
+                sv: components["schemas"]["store-multiLang"];
+                en: components["schemas"]["store-multiLang"];
+            };
+            children?: components["schemas"]["ExpandedSensitiveCollection"][];
         };
         "store-namedPlace": {
             /** Context for the MNP.namedPlace */
@@ -14796,7 +16323,7 @@ export interface components {
             public?: boolean;
             reserve?: components["schemas"]["store-reserve"];
             /** Tags */
-            tags?: ("" | "MNP.tagAccessibilityEasy" | "MNP.tagAccessibilityModerate" | "MNP.tagAccessibilityDifficult" | "MNP.tagHabitatImportant" | "MNP.tagCensusRare" | "MNP.tagHabitatFarmland" | "MNP.tagHabitatMire" | "MNP.tagHabitatMountain" | "MNP.tagSuitable" | "MNP.tagTypeIsland" | "MNP.tagTypePartialIsland" | "MNP.tagTypeIslandGroup" | "MNP.tagTypeWater" | "MNP.tagTypeShoreline" | "MNP.tagTypeMixed" | "MNP.tagTypeUnknown")[];
+            tags?: ("" | "MNP.tagAccessibilityEasy" | "MNP.tagAccessibilityModerate" | "MNP.tagAccessibilityDifficult" | "MNP.tagHabitatImportant" | "MNP.tagCensusRare" | "MNP.tagHabitatFarmland" | "MNP.tagHabitatMire" | "MNP.tagHabitatMountain" | "MNP.tagSuitable" | "MNP.tagTypeIsland" | "MNP.tagTypePartialIsland" | "MNP.tagTypeIslandGroup" | "MNP.tagTypeWater" | "MNP.tagTypeShoreline" | "MNP.tagTypeMixed" | "MNP.tagTypeUnknown" | "MNP.tagWishedToBeCounted")[];
             /** Taxa */
             taxonIDs?: string[];
             /** Sampling method notes */
@@ -14839,7 +16366,7 @@ export interface components {
             /** Context for the Area */
             "@context"?: string;
             /** Id for the Area */
-            id?: string;
+            id: string;
             /** Type for the Area */
             "@type"?: string;
             /**
@@ -14866,10 +16393,10 @@ export interface components {
             isPartOfEnvironmentalELY?: string;
             /** Is part of province */
             isPartOfProvince?: string;
-            name: string;
+            name?: string;
             /** Previously used name */
             previouslyOfficialName?: string[];
-            provinceCodeAlpha?: string;
+            provinceCodeAlpha?: components["schemas"]["store-multiLang"];
             /** Province code numeric */
             provinceCodeNumeric?: string;
             /** ringingDepartmentBirdAssociationAreaCode */
@@ -14884,8 +16411,8 @@ export interface components {
             id: string;
             /** Type for the MMAN.tagClass */
             "@type": string;
-            description: string;
-            name: string;
+            description?: string;
+            name: components["schemas"]["store-multiLang"];
             /** Required role to add */
             requiredRolesAdd: ("" | "MMAN.expert" | "MMAN.basic" | "MMAN.owner" | "MMAN.formAdmin" | "MMAN.ictAdmin")[];
             /** Required role to remove */
@@ -14900,7 +16427,7 @@ export interface components {
             /** Context for the Checklist */
             "@context"?: string;
             /** Id for the Checklist */
-            id?: string;
+            id: string;
             /** Type for the Checklist */
             "@type"?: string;
             /** isPublic */
@@ -14915,171 +16442,34 @@ export interface components {
         };
         "store-checklistVersion": {
             /** Context for the Checklist version */
-            "@context": string;
+            "@context"?: string;
             /** Id for the Checklist version */
             id: string;
             /** Type for the Checklist version */
-            "@type": string;
+            "@type"?: string;
             /** Checklist id */
-            versionChecklist: string;
+            versionChecklist?: string;
             /**
              * Frozen at
              * Format: date
              */
-            versionDate: string;
-            versionDescription: string;
-            versionName: string;
-        };
-        "store-organization": {
-            /** Context for the Organization */
-            "@context"?: string;
-            /** Id for the Organization */
-            id?: string;
-            /** Type for the Organization */
-            "@type"?: string;
-            /**
-             * EORI number
-             * @description Economic Operators Registration and Identification number for customs clearance, if needed.
-             */
-            EORINumber?: string;
-            /**
-             * Web address
-             * @description Organisation website. Include http://
-             */
-            URL?: string;
-            /**
-             * Institution code
-             * @description Official code for this organization, if one exists
-             */
-            abbreviation?: string;
-            /**
-             * Code source
-             * @description If organisation code is given, the source for it must be chosen.
-             * @enum {string}
-             */
-            abbreviationExplanation?: "" | "MOS.abbreviation-explanationIndexHerbariorum" | "MOS.abbreviation-explanationInsectAndSpiderCollectionsOfTheWorld";
-            /**
-             * Additional IDs
-             * @description Other identifiers this organization has
-             */
-            additionalIDs?: string[];
-            /**
-             * Content contact person
-             * @description Name of content/collection contact person for the organization.
-             */
-            contentContact?: string;
-            /**
-             * Country
-             * @description Name of the country as on a postal address.
-             */
-            country?: string;
-            /**
-             * Address for courier services
-             * @description Address and other contact details to be given for courier services, if different from normal postal address. Appears on transaction PDFs like formulated here.
-             */
-            courierAddress?: string;
-            /**
-             * Tags
-             * @description Tags this organisation has
-             */
-            datasetID?: string[];
-            /**
-             * Due date for orders
-             * Format: date
-             * @description Last date for sending seed orders to this organization.
-             */
-            dateOrdersDue?: string;
-            /** editNotes */
-            editNotes?: string;
-            /**
-             * Email
-             * @description Contact email address for the organization, or address of a contact person.
-             */
-            email?: string;
-            /**
-             * Fax
-             * @description Fax number, with country code
-             */
-            fax?: string;
-            fullName?: string;
-            /**
-             * Hide organization
-             * @description Used for organisations that are not to be used (duplicates etc.)
-             */
-            hidden?: boolean;
-            /**
-             * Locality/City
-             * @description Usually city name
-             */
-            locality?: string;
-            /**
-             * Logo URL
-             * @description Web address where the logo of the organization is located. Used on Kotka transaction PDFs for now.
-             */
-            logo?: string;
-            /**
-             * Notes
-             * @description Free-text notes
-             */
-            notes?: string;
-            organizationLevel1: string;
-            organizationLevel2?: string;
-            organizationLevel3?: string;
-            organizationLevel4?: string;
-            /**
-             * Telephone
-             * @description Phone number for organization or contact person, with country code.
-             */
-            phone?: string;
-            /**
-             * Post office box
-             * @description Insert only numbers, leave 'P.O. Box', 'PL' or such out.
-             */
-            postOfficeBox?: string;
-            /** Postal code */
-            postalCode?: string;
-            /**
-             * Region
-             * @description E.g. state or province; use only if needed in the postal address
-             */
-            region?: string;
-            /** Street address */
-            streetAddress?: string;
-            /** Content contact ID */
-            contentContactID?: string[];
-            /** Creator */
-            creator?: string;
-            /**
-             * Created
-             * Format: date-time
-             */
-            dateCreated?: string;
-            /**
-             * Edited
-             * Format: date-time
-             */
-            dateEdited?: string;
-            /** Editor */
-            editor?: string;
-            /**
-             * Owner of record
-             * @description Team or organisation that owns the record and can edit it.
-             */
-            owner?: string;
+            versionDate?: string;
+            versionDescription?: string;
+            versionName?: components["schemas"]["store-multiLang"];
         };
         SensitiveOrganization: {
             "@context": string;
-            organizationLevel1: string;
-            organizationLevel2?: string;
-            organizationLevel3?: string;
-            organizationLevel4?: string;
+            organizationLevel1?: string;
+            organizationLevel2?: components["schemas"]["MultiLangDto"];
+            organizationLevel3?: components["schemas"]["MultiLangDto"];
+            organizationLevel4?: components["schemas"]["MultiLangDto"];
             abbreviation?: string;
         };
         "store-informalTaxonGroup": {
             /** Context for the Informal Taxon Group */
             "@context"?: string;
             /** Id for the Informal Taxon Group */
-            id?: string;
+            id: string;
             /** Type for the Informal Taxon Group */
             "@type"?: string;
             /**
@@ -15089,7 +16479,7 @@ export interface components {
             explicitlyDefinedRoot?: boolean;
             /** Has subgroup */
             hasSubGroup?: string[];
-            name: string;
+            name?: string;
         };
         TaxonAutocompleteResponse: {
             /** @description Name that matched the search word */
@@ -15115,7 +16505,7 @@ export interface components {
             finnish: boolean;
             /** @description Is the taxon that has the mathing name species level or lower, or a higher taxon */
             species: boolean;
-            vernacularName: components["schemas"]["LajiBackendLocalizedText"];
+            vernacularName?: string;
             informalGroups: {
                 /** @description Identifier of the informal taxon group that the matching taxon belongs to); in the short Qname format, for example 'MVL.1' */
                 id: string;
@@ -15133,8 +16523,8 @@ export interface components {
         };
         SensitiveSource: {
             id?: string;
-            name: string;
-            description: string;
+            name?: string;
+            description: components["schemas"]["MultiLangDto"];
         };
         "store-iucnRedListTaxonGroup": {
             /** Context for the IUCN Red List Evaluation Informal Taxon Group */
@@ -15149,7 +16539,33 @@ export interface components {
             includesInformalTaxonGroup?: string[];
             /** Includes taxon */
             includesTaxon?: string[];
+            name?: string;
+        };
+        IucnRedListTaxonGroupExpanded: {
+            /** Context for the IUCN Red List Evaluation Informal Taxon Group */
+            "@context"?: string;
+            /** Id for the IUCN Red List Evaluation Informal Taxon Group */
+            id: string;
+            /** Type for the IUCN Red List Evaluation Informal Taxon Group */
+            "@type"?: string;
+            hasIucnSubGroup?: components["schemas"]["IucnRedListTaxonGroupExpanded"];
+            /** Includes informal taxon group */
+            includesInformalTaxonGroup?: string[];
+            /** Includes taxon */
+            includesTaxon?: string[];
             name: string;
+        };
+        "store-publication": {
+            /** Context for the Publication */
+            "@context"?: string;
+            /** Id for the Publication */
+            id: string;
+            /** Type for the Publication */
+            "@type"?: string;
+            /** URI */
+            URI?: string;
+            /** Name */
+            name?: string;
         };
     };
     responses: never;
@@ -15501,72 +16917,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** Context for the MHL.form */
-                        "@context": string;
-                        /** Id for the MHL.form */
-                        id: string;
-                        /** Type for the MHL.form */
-                        "@type": string;
-                        /** Base form */
-                        baseFormID: string;
-                        /**
-                         * Category
-                         * @enum {string}
-                         */
-                        category: "" | "MHL.categoryGeneric" | "MHL.categorySurvey" | "MHL.categoryTaxonomicGroup" | "MHL.categoryBirdMonitoringSchemes" | "MHL.categoryCitizenScience" | "MHL.categoryBiomonCompleteLists";
-                        /**
-                         * Collection ID
-                         * @description Id for the collection to where observation useing this form are connected
-                         */
-                        collectionID: string;
-                        /**
-                         * Context
-                         * @description The schema context of the form (e.g. MY.document, MNP.namedPlace...)
-                         */
-                        context: string;
-                        /** Description */
-                        description: string;
-                        /**
-                         * Fields form ID
-                         * @description Use fields, uiSchema and translations from the form
-                         */
-                        fieldsFormID: string;
-                        /**
-                         * Form language
-                         * @enum {string}
-                         */
-                        language: "" | "en" | "fi" | "sv";
-                        /** Logo address */
-                        logo: string;
-                        /** Name */
-                        name: string;
-                        options: components["schemas"]["store-formOptions"];
-                        /** Patch form data */
-                        patch: {
-                            [key: string]: unknown;
-                        }[];
-                        /** Short description */
-                        shortDescription: string;
-                        /**
-                         * Short title
-                         * @description Shown at sidebar and & as browser title
-                         */
-                        shortTitle: string;
-                        /** Supported language */
-                        supportedLanguage: ("" | "en" | "fi" | "sv")[];
-                        /** Title */
-                        title: string;
-                        /** Translations */
-                        translations: {
-                            [key: string]: unknown;
-                        };
-                        /** Specification for ui schema */
-                        uiSchema: {
-                            [key: string]: unknown;
-                        };
-                        schema: components["schemas"]["JSONSchema"];
-                    };
+                    "application/json": components["schemas"]["Form"];
                 };
             };
             400: {
@@ -17255,15 +18606,15 @@ export interface operations {
             };
         };
     };
-    NotificationsController_getAllV1: {
+    NotificationsController_getPage: {
         parameters: {
             query?: {
+                page?: number;
+                pageSize?: number;
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
                 selectedFields?: string;
                 /** @description Return only notifications that have not been marked as seen. */
                 onlyUnSeen?: boolean;
-                page?: number;
-                pageSize?: number;
             };
             header?: {
                 /** @description Person's authentication token. It is required. */
@@ -18231,7 +19582,7 @@ export interface operations {
             };
         };
     };
-    MetadataController_getAlts: {
+    MetadataController_getAltsLookup: {
         parameters: {
             query?: never;
             header?: never;
@@ -18247,6 +19598,115 @@ export interface operations {
                 content: {
                     "application/json": {
                         [key: string]: components["schemas"]["Alt"];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    MetadataController_getAltsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: {
+                            id: string;
+                            options: components["schemas"]["Alt"][];
+                        }[];
+                        "@context": string;
                     };
                 };
             };
@@ -18447,10 +19907,12 @@ export interface operations {
     CollectionsController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
             };
             header?: never;
             path?: never;
@@ -18585,6 +20047,112 @@ export interface operations {
                         prevPage?: number;
                         nextPage?: number;
                         results: components["schemas"]["SensitiveCollection"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    CollectionsController_getTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        results: components["schemas"]["ExpandedSensitiveCollection"][];
+                        "@context": string;
                     };
                 };
             };
@@ -19670,16 +21238,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @enum {string} */
-                        phase: "VALIDATING" | "READY_TO_COMPLETE" | "COMPLETING" | "COMPLETED" | "FAILED_UPON_VALIDATION" | "FAILED_UPON_COMPLETION";
-                        /** @default [] */
-                        errors: (components["schemas"]["ErrorsObj"] | null)[];
-                        id: string;
-                        documents?: components["schemas"]["store-document"][];
-                        status: components["schemas"]["BatchJobValidationStatus"];
-                        personID: string;
-                    };
+                    "application/json": components["schemas"]["BatchJobValidationStatusResponse"];
                 };
             };
             400: {
@@ -19898,16 +21457,12 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["store-document"];
             };
+        };
+        responses: {
             /** @description Validation raised no errors */
             204: {
                 headers: {
@@ -20238,6 +21793,8 @@ export interface operations {
     DocumentsController_getPage: {
         parameters: {
             query?: {
+                page?: number;
+                pageSize?: number;
                 /** @description Limit the list of documents to a certain named place */
                 namedPlace?: string;
                 /** @description Comma separated list of field names to include in the response */
@@ -20251,8 +21808,8 @@ export interface operations {
                 sourceID?: string;
                 /** @description Use this form's features for the request. */
                 formID?: string;
-                page?: number;
-                pageSize?: number;
+                /** @description Some collections return all users documents. This makes the result include only documents that the user is owner or editor of. */
+                selfAsEditorOrCreator?: boolean;
             };
             header?: {
                 /** @description Person's authentication token. It is required. */
@@ -21029,7 +22586,9 @@ export interface operations {
     };
     NamedPlacesController_getPage: {
         parameters: {
-            query: {
+            query?: {
+                page?: number;
+                pageSize?: number;
                 /** @description Include only items with these ids. Multiple values are separated by a comma (,). */
                 idIn?: string;
                 /** @description alternative ID. Multiple values are separated by a comma (,). */
@@ -21044,13 +22603,9 @@ export interface operations {
                 /** @description Filter by tags. Multiple values are separated by a comma (,). */
                 tags?: string;
                 /** @description Collection id. Child collections are also fetched. */
-                collectionID: string;
+                collectionID?: string;
                 /** @description Include public named places (used only when Person-Token is given). Defaults to true. */
                 includePublic?: boolean;
-                /** @description Include units in prepopulated and accepted documents (only form forms with 'MHL.includeUnits' true). Defaults to false. */
-                includeUnits?: boolean;
-                page?: number;
-                pageSize?: number;
             };
             header?: {
                 /** @description Person's authentication token. Necessary for fetching private places */
@@ -21740,6 +23295,8 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
                 /** @description Filter by comma separated ids */
@@ -21748,8 +23305,6 @@ export interface operations {
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description true: Will include only invasive taxa.
                  *     false: Will exclude invasive taxa. */
                 invasiveSpecies?: boolean;
@@ -21886,12 +23441,12 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description Include media objects in the response. Defaults to false. */
                 includeMedia?: boolean;
                 /** @description Include description objects in the response. Defaults to false. */
@@ -23362,6 +24917,8 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
                 /** @description Filter by comma separated ids */
@@ -23370,8 +24927,6 @@ export interface operations {
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description true: Will include only invasive taxa.
                  *     false: Will exclude invasive taxa. */
                 invasiveSpecies?: boolean;
@@ -23508,12 +25063,12 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description Include media objects in the response. Defaults to false. */
                 includeMedia?: boolean;
                 /** @description Include description objects in the response. Defaults to false. */
@@ -24991,173 +26546,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @description Qname identifier */
-                        qname: string;
-                        /** @description Qname identifier */
-                        id: string;
-                        uri: string;
-                        /** @description Qname identifier */
-                        isPartOf: string;
-                        /** @description Qname identifier */
-                        isPartOfNonHidden: string;
-                        parents: string[];
-                        nonHiddenParents: string[];
-                        depth: number;
-                        nonHiddenDepth: number;
-                        parentsIncludeSelf: string[];
-                        nonHiddenParentsIncludeSelf: string[];
-                        hiddenTaxon: boolean;
-                        /** @description Qname identifier */
-                        nameAccordingTo: string;
-                        /** @description Qname identifier */
-                        taxonRank: string;
-                        scientificName: string;
-                        scientificNameAuthorship: string;
-                        scientificNameDisplayName: string;
-                        cursiveName: boolean;
-                        typeSpecimenURI: string;
-                        synonymNames: string;
-                        basionyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        objectiveSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        subjectiveSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        homotypicSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        heterotypicSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        synonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        misspelledNames: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        orthographicVariants: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        uncertainSynonyms: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        misappliedNames: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        alternativeNames: components["schemas"]["LajiBackendSimpleTaxon"][];
-                        vernacularName: components["schemas"]["LajiBackendLocalizedText"];
-                        alternativeVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
-                        obsoleteVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
-                        colloquialVernacularName: components["schemas"]["LajiBackendLocalizedText"][];
-                        tradeName: components["schemas"]["LajiBackendLocalizedText"][];
-                        informalTaxonGroups: string[];
-                        /** @description Qname identifier */
-                        threatenedStatus: string;
-                        redListEvaluationGroups: string[];
-                        /** @description Qname identifier */
-                        occurrenceInFinland: string;
-                        occurrenceInFinlandSpecimenURI: string;
-                        typeOfOccurrenceInFinland: string[];
-                        occurrenceInFinlandPublications: string[];
-                        typeOfOccurrenceInFinlandNotes: string;
-                        originalPublications: string[];
-                        /** @description Qname identifier */
-                        originalDescription: string;
-                        /** @description Qname identifier */
-                        nameDecidedBy: string;
-                        nameDecidedDate: string;
-                        administrativeStatuses: string[];
-                        primaryHabitat: components["schemas"]["LajiBackendHabitatObject"];
-                        secondaryHabitats: components["schemas"]["LajiBackendHabitatObject"][];
-                        latestRedListStatusFinland: components["schemas"]["LajiBackendRedListStatus"];
-                        redListStatusesInFinland: components["schemas"]["LajiBackendRedListStatus"][];
-                        taxonExpert: string[];
-                        taxonEditor: string[];
-                        /** @description Qname identifier */
-                        invasiveSpeciesEstablishment: string;
-                        multimedia: components["schemas"]["LajiBackendImage"][];
-                        descriptions: components["schemas"]["LajiBackendContent"];
-                        /** @description Qname identifier */
-                        secureLevel: string;
-                        /** @description Qname identifier */
-                        breedingSecureLevel: string;
-                        /** @description Qname identifier */
-                        winteringSecureLevel: string;
-                        /** @description Qname identifier */
-                        nestSiteSecureLevel: string;
-                        /** @description Qname identifier */
-                        naturaAreaSecureLevel: string;
-                        sensitive: boolean;
-                        autoNonWild: boolean;
-                        occurrences: components["schemas"]["LajiBackendOccurrence"][];
-                        habitatOccurrenceCounts: components["schemas"]["LajiBackendHabitatOccurrenceCount"][];
-                        birdlifeCode: string;
-                        euringCode: string;
-                        euringNumber: number;
-                        customReportFormLink: string;
-                        taxonConceptIds: string[];
-                        additionalIds: string[];
-                        externalLinks: components["schemas"]["LajiBackendLocalizedURL"][];
-                        finnish: boolean;
-                        species: boolean;
-                        finnishSpecies: boolean;
-                        invasiveSpecies: boolean;
-                        stableInFinland: boolean;
-                        countOfSpecies: number;
-                        countOfFinnishSpecies: number;
-                        observationCount: number;
-                        occurrenceCount: number;
-                        observationCountFinland: number;
-                        occurrenceCountFinland: number;
-                        observationCountInvasiveFinland: number;
-                        occurrenceCountInvasiveFinland: number;
-                        bold: components["schemas"]["LajiBackendBoldRecords"];
-                        hasBold: boolean;
-                        /** @description Qname identifier */
-                        isPartOfSynonym: string;
-                        hasParent: boolean;
-                        hasChildren: boolean;
-                        hasMultimedia: boolean;
-                        hasDescriptions: boolean;
-                        invasiveSpeciesMainGroups: string[];
-                        taxonSets: string[];
-                        notes: string;
-                        taxonomicOrder: number;
-                        parent: {
-                            domain: components["schemas"]["LajiBackendSimpleTaxon"];
-                            kingdom: components["schemas"]["LajiBackendSimpleTaxon"];
-                            phylum: components["schemas"]["LajiBackendSimpleTaxon"];
-                            subphylum: components["schemas"]["LajiBackendSimpleTaxon"];
-                            division: components["schemas"]["LajiBackendSimpleTaxon"];
-                            class: components["schemas"]["LajiBackendSimpleTaxon"];
-                            subclass: components["schemas"]["LajiBackendSimpleTaxon"];
-                            order: components["schemas"]["LajiBackendSimpleTaxon"];
-                            suborder: components["schemas"]["LajiBackendSimpleTaxon"];
-                            superfamily: components["schemas"]["LajiBackendSimpleTaxon"];
-                            family: components["schemas"]["LajiBackendSimpleTaxon"];
-                            subfamily: components["schemas"]["LajiBackendSimpleTaxon"];
-                            tribe: components["schemas"]["LajiBackendSimpleTaxon"];
-                            subtribe: components["schemas"]["LajiBackendSimpleTaxon"];
-                            genus: components["schemas"]["LajiBackendSimpleTaxon"];
-                            subgenus: components["schemas"]["LajiBackendSimpleTaxon"];
-                            aggregate: components["schemas"]["LajiBackendSimpleTaxon"];
-                            species: components["schemas"]["LajiBackendSimpleTaxon"];
-                        };
-                        synonymOf: components["schemas"]["LajiBackendSimpleTaxon"];
-                        latestRedListEvaluation: components["schemas"]["LajiBackendEvaluation"];
-                        hasLatestRedListEvaluation: boolean;
-                        primaryHabitatSearchStrings: string[];
-                        anyHabitatSearchStrings: string[];
-                        vernacularNameMultiLang: {
-                            fi: components["schemas"]["LajiBackendLocalizedText"];
-                            sv: components["schemas"]["LajiBackendLocalizedText"];
-                            en: components["schemas"]["LajiBackendLocalizedText"];
-                        };
-                        alternativeVernacularNameMultiLang: {
-                            fi: components["schemas"]["LajiBackendLocalizedText"][];
-                            sv: components["schemas"]["LajiBackendLocalizedText"][];
-                            en: components["schemas"]["LajiBackendLocalizedText"][];
-                        };
-                        colloquialVernacularNameMultiLang: {
-                            fi: components["schemas"]["LajiBackendLocalizedText"][];
-                            sv: components["schemas"]["LajiBackendLocalizedText"][];
-                            en: components["schemas"]["LajiBackendLocalizedText"][];
-                        };
-                        obsoleteVernacularNameMultiLang: {
-                            fi: components["schemas"]["LajiBackendLocalizedText"][];
-                            sv: components["schemas"]["LajiBackendLocalizedText"][];
-                            en: components["schemas"]["LajiBackendLocalizedText"][];
-                        };
-                        tradeNameMultiLang: {
-                            fi: components["schemas"]["LajiBackendLocalizedText"][];
-                            sv: components["schemas"]["LajiBackendLocalizedText"][];
-                            en: components["schemas"]["LajiBackendLocalizedText"][];
-                        };
-                    };
+                    "application/json": components["schemas"]["LajiBackendTaxon"];
                 };
             };
             400: {
@@ -26338,6 +27727,8 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
                 /** @description Filter by comma separated ids */
@@ -26346,8 +27737,6 @@ export interface operations {
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description true: Will include only invasive taxa.
                  *     false: Will exclude invasive taxa. */
                 invasiveSpecies?: boolean;
@@ -26486,6 +27875,8 @@ export interface operations {
             query?: {
                 /** @description Include taxa from the specified checklists (defaults to FinBIF master checklist) */
                 checklist?: string;
+                page?: number;
+                pageSize?: number;
                 /** @description Filter based on given informal groups. Multiple values are separated by a comma (,). */
                 informalTaxonGroups?: string;
                 /** @description Filter by comma separated ids */
@@ -26494,8 +27885,6 @@ export interface operations {
                 selectedFields?: string;
                 /** @description Checklist version to be used. Defaults to the latest version. */
                 checklistVersion?: "current" | "MR.424" | "MR.425" | "MR.426" | "MR.427" | "MR.428" | "MR.484";
-                page?: number;
-                pageSize?: number;
                 /** @description true: Will include only invasive taxa.
                  *     false: Will exclude invasive taxa. */
                 invasiveSpecies?: boolean;
@@ -28292,12 +29681,12 @@ export interface operations {
     AreaController_getPage: {
         parameters: {
             query?: {
+                page?: number;
+                pageSize?: number;
                 /** @description Include only items with the given ids. Multiple values are separated by a comma (,). */
                 idIn?: string;
                 /** @description Area type */
                 areaType?: "ML.country" | "ML.biogeographicalProvince" | "ML.municipality" | "ML.oldMunicipality" | "ML.birdAssociationArea" | "ML.iucnEvaluationArea";
-                page?: number;
-                pageSize?: number;
             };
             header?: never;
             path?: never;
@@ -28641,6 +30030,219 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    ApiUsersController_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accessToken: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    ImagesController_getPage: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImagesPagedDto"];
+                };
             };
             400: {
                 headers: {
@@ -29512,6 +31114,116 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Image"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCode: string;
+                        message: string;
+                        localized: boolean;
+                    };
+                };
+            };
+        };
+    };
+    AudioController_getPage: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudioPagedDto"];
                 };
             };
             400: {
@@ -30687,10 +32399,10 @@ export interface operations {
     AnnotationsController_getPage: {
         parameters: {
             query: {
-                /** @description Filter by root ID */
-                rootID: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Filter by root ID */
+                rootID: string;
             };
             header?: {
                 /** @description Person's authentication token. It is required. */
@@ -31021,109 +32733,6 @@ export interface operations {
             };
         };
     };
-    InformationController_getIndex: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-        };
-    };
     InformationController_get: {
         parameters: {
             query?: never;
@@ -31131,109 +32740,6 @@ export interface operations {
             path: {
                 id: string;
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Information"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        errorCode: string;
-                        message: string;
-                        localized: boolean;
-                    };
-                };
-            };
-        };
-    };
-    InformationController_getAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -31440,10 +32946,12 @@ export interface operations {
     ChecklistController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
             };
             header?: never;
             path?: never;
@@ -31661,10 +33169,10 @@ export interface operations {
     ChecklistVersionsController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
             };
             header?: never;
             path?: never;
@@ -31774,7 +33282,7 @@ export interface operations {
             };
         };
     };
-    OrganizationsController_getAll: {
+    OrganizationsController_getPage: {
         parameters: {
             query?: {
                 /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
@@ -31998,10 +33506,12 @@ export interface operations {
     InformalTaxonGroupsController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
             };
             header?: never;
             path?: never;
@@ -33868,11 +35378,14 @@ export interface operations {
             };
         };
         responses: {
+            /** @description PDF file */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/pdf": string;
+                };
             };
             400: {
                 headers: {
@@ -34281,10 +35794,12 @@ export interface operations {
     SourcesController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
             };
             header?: never;
             path?: never;
@@ -34397,10 +35912,12 @@ export interface operations {
     RedListEvaluationGroupsController_getPage: {
         parameters: {
             query?: {
-                /** @description Comma separated ids */
-                idIn?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Comma separated ids */
+                idIn?: string;
+                /** @description Select fields to include in the result. Multiple values are separated by a comma (,) */
+                selectedFields?: string;
             };
             header?: never;
             path?: never;
@@ -34525,7 +36042,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        results: components["schemas"]["store-iucnRedListTaxonGroup"][];
+                        results: components["schemas"]["IucnRedListTaxonGroupExpanded"][];
                         "@context": string;
                     };
                 };
@@ -35374,7 +36891,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["store-publication"];
                 };
             };
             400: {
@@ -35466,10 +36983,10 @@ export interface operations {
     NewsController_getPage: {
         parameters: {
             query?: {
-                /** @description Show only news with the given tag(s). Multiple values are separated by a comma (,). */
-                tag?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Show only news with the given tag(s). Multiple values are separated by a comma (,). */
+                tag?: string;
             };
             header?: never;
             path?: never;
@@ -35587,7 +37104,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["NewsDto"];
+                    "application/json": components["schemas"]["LajiBackendCMSNode"];
                 };
             };
             400: {
@@ -35699,7 +37216,7 @@ export interface operations {
                     "text/csv": unknown;
                 };
             };
-            /** @description Unsupported file type */
+            /** @description Unsupported file type or bare .shp upload */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -35788,13 +37305,13 @@ export interface operations {
             };
         };
     };
-    get_status_status__id__get: {
+    get_status_status__conversion_id__get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 /** @description Conversion ID to check */
-                id: string;
+                conversion_id: string;
             };
             cookie?: never;
         };
@@ -35858,7 +37375,7 @@ export interface operations {
             };
         };
     };
-    get_output_output__id__get: {
+    get_output_output__conversion_id__get: {
         parameters: {
             query?: never;
             header?: {
@@ -35867,7 +37384,7 @@ export interface operations {
             };
             path: {
                 /** @description Conversion ID */
-                id: string;
+                conversion_id: string;
             };
             cookie?: never;
         };
@@ -35921,7 +37438,7 @@ export interface operations {
             };
         };
     };
-    convert_with_id__id__get: {
+    convert_with_id__dataset_id__get: {
         parameters: {
             query: {
                 /** @description Language for field names (fi=Finnish, en=English, tech=technical) */
@@ -35937,7 +37454,7 @@ export interface operations {
             };
             path: {
                 /** @description ID of the file in the data warehouse */
-                id: string;
+                dataset_id: string;
             };
             cookie?: never;
         };
@@ -35950,7 +37467,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                    /** @example dataset123_tech_point_wgs84 */
+                    /** @example 48cdcf2f-4e8a-4b4a-a786-068ab8854b84 */
                     "text/plain": unknown;
                 };
             };

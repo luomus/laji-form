@@ -17,7 +17,7 @@ export default function EnumRangeArrayField(props: FieldProps<JSONSchemaArray<JS
 	const getEnumOptionsAsync = useCallback(
 		async () => {
 			const enums = (await props.formContext.apiClient.get("/metadata/alts/{alt}", { path: { alt: range } })).results;
-			return enums.map(({value}) => ({value, label: value}));
+			return enums.map(({value}) => ({value, label: value ?? ""}));
 		},
 		[props.formContext.apiClient, range]
 	);
