@@ -476,12 +476,12 @@ const Caret = () => (
 	</div>
 );
 
-function ListItem(
+function ListItem<T extends string | number | undefined>(
 	{ onSelected, active, children }
 	: {
-		onSelected: (value: EnumOptionsType) => void;
+		onSelected: (value: EnumOptionsType<T>) => void;
 		active?: boolean;
-		children: EnumOptionsType
+		children: EnumOptionsType<T>
 	}
 ) {
 	const onClick = useCallback(() => {
