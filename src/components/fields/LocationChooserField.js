@@ -339,7 +339,8 @@ class LocationButton extends React.Component {
 		const {preselectMarker = true} = getUiOptions(that.props.uiSchema);
 		map.resetDrawUndoStack();
 		if (!disabled && !readonly && preselectMarker) {
-			this.triggerLayer = map.triggerDrawing("marker");
+			// setTimeout fixes luomus/meta#555
+			setTimeout(() => map.triggerDrawing("marker"), 0);
 		}
 	};
 
