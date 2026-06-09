@@ -1708,10 +1708,13 @@ body .laji-form {
 .laji-form-col-sortable.darker:hover {
 	background-color: #eaeaea;
 }
+.laji-form th.laji-form-col-desc, .laji-form th.laji-form-col-asc {
+	padding-right: 20px;
+}
 .laji-form-col-desc:after {
 	content: "↑";
 	position: absolute;
-	margin-left: 5px;
+	margin-left: 6px;
 	float: right;
 }
 .laji-form-col-asc:after {
