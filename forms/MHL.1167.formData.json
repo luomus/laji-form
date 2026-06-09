@@ -1,0 +1,69 @@
+{
+  "secureLevel": "MX.secureLevelNone",
+  "gatheringEvent": {
+    "leg": [
+      "MA.2718"
+    ],
+    "legPublic": true,
+    "dateBegin": "2026-03-02",
+    "timeStart": "10:00",
+    "dateEnd": "2026-03-02",
+    "timeEnd": "11:00",
+    "id": "JX.345039#1",
+    "@type": "MZ.gatheringEvent"
+  },
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  21.866346,
+                  59.953556
+                ],
+                [
+                  21.944423,
+                  59.953556
+                ],
+                [
+                  21.944423,
+                  59.988627
+                ],
+                [
+                  21.866346,
+                  59.988627
+                ],
+                [
+                  21.866346,
+                  59.953556
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      "localityDescription": "Kopparholmin saaristoa",
+      "biologicalProvince": "Varsinais-Suomi",
+      "country": "Suomi",
+      "municipality": "Parainen",
+      "id": "JX.345039#2",
+      "@type": "MY.gathering"
+    }
+  ],
+  "namedPlaceID": "MNP.56680",
+  "formID": "MHL.1167",
+  "creator": "MA.2718",
+  "sourceID": "KE.841",
+  "collectionID": "HR.7400",
+  "editor": "MA.2718",
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "dateEdited": "2026-03-02T13:50:17+02:00",
+  "dateCreated": "2026-03-02T11:20:11.915Z",
+  "id": "JX.345039",
+  "@type": "MY.document",
+  "@context": "https://store-dev.luomus.fi/json-ld-context/MY.document.json"
+}

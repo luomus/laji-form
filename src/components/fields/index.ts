@@ -67,6 +67,7 @@ export { default as CondensedObjectField } from "./CondensedObjectField";
 export { default as MultiActiveArrayField } from "./MultiActiveArrayField";
 export { default as PrefixArrayField } from "./PrefixArrayField";
 export { default as FillDateRangeField } from "./FillDateRangeField";
+export { default as TaxaByYearPopulatorField } from "./TaxaByYearPopulatorField";
 export { default as TaxonSetPopulatorField } from "./TaxonSetPopulatorField";
 export { default as ScientificNameTaxonAutosuggestField } from "./ScientificNameTaxonAutosuggestField";
 

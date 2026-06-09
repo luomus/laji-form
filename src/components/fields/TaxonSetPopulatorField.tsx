@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { FieldProps } from "../../types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { addLajiFormIds } from "../..//utils";
+import { addLajiFormIds } from "../../utils";
 
 const propsPropType = PropTypes.shape({
 	from: PropTypes.string.isRequired,
