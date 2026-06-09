@@ -17,7 +17,7 @@ interface Options {
 	excludeSortableColumns?: string[];
 }
 
-export const colIsLoading = (col: SortCol) => col.compareStrategy && !col.compare;
+export const colIsLoading = (col: SortCol) => col.compareStrategy?.strategy !== "default" && !col.compare;
 
 const colsLoading = (sortCols: SortCol[]) => sortCols.filter(colIsLoading).length > 0;
 
