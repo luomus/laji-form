@@ -8,7 +8,7 @@ import {
 	updateValue,
 	DateWidgetPO,
 	ImageArrayFieldPOI,
-	TaxonAutosuggestWidgetPOI
+	TaxonAutosuggestWidgetPOI, getRemoveIdentification
 } from "./test-utils";
 import { MapPageObject } from "@luomus/laji-map/test-export/test-utils";
 
@@ -23,7 +23,9 @@ test.describe("specimen form (MHL.1158)", () => {
 
 	const uiSchemaContext = {
 		userName: "Test, User",
-		userEmail: "user.test@email.com"
+		userEmail: "user.test@email.com",
+		confirmDelete: true,
+		isEdit: true
 	};
 
 	test.beforeAll(async ({browser}) => {
@@ -128,7 +130,7 @@ test.describe("specimen form (MHL.1158)", () => {
 		});
 
 		test("panel can be closed by clicking", async () => {
-			await form.$locateAddition("gatherings.0.units.0", "panel").locator(".laji-form-clickable-panel-header").click();
+			await form.$locateAddition("gatherings.0.units.0", "panel").locator(".laji-form-clickable-panel-header").first().click();
 			await expect(form.$locate("gatherings.0.units.0.primarySpecimen")).not.toBeVisible();
 			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
 		});
@@ -139,16 +141,33 @@ test.describe("specimen form (MHL.1158)", () => {
 			await expect(form.$locate("gatherings.0.units.1.primarySpecimen")).toBeVisible();
 		});
 
+		test("can be deleted", async () => {
+			await removeUnit(0, 1);
+
+			await expect(form.$locate("gatherings.0.units.1")).not.toBeVisible();
+		});
+
 		test.describe("identifications", () => {
 			let $identificationAdd: Locator;
+			let removeIdentification: (g: number, u: number, i: number) => Promise<void>;
 
 			test.beforeAll(async () => {
 				$identificationAdd = form.$locateButton("gatherings.0.units.0.identifications", "add");
+				removeIdentification = getRemoveIdentification(page);
+			});
+
+			test("has one by default", async () => {
+				await expect(form.$locate("gatherings.0.units.0.identifications.0")).toBeVisible();
 			});
 
 			test("can be added", async () => {
 				await $identificationAdd.click();
-				await expect(form.$locate("gatherings.0.units.0.identifications.0")).toBeVisible();
+				await expect(form.$locate("gatherings.0.units.0.identifications.1")).toBeVisible();
+			});
+
+			test("can be removed", async () => {
+				await removeIdentification(0, 0, 0);
+				await expect(form.$locate("gatherings.0.units.0.identifications.1")).not.toBeVisible();
 			});
 
 			test.describe("taxon autosuggest", () => {
@@ -161,7 +180,7 @@ test.describe("specimen form (MHL.1158)", () => {
 				});
 
 				test.afterEach(async () => {
-					await page.locator("#root_gatherings_0_units_0_identifications_0-delete").click();
+					await removeIdentification(0, 0, 0);
 					await $identificationAdd.click();
 				});
 
@@ -257,12 +276,6 @@ test.describe("specimen form (MHL.1158)", () => {
 				expect(formData.gatherings[0].units[0].samples[0].material).toEqual("MF.materialSkull");
 			});
 		});
-
-		test("can be deleted", async () => {
-			await removeUnit(0, 1);
-
-			await expect(form.$locate("gatherings.0.units.1")).not.toBeVisible();
-		});
 	});
 
 	test.describe("measurements", () => {
@@ -307,6 +320,7 @@ test.describe("specimen form (MHL.1158)", () => {
 
 		test("can remove measurement field", async () => {
 			await form.$locateButton("gatherings.0.units.0.measurement.beakMillimeters.0", "delete").click();
+			await page.locator("#root_gatherings_0_units_0_measurement_beakMillimeters_0-delete-confirm-yes").click();
 
 			expect(form.$locate("gatherings.0.units.0.measurement.beakMillimeters.1")).not.toBeVisible();
 
@@ -316,7 +330,9 @@ test.describe("specimen form (MHL.1158)", () => {
 
 		test("can remove all measurement fields", async () => {
 			await form.$locateButton("gatherings.0.units.0.measurement.bodyCentimeters.0", "delete").click();
+			await page.locator("#root_gatherings_0_units_0_measurement_bodyCentimeters_0-delete-confirm-yes").click();
 			await form.$locateButton("gatherings.0.units.0.measurement.beakMillimeters.0", "delete").click();
+			await page.locator("#root_gatherings_0_units_0_measurement_beakMillimeters_0-delete-confirm-yes").click();
 
 			expect(form.$locate("gatherings.0.units.0.measurement.bodyCentimeters.0")).not.toBeVisible();
 			expect(form.$locate("gatherings.0.units.0.measurement.beakMillimeters.0")).not.toBeVisible();
@@ -368,6 +384,7 @@ test.describe("specimen form (MHL.1158)", () => {
 
 		test("can remove relationship field", async () => {
 			await form.$locateButton("relationship.0", "delete").click();
+			await page.locator("#root_relationship_0-delete-confirm-yes").click();
 
 			expect(form.$locate("relationship.2")).not.toBeVisible();
 

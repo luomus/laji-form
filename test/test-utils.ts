@@ -460,3 +460,8 @@ export const getRemoveUnit = (page: Page) => async (gatheringIdx: number, unitId
 	await page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete`).click();
 	return page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
 };
+
+export const getRemoveIdentification = (page: Page) => async (gatheringIdx: number, unitIdx: number, identificationIdx: number) => {
+	await page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}_identifications_${identificationIdx}-delete`).click();
+	return page.locator(`#root_gatherings_${gatheringIdx}_units_${unitIdx}_identifications_${identificationIdx}-delete-confirm-yes`).click();
+};
