@@ -11,7 +11,7 @@ import exif from "exifreader";
 import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
 import moment from "moment";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
-import ApiClient from "../../ApiClient";
+import ApiClient, { LajiApiError } from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
 
@@ -476,6 +476,18 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		};
 
 		parseExif = (files: File[]): Promise<ProcessedExifData> => {
+			const readDateFromFile = (file: File) => {
+				if (file.lastModified) {
+					const momentDate = moment(file.lastModified);
+					if (momentDate.isValid()) {
+						const date = momentDate.format("YYYY-MM-DDTHH:mm");
+						if (date) {
+							found.date = date;
+						}
+					}
+				}
+			};
+
 			const {exifParsers = []} = getUiOptions(this.props.uiSchema);
 			if (!exifParsers) return Promise.resolve({});
 
@@ -509,18 +521,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								console.info("Reading GPS from EXIF failed", e);
 							}
 
-							const readDateFromFile = () => {
-								if (file.lastModified) {
-									const momentDate = moment(file.lastModified);
-									if (momentDate.isValid()) {
-										const date = momentDate.format("YYYY-MM-DDTHH:mm");
-										if (date) {
-											found.date = date;
-										}
-									}
-								}
-							};
-
 							if ("date" in found) {
 								try {
 									const rawDate = tags["DateTimeOriginal"]?.description;
@@ -528,15 +528,19 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 									if (momentDate.isValid()) {
 										found.date = momentDate.format("YYYY-MM-DDTHH:mm");
 									} else {
-										readDateFromFile();
+										readDateFromFile(file);
 									}
 								} catch (e) {
 									console.info("Reading date from EXIF failed, trying to read from file", e);
-									readDateFromFile();
+									readDateFromFile(file);
 								}
 							} else {
-								readDateFromFile();
+								readDateFromFile(file);
 							}
+							resolve(found);
+						}).catch(e => {
+							console.info("Reading EXIF data failed", e);
+							readDateFromFile(file);
 							resolve(found);
 						});
 					})
@@ -719,7 +723,17 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					delete this._context.tmpMedias[containerId][id];
 				});
 				this.mounted && this.setState({tmpMedias: this.state.tmpMedias.filter(id => !tmpMedias.includes(id))});
-				throw e;
+
+				let errorMsg: string;
+				if (typeof e === "string") {
+					errorMsg = e;
+				} else if (e instanceof LajiApiError && e.statusCode === 400) {
+					errorMsg = this.props.formContext.translations["InvalidFile"];
+				} else {
+					errorMsg = this.props.formContext.translations["RequestFailed"];
+				}
+
+				throw errorMsg;
 			}
 		}
 
