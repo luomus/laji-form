@@ -679,6 +679,11 @@
 		"en": "Pan the location inside the circle",
 		"sv": "Placera platsen inne i cirkeln"
 	},
+	"confirmLocationChange": {
+		"fi": "Haluatko varmasti muuttaa sijaintia?",
+		"en": "Are you sure you want to change the location?",
+		"sv": "Är du säker på att du vill ändra platsen?"
+	},
 	"unknown": {
 		"fi": "Ei tietoa",
 		"en": "Unknown",

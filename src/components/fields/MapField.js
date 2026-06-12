@@ -2,7 +2,7 @@ import * as React from "react";
 import { createPortal, findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
-import { getUiOptions, isObject } from "../../utils";
+import {getUiOptions, hasData, isObject} from "../../utils";
 const equals = require("deep-equal");
 import Spinner from "react-spinner";
 import { Affix, Button, Fullscreen } from "../components";
@@ -328,6 +328,9 @@ export default class MapField extends React.Component {
 	};
 
 	onChange = (events) => {
+		const options = getUiOptions(this.props.uiSchema);
+		const {confirmChange} = options;
+
 		let formData;
 		events.forEach(e => {
 			switch (e.type) {
@@ -341,6 +344,14 @@ export default class MapField extends React.Component {
 				formData = this.getFormDataFromGeometry(undefined);
 			}
 		});
+
+		if (confirmChange && hasData(this.props.formData) && !equals(formData, this.props.formData)) {
+			if (!confirm(this.props.formContext.translations.ConfirmLocationChange)) {
+				this.map.updateDrawData(this.getDrawOptions(this.props));
+				return;
+			}
+		}
+
 		this._zoomToDataOnNextTick = true;
 		this.props.onChange(formData);
 	};

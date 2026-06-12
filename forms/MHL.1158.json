@@ -5141,6 +5141,7 @@
                   "latitude":"wgs84Latitude",
                   "longitude":"wgs84Longitude"
                 },
+                "confirmChange":true,
                 "mapOptions":{
                   "tileLayerName":"taustakartta",
                   "controls":{
