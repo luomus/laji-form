@@ -728,9 +728,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				if (typeof e === "string") {
 					errorMsg = e;
 				} else if (e instanceof LajiApiError && e.statusCode === 400) {
-					errorMsg = this.props.formContext.translations["InvalidFile"];
+					errorMsg = this.props.formContext.translations.InvalidFile;
 				} else {
-					errorMsg = this.props.formContext.translations["RequestFailed"];
+					errorMsg = this.props.formContext.translations.RequestFailed;
 				}
 
 				throw errorMsg;
