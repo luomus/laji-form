@@ -465,6 +465,7 @@ test.describe("Validations", () => {
 			await expect(form.$blocker).not.toBeVisible();
 
 			await expect(form.errors.$$all).toHaveCount(0);
+			expect(await form.getSubmittedData()).toEqual(formData);
 		});
 
 		test("doesn't run schema validations for empty object items", async ({browser}) => {
@@ -475,6 +476,7 @@ test.describe("Validations", () => {
 			await expect(form.$blocker).not.toBeVisible();
 
 			await expect(form.errors.$$all).toHaveCount(0);
+			expect(await form.getSubmittedData()).toEqual(formData);
 		});
 
 		test("doesn't run schema validations for empty objects", async ({browser}) => {
@@ -485,6 +487,7 @@ test.describe("Validations", () => {
 			await expect(form.$blocker).not.toBeVisible();
 
 			await expect(form.errors.$$all).toHaveCount(0);
+			expect(await form.getSubmittedData()).toEqual(formData);
 		});
 
 		test("runs schema validations for non-empty items", async ({browser}) => {
