@@ -70,6 +70,7 @@ export { default as FillDateRangeField } from "./FillDateRangeField";
 export { default as TaxaByYearPopulatorField } from "./TaxaByYearPopulatorField";
 export { default as TaxonSetPopulatorField } from "./TaxonSetPopulatorField";
 export { default as ScientificNameTaxonAutosuggestField } from "./ScientificNameTaxonAutosuggestField";
+export { default as ArchipelagoURLField } from "./ArchipelagoURLField";
 
 // ---- Aliases for backward compatibility ----
 export { default as ArraySchemaField } from "./SchemaField";

@@ -918,5 +918,10 @@
 		"fi": "Kiinnitä ylös",
 		"en": "Pin to top",
 		"sv": "Fäst överst"
+	},
+	"resultsLink": {
+		"fi": "Linkki tulospalveluun",
+		"en": "Link to result service",
+		"sv": "Länk till resultat"
 	}
 }
