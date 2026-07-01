@@ -36,13 +36,15 @@ export default class ArchipelagoURLField extends React.Component<FieldProps> {
 
 		return (
 			<>
-				<div style={{ margin: 10 }}>
-					<b>{translations.ResultsLink}</b>
-					<br />
-					<a href={url} target="_blank">
-						{url}
-					</a>
-				</div>
+				{year !== undefined && namedPlace !== undefined && (
+					<div style={{ margin: 10 }}>
+						<b>{translations.ResultsLink}</b>
+						<br />
+						<a href={url} target="_blank">
+							{url}
+						</a>
+					</div>
+				)}
 				<SchemaField
 					{...this.props}
 					uiSchema={getInnerUiSchema(this.props.uiSchema)}
