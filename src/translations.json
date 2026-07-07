@@ -923,5 +923,10 @@
 		"fi": "Linkki tulospalveluun",
 		"en": "Link to result service",
 		"sv": "Länk till resultat"
+	},
+	"fieldObservationsFromNP": {
+		"fi": "Kenttähavainnot tältä paikalta",
+		"en": "Field observations from this place",
+		"sv": "Fältobservationer från denna plats"
 	}
 }

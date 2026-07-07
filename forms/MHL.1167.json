@@ -2682,12 +2682,6 @@
             ]
           }
         }
-      },
-      {
-        "ui:field": "ArchipelagoURLField",
-        "ui:options": {
-          "baseURL": "https://dev.laji.fi"
-        }
       }
     ],
     "ui:field": "InjectField",
@@ -3185,6 +3179,12 @@
             },
             {
               "ui:field": "UnitListShorthandArrayField"
+            },
+            {
+              "ui:field": "ArchipelagoURLField",
+              "ui:options": {
+                "baseURL": "https://dev.laji.fi"
+              }
             }
           ],
           "ui:field": "SingleActiveArrayField",

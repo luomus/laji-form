@@ -11,6 +11,7 @@ export default class RootInstanceService {
 	private submitWithWarningsCallback: () => void;
 	private mounted = false;
 	private errorListInstance: ErrorListTemplate;
+	private formDataListeners: ((formData: any) => void)[] = [];
 	constructor(schema: any, formData: any, onChange: (formData: any) => void, validate: () => void, submitWithWarnings: () => void) {
 		this.schema = schema;
 		this.formData = formData;
@@ -21,6 +22,15 @@ export default class RootInstanceService {
 
 	setFormData(formData: any) {
 		this.formData = formData;
+		this.formDataListeners.forEach(fn => fn(formData));
+	}
+
+	addFormDataListener(fn: (formData: any) => void) {
+		this.formDataListeners.push(fn);
+	}
+
+	removeFormDataListener(fn: (formData: any) => void) {
+		this.formDataListeners = this.formDataListeners.filter(f => f !== fn);
 	}
 
 	getFormData() {
