@@ -639,6 +639,23 @@ export function getWindowScrolled(): number {
 	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
 
+export function getScrollMaxValue(): number {
+	const body = document.body;
+	const html = document.documentElement;
+
+	const documentHeight = Math.max(
+		body.scrollHeight,
+		body.offsetHeight,
+		html.clientHeight,
+		html.scrollHeight,
+		html.offsetHeight
+	);
+
+	const windowHeight = window.innerHeight;
+
+	return documentHeight - windowHeight;
+}
+
 export function getScrollPositionForScrollIntoViewIfNeeded(elem: Element, topOffset = 0, bottomOffset = 0): number {
 	if (!elem) return getWindowScrolled();
 	const rect = elem.getBoundingClientRect();
@@ -652,7 +669,7 @@ export function getScrollPositionForScrollIntoViewIfNeeded(elem: Element, topOff
 
 	if (inView) return pageScrolled;
 
-	return pageScrolled + elemTopDistFromViewportTop - topOffset;
+	return Math.min(pageScrolled + elemTopDistFromViewportTop - topOffset, getScrollMaxValue());
 }
 
 export function scrollIntoViewIfNeeded(elem: HTMLElement, topOffset = 0, bottomOffset = 0) {
