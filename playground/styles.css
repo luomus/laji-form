@@ -1858,6 +1858,7 @@ body .laji-form {
 	background: white;
 	min-width: 100%;
 	max-width: 50vw;
+	word-break: break-word;
 }
 .laji-form-dropdown-open {
 	display: block;
@@ -1866,12 +1867,11 @@ body .laji-form {
 	max-height: 400px;
 }
 .laji-form-dropdown-item {
-	height: 26px;
+	min-height: 26px;
 	line-height: 26px;
 	padding: 0px;
 	padding-left: 8px;
 	border-top: none;
-	white-space: nowrap;
 	cursor: pointer;
 }
 .laji-form-dropdown-item:hover {
