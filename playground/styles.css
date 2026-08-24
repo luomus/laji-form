@@ -328,7 +328,7 @@ body .laji-form {
 	margin-bottom: 1px;
 	margin-left: 1px;
 }
-.laji-form .glyph-button:not(.button-corner) {
+.laji-form .glyph-button:not(.button-corner):not(.audio-metadata-button) {
 	min-width: 25px;
 	width: initial;
 }
