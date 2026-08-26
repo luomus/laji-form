@@ -1,5 +1,5 @@
 import { FieldProps, WidgetProps } from "../types";
-import { parseJSONPointer } from "../utils";
+import { omit, parseJSONPointer } from "../utils";
 const equals = require("deep-equal");
 
 export type Settings = Record<string, string>;
@@ -38,10 +38,9 @@ export default class SettingsService {
 		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
 				const value = settingSavers[key]();
-				if (value === undefined) { // skip, or JSON parse will error.
-					return settings;
-				}
-				return {...settings, [key]: value};
+				return value === undefined
+					? omit(settings, key) // skip, or JSON parse will error.
+					: {...settings, [key]: value};
 			} catch (e) {
 				// Swallow failing settings parsing.
 			}
