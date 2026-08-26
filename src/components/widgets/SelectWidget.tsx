@@ -95,15 +95,12 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 
 	// Calculate whether the dropdown needs to flip to the left.
 	const calculatePosition = useCallback(() => {
-		if (!containerRef.current) return;
+		if (!containerRef.current || !dropdownRef.current) return;
 
-		const triggerRect = containerRef.current.getBoundingClientRect();
+		const containerLeft = containerRef.current.getBoundingClientRect().left;
+		const estimatedWidth = dropdownRef.current.getBoundingClientRect().width;
+		const wouldOverflowRight = containerLeft + estimatedWidth > window.innerWidth;
 
-		const estimatedWidth = dropdownRef.current
-			? dropdownRef.current.getBoundingClientRect().width
-			: triggerRect.width;
-
-		const wouldOverflowRight = triggerRect.left + estimatedWidth > window.innerWidth;
 		if (wouldOverflowRight) {
 			setOpenLeft(true);
 		} else {
