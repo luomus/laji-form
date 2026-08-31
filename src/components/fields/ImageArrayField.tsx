@@ -141,6 +141,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		fetching: any;
 
 		addMediaContainerRef = React.createRef<HTMLInputElement>();
+		metadataFormRef = React.createRef<LajiForm>();
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -348,7 +349,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
 
-		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData});
+		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData, metadataSaveSuccess: undefined});
+
+		onMetadataFormSubmitClick = () => this.metadataFormRef.current?.submit();
 
 		renderMetadataModal = () => {
 			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess} = this.state;
@@ -398,21 +401,25 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 									{(this as any).renderModalMedia(modalIdx)}
 									{metadataModal && <LajiForm
 										{...metadataForm}
+										ref={this.metadataFormRef}
 										uiSchema={uiSchema}
 										formData={modalMetadata}
 										onChange={this.onMetadataFormChange}
 										onSubmit={this.onMediaMetadataUpdate}
-										submitText={translations.Save}
 										lang={lang}
 										apiClient={this.props.formContext.apiClient.apiClient}
 										uiSchemaContext={this.props.formContext.uiSchemaContext}
 										showShortcutButton={false}>
-										{(metadataSaveSuccess !== undefined) ? (
-											<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
-												{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
-											</Alert>
-										) : null
-										}
+										<React.Fragment>
+											{(metadataSaveSuccess !== undefined) ? (
+												<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
+													{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
+												</Alert>
+											) : null}
+											<Button id="submit" onClick={this.onMetadataFormSubmitClick} disabled={this.props.readonly || this.props.disabled}>
+												{translations.Save}
+											</Button>
+										</React.Fragment>
 									</LajiForm>}
 								</React.Fragment>
 								: <Spinner />}
