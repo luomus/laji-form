@@ -26,6 +26,10 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 		this.state = {popped: true};
 	}
 
+	dismissAll = () => {
+		this.props.formContext.services.submitHooks.removeAll();
+	};
+
 	dismissFailedJob = ({hook, running}: SubmitHook) => (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (running) return;
@@ -79,7 +83,7 @@ export class FailedBackgroundJobsPanel extends React.Component<Props, State> {
 		if (!errors.length) return null;
 
 		const footer = (
-			<Button onClick={this.props.formContext.services.submitHooks.removeAll}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+			<Button onClick={this.dismissAll}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
 		);
 
 		return (

@@ -11,7 +11,7 @@ import exif from "exifreader";
 import { validateLatLng, wgs84Validator } from "@luomus/laji-map/lib/utils";
 import moment from "moment";
 import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
-import ApiClient from "../../ApiClient";
+import ApiClient, { LajiApiError } from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
 
@@ -74,7 +74,7 @@ export interface MediaArrayState {
 	modalIdx?: number;
 	modalMediaSrc?: string;
 	modalMetadata?: any;
-	metadataSaveSuccess?: string | false;
+	metadataSaveError?: string;
 	metadataForm?: any;
 	alert?: boolean;
 	alertMsg?: string;
@@ -141,6 +141,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		fetching: any;
 
 		addMediaContainerRef = React.createRef<HTMLInputElement>();
+		metadataFormRef = React.createRef<LajiForm>();
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -346,12 +347,14 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			}
 		};
 
-		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
+		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveError: undefined});
 
-		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData});
+		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData, metadataSaveError: undefined});
+
+		onMetadataFormSubmitClick = () => this.metadataFormRef.current?.submit();
 
 		renderMetadataModal = () => {
-			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess} = this.state;
+			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveError} = this.state;
 			const {lang, translations} = this.props.registry.formContext;
 
 			const metadataForm = this.state.metadataForm || {};
@@ -398,21 +401,25 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 									{(this as any).renderModalMedia(modalIdx)}
 									{metadataModal && <LajiForm
 										{...metadataForm}
+										ref={this.metadataFormRef}
 										uiSchema={uiSchema}
 										formData={modalMetadata}
 										onChange={this.onMetadataFormChange}
 										onSubmit={this.onMediaMetadataUpdate}
-										submitText={translations.Save}
 										lang={lang}
 										apiClient={this.props.formContext.apiClient.apiClient}
 										uiSchemaContext={this.props.formContext.uiSchemaContext}
 										showShortcutButton={false}>
-										{(metadataSaveSuccess !== undefined) ? (
-											<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
-												{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
-											</Alert>
-										) : null
-										}
+										<React.Fragment>
+											{(metadataSaveError !== undefined) ? (
+												<Alert variant="danger">
+													{metadataSaveError}
+												</Alert>
+											) : null}
+											<Button id="submit" onClick={this.onMetadataFormSubmitClick} disabled={this.props.readonly || this.props.disabled}>
+												{translations.Save}
+											</Button>
+										</React.Fragment>
 									</LajiForm>}
 								</React.Fragment>
 								: <Spinner />}
@@ -476,6 +483,18 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		};
 
 		parseExif = (files: File[]): Promise<ProcessedExifData> => {
+			const readDateFromFile = (file: File) => {
+				if (file.lastModified) {
+					const momentDate = moment(file.lastModified);
+					if (momentDate.isValid()) {
+						const date = momentDate.format("YYYY-MM-DDTHH:mm");
+						if (date) {
+							found.date = date;
+						}
+					}
+				}
+			};
+
 			const {exifParsers = []} = getUiOptions(this.props.uiSchema);
 			if (!exifParsers) return Promise.resolve({});
 
@@ -509,18 +528,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								console.info("Reading GPS from EXIF failed", e);
 							}
 
-							const readDateFromFile = () => {
-								if (file.lastModified) {
-									const momentDate = moment(file.lastModified);
-									if (momentDate.isValid()) {
-										const date = momentDate.format("YYYY-MM-DDTHH:mm");
-										if (date) {
-											found.date = date;
-										}
-									}
-								}
-							};
-
 							if ("date" in found) {
 								try {
 									const rawDate = tags["DateTimeOriginal"]?.description;
@@ -528,15 +535,19 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 									if (momentDate.isValid()) {
 										found.date = momentDate.format("YYYY-MM-DDTHH:mm");
 									} else {
-										readDateFromFile();
+										readDateFromFile(file);
 									}
 								} catch (e) {
 									console.info("Reading date from EXIF failed, trying to read from file", e);
-									readDateFromFile();
+									readDateFromFile(file);
 								}
 							} else {
-								readDateFromFile();
+								readDateFromFile(file);
 							}
+							resolve(found);
+						}).catch(e => {
+							console.info("Reading EXIF data failed", e);
+							readDateFromFile(file);
 							resolve(found);
 						});
 					})
@@ -719,7 +730,17 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					delete this._context.tmpMedias[containerId][id];
 				});
 				this.mounted && this.setState({tmpMedias: this.state.tmpMedias.filter(id => !tmpMedias.includes(id))});
-				throw e;
+
+				let errorMsg: string;
+				if (typeof e === "string") {
+					errorMsg = e;
+				} else if (e instanceof LajiApiError && e.statusCode === 400) {
+					errorMsg = this.props.formContext.translations.InvalidFile;
+				} else {
+					errorMsg = this.props.formContext.translations.RequestFailed;
+				}
+
+				throw errorMsg;
 			}
 		}
 
@@ -760,7 +781,15 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			} catch (e) {
 				this.props.formContext.services.blocker.pop();
-				this.mounted && this.setState({metadataSaveSuccess: false});
+
+				let metadataSaveError: string;
+				if (e instanceof LajiApiError && e.statusCode === 400) {
+					metadataSaveError = this.props.formContext.translations.InvalidMediaMetadata;
+				} else {
+					metadataSaveError = this.props.formContext.translations.SaveFail;
+				}
+
+				this.mounted && this.setState({metadataSaveError});
 			}
 		};
 

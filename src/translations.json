@@ -264,6 +264,11 @@
 		"en": "All the files weren't saved. Please verify the files.",
 		"sv": "Alla filer sparades inte. Vänligen kontrollera filerna."
 	},
+	"invalidMediaMetadata": {
+		"fi": "Joissain kentissä on virheellisiä arvoja. Tarkista syötetyt tiedot.",
+		"en": "Some fields have invalid values. Please verify the data.",
+		"sv": "Vissa fält har ogiltiga värden. Vänligen kontrollera data."
+	},
 	"error": {
 		"fi": "Virhe",
 		"en": "Error",
@@ -678,6 +683,11 @@
 		"fi": "Rajaa sijainti ympyrän sisälle",
 		"en": "Pan the location inside the circle",
 		"sv": "Placera platsen inne i cirkeln"
+	},
+	"confirmLocationChange": {
+		"fi": "Haluatko varmasti muuttaa sijaintia?",
+		"en": "Are you sure you want to change the location?",
+		"sv": "Är du säker på att du vill ändra platsen?"
 	},
 	"unknown": {
 		"fi": "Ei tietoa",

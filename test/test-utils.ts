@@ -132,7 +132,8 @@ export class Form {
 	warnings = this.createValidatorPO("warning");
 	failedJobs = {
 		$container: this.$locator.locator(".laji-form-failed-jobs-list"),
-		$$errors: this.$locator.locator(".laji-form-failed-jobs-list .list-group-item")
+		$$errors: this.$locator.locator(".laji-form-failed-jobs-list .list-group-item"),
+		$dismissAll: this.$locator.locator(".laji-form-failed-jobs-list .panel-footer button")
 	};
 
 	$runningJobs = this.$locator.locator(".running-jobs");
