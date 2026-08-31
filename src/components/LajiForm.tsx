@@ -747,7 +747,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			schemaErrors = immutableDelete(schemaErrors, path);
 		});
 
-		return schemaErrors;
+		return removeEmptyErrorObjects(schemaErrors);
 	};
 
 	getFormDataReadyForSubmit = (formData: any, schema: JSONSchema): { formData: any, removedArrayItemsAndObjects: string[] } => {
@@ -817,6 +817,22 @@ const removeEmptyValuesAndTrim = (formData: any, schema: JSONSchema): { formData
 	}
 };
 
+const removeEmptyErrorObjects = (errors: ErrorSchema): ErrorSchema => {
+	const result: ErrorSchema = {};
+
+	for (const key of Object.keys(errors)) {
+		if (key === "__errors") {
+			result[key] = errors[key];
+		} else if (errors[key]) {
+			const cleanedValue = removeEmptyErrorObjects(errors[key]);
+			if (Object.keys(cleanedValue).length > 0) {
+				result[key] = cleanedValue;
+			}
+		}
+	}
+
+	return Object.keys(result).length === 0 ? {} : result;
+};
 
 const getShortcuts = (uiSchema: any) => {
 	if (window.navigator?.platform?.includes("Mac")) {

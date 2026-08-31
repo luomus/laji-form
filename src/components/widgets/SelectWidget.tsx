@@ -93,6 +93,21 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 	const inputRef = useRef<typeof FormControl>(null);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
+	// Calculate whether the dropdown needs to flip to the left.
+	const calculatePosition = useCallback(() => {
+		if (!containerRef.current || !dropdownRef.current) return;
+
+		const containerLeft = containerRef.current.getBoundingClientRect().left;
+		const estimatedWidth = dropdownRef.current.getBoundingClientRect().width;
+		const wouldOverflowRight = containerLeft + estimatedWidth > window.innerWidth;
+
+		if (wouldOverflowRight) {
+			setOpenLeft(true);
+		} else {
+			setOpenLeft(false);
+		}
+	}, []);
+
 	const allEnumOptions = useMemo(() =>
 		getEnumOptions<T>(options.enumOptions!, uiSchema, includeEmpty),
 	[options.enumOptions, uiSchema, includeEmpty]);
@@ -112,6 +127,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 
 	const [filterTerm, setFilterTerm] = useState<string | undefined>(undefined);
 	const [isOpen, show, hide] = useBooleanSetter(false);
+	const [openLeft, setOpenLeft] = useState(false);
 
 	const filteredEnums = useMemo(() => {
 		return filterTerm !== undefined && filterTerm !== ""
@@ -136,6 +152,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 
 	const showAndSelectText = useCallback(() => {
 		show();
+		calculatePosition();
 		(findDOMNode(inputRef.current as any) as any)?.setSelectionRange(0, inputValue.length);
 	}, [show, inputValue.length]);
 
@@ -206,7 +223,7 @@ export function SearchableDrowndown<T extends string | number>(props: SingleSele
 			<Caret />
 			<div
 				className={`laji-form-dropdown laji-form-dropdown-${isOpen ? "open" : "closed"}`}
-				style={{ position: "absolute" }}
+				style={{ position: "absolute", left: openLeft ? "auto" : 0, right: openLeft ? 0 : "auto" }}
 				tabIndex={-1}
 				ref={dropdownRef}>
 				{filteredEnums.map((oneOf, idx) => (

@@ -56,7 +56,7 @@ import {
 	DropdownToggleProps,
 	FormGroupProps,
 	ValidationState,
-	ToggleButtonProps
+	ToggleButtonProps, TableProps
 } from "./theme";
 import { classNames } from "../utils";
 
@@ -124,7 +124,7 @@ _Pager.Item = React.forwardRef<HTMLLIElement, PagerItemProps>(({previous, next, 
 
 const theme: Theme = {
 	Panel,
-	Table,
+	Table: React.forwardRef<HTMLTableElement, TableProps>(({condensed, ...props}, ref) => <Table size={condensed ? "sm" : undefined} {...props} ref={ref} />),
 	ProgressBar,
 	Button: React.forwardRef<HTMLButtonElement, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} variant={mapBtnVariant(variant)} size={small ? "sm" : undefined} ref={ref} />),
 	ButtonGroup,

@@ -328,7 +328,7 @@ body .laji-form {
 	margin-bottom: 1px;
 	margin-left: 1px;
 }
-.laji-form .glyph-button:not(.button-corner) {
+.laji-form .glyph-button:not(.button-corner):not(.audio-metadata-button) {
 	min-width: 25px;
 	width: initial;
 }
@@ -969,7 +969,7 @@ body .laji-form {
 	width: 1px; /** firefox 52 table-responsive fails without fixed width (possibly related to display: flex also?) **/
 }
 .laji-form .single-active-array-table {
-	border-right: none;
+	border-width: 0;
 }
 .laji-form .single-active-array-table th {
 	position: relative;
@@ -980,6 +980,7 @@ body .laji-form {
 .laji-form .single-active-array-table-delete {
 	width: 1px;
 	padding: 0px;
+	border: 0px;
 }
 .laji-form .single-active-array-table-delete button {
 	padding: 0px;
@@ -1013,6 +1014,7 @@ body .laji-form {
 .laji-form td.single-active-array-table-content-col {
 	padding: 0px;
 	width: 0px;
+	border: none;
 }
 
 .laji-form .single-active-array-table td > .media-loading {
