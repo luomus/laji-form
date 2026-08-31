@@ -74,7 +74,7 @@ export interface MediaArrayState {
 	modalIdx?: number;
 	modalMediaSrc?: string;
 	modalMetadata?: any;
-	metadataSaveSuccess?: string | false;
+	metadataSaveError?: string;
 	metadataForm?: any;
 	alert?: boolean;
 	alertMsg?: string;
@@ -347,14 +347,14 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			}
 		};
 
-		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
+		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveError: undefined});
 
-		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData, metadataSaveSuccess: undefined});
+		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData, metadataSaveError: undefined});
 
 		onMetadataFormSubmitClick = () => this.metadataFormRef.current?.submit();
 
 		renderMetadataModal = () => {
-			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess} = this.state;
+			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveError} = this.state;
 			const {lang, translations} = this.props.registry.formContext;
 
 			const metadataForm = this.state.metadataForm || {};
@@ -411,9 +411,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 										uiSchemaContext={this.props.formContext.uiSchemaContext}
 										showShortcutButton={false}>
 										<React.Fragment>
-											{(metadataSaveSuccess !== undefined) ? (
-												<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
-													{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
+											{(metadataSaveError !== undefined) ? (
+												<Alert variant="danger">
+													{metadataSaveError}
 												</Alert>
 											) : null}
 											<Button id="submit" onClick={this.onMetadataFormSubmitClick} disabled={this.props.readonly || this.props.disabled}>
@@ -781,7 +781,15 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			} catch (e) {
 				this.props.formContext.services.blocker.pop();
-				this.mounted && this.setState({metadataSaveSuccess: false});
+
+				let metadataSaveError: string;
+				if (e instanceof LajiApiError && e.statusCode === 400) {
+					metadataSaveError = this.props.formContext.translations.InvalidMediaMetadata;
+				} else {
+					metadataSaveError = this.props.formContext.translations.SaveFail;
+				}
+
+				this.mounted && this.setState({metadataSaveError});
 			}
 		};
 
