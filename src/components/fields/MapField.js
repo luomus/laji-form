@@ -97,7 +97,10 @@ export default class MapField extends React.Component {
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 
 		const { mobileEditor } = getUiOptions(uiSchema);
-		if (mobileEditor) { this.showMobileEditorMap(); }
+		console.log(this.props.formData, this.props.formContext.utils.formDataIsEmpty(this.props));
+		if (mobileEditor && (!this.props.formData || this.props.formContext.utils.formDataIsEmpty(this.props))) {
+			this.showMobileEditorMap();
+		}
 	}
 
 	componentWillUnmount() {
