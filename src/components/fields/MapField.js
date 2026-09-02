@@ -97,7 +97,6 @@ export default class MapField extends React.Component {
 		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 
 		const { mobileEditor } = getUiOptions(uiSchema);
-		console.log(this.props.formData, this.props.formContext.utils.formDataIsEmpty(this.props));
 		if (mobileEditor && (!this.props.formData || this.props.formContext.utils.formDataIsEmpty(this.props))) {
 			this.showMobileEditorMap();
 		}
@@ -231,7 +230,7 @@ export default class MapField extends React.Component {
 							onClose={this.onHideMobileEditorMap}
 							map={this.map}
 							formContext={this.props.formContext}
-							geometry={this.getMobileGeometry()}
+							geometry={this.props.formData}
 							moved={this.state.moved}
 							setMoved={this.setMoved}
 							defaultLocation={!this.props.formData && !this.map?.userLocation}
@@ -423,12 +422,17 @@ class MobileEditorMap extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const { geometry } = this.props;
-
 		this.state = {
-			geometry: [{ geoData: geometry}],
+			geometry: [{ geoData: this.getGeometryWithDefault(props)}],
 			locateActive: false,
 			hasLocated: false
+		};
+	}
+
+	getGeometryWithDefault = (props) => {
+		return props.geometry || {
+			type: "Point",
+			coordinates: [24.94782264266911, 60.17522413438655]
 		};
 	}
 
@@ -449,8 +453,10 @@ class MobileEditorMap extends React.Component {
 		this.okButtonElem.focus();
 		this.map.setLocateOff();
 
-		if (this.props.geometry) {
-			const [lng, lat] = this.props.geometry.coordinates;
+		const geometry = this.getGeometryWithDefault(this.props);
+
+		if (geometry) {
+			const [lng, lat] = geometry.coordinates;
 			this.setMarkerLatLng({lng, lat});
 			if (this.props.defaultLocation) {
 				this.map.map.setView({lng, lat}, 4);
@@ -510,7 +516,7 @@ class MobileEditorMap extends React.Component {
 	};
 
 	onKeyDown = ({key}) => {
-		if (key === "Escape") {
+		if (key === "Escape" && this.props.geometry) {
 			this.onClose();
 		}
 	};
