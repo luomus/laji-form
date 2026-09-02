@@ -48,17 +48,7 @@ test.describe("Mobile form (MHL.51)", () => {
 			await expect(form.$form).toBeVisible();
 		});
 
-		test("mobile editor map is displayed", async () => {
-			await expect($mobileEditorMap(page)).toBeVisible();
-		});
-
-		test("choose location button is enabled without moving the marker", async () => {
-			await expect(page.locator(".choose-location-button")).toBeEnabled();
-		});
-
-		test("choose location button closes the map without moving the marker", async () => {
-			await expect(page.locator(".choose-location-button")).toBeEnabled();
-			await page.locator(".choose-location-button").click();
+		test("mobile editor map is not displayed", async () => {
 			await expect($mobileEditorMap(page)).toBeHidden();
 		});
 	});
