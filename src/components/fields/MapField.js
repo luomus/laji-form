@@ -434,7 +434,7 @@ class MobileEditorMap extends React.Component {
 			type: "Point",
 			coordinates: [24.94782264266911, 60.17522413438655]
 		};
-	}
+	};
 
 	setMobileEditorMapRef = (mapComponent) => {
 		if (mapComponent && mapComponent.refs && mapComponent.refs.map) {
