@@ -38,6 +38,7 @@ export default class SingleItemArrayField extends React.Component {
 		let uiSchema = {
 			"ui:title": getTitle(props, activeIdx),
 			"ui:help": props.uiSchema["ui:help"],
+			"ui:description": props.uiSchema["ui:description"],
 			...props.uiSchema.items || {},
 			"ui:options": {
 				titleClassName: getUiOptions(props.uiSchema).titleClassName,
