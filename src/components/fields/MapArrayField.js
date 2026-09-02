@@ -2102,7 +2102,7 @@ class MapPanel extends React.Component {
 	render() {
 		const {Panel} = this.context.theme;
 		return (
-			<Panel variant={this.props.variant || undefined} className="laji-form-popped" id={this.props.id}>
+			<Panel variant={this.props.variant || undefined} className="laji-form-popped laji-form-map-panel" id={this.props.id}>
 				{this.props.header ? (
 					<Panel.Heading>
 						{this.props.header}
