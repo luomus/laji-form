@@ -128,6 +128,7 @@ export interface FormContext {
 	utils: ReactUtilsType;
 	lajiGeoServerAddress: string;
 	globals: Record<string, unknown>; // Used to store data mutably between components so doesn't affect React rendering.
+	titleRequiredBig?: boolean;
 	services: {
 		keyHandler: KeyHandlerService,
 		settings: SettingsService,
@@ -274,7 +275,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				services: {},
 				formRef: this.formRef,
 				lajiGeoServerAddress: props.lajiGeoServerAddress,
-				globals: instanceContext(this._id)
+				globals: instanceContext(this._id),
+				titleRequiredBig: props.uiSchema["ui:titleRequiredBig"]
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {

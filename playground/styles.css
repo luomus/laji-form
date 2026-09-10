@@ -1989,3 +1989,25 @@ body .laji-form {
 	transform: translateX(-50%);
 	left: 50%;
 }
+
+.laji-form .relaxed {
+  zoom: 1.4;
+}
+
+.laji-form .relaxed .form-group, .laji-form .relaxed.form-group {
+	margin-bottom: 10px;
+}
+
+.laji-form .relaxed legend {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+.laji-form .title-required-big {
+    color: white;
+    background: #6c6363;
+    padding: 0px 6px;
+    margin-left: 5px;
+    border-radius: 2px;
+}

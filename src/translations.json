@@ -928,5 +928,10 @@
 		"fi": "Kenttähavainnot tältä paikalta",
 		"en": "Field observations from this place",
 		"sv": "Fältobservationer från denna plats"
+	},
+	"required": {
+		"fi": "Pakollinen",
+		"en": "Required",
+		"sv": "Obligatoriskt"
 	}
 }

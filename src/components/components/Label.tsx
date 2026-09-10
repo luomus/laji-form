@@ -27,7 +27,12 @@ export function Label({label, children, id, required, registry = {}, uiSchema = 
 		): label}</Tooltip>
 	);
 
-	const requiredHtml = required ? "<span class='text-danger'>*</span>" : "";
+	const requiredHtml = required
+		? registry.formContext?.titleRequiredBig
+			? `<span class='title-required-big'>${registry.formContext.translations.Required}</span>`
+			: "<span class='text-danger'>*</span>"
+		: "";
+
 
 	const [focused, setFocused] = React.useState(false);
 
