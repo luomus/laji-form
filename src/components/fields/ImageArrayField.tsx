@@ -223,10 +223,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		render() {
 			const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
 			const {translations} = formContext;
+			const {Label} = formContext;
 
-			const {description, addModal} = getUiOptions(uiSchema);
+			const {description, addModal, renderTitleAsLabel} = getUiOptions(uiSchema);
 			const title = (schema.title === undefined) ? name : schema.title;
-			const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
+			const TitleFieldTemplate = renderTitleAsLabel ? Label : getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 
 			const {OverlayTrigger, Tooltip, Glyphicon} = this.context.theme;
 
@@ -250,7 +251,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return (
 				<Row>
 					<Col xs={12}>
-						<TitleFieldTemplate title={title} schema={schema} uiSchema={uiSchema} id={idSchema.$id} registry={this.props.registry} />
+						<TitleFieldTemplate title={title} label={title} schema={schema} uiSchema={uiSchema} id={idSchema.$id} registry={this.props.registry} />
 						{description !== undefined ? <DescriptionFieldTemplate description={description} schema={schema} id={idSchema.$id} registry={this.props.registry} /> : null}
 						<div className={`laji-form-medias ${this.CONTAINER_CLASS}`}>
 							{this.renderMedias()}
