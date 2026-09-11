@@ -15,9 +15,8 @@ export const GlyphButton = React.forwardRef((props: Props, ref) => {
 			ref={ref}
 			className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
 			tooltipPlacement={props.tooltipPlacement || "left"}>
-			<Glyphicon glyph={glyph} />
+			<Glyphicon glyph={glyph} style={{ pointerEvents: "none" }} />
 			{props.children}
 		</Button>
 	);
 });
-
