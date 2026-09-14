@@ -16,7 +16,12 @@ export default class _BaseInputTemplate extends React.Component {
 	}
 
 	getStateFromProps = (props) => {
-		return {value: props.value, ...getUiOptions(props).inputOptions};
+		let state = {};
+		if (!this.timeout) {
+			state.value = props.value;
+		}
+		state = { ...state, ...getUiOptions(props).inputOptions };
+		return state;
 	};
 
 	onChange = (value) => {
@@ -42,6 +47,7 @@ export default class _BaseInputTemplate extends React.Component {
 				if (this.timeout) clearTimeout(this.timeout);
 				this.timeout = this.props.formContext.setTimeout(() => {
 					this.props.onChange(value);
+					this.timeout = undefined;
 				}, 1000);
 			}
 		});
@@ -57,7 +63,10 @@ export default class _BaseInputTemplate extends React.Component {
 		if (this.state.value !== this.props.value) {
 			this.props.onChange(this.state.value);
 		}
-		if (this.timeout) clearTimeout(this.timeout);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+			this.timeout = undefined;
+		}
 		this.props.onBlur && this.props.onBlur(e);
 	};
 

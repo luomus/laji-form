@@ -161,7 +161,7 @@ export class Form {
 		return this.$locate(str).locator("textarea");
 	}
 
-	$getEnumWidget(str: string){
+	$getEnumWidget(str: string) {
 		const $container = this.$locate(str).locator(".laji-form-dropdown-container");
 		return getEnumWidgetForContainer($container);
 	}

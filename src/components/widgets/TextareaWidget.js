@@ -30,7 +30,7 @@ export default class TextareaWidget extends React.Component {
 	}
 
 	getStateFromProps = (props) => {
-		return {value: props.value};
+		return this.timeout ? { } : { value: props.value };
 	};
 
 	onFocus = (e) => {
@@ -43,7 +43,10 @@ export default class TextareaWidget extends React.Component {
 		if (this.state.value !== this.props.value) {
 			this.props.onChange(this.state.value);
 		}
-		if (this.timeout) clearTimeout(this.timeout);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+			this.timeout = undefined;
+		}
 		this.props.onBlur && this.props.onBlur(e);
 	};
 
@@ -55,6 +58,7 @@ export default class TextareaWidget extends React.Component {
 				if (this.timeout) clearTimeout(this.timeout);
 				this.timeout = this.props.formContext.setTimeout(() => {
 					this.props.onChange(value === "" ? getUiOptions(this.props).emptyValue : value);
+					this.timeout = undefined;
 				}, 1000);
 			}
 		});
