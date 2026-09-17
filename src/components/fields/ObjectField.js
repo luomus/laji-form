@@ -26,6 +26,7 @@ export default (props) => {
 function GridTemplate(props) {
 	const {schema, uiSchema, idSchema, properties} = props;
 	const TitleFieldTemplate = getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
+	const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", props.registry, getUiOptions(props.uiSchema));
 	const gridOptions = props.uiSchema["ui:grid"] || {};
 	const {ButtonToolbar, Row, Col} = React.useContext(ReactContext).theme;
 
@@ -119,6 +120,7 @@ function GridTemplate(props) {
 						uiSchema={titleUiSchema}
 						registry={props.registry}
 						id={idSchema.$id} /> : null}
+				<DescriptionFieldTemplate description={uiSchema["ui:description"]} schema={props.schema} />
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>
