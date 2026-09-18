@@ -98,4 +98,19 @@ test.describe("Image array", () => {
 		await expect(form.getImageArrayField("0").$$imgs).toHaveCount(1);
 		await remove();
 	});
+
+	test("Dismiss all button clears error panel", async () => {
+		await form.setState({ schema, uiSchema, uiSchemaContext, formData: [] });
+		const filePath = require("path").resolve(__dirname, "./mock/pixel.png");
+		const {reject, remove} = await form.setMockResponse("/images", false);
+
+		await imgArrayField.$dropzone.locator("input").setInputFiles(filePath);
+		await reject({message: "Invalid file", statusCode: 400});
+
+		await expect(form.failedJobs.$$errors).toHaveCount(1);
+		await form.failedJobs.$dismissAll.click();
+		await expect(form.failedJobs.$container).not.toBeVisible();
+
+		await remove();
+	});
 });
