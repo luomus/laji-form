@@ -276,7 +276,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 												{...rootProps}
 												onKeyDown={this.onKeyDown}
 												ref={this.addMediaContainerRef} >
-												<input {...getInputProps()} />
+												<input {...getInputProps()} capture="environment" />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
 										);
