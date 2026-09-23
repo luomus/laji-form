@@ -188,7 +188,8 @@ if (test !== true) {
 			capturerVerbatim: "Test",
 			intellectualOwner: "Test"
 		},
-		lajiGeoServerAddress: "https://geoserver-dev.laji.fi"
+		lajiGeoServerAddress: "https://geoserver-dev.laji.fi",
+		mediaAddModal: true
 	}));
 }
 

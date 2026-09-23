@@ -176,13 +176,14 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			if (!this._context.metadatas) this._context.metadatas = {};
 			if (!this._context.tmpMedias) this._context.tmpMedias = {};
 			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {}).map(i => +i)};
-			const {addModal, autoOpenAddModal} = options;
-			if (addModal
+			const {autoOpenAddModal} = options;
+			const useAddModal = this.useAddModal();
+			if (useAddModal
 				&& autoOpenAddModal
 				&& (props.formData || []).length === 0
 				&& !props.formContext.uiSchemaContext.isEdit
 			) {
-				(this.state as any).addModal = addModal;  
+				(this.state as any).addModal = useAddModal;  
 			}
 		}
 
@@ -217,8 +218,13 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		};
 
 		defaultOnClick = () => {
-			const {addModal} = getUiOptions(this.props.uiSchema);
-			this.setState({addModal});
+			const useAddModal = this.useAddModal();
+			this.setState({ addModal: useAddModal });
+		};
+
+		useAddModal = () => {
+			const { addModal } = getUiOptions(this.props.uiSchema);
+			return this.props.formContext.mediaAddModal ?? addModal;
 		};
 
 		render() {
@@ -226,7 +232,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const {translations} = formContext;
 			const {Label} = formContext;
 
-			const {description, addModal, renderTitleAsLabel} = getUiOptions(uiSchema);
+			const {description, renderTitleAsLabel} = getUiOptions(uiSchema);
+			const useAddModal = this.useAddModal();
 			const title = (schema.title === undefined) ? name : schema.title;
 			const TitleFieldTemplate = renderTitleAsLabel ? Label : getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 
@@ -267,7 +274,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								>
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
-										const onClick = addModal ? this.defaultOnClick : _onClick;
+										const onClick = useAddModal ? this.defaultOnClick : _onClick;
 										return (
 											<div className={classNames("laji-form-drop-zone", dragging && "dragging", (readonly || disabled) && " disabled")}
 												onClick={onClick}
@@ -276,7 +283,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 												{...rootProps}
 												onKeyDown={this.onKeyDown}
 												ref={this.addMediaContainerRef} >
-												<input {...getInputProps()} capture="environment" />
+												<input {...getInputProps()} />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
 										);
@@ -293,8 +300,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		onKeyDown = this.props.formContext.utils.keyboardClick(() => {
 			const input = this.addMediaContainerRef.current?.querySelector("input");
-			const {addModal} = getUiOptions(this.props.uiSchema);
-			addModal ? this.defaultOnClick() : input?.click();
+			this.useAddModal() ? this.defaultOnClick() : input?.click();
 		});
 
 		renderMedias = () => {
@@ -442,6 +448,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			if (!addModal) return null;
 
 			const {Modal} = this.context.theme;
+			const { autoOpenAddModal } = this.getOptions(this.props.uiSchema);
 		
 			return (
 				<Modal dialogClassName="laji-form media-add-modal" show={true} onHide={this.onHideMediaAddModal}>
@@ -473,7 +480,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								}}
 							</DropZone>
 						)}
-						<Button className="cancel" block onClick={this.onHideMediaAddModal}>{cancel || translations[this.TRANSLATION_NO_MEDIA]}</Button>
+						{ autoOpenAddModal && <Button className="cancel" block onClick={this.onHideMediaAddModal}>{cancel || translations[this.TRANSLATION_NO_MEDIA]}</Button> }
 					</Modal.Body>
 				</Modal>
 			);
