@@ -208,7 +208,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	constructor(props: LajiFormProps) {
 		super(props);
 		if ( props.apiClient) {
-			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+			this.apiClient = new ApiClient(props.apiClient, props.lang);
 		}
 		initializeValidation(this.apiClient);
 		this._id = getNewId();
@@ -221,7 +221,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	UNSAFE_componentWillReceiveProps(props: LajiFormProps) {
 		if ( props.apiClient && props.apiClient !== this.apiClient.apiClient) {
-			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+			this.apiClient = new ApiClient(props.apiClient, props.lang);
 		}
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang as Lang);
