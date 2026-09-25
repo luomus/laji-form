@@ -111,7 +111,6 @@ export default class ApiClient {
 
 	private getCacheNode(path: string, params: { path?: Record<string, string>, query?: Record<string, string | number | boolean> }) {
 		const segments = splitAndResolvePath(path, params);
-		const serializedQuery = hashRecord(params?.query || {});
 		let node: CacheNode = this.cacheTree;
 
 		for (let i = 0; i < segments.length; i++) {
@@ -125,9 +124,6 @@ export default class ApiClient {
 			}
 			if (i === segments.length - 1) {
 				continue;
-			}
-			if (node.queries.has(serializedQuery)) {
-				return node;
 			}
 		}
 		return node;
