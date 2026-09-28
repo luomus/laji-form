@@ -851,7 +851,7 @@ const getShortcuts = (uiSchema: any) => {
 };
 
 const addExternalErrors = (internalErrors: ErrorSchema, externalErrors: ErrorSchema): ErrorSchema => {
-	return merge(internalErrors, processExternalErrors(externalErrors));
+	return merge(internalErrors, processExternalErrors(externalErrors), { arrayMerge: (a1, a2) => a2 });
 };
 
 const processExternalErrors = (errors: ErrorSchema): ErrorSchema => {
