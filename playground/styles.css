@@ -469,6 +469,9 @@ body .laji-form {
 	width: 120px;
 	height: 120px;
 	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .laji-form .laji-form-medias .media-container-link > img, .laji-form .audios-container .media-container-link {
 	cursor: pointer;
@@ -479,11 +482,6 @@ body .laji-form {
 }
 .laji-form .laji-form-medias .media-loading img {
 	opacity: 0.5;
-}
-
-.laji-form .audios-container > .media-container, .laji-form .audios-container > .laji-form-drop-zone {
-	width: 90px;
-	height: 105px;
 }
 
 .laji-form .taxon-img {
@@ -535,13 +533,9 @@ body .laji-form {
 	display: table-cell;
 	text-align: center;
 	vertical-align: middle;
-	padding-left: 16px;
-	padding-top: 16px;
 }
 .laji-form .audios-container .laji-form-drop-zone .glyphicon {
 	font-size: 60px;
-	padding-left: 12px;
-	padding-top: 19px;
 }
 .laji-form .audios-container .media-container > .media-container-link > div > .glyphicon {
 	padding-left: 2px;
