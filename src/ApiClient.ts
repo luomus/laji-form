@@ -196,7 +196,7 @@ export default class ApiClient {
 		params?: RelaxQuery<Parameters<paths[P]["post"]>, MiddlewareInjectedKeys>,
 		body?: ExtractRequestBodyIfExists<paths[P]["post"]>,
 	): Promise<ExtractContentIfExists<R[IntersectUnionTypes<keyof R, HttpSuccessCodes>]>> {
-		const result = this.fetch(path, "post" as any, params as any, body);
+		const result = await this.fetch(path, "post" as any, params as any, body);
 		this.flush(path, params);
 		return result;
 	}
@@ -205,7 +205,7 @@ export default class ApiClient {
 		path: P,
 		params?: RelaxQuery<Parameters<paths[P]["delete"]>, MiddlewareInjectedKeys>
 	): Promise<ExtractContentIfExists<R[IntersectUnionTypes<keyof R, HttpSuccessCodes>]>> {
-		const result = this.fetch(path, "delete" as any, params as any);
+		const result = await this.fetch(path, "delete" as any, params as any);
 		this.flush(path, params);
 		return result;
 	}

@@ -189,7 +189,7 @@ if (test !== true) {
 			intellectualOwner: "Test"
 		},
 		lajiGeoServerAddress: "https://geoserver-dev.laji.fi",
-		mediaAddModal: true
+		// mediaAddModal: true
 	}));
 }
 
