@@ -258,7 +258,9 @@ export default class ApiClient {
 			const error: LajiApiErrorJSONContent = await response.json();
 			throw new LajiApiError(error?.message, response.status, error);
 		}
-		return (response.headers.get("Content-Type") || "").includes("application/json")
+		// Headers should be case-insensitive but it's hard to read map keys with case-insensitivity in mind. The wrapped
+		// this.client might return headers in unknown case, so we test for the two most likely ones. 
+		return (response.headers.get("content-type") || response.headers.get("Content-Type") || "").includes("application/json")
 			? response.json()
 			: response.text() as any;
 	}
