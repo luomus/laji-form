@@ -1073,6 +1073,10 @@ body .laji-form {
 		width: calc(100% / 104 * 13);
 		float: left;
 	}
+	.col-sm-14146 {
+		width: calc(100% / 146 * 14);
+		float: left;
+	}
 	.col-sm-6104 {
 		width: calc(100% / 104 * 6);
 		float: left;
@@ -1084,6 +1088,10 @@ body .laji-form {
 		width: calc(100% / 104 * 13);
 		float: left;
 	}
+	.col-md-14146 {
+		width: calc(100% / 146 * 14);
+		float: left;
+	}
 	.col-md-6104 {
 		width: calc(100% / 104 * 6);
 		float: left;
@@ -1093,6 +1101,10 @@ body .laji-form {
 @media (min-width: 1200px) {
 	.col-lg-13104 {
 		width: calc(100% / 104 * 13);
+		float: left;
+	}
+	.col-lg-14146 {
+		width: calc(100% / 146 * 14);
 		float: left;
 	}
 	.col-lg-6104 {
