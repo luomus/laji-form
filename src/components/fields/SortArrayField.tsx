@@ -1,10 +1,10 @@
 import * as React from "react";
-import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID, isDefaultData } from "../../utils";
+import { capitalizeFirstLetter, getInnerUiSchema, getUiOptions, getUUID, isDefaultData, parseJSONPointer } from "../../utils";
 import { FormContext } from "../LajiForm";
 import memoize from "memoizee";
 import ReactContext from "../../ReactContext";
 import {TooltipComponent} from "../components";
-import { FieldProps, JSONSchemaArray, JSONSchemaObject } from "../../types";
+import { FieldProps, JSONObject, JSONSchemaArray, JSONSchemaObject } from "../../types";
 import Spinner from "react-spinner";
 
 interface Options {
@@ -44,12 +44,16 @@ interface State {
 	sortCols: SortCol[];
 }
 
-type DefaultCompareStrategy = {
+type CompareStrategyCommons = {
+	default?: true;
+}
+
+type DefaultCompareStrategy = CompareStrategyCommons & {
 	strategy: "default";
 	noDescending?: boolean;
 }
 
-type TaxonomicCompareStrategy = {
+type TaxonomicCompareStrategy = CompareStrategyCommons & {
 	strategy: "taxonomic";
 	noDescending?: boolean;
 	valueField?: string
@@ -109,8 +113,9 @@ class TaxonomicComparer extends Comparer<TaxonomicCompareStrategy> {
 	}
 
 	compare(a: any, b: any) {
-		const aValue = a[this.options.valueField || this.colName];
-		const bValue = b[this.options.valueField || this.colName];
+		const { valueField } = this.options;
+		const aValue = valueField ? parseMaybeJSONPointer(a, valueField) : a[this.colName];
+		const bValue = valueField ? parseMaybeJSONPointer(b, valueField) : b[this.colName];
 
 		if (this.idToIdx[aValue] === undefined && this.idToIdx[bValue] !== undefined) { 
 			return 1;
@@ -267,8 +272,6 @@ const getIdToOrigIdx = memoize((formData: any[]) => getIdToIdx(formData), {max: 
  */
 export default class SortArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, State> {
 
-	state: State = {sortCols: []};
-
 	sortTimeIdToSortedIdx: Record<string, number> = {};
 	/**
 	 * Id-to-idx mapping when the sorting was touched. Used to sorting newly items where they are put, instead of sorting them according to the sort cols.
@@ -278,11 +281,26 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 	constructor(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>) {
 		super(props);
 		props.formContext.services.settings.bind(this, props);
+		this.state = this.getInitialState(props);
 		this.syncColumns();
 	}
 
 	componentDidUpdate() {
 		this.syncColumns();
+	}
+
+	getInitialState(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>) {
+		const { columns = {} }: Options = getUiOptions(props.uiSchema);
+		return {
+			sortCols: Object.keys(columns).reduce((sortCols, colName) => {
+				const col = columns[colName];
+				const enabledByDefaultStrategy = col.compareStrategies?.find(strategy => strategy.default);
+				if (enabledByDefaultStrategy) {
+					sortCols.push({ ...col, compareStrategy: enabledByDefaultStrategy, name: colName });
+				}
+				return sortCols;
+			}, [] as SortCol[])
+		};
 	}
 
 	/**
@@ -485,3 +503,10 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 		);
 	}
 }
+
+const parseMaybeJSONPointer = (container: JSONObject, maybeJSONPointer: string) => {
+	if (maybeJSONPointer.startsWith("/")) {
+		return parseJSONPointer(container, maybeJSONPointer);
+	}
+	return container[maybeJSONPointer];
+};
