@@ -46,6 +46,7 @@ interface State {
 
 type CompareStrategyCommons = {
 	default?: true;
+	defaultDescending?: boolean;
 }
 
 type DefaultCompareStrategy = CompareStrategyCommons & {
@@ -296,7 +297,7 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 				const col = columns[colName];
 				const enabledByDefaultStrategy = col.compareStrategies?.find(strategy => strategy.default);
 				if (enabledByDefaultStrategy) {
-					sortCols.push({ ...col, compareStrategy: enabledByDefaultStrategy, name: colName });
+					sortCols.push({ ...col, compareStrategy: enabledByDefaultStrategy, name: colName, descending: enabledByDefaultStrategy.defaultDescending });
 				}
 				return sortCols;
 			}, [] as SortCol[])
