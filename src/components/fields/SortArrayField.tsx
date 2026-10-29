@@ -221,7 +221,6 @@ const getValue = (formData: any, schema: any) => {
 };
 
 const sort = (schema: any, {sortCols}: State, sortTimeIdToSortedIdx: Record<string, number>, sortTimeIdToOrigIdx: Record<string, number>) => (a: any, b: any): number => {
-
 	// Don't sort items that weren't there when the sorting was done.
 	// For example when adding a new item to the array, it should be exactly where it is added.
 	// const idToOrigIdx = getIdToOrigIdx(formData);
@@ -274,15 +273,16 @@ const getIdToOrigIdx = memoize((formData: any[]) => getIdToIdx(formData), {max: 
 export default class SortArrayField extends React.Component<FieldProps<JSONSchemaArray<JSONSchemaObject>>, State> {
 
 	sortTimeIdToSortedIdx: Record<string, number> = {};
-	/**
-	 * Id-to-idx mapping when the sorting was touched. Used to sorting newly items where they are put, instead of sorting them according to the sort cols.
-	*/
+	/** Id-to-idx mapping when the sorting was touched. Used to sorting newly items where they are put, instead of sorting them according to the sort cols.  */
 	sortTimeIdToOrigIdx: Record<string, number> = {};
 
 	constructor(props: FieldProps<JSONSchemaArray<JSONSchemaObject>>) {
 		super(props);
 		props.formContext.services.settings.bind(this, props);
 		this.state = this.getInitialState(props);
+	}
+
+	componentDidMount() {
 		this.syncColumns();
 	}
 
@@ -306,7 +306,7 @@ export default class SortArrayField extends React.Component<FieldProps<JSONSchem
 
 	/**
 	 * Sort cols might be retrieved from settings JSON, which doesn't hold the 'compare' fn. We add the fn
-	 * asynchronously when the  component updates according to the comparison strategy name.
+	 * asynchronously when the component updates according to the comparison strategy name.
 	 */
 	syncColumns() {
 		const {sortCols} = this.state;
