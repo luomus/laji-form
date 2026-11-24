@@ -4,6 +4,7 @@ export { default as TextareaWidget } from "./TextareaWidget";
 export { default as DateTimeWidget } from "./DateTimeWidget";
 export { default as DateWidget } from "./DateWidget";
 export { default as TimeWidget } from "./TimeWidget";
+export { default as FreeTextDateWidget } from "./FreeTextDateWidget";
 export { default as SeparatedDateTimeWidget } from "./SeparatedDateTimeWidget";
 export { default as AutosuggestWidget } from "./AutosuggestWidget";
 export { default as HiddenWidget } from "./HiddenWidget";
