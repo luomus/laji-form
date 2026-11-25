@@ -19,7 +19,11 @@ function getCalendarDate(value: string, format: string): Date | undefined {
 	const yearFormat  = "YYYY";
 
 	const formats = [
+		format,
+		format.replace("DD", "D"),
+		format.replace("MM", "M"),
 		format.replace("DD", "D").replace("MM", "M"),
+		yearAndMonthDateFormat,
 		yearAndMonthDateFormat.replace("MM", "M"),
 		yearFormat
 	];
