@@ -8,7 +8,7 @@ import LajiMap from "@luomus/laji-map";
 import { combineColors } from "@luomus/laji-map/lib/utils";
 import { NORMAL_COLOR }  from "@luomus/laji-map/lib/globals";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState, classNames } from "../../utils";
 import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getPropsForFields } from "./NestField";
@@ -1892,7 +1892,8 @@ export class MapComponent extends React.Component {
 				variant={panel.variant || undefined}
 				buttonThemeRole={panel.buttonThemeRole}
 				header={panel.header}
-				text={panel.panelTextContent} />
+				text={panel.panelTextContent}
+				className={panel.className} />
 			: null;
 
 		return (
@@ -2102,7 +2103,7 @@ class MapPanel extends React.Component {
 	render() {
 		const {Panel} = this.context.theme;
 		return (
-			<Panel variant={this.props.variant || undefined} className="laji-form-popped laji-form-map-panel" id={this.props.id}>
+			<Panel variant={this.props.variant || undefined} className={classNames(this.props.className, "laji-form-popped laji-form-map-panel")} id={this.props.id}>
 				{this.props.header ? (
 					<Panel.Heading>
 						{this.props.header}

@@ -113,7 +113,6 @@ export default class AutosuggestField extends React.Component {
 					? formData[informalTaxonGroups][0] 
 					: undefined;
 
-
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -172,8 +171,6 @@ export default class AutosuggestField extends React.Component {
 				...options
 			},
 		}, _uiSchemaJSONPointer);
-
-
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	};

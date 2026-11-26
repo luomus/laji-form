@@ -540,9 +540,9 @@
 		"sv": "Avsluta helskärmsläge"
 	},
 	"mobileMapInstructions": {
-		"fi": "Valitse sijainti napauttamalla karttaa tai raahaamalla olemassa olevaa pistettä.",
-		"en": "Select a location by tapping the map or dragging an existing point.",
-		"sv": "Välj en plats genom att trycka på kartan eller dra en befintlig punkt."
+		"fi": "Valitse sijainti napauttamalla karttaa tai raahaamalla olemassa olevaa pistettä",
+		"en": "Select a location by tapping the map or dragging an existing point",
+		"sv": "Välj en plats genom att trycka på kartan eller dra en befintlig punkt"
 	},
 	"openShorthand": {
 		"fi": "Avaa pikasyöttötila",
@@ -915,9 +915,9 @@
 		"sv": "Värdet måste vara"
 	},
 	"taxonSetDeletionFailed": {
-		"fi": "Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja.",
-		"en": "This taxon set cannot be removed because it contains observations.",
-		"sv": "Den här artgruppen kan inte tas bort eftersom det finns observationer i den."
+		"fi": "Tätä lajiryhmää ei voi poistaa, koska siihen on kirjattu havaintoja",
+		"en": "This taxon set cannot be removed because it contains observations",
+		"sv": "Den här artgruppen kan inte tas bort eftersom det finns observationer i den"
 	},
 	"pop": {
 		"fi": "Kelluta",
@@ -943,5 +943,10 @@
 		"fi": "Pakollinen",
 		"en": "Required",
 		"sv": "Obligatoriskt"
+	},
+	"editLocalityNames": {
+		"fi": "Muokkaa paikannimiä",
+		"en": "Edit locality names",
+		"sv": "redigera platsnamn"
 	}
 }

@@ -1,10 +1,12 @@
 import * as React from "react";
 import { FormContext } from "../LajiForm";
 import { createPortal } from "react-dom";
+import { classNames } from "../../utils";
 
 type Props = {
 	formContext: FormContext;
 	onKeyDown: React.KeyboardEventHandler;
+	className?: string;
 }
 
 export class Fullscreen extends React.Component<Props> {
@@ -30,7 +32,7 @@ export class Fullscreen extends React.Component<Props> {
 
 	render() {
 		return createPortal((
-			<div className="laji-form fullscreen">
+			<div className={classNames("laji-form fullscreen", this.props.className)}>
 				{this.props.children}
 			</div>
 		), document.body);

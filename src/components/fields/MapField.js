@@ -8,6 +8,7 @@ import Spinner from "react-spinner";
 import { Affix, Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "@luomus/laji-map/lib/utils";
 import { getTemplate } from "@rjsf/utils";
+import ReactContext from "../../ReactContext";
 
 export function findSingleGeometry(geoJSON) {
 	if (!geoJSON) return undefined;
@@ -47,6 +48,7 @@ export function getCenterAndRadiusFromGeometry(geometry) {
 }
 
 export default class MapField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -186,14 +188,11 @@ export default class MapField extends React.Component {
 		if (_mobileEditor) {
 			_mapOptions.controls = false;
 			_mapOptions.viewLocked = true;
-			_mapOptions.customControls = [{
-				text: this.props.formContext.translations.ChooseLocation,
-				fn: this.showMobileEditorMap,
-				iconCls: "glyphicon glyphicon-pencil"
-			}];
 		}
 
 		const {lang, topOffset, bottomOffset} = this.props.formContext;
+
+		const { Glyphicon } = this.context.theme;
 
 		const {mobileEditor} = this.state;
 
@@ -222,6 +221,10 @@ export default class MapField extends React.Component {
 							onOptionsChanged={this.onOptionsChanged} />
 						{this.map && this.map.container && createPortal(this.renderBlocker(), this.map.container)}
 					</div>
+					<Button className="laji-form-map-field-edit-locality relaxed" onClick={this.showMobileEditorMap}>
+						<Glyphicon glyph="pencil"/>
+						<span className="laji-form-ml-5">{this.props.formContext.translations.ChooseLocation}</span>
+					</Button>
 				</Affix>
 				{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
 						<MobileEditorMap {...mobileEditorOptions}
@@ -572,11 +575,12 @@ class MobileEditorMap extends React.Component {
 			ref: this.setMobileEditorMapRef,
 			formContext: this.props.formContext,
 			panel: {
-				panelTextContent: this.props.formContext.translations.MobileMapInstructions
+				panelTextContent: this.props.formContext.translations.MobileMapInstructions,
+				className: "laji-form-mobile-map-panel"
 			}
 		};
 		return (
-			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext}>
+			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} formContext={this.props.formContext} className="relaxed">
 				<MapComponent
 					{...mapComponentProps}
 					onLocateToggle={this.handleLocateToggle}

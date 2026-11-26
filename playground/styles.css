@@ -1515,7 +1515,7 @@ body .laji-form {
 }
 
 .laji-form .floating-buttons-container {
-	bottom: 10%;
+	bottom: 65px;
 	position: absolute;
 	z-index: 1;
 	left: 50%;
@@ -2029,4 +2029,28 @@ body .laji-form {
 	display: block;
 	margin-bottom: 15px;
 	color: #656565;
+}
+
+.laji-form-map-container .laji-form-popped.laji-form-mobile-map-panel {
+	top: initial;
+	font-size: 20px;
+	background: none;
+	box-shadow: none;
+	border: none;
+	font-weight: bold;
+	width: 315px;
+	bottom: 139px;
+	pointer-events: none;
+	margin: 0;
+}
+
+.laji-form-ml-5 {
+	margin-left: 5px;
+}
+
+.laji-form-map-field-edit-locality {
+	position: absolute;
+	top: 6px;
+	z-index: 1;
+	right: 5px;
 }

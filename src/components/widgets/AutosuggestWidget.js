@@ -689,7 +689,7 @@ export class Autosuggest extends React.Component {
 
 		this.setState({isLoading: true});
 
-		const request = async () => {
+		const request = this.props.formContext.services.submitHooks.add(this.props, async () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			try {
@@ -718,7 +718,7 @@ export class Autosuggest extends React.Component {
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)
 					: this.afterBlurAndFetch();
 			}
-		};
+		});
 
 		if (this.timeout) {
 			clearTimeout(this.timeout);
