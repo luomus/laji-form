@@ -12,6 +12,8 @@ const DATE_TIME_SEPARATOR = ", ";
 export const YEAR_MATCH = /^\d{4}$/;
 export const YEAR_MONTH_MATCH = /^\d{4}-\d{1,2}$/;
 
+export const getYearAndMonthDateFormat = (format) => format.replace(/([^YM]DD)|(DD[^YM])/, "");
+
 export default class DateTimeWidget extends React.Component {
 	static contextType = ReactContext;
 	static propTypes = {
@@ -97,7 +99,7 @@ export default class DateTimeWidget extends React.Component {
 		let placeholder = "";
 		if (props.calendar) {
 			if (!dateFormat) dateFormat = localeFormats.L;
-			if (!yearAndMonthDateFormat) yearAndMonthDateFormat = dateFormat.replace(/([^YM]DD)|(DD[^YM])/, "");
+			if (!yearAndMonthDateFormat) yearAndMonthDateFormat = getYearAndMonthDateFormat(dateFormat);
 			placeholder += translations[dateFormat.toLowerCase()] || dateFormat;
 		}
 		if (props.time) {
